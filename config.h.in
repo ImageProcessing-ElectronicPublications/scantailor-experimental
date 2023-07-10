@@ -1,0 +1,13 @@
+/* This file is a template for config.h, for use with CMake. */
+
+#ifndef SCANTAILOR_CONFIG_H_
+#define SCANTAILOR_CONFIG_H_
+
+#define TRANSLATION_DIRS "@TRANSLATION_DIRS@"
+#define PLUGIN_DIRS "@PLUGIN_DIRS@"
+
+#cmakedefine ENABLE_CRASH_REPORTER
+#cmakedefine ENABLE_OPENGL
+#cmakedefine ENABLE_OPENCL
+
+#endif

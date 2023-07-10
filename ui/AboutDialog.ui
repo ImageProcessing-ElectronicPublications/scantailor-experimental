@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AboutDialog</class>
+ <widget class="QDialog" name="AboutDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>534</width>
+    <height>423</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>About Scan Tailor</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>About</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="3" column="0" colspan="2">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Scan Tailor is an interactive post-processing tool for scanned pages. It performs operations such as page splitting, skew correction, adding/removing margins, and others. You give it raw scans, and you get pages ready to be printed or assembled into a PDF or DJVU file.  Scanning and optical character recognition is out of scope of this project.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>440</width>
+           <height>127</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-size: 16pt;
+font-weight: bold;</string>
+         </property>
+         <property name="text">
+          <string notr="true">Scan Tailor</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" rowspan="2">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../resources/resources.qrc">:/icons/appicon-about.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="version">
+         <property name="styleSheet">
+          <string notr="true">font-size:10pt;
+font-weight:bold;</string>
+         </property>
+         <property name="text">
+          <string notr="true">version</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignHCenter|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Authors</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>467</width>
+            <height>516</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="styleSheet">
+              <string notr="true">font-weight: bold;</string>
+             </property>
+             <property name="text">
+              <string>Lead Developer</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Joseph Artsimovich</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="styleSheet">
+              <string notr="true">font-weight: bold;</string>
+             </property>
+             <property name="text">
+              <string>Contributors</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_12">
+               <property name="text">
+                <string>U235 - Picture auto-detection algorithm.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="text">
+                <string>Robert B. - First generation dewarping algorithm.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_15">
+               <property name="text">
+                <string>Petr Kovář - Command line interface.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="styleSheet">
+              <string notr="true">font-weight: bold;</string>
+             </property>
+             <property name="text">
+              <string>Translators</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Neco Torquato - Brazilian Portuguese</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>Svetoslav Sashkov, Mandor - Bulgarian</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_29">
+               <property name="text">
+                <string>Damir13 - Croatian</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>Petr Kovář - Czech</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_17">
+               <property name="text">
+                <string>Stefan Birkner, Markus Stamm - German</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_18">
+               <property name="text">
+                <string>Angelo Gemmi - Italian</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_19">
+               <property name="text">
+                <string>Masahiro Kitagawa - Japanese</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_20">
+               <property name="text">
+                <string>Patrick Pascal - French</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_21">
+               <property name="text">
+                <string>Daniel Koć - Polish</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>uciN - Romanian</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_22">
+               <property name="text">
+                <string>Joseph Artsimovich - Russian</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>Hxcan Cai - Simplified Chinese</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_23">
+               <property name="text">
+                <string>Marián Hvolka - Slovak</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_27">
+               <property name="text">
+                <string>Flavio Benelli - Spanish</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_24">
+               <property name="text">
+                <string>Davidson Wang - Traditional Chinese</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_28">
+               <property name="text">
+                <string>Yuri Chornoivan - Ukrainian</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="styleSheet">
+              <string notr="true">font-weight: bold;</string>
+             </property>
+             <property name="text">
+              <string>Documentation</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>denver 22</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_25">
+               <property name="text">
+                <string notr="true">phaedrus</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_26">
+               <property name="text">
+                <string notr="true">Taxman</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>References</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QScrollArea" name="scrollArea_2">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>-843</y>
+            <width>467</width>
+            <height>1178</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QLabel" name="references">
+             <property name="text">
+              <string notr="true">&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Recursive+implementation+of+the+Gaussian+filter&quot;&gt;[1]&lt;/a&gt; Young, Ian T., and Lucas J. Van Vliet. &quot;Recursive implementation of the Gaussian filter.&quot; Signal processing 44.2 (1995): 139-151.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Boundary+conditions+for+Young-van+Vliet+recursive+filtering&quot;&gt;[2]&lt;/a&gt; Triggs, Bill, and Michaël Sdika. &quot;Boundary conditions for Young-van Vliet recursive filtering.&quot; Signal Processing, IEEE Transactions on 54.6 (2006): 2365-2367.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Fast+anisotropic+gauss+filtering&quot;&gt;[3]&lt;/a&gt; Geusebroek, Jan-Mark, Arnold WM Smeulders, and Joost Van de Weijer. &quot;Fast anisotropic gauss filtering.&quot; Image Processing, IEEE Transactions on 12.8 (2003): 938-943.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Structured+second-and+higher-order+derivatives+through+univariate+Taylor+series&quot;&gt;[4]&lt;/a&gt; Bischof, Christian, George Corliss, and Andreas Griewank. &quot;Structured second-and higher-order derivatives through univariate Taylor series.&quot; Optimization Methods and Software 2.3-4 (1993): 211-232.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=A+concept+for+parametric+surface+fitting+which+avoids+the+parametrization+problem&quot;&gt;[5]&lt;/a&gt; Pottmann, Helmut, and Stefan Leopoldseder. &quot;A concept for parametric surface fitting which avoids the parametrization problem.&quot; Computer Aided Geometric Design 20.6 (2003): 343-362.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Fitting+b-spline+curves+to+point+clouds+by+squared+distance+minimization&quot;&gt;[6]&lt;/a&gt; Wang, Wenping, Helmut Pottmann, and Yang Liu. &quot;Fitting b-spline curves to point clouds by squared distance minimization.&quot; Preprint, University of Hong Kong (2004).
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=A+threshold+selection+method+from+gray-level+histograms&quot;&gt;[7]&lt;/a&gt; Otsu, Nobuyuki. &quot;A threshold selection method from gray-level histograms.&quot; Automatica 11.285-296 (1975): 23-27.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Adaptive+thresholding+based+on+co-occurrence+matrix+edge+information&quot;&gt;[8]&lt;/a&gt; Mokji, Musa Mohd, and S. A. R. A. Bakar. &quot;Adaptive thresholding based on co-occurrence matrix edge information.&quot; Modelling &amp;amp; Simulation, 2007. AMS'07. First Asia International Conference on. IEEE, 2007.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Niblack%2C+W.%3A+An+Introduction+to+Digital+Image+Processing.&quot;&gt;[9]&lt;/a&gt; Niblack, Wayne. An introduction to digital image processing. Englewood Cliffs, N. J., Prentice Hall (1986) 115-116
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=An+adaptive+binarization+technique+for+low+quality+historical+documents&quot;&gt;[10]&lt;/a&gt; Gatos, Basilios, Ioannis Pratikakis, and Stavros J. Perantonis. &quot;An adaptive binarization technique for low quality historical documents.&quot; Document Analysis Systems VI. Springer Berlin Heidelberg, 2004. 102-113.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Adaptive+document+image+binarization&quot;&gt;[11]&lt;/a&gt; Sauvola, Jaakko, and Matti Pietikäinen. &quot;Adaptive document image binarization.&quot; Pattern recognition 33.2 (2000): 225-236.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Text+localization%2C+enhancement+and+binarization+in+multimedia+documents&quot;&gt;[12]&lt;/a&gt; Wolf, Christian, Jean-Michel Jolion, and Francoise Chassaing. &quot;Text localization, enhancement and binarization in multimedia documents.&quot; Pattern Recognition, 2002. Proceedings. 16th International Conference on. Vol. 2. IEEE, 2002.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=A+fast+algorithm+for+local+minimum+and+maximum+filters+on+rectangular+and+octagonal+kernels&quot;&gt;[13]&lt;/a&gt; Van Herk, Marcel. &quot;A fast algorithm for local minimum and maximum filters on rectangular and octagonal kernels.&quot; Pattern Recognition Letters 13.7 (1992): 517-521.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Finding+Lines+under+Bounded+Error&quot;&gt;[14]&lt;/a&gt; Breuel, Thomas M. &quot;Finding lines under bounded error.&quot; Pattern recognition 29.1 (1996): 167-178.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Morphological+grayscale+reconstruction+in+image+analysis%3A+applications+and+efficient+algorithms&quot;&gt;[15]&lt;/a&gt; Vincent, Luc. &quot;Morphological grayscale reconstruction in image analysis: applications and efficient algorithms.&quot; Image Processing, IEEE Transactions on 2.2 (1993): 176-201.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?hl=en&amp;q=Binarization+of+Badly+Illuminated+Document+Images+through+Shading+Estimation+and+Compensation&quot;&gt;[16]&lt;/a&gt; Lu, Shijian, and Chew Lim Tan. &quot;Binarization of badly illuminated document images through shading estimation and compensation.&quot; Document Analysis and Recognition, 2007. ICDAR 2007. Ninth International Conference on. Vol. 1. IEEE, 2007.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Rectifying+the+bound+document+image+captured+by+the+camera%3A+A+model+based+approach#&quot;&gt;[17]&lt;/a&gt; Cao, Huaigu, Xiaoqing Ding, and Changsong Liu. &quot;Rectifying the bound document image captured by the camera: A model based approach.&quot; Document Analysis and Recognition, 2003. Proceedings. Seventh International Conference on. IEEE, 2003.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=X-splines%3A+A+spline+model+designed+for+the+end-user&quot;&gt;[18]&lt;/a&gt; Blanc, Carole, and Christophe Schlick. &quot;X-splines: A spline model designed for the end-user.&quot; Proceedings of the 22nd annual conference on Computer graphics and interactive techniques. ACM, 1995.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=Danielsson+Euclidean+distance+mapping&quot;&gt;[19]&lt;/a&gt; Danielsson, Per-Erik. &quot;Euclidean distance mapping.&quot; Computer Graphics and image processing 14.3 (1980): 227-248.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href=&quot;http://scholar.google.com/scholar?q=A+general+algorithm+for+computing+distance+transforms+in+linear+time&quot;&gt;[20]&lt;/a&gt; Meijster, Arnold, Jos BTM Roerdink, and Wim H. Hesselink. &quot;A general algorithm for computing distance transforms in linear time.&quot; Mathematical Morphology and its applications to image and signal processing. Springer US, 2002. 331-340.
+&lt;/p&gt;</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="openExternalLinks">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>License</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QTextBrowser" name="licenseViewer">
+         <property name="html">
+          <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>AboutDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>440</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>477</x>
+     <y>291</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

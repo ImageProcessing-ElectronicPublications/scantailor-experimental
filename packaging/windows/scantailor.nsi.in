@@ -1,0 +1,158 @@
+!define VERSION "@VERSION@"
+!define VERSION_QUAD "@VERSION_QUAD@"
+!define LICENSE_FILE "@LICENSE_FILE@"
+!define INSTALLER_FILENAME "@INSTALLER_FILENAME@"
+!define STAGING_DIR "@STAGING_DIR@"
+!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scan Tailor"
+
+# The window identifier of the main Scan Tailor window.
+!define WNDCLASS "ScanTailor_Window"
+
+!include "@REGISTER_EXTENSION_NSH@"
+!include "x64.nsh"
+!include "MUI2.nsh"
+!include "LogicLib.nsh"
+
+BrandingText " " # To remove the mention of NullSoft.
+#LoadLanguageFile "${NSISDIR}\Contrib\Language files\Russian.nlf"
+
+Name "Scan Tailor version ${VERSION}"
+
+OutFile "${INSTALLER_FILENAME}"
+
+!if "@SIZEOF_VOID_PTR@" == "8"
+InstallDir "$PROGRAMFILES64\Scan Tailor"
+!else
+InstallDir "$PROGRAMFILES\Scan Tailor"
+!endif
+
+InstallDirRegKey HKLM "${UNINST_REGKEY}" "InstallLocation"
+
+RequestExecutionLevel admin
+
+XPStyle on
+
+AllowSkipFiles off
+
+SetCompressor /SOLID /FINAL lzma
+
+!if "${VERSION_QUAD}" != ""
+  VIAddVersionKey "ProductName" "Scan Tailor"
+  VIAddVersionKey "ProductVersion" "${VERSION}"
+  VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
+  VIAddVersionKey "CompanyName" "Joseph Artsimovich"
+  VIAddVersionKey "LegalTrademarks" ""
+  VIAddVersionKey "LegalCopyright" "� Joseph Artsimovich et al."
+  VIAddVersionKey "FileDescription" "Post-processing tool for scanned pages."
+  VIAddVersionKey "FileVersion" "${VERSION}"
+  VIProductVersion "${VERSION_QUAD}"
+!endif
+
+!define MUI_ABORTWARNING
+
+# Installer Pages
+!insertmacro MUI_PAGE_LICENSE "${LICENSE_FILE}"
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "English"
+
+!if "@SIZEOF_VOID_PTR@" == "8"
+Function .onInit
+  ${IfNot} ${RunningX64}
+    MessageBox MB_ICONSTOP|MB_OK "A 64-bit version of Scan Tailor won't work on a 32-bit version of Windows."
+    Abort
+  ${EndIf}
+FunctionEnd
+!endif
+
+Section
+  SetOutPath $INSTDIR
+  File /r "${STAGING_DIR}\*"
+  
+  WriteUninstaller $INSTDIR\Uninstaller.exe
+  
+  # Write uninstall registry records.
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scan Tailor"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "UninstallString" "$INSTDIR\Uninstaller.exe"
+  
+  # Create menu shortcuts.
+  SetShellVarContext all
+  CreateDirectory "$SMPROGRAMS\Scan Tailor"
+  CreateShortcut "$SMPROGRAMS\Scan Tailor\Scan Tailor.lnk" "$INSTDIR\scantailor.exe"
+  CreateShortcut "$SMPROGRAMS\Scan Tailor\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"  
+
+  # Register the ".ScanTailor" file extension.
+  ${registerExtension} "$INSTDIR\scantailor.exe" ".ScanTailor" \
+  "Scan Tailor Project" "$INSTDIR\scantailor.exe"
+SectionEnd
+
+
+Function un.onInit
+  FindWindow $0 "${WNDCLASS}" ""
+  StrCmp $0 0 continueInstall
+    MessageBox MB_ICONSTOP|MB_OK "The application you are trying to remove is running. Close it and try again."
+    Abort
+  continueInstall:
+FunctionEnd
+
+
+Section "Uninstall"
+  # Unregister the ".ScanTailor" file extension.
+  ${unregisterExtension} ".ScanTailor" "Scan Tailor Project"
+  
+  # Remove program files.
+  Delete "$INSTDIR\scantailor.exe"
+  Delete "$INSTDIR\scantailor-cli.exe"
+  Delete "$INSTDIR\opencl_plugin.dll"
+  Delete "$INSTDIR\acceleration.dll"
+  Delete "$INSTDIR\foundation.dll"
+  Delete "$INSTDIR\math.dll"
+  Delete "$INSTDIR\imageproc.dll"
+  Delete "$INSTDIR\dewarping.dll"
+  Delete "$INSTDIR\mingwm10.dll"
+  Delete "$INSTDIR\libgcc_*.dll"
+  Delete "$INSTDIR\CrashReporter.exe"
+  Delete "$INSTDIR\Qt*.dll"
+  Delete "$INSTDIR\libz.dll"
+  Delete "$INSTDIR\zdll.dll"
+  Delete "$INSTDIR\libpng.dll"
+  Delete "$INSTDIR\libjpeg.dll"
+  Delete "$INSTDIR\libtiff.dll"
+  Delete "$INSTDIR\msvc*.dll"
+  Delete "$INSTDIR\vccorlib*.dll"
+  Delete "$INSTDIR\Uninstaller.exe"
+  RMDir /r "$INSTDIR\Microsoft.VC80.CRT"
+  RMDir /r "$INSTDIR\Microsoft.VC90.CRT"
+  RMDir /r "$INSTDIR\Microsoft.VC100.CRT"
+  
+  # Remove translations.
+  Delete "$INSTDIR\translations\*.qm"
+  RMDir "$INSTDIR\translations"
+  
+  # Remove imageformats plugins.
+  # We no longer ship any, but it's a good idea to cleanup after previous version.
+  Delete "$INSTDIR\imageformats\*.dll"
+  RMDir "$INSTDIR\imageformats"
+
+  # Remove platform plugins.
+  Delete "$INSTDIR\platforms\*.dll"
+  RMDir "$INSTDIR\platforms"
+
+  # Remove accessible plugins.
+  Delete "$INSTDIR\accessible\*.dll"
+  RMDir "$INSTDIR\accessible"
+  
+  # Remove the installation directory.
+  RMDir "$INSTDIR"
+
+  # Remove the uninstall record from the registry.
+  DeleteRegKey HKLM "${UNINST_REGKEY}"
+
+  # Remove menu entries
+  SetShellVarContext all
+  RMDir /r "$SMPROGRAMS\Scan Tailor"
+SectionEnd
