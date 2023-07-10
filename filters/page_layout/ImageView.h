@@ -19,6 +19,13 @@
 #ifndef PAGE_LAYOUT_IMAGEVIEW_H_
 #define PAGE_LAYOUT_IMAGEVIEW_H_
 
+#include <QTransform>
+#include <QSizeF>
+#include <QRectF>
+#include <QPointF>
+#include <QPoint>
+#include <QPainterPath>
+#include <memory>
 #include "ImageViewBase.h"
 #include "ImagePixmapUnion.h"
 #include "InteractionHandler.h"
@@ -32,12 +39,6 @@
 #include "PageId.h"
 #include "imageproc/AffineImageTransform.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <QTransform>
-#include <QSizeF>
-#include <QRectF>
-#include <QPointF>
-#include <QPoint>
-#include <memory>
 
 class ContentBox;
 class RelativeMargins;

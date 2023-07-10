@@ -30,6 +30,7 @@
 #include <QObject>
 #include <QColor>
 #include <QtGlobal> // For Q_OS_*
+#include <QPainterPath>
 #include <boost/function.hpp>
 #include <map>
 #include <memory>
