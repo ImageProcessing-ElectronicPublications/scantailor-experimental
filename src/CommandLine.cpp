@@ -169,14 +169,14 @@ void
 CommandLine::printHelp()
 {
 	std::cout << "\n";
-	std::cout << "Scan Tailor is a post-processing tool for scanned pages." << "\n";
+	std::cout << "Scan Tailor Experimental is a post-processing tool for scanned pages." << "\n";
 	std::cout << "Version: " << VERSION << "\n";
 	std::cout << "\n";
-	std::cout << "ScanTailor usage: " << "\n";
-	std::cout << "\t1) scantailor" << "\n";
-	std::cout << "\t2) scantailor <project_file>" << "\n";
-	std::cout << "\t3) scantailor-cli [options] <images|directory|-> <output_directory>" << "\n";
-	std::cout << "\t4) scantailor-cli [options] <project_file> [output_directory]" << "\n";
+	std::cout << "ScanTailor Experimental usage: " << "\n";
+	std::cout << "\t1) scantailor-experimental" << "\n";
+	std::cout << "\t2) scantailor-experimental <project_file>" << "\n";
+	std::cout << "\t3) scantailor-experimental-cli [options] <images|directory|-> <output_directory>" << "\n";
+	std::cout << "\t4) scantailor-experimental-cli [options] <project_file> [output_directory]" << "\n";
 	std::cout << "\n";
 	std::cout << "1)" << "\n";
 	std::cout << "\tstart ScanTailor's GUI interface" << "\n";

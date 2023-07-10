@@ -32,4 +32,4 @@ QT5_WRAP_UI(ui_sources ${ui_files})
 ADD_LIBRARY(page_split STATIC ${sources} ${ui_sources})
 TARGET_LINK_LIBRARIES(page_split Qt5::Widgets Qt5::Xml)
 
-TRANSLATION_SOURCES(scantailor ${sources} ${ui_files})
+TRANSLATION_SOURCES(scantailor-experimental ${sources} ${ui_files})

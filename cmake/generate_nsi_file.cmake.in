@@ -59,6 +59,6 @@ TO_NATIVE_PATH("${STAGING_DIR}" STAGING_DIR)
 SET(SIZEOF_VOID_PTR "@CMAKE_SIZEOF_VOID_P@")
 
 CONFIGURE_FILE(
-	"@CMAKE_SOURCE_DIR@/packaging/windows/scantailor.nsi.in"
-	"@CMAKE_BINARY_DIR@/scantailor.nsi" @ONLY
+	"@CMAKE_SOURCE_DIR@/packaging/windows/scantailor-experimental.nsi.in"
+	"@CMAKE_BINARY_DIR@/scantailor-experimental.nsi" @ONLY
 )

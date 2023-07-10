@@ -51,4 +51,4 @@ ADD_LIBRARY(output STATIC ${sources} ${ui_sources})
 TARGET_LINK_LIBRARIES(output Qt5::Widgets Qt5::Xml)
 ADD_DEPENDENCIES(output toplevel_ui_sources)
 
-TRANSLATION_SOURCES(scantailor ${sources} ${ui_files})
+TRANSLATION_SOURCES(scantailor-experimental ${sources} ${ui_files})

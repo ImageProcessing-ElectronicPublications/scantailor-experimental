@@ -33,7 +33,7 @@ SET(
 )
 
 SOURCE_GROUP("Sources" FILES ${host_sources} ${plugin_sources})
-TRANSLATION_SOURCES(scantailor ${plugin_sources})
+TRANSLATION_SOURCES(scantailor-experimental ${plugin_sources})
 
 FILE(GLOB device_sources device_code/*.cl)
 SOURCE_GROUP("Sources\\Device" "${device_sources}")
@@ -60,7 +60,7 @@ IF(ENABLE_OPENCL)
 		LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 	)
 
-	INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION lib/scantailor)
+	INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION lib/scantailor-experimental)
 
 	ADD_SUBDIRECTORY(tests)
 ENDIF()

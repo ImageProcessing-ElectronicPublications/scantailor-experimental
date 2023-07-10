@@ -30,7 +30,7 @@ include_directories(src)
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Scan Tailor needs to find its shared libraries.
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/scantailor")
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/scantailor-experimental")
 
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -374,8 +374,8 @@ IF(WIN32)
 	SET(TRANSLATION_DIRS ".:translations")
 	SET(PLUGIN_DIRS ".")
 ELSE()
-	SET(TRANSLATION_DIRS ".:${CMAKE_INSTALL_PREFIX}/share/scantailor/translations")
-	SET(PLUGIN_DIRS ".:${CMAKE_INSTALL_PREFIX}/lib/scantailor")
+	SET(TRANSLATION_DIRS ".:${CMAKE_INSTALL_PREFIX}/share/scantailor-experimental/translations")
+	SET(PLUGIN_DIRS ".:${CMAKE_INSTALL_PREFIX}/lib/scantailor-experimental")
 ENDIF()
 
 CONFIGURE_FILE(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h @ONLY)
@@ -556,27 +556,27 @@ TARGET_LINK_LIBRARIES(stcore Qt5::Widgets Qt5::Xml ${MAYBE_QT_OPENGL_MODULE})
 ADD_DEPENDENCIES(stcore toplevel_ui_sources)
 
 ADD_EXECUTABLE(
-	scantailor WIN32 ${gui_only_sources} ${resource_sources} ${win32_resource_file}
+	scantailor-experimental WIN32 ${gui_only_sources} ${resource_sources} ${win32_resource_file}
 )
 
-ADD_EXECUTABLE(scantailor-cli ${cli_only_sources} ${common_ui_sources})
+ADD_EXECUTABLE(scantailor-experimental-cli ${cli_only_sources} ${common_ui_sources})
 
 TARGET_LINK_LIBRARIES(
-	scantailor
+	scantailor-experimental
 	acceleration page_layout output
 	fix_orientation page_split deskew select_content stcore
 	dewarping zones interaction imageproc math foundation
 	${EXTRA_LIBS}
 )
 TARGET_LINK_LIBRARIES(
-	scantailor-cli
+	scantailor-experimental-cli
 	acceleration page_layout output
 	fix_orientation page_split deskew select_content stcore
 	dewarping zones interaction imageproc math foundation
 	${EXTRA_LIBS}
 )
 
-INSTALL(TARGETS scantailor scantailor-cli RUNTIME DESTINATION bin)
+INSTALL(TARGETS scantailor-experimental scantailor-experimental-cli RUNTIME DESTINATION bin)
 
 IF(ENABLE_CRASH_REPORTER)
 	FIND_PATH(
@@ -602,20 +602,20 @@ IF(ENABLE_CRASH_REPORTER)
 	ENDIF()
 
 	INCLUDE_DIRECTORIES(crash_reporter crash_reporter/google-breakpad)
-	TARGET_LINK_LIBRARIES(scantailor crash_handler)
+	TARGET_LINK_LIBRARIES(scantailor-experimental crash_handler)
 ENDIF()
 
 # Translations
 TRANSLATION_SOURCES(
-	scantailor
+	scantailor-experimental
 	${common_sources} ${gui_only_sources} ${cli_only_sources}
 )
-FILE(GLOB TRANSLATION_FILES src/translations/scantailor_*.ts)
+FILE(GLOB TRANSLATION_FILES src/translations/scantailor-experimental_*.ts)
 FILE(GLOB CR_TRANSLATION_FILES src/translations/crashreporter_*.ts)
 
-FINALIZE_TRANSLATION_SET(scantailor ${TRANSLATION_FILES})
+FINALIZE_TRANSLATION_SET(scantailor-experimental ${TRANSLATION_FILES})
 FINALIZE_TRANSLATION_SET(crashreporter ${CR_TRANSLATION_FILES})
-UPDATE_TRANSLATIONS_TARGET(update_translations scantailor crashreporter)
+UPDATE_TRANSLATIONS_TARGET(update_translations scantailor-experimental crashreporter)
 
 SET(ts_files ${TRANSLATION_FILES})
 IF(ENABLE_CRASH_REPORTER)
@@ -635,12 +635,12 @@ ENDFOREACH(ts_file)
 QT5_ADD_TRANSLATION(QM_FILES ${FILTERED_TRANSLATION_FILES})
 ADD_CUSTOM_TARGET(compile_translations ALL DEPENDS ${QM_FILES})
 
-INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor/translations")
+INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translations")
 
 # Source code packaging
 SET(CPACK_CMAKE_GENERATOR "")
 SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_SOURCE_PACKAGE_FILE_NAME "scantailor-${VERSION}")
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "scantailor-experimental-${VERSION}")
 SET(
 	CPACK_SOURCE_IGNORE_FILES
 	"/\\\\.svn/"

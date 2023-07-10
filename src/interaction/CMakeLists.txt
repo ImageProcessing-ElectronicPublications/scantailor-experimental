@@ -21,4 +21,4 @@ SOURCE_GROUP(Sources FILES ${sources})
 ADD_LIBRARY(interaction STATIC ${sources})
 TARGET_LINK_LIBRARIES(interaction Qt5::Widgets)
 
-TRANSLATION_SOURCES(scantailor ${sources})
+TRANSLATION_SOURCES(scantailor-experimental ${sources})

@@ -30,6 +30,6 @@ SET_TARGET_PROPERTIES(
 	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 
-INSTALL(TARGETS dewarping DESTINATION lib/scantailor)
+INSTALL(TARGETS dewarping DESTINATION lib/scantailor-experimental)
 
-TRANSLATION_SOURCES(scantailor ${sources})
+TRANSLATION_SOURCES(scantailor-experimental ${sources})

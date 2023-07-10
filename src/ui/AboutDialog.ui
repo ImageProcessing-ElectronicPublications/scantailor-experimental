@@ -83,8 +83,7 @@ font-weight: bold;</string>
        <item row="1" column="0">
         <widget class="QLabel" name="version">
          <property name="styleSheet">
-          <string notr="true">font-size:10pt;
-font-weight:bold;</string>
+          <string notr="true">font-size:10pt; font-weight:bold;</string>
          </property>
          <property name="text">
           <string notr="true">version</string>

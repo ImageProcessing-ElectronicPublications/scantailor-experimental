@@ -12,7 +12,7 @@ SET(
 	DefaultAccelerationProvider.cpp DefaultAccelerationProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
-TRANSLATION_SOURCES(scantailor ${sources})
+TRANSLATION_SOURCES(scantailor-experimental ${sources})
 
 ADD_DEFINITIONS(-DBUILDING_ACCELERATION)
 ADD_LIBRARY(acceleration SHARED ${sources})
@@ -24,4 +24,4 @@ SET_TARGET_PROPERTIES(
 	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 
-INSTALL(TARGETS acceleration DESTINATION lib/scantailor)
+INSTALL(TARGETS acceleration DESTINATION lib/scantailor-experimental)

@@ -3,10 +3,10 @@
 !define LICENSE_FILE "@LICENSE_FILE@"
 !define INSTALLER_FILENAME "@INSTALLER_FILENAME@"
 !define STAGING_DIR "@STAGING_DIR@"
-!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scan Tailor"
+!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scan Tailor Experimental"
 
 # The window identifier of the main Scan Tailor window.
-!define WNDCLASS "ScanTailor_Window"
+!define WNDCLASS "ScanTailor-experimental_Window"
 
 !include "@REGISTER_EXTENSION_NSH@"
 !include "x64.nsh"
@@ -21,9 +21,9 @@ Name "Scan Tailor version ${VERSION}"
 OutFile "${INSTALLER_FILENAME}"
 
 !if "@SIZEOF_VOID_PTR@" == "8"
-InstallDir "$PROGRAMFILES64\Scan Tailor"
+InstallDir "$PROGRAMFILES64\Scan Tailor Experimental"
 !else
-InstallDir "$PROGRAMFILES\Scan Tailor"
+InstallDir "$PROGRAMFILES\Scan Tailor Experimental"
 !endif
 
 InstallDirRegKey HKLM "${UNINST_REGKEY}" "InstallLocation"
@@ -37,7 +37,7 @@ AllowSkipFiles off
 SetCompressor /SOLID /FINAL lzma
 
 !if "${VERSION_QUAD}" != ""
-  VIAddVersionKey "ProductName" "Scan Tailor"
+  VIAddVersionKey "ProductName" "Scan Tailor Experimental"
   VIAddVersionKey "ProductVersion" "${VERSION}"
   VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
   VIAddVersionKey "CompanyName" "Joseph Artsimovich"
@@ -76,18 +76,18 @@ Section
   WriteUninstaller $INSTDIR\Uninstaller.exe
   
   # Write uninstall registry records.
-  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scan Tailor"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scan Tailor Experimental"
   WriteRegStr HKLM "${UNINST_REGKEY}" "UninstallString" "$INSTDIR\Uninstaller.exe"
   
   # Create menu shortcuts.
   SetShellVarContext all
-  CreateDirectory "$SMPROGRAMS\Scan Tailor"
-  CreateShortcut "$SMPROGRAMS\Scan Tailor\Scan Tailor.lnk" "$INSTDIR\scantailor.exe"
+  CreateDirectory "$SMPROGRAMS\Scan Tailor Experimental"
+  CreateShortcut "$SMPROGRAMS\Scan Tailor\Scan Tailor Experimental.lnk" "$INSTDIR\scantailor-experimental.exe"
   CreateShortcut "$SMPROGRAMS\Scan Tailor\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"  
 
   # Register the ".ScanTailor" file extension.
-  ${registerExtension} "$INSTDIR\scantailor.exe" ".ScanTailor" \
-  "Scan Tailor Project" "$INSTDIR\scantailor.exe"
+  ${registerExtension} "$INSTDIR\scantailor-experimental.exe" ".ScanTailor" \
+  "Scan Tailor Project" "$INSTDIR\scantailor-experimental.exe"
 SectionEnd
 
 
@@ -105,8 +105,8 @@ Section "Uninstall"
   ${unregisterExtension} ".ScanTailor" "Scan Tailor Project"
   
   # Remove program files.
-  Delete "$INSTDIR\scantailor.exe"
-  Delete "$INSTDIR\scantailor-cli.exe"
+  Delete "$INSTDIR\scantailor-experimental.exe"
+  Delete "$INSTDIR\scantailor-experimental-cli.exe"
   Delete "$INSTDIR\opencl_plugin.dll"
   Delete "$INSTDIR\acceleration.dll"
   Delete "$INSTDIR\foundation.dll"

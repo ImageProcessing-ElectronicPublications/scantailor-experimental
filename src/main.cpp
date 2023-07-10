@@ -150,7 +150,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	
-	QString const translation("scantailor_"+QLocale::system().name());
+	QString const translation("scantailor-experimental_"+QLocale::system().name());
 	QTranslator translator;
 	
 	// Try loading translations from different paths.

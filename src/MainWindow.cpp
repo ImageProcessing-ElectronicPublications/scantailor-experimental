@@ -89,44 +89,6 @@
 #include "ui_BatchProcessingLowerPanel.h"
 #include "config.h"
 #include "version.h"
-#include <boost/foreach.hpp>
-#include <QApplication>
-#include <QLineF>
-#include <QPointer>
-#include <QWidget>
-#include <QDialog>
-#include <QCloseEvent>
-#include <QStackedLayout>
-#include <QGridLayout>
-#include <QVBoxLayout>
-#include <QLayoutItem>
-#include <QScrollBar>
-#include <QPushButton>
-#include <QCheckBox>
-#include <QFileInfo>
-#include <QFile>
-#include <QDir>
-#include <QString>
-#include <QByteArray>
-#include <QVariant>
-#include <QModelIndex>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QPalette>
-#include <QStyle>
-#include <QSettings>
-#include <QDomDocument>
-#include <QSortFilterProxyModel>
-#include <QFileSystemModel>
-#include <QFileInfo>
-#include <QResource>
-#include <Qt>
-#include <QDebug>
-#include <algorithm>
-#include <vector>
-#include <stddef.h>
-#include <math.h>
-#include <assert.h>
 
 class MainWindow::PageSelectionProviderImpl : public PageSelectionProvider
 {
@@ -1475,7 +1437,7 @@ MainWindow::showAboutDialog()
 	Ui::AboutDialog ui;
 	QDialog* dialog = new QDialog(this);
 	ui.setupUi(dialog);
-	ui.version->setText(QString::fromUtf8(VERSION));
+	ui.version->setText(QString::fromUtf8(VERSION"\n"VERSION_QUAD));
 
 	QResource license(":/GPLv3.html");
 	ui.licenseViewer->setHtml(QString::fromUtf8((char const*)license.data(), license.size()));
