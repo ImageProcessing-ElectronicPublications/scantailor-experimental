@@ -15,7 +15,7 @@ SOURCE_GROUP("Sources" FILES ${sources})
 TRANSLATION_SOURCES(scantailor-experimental ${sources})
 
 ADD_DEFINITIONS(-DBUILDING_ACCELERATION)
-ADD_LIBRARY(acceleration SHARED ${sources})
+ADD_LIBRARY(acceleration STATIC ${sources})
 TARGET_LINK_LIBRARIES(acceleration dewarping imageproc Qt5::Core Qt5::Gui)
 
 # We want the DLL located where executables can find it.

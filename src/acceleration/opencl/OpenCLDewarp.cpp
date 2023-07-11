@@ -62,7 +62,7 @@ AdaptedImage adaptImage(QImage const& src, QColor const& bg_color)
 		case QImage::Format_MonoLSB:
 			if (src.allGray() && is_opaque_gray(bg_color.rgba())) {
 				adapted.image = toGrayscale(src);
-				adapted.clFormat = cl::ImageFormat(CL_LUMINANCE, CL_UNORM_INT8);
+				adapted.clFormat = cl::ImageFormat(CL_R, CL_UNORM_INT8);
 				break;
 			}
 			// fall through
@@ -140,7 +140,7 @@ QImage dewarp(
 
 	// Write the source image to device memory.
 	std::array<size_t, 3> const origin{0, 0, 0};
-	std::array<size_t, 3> region{src.width(), src.height(), 1};
+	std::array<size_t, 3> region{(size_t)src.width(), (size_t)src.height(), 1};
 	command_queue.enqueueWriteImage(
 		src_image, CL_FALSE, origin, region, adapted.image.bytesPerLine(), 0,
 		(void*)adapted.image.bits(), &events, &evt

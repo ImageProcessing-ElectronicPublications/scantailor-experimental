@@ -62,12 +62,9 @@ imageproc::GrayImage savGolFilter(
 
 	cl::Context const context = command_queue.getInfo<CL_QUEUE_CONTEXT>();
 	cl::Device const device = command_queue.getInfo<CL_QUEUE_DEVICE>();
-	size_t const max_wg_size = device.getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>();
-	size_t const v_wg_size = static_cast<size_t>(std::sqrt((double)max_wg_size));
-	size_t const h_wg_size = max_wg_size / v_wg_size;
 
-	auto const cl_format_byte = cl::ImageFormat(CL_LUMINANCE, CL_UNORM_INT8);
-	auto const cl_format_float = cl::ImageFormat(CL_LUMINANCE, CL_FLOAT);
+	auto const cl_format_byte = cl::ImageFormat(CL_R, CL_UNORM_INT8);
+	auto const cl_format_float = cl::ImageFormat(CL_R, CL_FLOAT);
 
 	// Create two images on the device.
 	cl::Image2D byte_texture(context, CL_MEM_READ_WRITE, cl_format_byte, src.width(), src.height());
@@ -78,13 +75,17 @@ imageproc::GrayImage savGolFilter(
 
 	// Copy the source image to byte_texture.
 	std::array<size_t, 3> const origin{0, 0, 0};
-	std::array<size_t, 3> const region{src.width(), src.height(), 1};
+	std::array<size_t, 3> const region{(size_t)src.width(), (size_t)src.height(), 1};
 	command_queue.enqueueWriteImage(
 		byte_texture, CL_FALSE, origin, region, src.stride(), 0, (void*)src.data(), &events, &evt
 	);
 	indicateCompletion(&events, evt);
 
 	cl::Kernel kernel(program, "sav_gol_filter_1d");
+	size_t const max_wg_items = kernel.getWorkGroupInfo<CL_KERNEL_WORK_GROUP_SIZE>(device);
+
+	size_t const v_wg_size = static_cast<size_t>(std::sqrt((double)max_wg_items));
+	size_t const h_wg_size = max_wg_items / v_wg_size;
 
 	// Horizontal pass: byte_texture -> float_texture
 	{

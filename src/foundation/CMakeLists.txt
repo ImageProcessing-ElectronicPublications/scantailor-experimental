@@ -46,7 +46,7 @@ SET(
 SOURCE_GROUP("Sources" FILES ${sources})
 
 ADD_DEFINITIONS(-DBUILDING_FOUNDATION)
-ADD_LIBRARY(foundation SHARED ${sources})
+ADD_LIBRARY(foundation STATIC ${sources})
 TARGET_LINK_LIBRARIES(foundation Qt5::Gui Qt5::Core Qt5::Xml)
 
 # We want the DLL located where executables can find it.

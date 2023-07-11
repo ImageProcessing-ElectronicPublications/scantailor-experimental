@@ -21,7 +21,7 @@ SET(
 SOURCE_GROUP("Sources" FILES ${sources})
 
 ADD_DEFINITIONS(-DBUILDING_DEWARPING)
-ADD_LIBRARY(dewarping SHARED ${sources})
+ADD_LIBRARY(dewarping STATIC ${sources})
 TARGET_LINK_LIBRARIES(dewarping imageproc math foundation Qt5::Widgets Qt5::Xml)
 
 # We want the DLL located where executables can find it.

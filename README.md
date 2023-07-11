@@ -2,7 +2,7 @@
 
 Based of Scan Tailor - [scantailor.org](http://scantailor.org/)
 
-![ScanTailor logo from scantailor.org](http://scantailor.org/assets/logo_h300-fs8.png) 
+![ScanTailor logo from scantailor.org](https://scantailor.org/wp-content/uploads/2021/05/1200px-Scan_Tailor_-_Logo.svg_-300x288.png) 
 
 
 ## About ##
