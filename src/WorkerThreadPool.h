@@ -29,34 +29,34 @@ class QThreadPool;
 
 class WorkerThreadPool : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	WorkerThreadPool(QObject* parent = nullptr);
-	
-	virtual ~WorkerThreadPool();
-	
-	/**
-	 * \brief Waits for pending jobs to finish and stop the thread.
-	 *
-	 * The destructor also performs these tasks, so this method is only
-	 * useful to prematuraly stop task processing.
-	 */
-	void shutdown();
+    WorkerThreadPool(QObject* parent = nullptr);
 
-	bool hasSpareCapacity() const;
+    virtual ~WorkerThreadPool();
 
-	void submitTask(BackgroundTaskPtr const& task);
+    /**
+     * \brief Waits for pending jobs to finish and stop the thread.
+     *
+     * The destructor also performs these tasks, so this method is only
+     * useful to prematuraly stop task processing.
+     */
+    void shutdown();
+
+    bool hasSpareCapacity() const;
+
+    void submitTask(BackgroundTaskPtr const& task);
 signals:
-	void taskResult(BackgroundTaskPtr const& task, FilterResultPtr const& result);
+    void taskResult(BackgroundTaskPtr const& task, FilterResultPtr const& result);
 private:
-	class TaskResultEvent;
-	
-	virtual void customEvent(QEvent* event) override;
+    class TaskResultEvent;
 
-	void updateNumberOfThreads();
+    virtual void customEvent(QEvent* event) override;
 
-	QThreadPool* m_pPool;
-	QSettings m_settings;
+    void updateNumberOfThreads();
+
+    QThreadPool* m_pPool;
+    QSettings m_settings;
 };
 
 #endif

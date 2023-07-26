@@ -45,7 +45,7 @@ class RelativeMargins;
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 namespace page_layout
@@ -55,195 +55,195 @@ class OptionsWidget;
 class Settings;
 
 class ImageView :
-	public ImageViewBase,
-	private InteractionHandler
+    public ImageViewBase,
+    private InteractionHandler
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ImageView(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		IntrusivePtr<Settings> const& settings, PageId const& page_id,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_transform,
-		imageproc::AffineTransformedImage const& affine_transformed_image,
-		ImagePixmapUnion const& downscaled_image,
-		ContentBox const& content_box,
-		OptionsWidget const& opt_widget);
-	
-	virtual ~ImageView();
+    ImageView(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        IntrusivePtr<Settings> const& settings, PageId const& page_id,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_transform,
+        imageproc::AffineTransformedImage const& affine_transformed_image,
+        ImagePixmapUnion const& downscaled_image,
+        ContentBox const& content_box,
+        OptionsWidget const& opt_widget);
+
+    virtual ~ImageView();
 signals:
-	void invalidateThumbnail(PageId const& page_id);
-	
-	void invalidateAllThumbnails();
-	
-	void marginsSetLocally(RelativeMargins const& margins);
+    void invalidateThumbnail(PageId const& page_id);
+
+    void invalidateAllThumbnails();
+
+    void marginsSetLocally(RelativeMargins const& margins);
 public slots:
-	void marginsSetExternally(RelativeMargins const& margins);
-	
-	void leftRightLinkToggled(bool linked);
-	
-	void topBottomLinkToggled(bool linked);
-	
-	void matchSizeModeChanged(MatchSizeMode const& match_size_mode);
+    void marginsSetExternally(RelativeMargins const& margins);
 
-	void alignmentChanged(Alignment const& alignment);
-	
-	void aggregateHardSizeChanged();
+    void leftRightLinkToggled(bool linked);
+
+    void topBottomLinkToggled(bool linked);
+
+    void matchSizeModeChanged(MatchSizeMode const& match_size_mode);
+
+    void alignmentChanged(Alignment const& alignment);
+
+    void aggregateHardSizeChanged();
 private:
-	enum Edge { LEFT = 1, RIGHT = 2, TOP = 4, BOTTOM = 8 };
-	enum FitMode { FIT, DONT_FIT };
-	enum AggregateSizeChanged { AGGREGATE_SIZE_UNCHANGED, AGGREGATE_SIZE_CHANGED };
-	
-	struct StateBeforeResizing
-	{
-		/**
-		 * Transformation from virtual image coordinates to widget coordinates.
-		 */
-		QTransform virtToWidget;
-		
-		/**
-		 * Transformation from widget coordinates to virtual image coordinates.
-		 */
-		QTransform widgetToVirt;
-		
-		/**
-		 * m_middleRect in widget coordinates.
-		 */
-		QRectF middleWidgetRect;
-		
-		/**
-		 * Mouse pointer position in widget coordinates.
-		 */
-		QPointF mousePos;
-		
-		/**
-		 * The point in image that is to be centered on the screen,
-		 * in pixel image coordinates.
-		 */
-		QPointF focalPoint;
-	};
-	
-	virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+    enum Edge { LEFT = 1, RIGHT = 2, TOP = 4, BOTTOM = 8 };
+    enum FitMode { FIT, DONT_FIT };
+    enum AggregateSizeChanged { AGGREGATE_SIZE_UNCHANGED, AGGREGATE_SIZE_CHANGED };
 
-	Proximity cornerProximity(int edge_mask, QRectF const* box, QPointF const& mouse_pos) const;
+    struct StateBeforeResizing
+    {
+        /**
+         * Transformation from virtual image coordinates to widget coordinates.
+         */
+        QTransform virtToWidget;
 
-	Proximity edgeProximity(int edge_mask, QRectF const* box, QPointF const& mouse_pos) const;
+        /**
+         * Transformation from widget coordinates to virtual image coordinates.
+         */
+        QTransform widgetToVirt;
 
-	void dragInitiated(QPointF const& mouse_pos);
+        /**
+         * m_middleRect in widget coordinates.
+         */
+        QRectF middleWidgetRect;
 
-	void innerRectDragContinuation(int edge_mask, QPointF const& mouse_pos);
+        /**
+         * Mouse pointer position in widget coordinates.
+         */
+        QPointF mousePos;
 
-	void middleRectDragContinuation(int edge_mask, QPointF const& mouse_pos);
+        /**
+         * The point in image that is to be centered on the screen,
+         * in pixel image coordinates.
+         */
+        QPointF focalPoint;
+    };
 
-	void dragFinished();
-	
-	void recalcBoxesAndFit(RelativeMargins const& margins);
-	
-	void updatePresentationTransform(FitMode fit_mode);
-	
-	void forceNonNegativeHardMargins(QRectF& middle_rect) const;
-	
-	RelativeMargins calcHardMargins() const;
-	
-	void recalcOuterRect();
-	
-	AggregateSizeChanged commitHardMargins(RelativeMargins const& margins);
-	
-	void invalidateThumbnails(AggregateSizeChanged agg_size_changed);
-	
-	DraggableObject m_innerCorners[4];
-	ObjectDragHandler m_innerCornerHandlers[4];
-	DraggableObject m_innerEdges[4];
-	ObjectDragHandler m_innerEdgeHandlers[4];
+    virtual void onPaint(QPainter& painter, InteractionState const& interaction);
 
-	DraggableObject m_middleCorners[4];
-	ObjectDragHandler m_middleCornerHandlers[4];
-	DraggableObject m_middleEdges[4];
-	ObjectDragHandler m_middleEdgeHandlers[4];
+    Proximity cornerProximity(int edge_mask, QRectF const* box, QPointF const& mouse_pos) const;
 
-	DragHandler m_dragHandler;
-	ZoomHandler m_zoomHandler;
+    Proximity edgeProximity(int edge_mask, QRectF const* box, QPointF const& mouse_pos) const;
 
-	IntrusivePtr<Settings> m_ptrSettings;
-	
-	PageId const m_pageId;
+    void dragInitiated(QPointF const& mouse_pos);
 
-	/**
-	 * AffineImageTransform extracted from \p affine_transformed_image constructor parameter.
-	 * This doesn't take image scaling as a result of MatchSizeMode::SCALE into account.
-	 */
-	imageproc::AffineImageTransform const m_unscaledAffineTransform;
+    void innerRectDragContinuation(int edge_mask, QPointF const& mouse_pos);
 
-	/**
-	 * ContentBox in virtual image coordinates, prior to scaling by MatchSizeMode::SCALE.
-	 */
-	QRectF const m_unscaledContentRect;
+    void middleRectDragContinuation(int edge_mask, QPointF const& mouse_pos);
 
-	/**
-	 * The point in affine_transformed_image.origImage() coordinates corresponding to
-	 * the top-left corner of the content box. This point is obtained by reverse mapping
-	 * of m_unscaledContentRect.topLeft() through m_unscaledAffineTransform.
-	 *
-	 * @note This member must follow both m_unscaledAffineTransform and m_unscaledContentRect.
-	 */
-	QPointF const m_affineImageContentTopLeft;
-	
-	/**
-	 * Content box in virtual image coordinates, possibly scaled
-	 * as a result of MatchSizeMode::SCALE.
-	 */
-	QRectF m_innerRect;
-	
-	/**
-	 * \brief Content box + hard margins in virtual image coordinates.
-	 *
-	 * Hard margins are margins that will be there no matter what.
-	 * Soft margins are those added to extend the page to match its
-	 * size with other pages.
-	 */
-	QRectF m_middleRect;
-	
-	/**
-	 * \brief Content box + hard + soft margins in virtual image coordinates.
-	 *
-	 * Hard margins are margins that will be there no matter what.
-	 * Soft margins are those added to extend the page to match its
-	 * size with other pages.
-	 */
-	QRectF m_outerRect;
-	
-	/**
-	 * \brief Aggregate (max_width, max_height) hard page size in pixels.
-	 *
-	 * This one is for displaying purposes only.  It changes during
-	 * dragging, and it may differ from what
-	 * m_ptrSettings->getAggregateHardSize() would return.
-	 *
-	 * \see m_committedAggregateHardSize
-	 */
-	QSizeF m_aggregateHardSize;
-	
-	/**
-	 * \brief Aggregate (max_width, max_height) hard page size in pixels.
-	 *
-	 * This one is supposed to be the cached version of what
-	 * m_ptrSettings->getAggregateHardSize() would return.
-	 *
-	 * \see m_aggregateHardSize
-	 */
-	QSizeF m_committedAggregateHardSize;
+    void dragFinished();
 
-	MatchSizeMode m_matchSizeMode;
-	
-	Alignment m_alignment;
-	
-	/**
-	 * Some data saved at the beginning of a resizing operation.
-	 */
-	StateBeforeResizing m_beforeResizing;
-	
-	bool m_leftRightLinked;
-	
-	bool m_topBottomLinked;
+    void recalcBoxesAndFit(RelativeMargins const& margins);
+
+    void updatePresentationTransform(FitMode fit_mode);
+
+    void forceNonNegativeHardMargins(QRectF& middle_rect) const;
+
+    RelativeMargins calcHardMargins() const;
+
+    void recalcOuterRect();
+
+    AggregateSizeChanged commitHardMargins(RelativeMargins const& margins);
+
+    void invalidateThumbnails(AggregateSizeChanged agg_size_changed);
+
+    DraggableObject m_innerCorners[4];
+    ObjectDragHandler m_innerCornerHandlers[4];
+    DraggableObject m_innerEdges[4];
+    ObjectDragHandler m_innerEdgeHandlers[4];
+
+    DraggableObject m_middleCorners[4];
+    ObjectDragHandler m_middleCornerHandlers[4];
+    DraggableObject m_middleEdges[4];
+    ObjectDragHandler m_middleEdgeHandlers[4];
+
+    DragHandler m_dragHandler;
+    ZoomHandler m_zoomHandler;
+
+    IntrusivePtr<Settings> m_ptrSettings;
+
+    PageId const m_pageId;
+
+    /**
+     * AffineImageTransform extracted from \p affine_transformed_image constructor parameter.
+     * This doesn't take image scaling as a result of MatchSizeMode::SCALE into account.
+     */
+    imageproc::AffineImageTransform const m_unscaledAffineTransform;
+
+    /**
+     * ContentBox in virtual image coordinates, prior to scaling by MatchSizeMode::SCALE.
+     */
+    QRectF const m_unscaledContentRect;
+
+    /**
+     * The point in affine_transformed_image.origImage() coordinates corresponding to
+     * the top-left corner of the content box. This point is obtained by reverse mapping
+     * of m_unscaledContentRect.topLeft() through m_unscaledAffineTransform.
+     *
+     * @note This member must follow both m_unscaledAffineTransform and m_unscaledContentRect.
+     */
+    QPointF const m_affineImageContentTopLeft;
+
+    /**
+     * Content box in virtual image coordinates, possibly scaled
+     * as a result of MatchSizeMode::SCALE.
+     */
+    QRectF m_innerRect;
+
+    /**
+     * \brief Content box + hard margins in virtual image coordinates.
+     *
+     * Hard margins are margins that will be there no matter what.
+     * Soft margins are those added to extend the page to match its
+     * size with other pages.
+     */
+    QRectF m_middleRect;
+
+    /**
+     * \brief Content box + hard + soft margins in virtual image coordinates.
+     *
+     * Hard margins are margins that will be there no matter what.
+     * Soft margins are those added to extend the page to match its
+     * size with other pages.
+     */
+    QRectF m_outerRect;
+
+    /**
+     * \brief Aggregate (max_width, max_height) hard page size in pixels.
+     *
+     * This one is for displaying purposes only.  It changes during
+     * dragging, and it may differ from what
+     * m_ptrSettings->getAggregateHardSize() would return.
+     *
+     * \see m_committedAggregateHardSize
+     */
+    QSizeF m_aggregateHardSize;
+
+    /**
+     * \brief Aggregate (max_width, max_height) hard page size in pixels.
+     *
+     * This one is supposed to be the cached version of what
+     * m_ptrSettings->getAggregateHardSize() would return.
+     *
+     * \see m_aggregateHardSize
+     */
+    QSizeF m_committedAggregateHardSize;
+
+    MatchSizeMode m_matchSizeMode;
+
+    Alignment m_alignment;
+
+    /**
+     * Some data saved at the beginning of a resizing operation.
+     */
+    StateBeforeResizing m_beforeResizing;
+
+    bool m_leftRightLinked;
+
+    bool m_topBottomLinked;
 };
 
 } // namespace page_layout

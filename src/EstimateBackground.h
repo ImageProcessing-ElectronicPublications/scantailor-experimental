@@ -29,8 +29,8 @@ class QPolygonF;
 
 namespace imageproc
 {
-	class PolynomialSurface;
-	class GrayImage;
+class PolynomialSurface;
+class GrayImage;
 }
 
 /**
@@ -61,9 +61,9 @@ namespace imageproc
  *    provided they touch the edges, but it performs better without them.
  */
 imageproc::PolynomialSurface estimateBackground(
-	imageproc::GrayImage const& downscaled_input,
-	boost::optional<QPolygonF> const& region_of_intereset,
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	TaskStatus const& status, DebugImages* dbg = 0);
+    imageproc::GrayImage const& downscaled_input,
+    boost::optional<QPolygonF> const& region_of_intereset,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    TaskStatus const& status, DebugImages* dbg = 0);
 
 #endif

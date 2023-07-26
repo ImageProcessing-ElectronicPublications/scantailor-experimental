@@ -34,33 +34,33 @@ namespace tests
 class DeviceListFixture
 {
 public:
-	DeviceListFixture();
+    DeviceListFixture();
 protected:
-	std::vector<cl::Device> m_devices;
+    std::vector<cl::Device> m_devices;
 };
 
 class ProgramBuilderFixture
 {
 public:
-	ProgramBuilderFixture();
+    ProgramBuilderFixture();
 
-	~ProgramBuilderFixture();
+    ~ProgramBuilderFixture();
 protected:
-	void addSource(char const* source_fname);
+    void addSource(char const* source_fname);
 
-	cl::Program buildProgram(cl::Context const& context) const;
+    cl::Program buildProgram(cl::Context const& context) const;
 private:
-	cl::Program::Sources m_sources;
+    cl::Program::Sources m_sources;
 };
 
 imageproc::BinaryImage randomBinaryImage(int width, int height);
 
 OpenCLGrid<uint32_t> binaryImageToOpenCLGrid(
-	imageproc::BinaryImage const& image, cl::CommandQueue const& command_queue);
+    imageproc::BinaryImage const& image, cl::CommandQueue const& command_queue);
 
 imageproc::BinaryImage openCLGridToBinaryImage(
-	OpenCLGrid<uint32_t> const& grid, int pixel_width,
-	cl::CommandQueue const& command_queue);
+    OpenCLGrid<uint32_t> const& grid, int pixel_width,
+    cl::CommandQueue const& command_queue);
 
 } // namespace tests
 

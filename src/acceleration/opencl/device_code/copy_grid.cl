@@ -17,16 +17,17 @@
 */
 
 kernel void copy_float_grid(
-	int const width, int const height,
-	global float const* const src, int const src_offset, int const src_stride,
-	global float* const dst, int const dst_offset, int const dst_stride)
+    int const width, int const height,
+    global float const* const src, int const src_offset, int const src_stride,
+    global float* const dst, int const dst_offset, int const dst_stride)
 {
-	int const x = get_global_id(0);
-	int const y = get_global_id(1);
-	bool const outside_bounds = (x >= width) | (y >= height);
-	if (outside_bounds) {
-		return;
-	}
+    int const x = get_global_id(0);
+    int const y = get_global_id(1);
+    bool const outside_bounds = (x >= width) | (y >= height);
+    if (outside_bounds)
+    {
+        return;
+    }
 
-	dst[dst_offset + dst_stride * y + x] = src[src_offset + src_stride * y + x];
+    dst[dst_offset + dst_stride * y + x] = src[src_offset + src_stride * y + x];
 }

@@ -35,27 +35,27 @@
 template<typename Node>
 class ObjectSwapperImpl<Grid<Node> >
 {
-	BOOST_STATIC_ASSERT(CopyableByMemcpy<Node>::value == true);
+    BOOST_STATIC_ASSERT(CopyableByMemcpy<Node>::value == true);
 public:
-	ObjectSwapperImpl(QString const& swap_dir);
+    ObjectSwapperImpl(QString const& swap_dir);
 
-	boost::shared_ptr<Grid<Node> > swapIn();
+    boost::shared_ptr<Grid<Node> > swapIn();
 
-	void swapOut(boost::shared_ptr<Grid<Node> > const& obj);
+    void swapOut(boost::shared_ptr<Grid<Node> > const& obj);
 private:
-	QString m_swapDir;
-	AutoRemovingFile m_file;
-	int m_width;
-	int m_height;
-	int m_padding;
+    QString m_swapDir;
+    AutoRemovingFile m_file;
+    int m_width;
+    int m_height;
+    int m_padding;
 };
 
 template<typename Node>
 ObjectSwapperImpl<Grid<Node> >::ObjectSwapperImpl(QString const& swap_dir)
-:	m_swapDir(swap_dir)
-,	m_width(0)
-,	m_height(0)
-,	m_padding(0)
+    :	m_swapDir(swap_dir)
+    ,	m_width(0)
+    ,	m_height(0)
+    ,	m_padding(0)
 {
 }
 
@@ -64,51 +64,55 @@ template<typename Node>
 boost::shared_ptr<Grid<Node> >
 ObjectSwapperImpl<Grid<Node> >::swapIn()
 {
-	boost::shared_ptr<Grid<Node> > grid(new Grid<Node>(m_width, m_height, m_padding));
+    boost::shared_ptr<Grid<Node> > grid(new Grid<Node>(m_width, m_height, m_padding));
 
-	QFile file(m_file.get());
-	if (!file.open(file.ReadOnly)) {
-		qDebug() << "Unable to load a grid from file: " << m_file.get();
-		return grid;
-	}
+    QFile file(m_file.get());
+    if (!file.open(file.ReadOnly))
+    {
+        qDebug() << "Unable to load a grid from file: " << m_file.get();
+        return grid;
+    }
 
-	size_t const bytes = (m_width + m_padding*2) * (m_height + m_padding*2) * sizeof(Node);
-	if (file.size() != bytes) {
-		qDebug() << "Unexpected size of file: " << m_file.get();
-		return grid;
-	}
+    size_t const bytes = (m_width + m_padding*2) * (m_height + m_padding*2) * sizeof(Node);
+    if (file.size() != bytes)
+    {
+        qDebug() << "Unexpected size of file: " << m_file.get();
+        return grid;
+    }
 
-	file.read((char*)grid->paddedData(), bytes);
-	return grid;
+    file.read((char*)grid->paddedData(), bytes);
+    return grid;
 }
 
 template<typename Node>
 void
 ObjectSwapperImpl<Grid<Node> >::swapOut(boost::shared_ptr<Grid<Node> > const& obj)
 {
-	assert(obj.get());
-	m_width = obj->width();
-	m_height = obj->height();
-	m_padding = obj->padding();
+    assert(obj.get());
+    m_width = obj->width();
+    m_height = obj->height();
+    m_padding = obj->padding();
 
-	if (!m_file.get().isEmpty()) {
-		// We don't swap out the same stuff twice.
-		return;
-	}
+    if (!m_file.get().isEmpty())
+    {
+        // We don't swap out the same stuff twice.
+        return;
+    }
 
-	QTemporaryFile file(m_swapDir+"/XXXXXX.grid");
-	if (!file.open()) {
-		qDebug() << "Unable to create a temporary file in " << m_swapDir;
-		return;
-	}
+    QTemporaryFile file(m_swapDir+"/XXXXXX.grid");
+    if (!file.open())
+    {
+        qDebug() << "Unable to create a temporary file in " << m_swapDir;
+        return;
+    }
 
-	AutoRemovingFile remover(file.fileName());
-	file.setAutoRemove(false);
+    AutoRemovingFile remover(file.fileName());
+    file.setAutoRemove(false);
 
-	size_t const bytes = (m_width + m_padding*2) * (m_height + m_padding*2) * sizeof(Node);
-	file.write((char const*)obj->paddedData(), bytes);
+    size_t const bytes = (m_width + m_padding*2) * (m_height + m_padding*2) * sizeof(Node);
+    file.write((char const*)obj->paddedData(), bytes);
 
-	m_file = remover;
+    m_file = remover;
 }
 
 #endif

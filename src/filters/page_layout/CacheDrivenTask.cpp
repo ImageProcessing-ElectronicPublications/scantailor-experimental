@@ -39,10 +39,10 @@ namespace page_layout
 {
 
 CacheDrivenTask::CacheDrivenTask(
-	IntrusivePtr<output::CacheDrivenTask> const& next_task,
-	IntrusivePtr<Settings> const& settings)
-:	m_ptrNextTask(next_task)
-,	m_ptrSettings(settings)
+    IntrusivePtr<output::CacheDrivenTask> const& next_task,
+    IntrusivePtr<Settings> const& settings)
+    :	m_ptrNextTask(next_task)
+    ,	m_ptrSettings(settings)
 {
 }
 
@@ -52,77 +52,84 @@ CacheDrivenTask::~CacheDrivenTask()
 
 void
 CacheDrivenTask::process(
-	PageInfo const& page_info, AbstractFilterDataCollector* collector,
-	std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
-	ContentBox const& content_box)
+    PageInfo const& page_info, AbstractFilterDataCollector* collector,
+    std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
+    ContentBox const& content_box)
 {
-	std::auto_ptr<Params> const params(
-		m_ptrSettings->getPageParams(page_info.id())
-	);
-	if (!params.get() || !params->contentSize().isValid()) {
-		if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector)) {
-			thumb_col->processThumbnail(
-				std::auto_ptr<QGraphicsItem>(
-					new IncompleteThumbnail(
-						thumb_col->thumbnailCache(),
-						thumb_col->maxLogicalThumbSize(),
-						page_info.id(), *full_size_image_transform
-					)
-				)
-			);
-		}
-		return;
-	}
+    std::auto_ptr<Params> const params(
+        m_ptrSettings->getPageParams(page_info.id())
+    );
+    if (!params.get() || !params->contentSize().isValid())
+    {
+        if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
+        {
+            thumb_col->processThumbnail(
+                std::auto_ptr<QGraphicsItem>(
+                    new IncompleteThumbnail(
+                        thumb_col->thumbnailCache(),
+                        thumb_col->maxLogicalThumbSize(),
+                        page_info.id(), *full_size_image_transform
+                    )
+                )
+            );
+        }
+        return;
+    }
 
-	QRectF const unscaled_content_rect(
-		content_box.toTransformedRect(*full_size_image_transform)
-	);
+    QRectF const unscaled_content_rect(
+        content_box.toTransformedRect(*full_size_image_transform)
+    );
 
-	std::shared_ptr<AbstractImageTransform> adjusted_transform(
-		full_size_image_transform->clone()
-	);
+    std::shared_ptr<AbstractImageTransform> adjusted_transform(
+        full_size_image_transform->clone()
+    );
 
-	PageLayout const page_layout(
-		unscaled_content_rect, m_ptrSettings->getAggregateHardSize(),
-		params->matchSizeMode(), params->alignment(), params->hardMargins()
-	);
-	page_layout.absorbScalingIntoTransform(*adjusted_transform);
+    PageLayout const page_layout(
+        unscaled_content_rect, m_ptrSettings->getAggregateHardSize(),
+        params->matchSizeMode(), params->alignment(), params->hardMargins()
+    );
+    page_layout.absorbScalingIntoTransform(*adjusted_transform);
 
-	if (m_ptrNextTask) {
+    if (m_ptrNextTask)
+    {
 
-		m_ptrNextTask->process(
-			page_info, adjusted_transform,
-			page_layout.innerRect(), page_layout.outerRect(), collector
-		);
-		return;
-	}
-	
-	if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector)) {
-		
-		std::auto_ptr<QGraphicsItem> thumb;
+        m_ptrNextTask->process(
+            page_info, adjusted_transform,
+            page_layout.innerRect(), page_layout.outerRect(), collector
+        );
+        return;
+    }
 
-		if (content_box.isValid()) {
-			thumb.reset(
-				new Thumbnail(
-					thumb_col->thumbnailCache(),
-					thumb_col->maxLogicalThumbSize(),
-					page_info.id(), *params,
-					*adjusted_transform, page_layout
-				)
-			);
-		} else {
-			thumb.reset(
-				new ThumbnailBase(
-					thumb_col->thumbnailCache(),
-					thumb_col->maxLogicalThumbSize(),
-					page_info.id(),
-					*full_size_image_transform
-				)
-			);
-		}
+    if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
+    {
 
-		thumb_col->processThumbnail(thumb);
-	}
+        std::auto_ptr<QGraphicsItem> thumb;
+
+        if (content_box.isValid())
+        {
+            thumb.reset(
+                new Thumbnail(
+                    thumb_col->thumbnailCache(),
+                    thumb_col->maxLogicalThumbSize(),
+                    page_info.id(), *params,
+                    *adjusted_transform, page_layout
+                )
+            );
+        }
+        else
+        {
+            thumb.reset(
+                new ThumbnailBase(
+                    thumb_col->thumbnailCache(),
+                    thumb_col->maxLogicalThumbSize(),
+                    page_info.id(),
+                    *full_size_image_transform
+                )
+            );
+        }
+
+        thumb_col->processThumbnail(thumb);
+    }
 }
 
 } // namespace page_layout

@@ -30,32 +30,44 @@ namespace deskew
 
 class RotationParams
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/**
-	 * Constructs RotationParams with MODE_AUTO and an invalid compensation angle.
-	 */
-	RotationParams();
-	
-	RotationParams(QDomElement const& el);
+    /**
+     * Constructs RotationParams with MODE_AUTO and an invalid compensation angle.
+     */
+    RotationParams();
 
-	bool isValid() const { return m_isValid; }
+    RotationParams(QDomElement const& el);
 
-	void invalidate();
+    bool isValid() const
+    {
+        return m_isValid;
+    }
 
-	AutoManualMode mode() const { return m_mode; }
+    void invalidate();
 
-	void setMode(AutoManualMode mode) { m_mode = mode; }
+    AutoManualMode mode() const
+    {
+        return m_mode;
+    }
 
-	double compensationAngleDeg() const { return m_compensationAngleDeg; }
+    void setMode(AutoManualMode mode)
+    {
+        m_mode = mode;
+    }
 
-	void setCompensationAngleDeg(double angle_deg);
+    double compensationAngleDeg() const
+    {
+        return m_compensationAngleDeg;
+    }
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    void setCompensationAngleDeg(double angle_deg);
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	double m_compensationAngleDeg;
-	AutoManualMode m_mode;
-	bool m_isValid;
+    double m_compensationAngleDeg;
+    AutoManualMode m_mode;
+    bool m_isValid;
 };
 
 } // namespace deskew

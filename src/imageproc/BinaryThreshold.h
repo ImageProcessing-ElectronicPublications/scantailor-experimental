@@ -38,37 +38,43 @@ class GrayscaleHistogram;
  */
 class IMAGEPROC_EXPORT BinaryThreshold
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/**
-	 * \brief Finds the threshold using Otsu’s thresholding method.
-	 */
-	static BinaryThreshold otsuThreshold(QImage const& image);
-	
-	/**
-	 * \brief Finds the threshold using Otsu’s thresholding method.
-	 */
-	static BinaryThreshold otsuThreshold(GrayscaleHistogram const& pixels_by_color);
-	
-	/**
-	 * \brief Image binarization using Mokji's global thresholding method.
-	 *
-	 * \param image The source image.  May be in any format.
-	 * \param max_edge_width The maximum gradient length to consider.
-	 * \param min_edge_magnitude The minimum color difference in a gradient.
-	 * \return A black and white image.
-	 */
-	static BinaryThreshold mokjiThreshold(
-		QImage const& image,
-		unsigned max_edge_width = 3, unsigned min_edge_magnitude = 20);
-	
-	explicit BinaryThreshold(int threshold) : m_threshold(threshold) {}
-	
-	operator int() const { return m_threshold; }
-	
-	BWColor grayToBW(int gray) const { return gray < m_threshold ? BLACK : WHITE; } 
+    /**
+     * \brief Finds the threshold using Otsu’s thresholding method.
+     */
+    static BinaryThreshold otsuThreshold(QImage const& image);
+
+    /**
+     * \brief Finds the threshold using Otsu’s thresholding method.
+     */
+    static BinaryThreshold otsuThreshold(GrayscaleHistogram const& pixels_by_color);
+
+    /**
+     * \brief Image binarization using Mokji's global thresholding method.
+     *
+     * \param image The source image.  May be in any format.
+     * \param max_edge_width The maximum gradient length to consider.
+     * \param min_edge_magnitude The minimum color difference in a gradient.
+     * \return A black and white image.
+     */
+    static BinaryThreshold mokjiThreshold(
+        QImage const& image,
+        unsigned max_edge_width = 3, unsigned min_edge_magnitude = 20);
+
+    explicit BinaryThreshold(int threshold) : m_threshold(threshold) {}
+
+    operator int() const
+    {
+        return m_threshold;
+    }
+
+    BWColor grayToBW(int gray) const
+    {
+        return gray < m_threshold ? BLACK : WHITE;
+    }
 private:
-	int m_threshold;
+    int m_threshold;
 };
 
 } // namespace imageproc

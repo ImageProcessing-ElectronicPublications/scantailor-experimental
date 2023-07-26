@@ -27,19 +27,21 @@
 class FOUNDATION_EXPORT ObjectSwapperFactory
 {
 public:
-	explicit ObjectSwapperFactory(QString const& swap_dir, bool ensure_exists = true);
+    explicit ObjectSwapperFactory(QString const& swap_dir, bool ensure_exists = true);
 
-	template<typename Obj>
-	ObjectSwapper<Obj> operator()(Obj const& obj) const {
-		return ObjectSwapper<Obj>(obj, m_swapDir);
-	}
+    template<typename Obj>
+    ObjectSwapper<Obj> operator()(Obj const& obj) const
+    {
+        return ObjectSwapper<Obj>(obj, m_swapDir);
+    }
 
-	template<typename Obj>
-	ObjectSwapper<Obj> operator()(std::auto_ptr<Obj> obj) const {
-		return ObjectSwapper<Obj>(obj, m_swapDir);
-	}
+    template<typename Obj>
+    ObjectSwapper<Obj> operator()(std::auto_ptr<Obj> obj) const
+    {
+        return ObjectSwapper<Obj>(obj, m_swapDir);
+    }
 private:
-	QString m_swapDir;
+    QString m_swapDir;
 };
 
 #endif

@@ -26,19 +26,24 @@ template<typename T>
 class MaxAccumulator
 {
 public:
-	typedef void result_type;
+    typedef void result_type;
 
-	explicit MaxAccumulator(T initial_val = NumericTraits<T>::min()) : m_max(initial_val) {}
+    explicit MaxAccumulator(T initial_val = NumericTraits<T>::min()) : m_max(initial_val) {}
 
-	void operator()(T val) {
-		if (m_max < val) {
-			m_max = val;
-		}
-	}
+    void operator()(T val)
+    {
+        if (m_max < val)
+        {
+            m_max = val;
+        }
+    }
 
-	T const& max() const { return m_max; }
+    T const& max() const
+    {
+        return m_max;
+    }
 private:
-	T m_max;
+    T m_max;
 };
 
 #endif

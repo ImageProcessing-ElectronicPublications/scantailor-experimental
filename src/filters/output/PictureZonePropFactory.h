@@ -27,7 +27,7 @@ namespace output
 class PictureZonePropFactory : public PropertyFactory
 {
 public:
-	PictureZonePropFactory();
+    PictureZonePropFactory();
 };
 
 } // namespace output

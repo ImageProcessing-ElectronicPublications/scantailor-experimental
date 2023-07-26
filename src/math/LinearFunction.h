@@ -32,40 +32,43 @@
  */
 class MATH_EXPORT LinearFunction
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	Eigen::VectorXd a;
-	double b;
+    Eigen::VectorXd a;
+    double b;
 
-	/**
-	 * Constructs a linear function of the given number of variables,
-	 * initializing everything to zero.
-	 */
-	LinearFunction(size_t num_vars = 0);
+    /**
+     * Constructs a linear function of the given number of variables,
+     * initializing everything to zero.
+     */
+    LinearFunction(size_t num_vars = 0);
 
-	/**
-	 * Resets everything to zero, so that F(x) = 0
-	 */
-	void reset();
+    /**
+     * Resets everything to zero, so that F(x) = 0
+     */
+    void reset();
 
-	size_t numVars() const { return a.size(); }
+    size_t numVars() const
+    {
+        return a.size();
+    }
 
-	/**
-	 * Evaluates a^T * x + b
-	 */
-	double evaluate(Eigen::VectorXd const& x) const;
+    /**
+     * Evaluates a^T * x + b
+     */
+    double evaluate(Eigen::VectorXd const& x) const;
 
-	void swap(LinearFunction& other);
+    void swap(LinearFunction& other);
 
-	LinearFunction& operator+=(LinearFunction const& other);
+    LinearFunction& operator+=(LinearFunction const& other);
 
-	LinearFunction& operator*=(double scalar);
+    LinearFunction& operator*=(double scalar);
 };
 
 
 inline void swap(LinearFunction& f1, LinearFunction& f2)
 {
-	f1.swap(f2);
+    f1.swap(f2);
 }
 
 #endif

@@ -17,16 +17,17 @@
 */
 
 kernel void copy_1px_column(
-	int const height, global float* data,
-	int const offset, int const stride, int const dx)
+    int const height, global float* data,
+    int const offset, int const stride, int const dx)
 {
-	int const y = get_global_id(0);
-	if (y >= height) {
-		return;
-	}
+    int const y = get_global_id(0);
+    if (y >= height)
+    {
+        return;
+    }
 
-	data += mad24(y, stride, offset);
-	data[dx] = data[0];
+    data += mad24(y, stride, offset);
+    data[dx] = data[0];
 }
 
 /**
@@ -42,17 +43,17 @@ kernel void copy_1px_column(
  * @note This kernel needs to be enqueued as a task.
  */
 kernel void copy_padding_corners(
-	int const width, int const height,
-	global float* const data,
-	int const inner_offset, int const stride)
+    int const width, int const height,
+    global float* const data,
+    int const inner_offset, int const stride)
 {
-	global float* inner_data = data + inner_offset;
+    global float* inner_data = data + inner_offset;
 
-	inner_data[-1 - stride] = inner_data[0];
-	inner_data[width - stride] = inner_data[width - 1];
+    inner_data[-1 - stride] = inner_data[0];
+    inner_data[width - stride] = inner_data[width - 1];
 
-	inner_data += (height - 1) * stride;
+    inner_data += (height - 1) * stride;
 
-	inner_data[-1 + stride] = inner_data[0];
-	inner_data[width + stride] = inner_data[width - 1];
+    inner_data[-1 + stride] = inner_data[0];
+    inner_data[width + stride] = inner_data[width - 1];
 }

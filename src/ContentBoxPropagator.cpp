@@ -33,26 +33,32 @@ using namespace imageproc;
 class ContentBoxPropagator::Collector : public ContentBoxCollector
 {
 public:
-	Collector();
-	
-	virtual void process(
-		imageproc::AbstractImageTransform const& xform,
-		ContentBox const& content_box);
-	
-	bool collected() const { return m_collected; }
-	
-	QRectF const& contentRect() const { return m_contentRect; }
+    Collector();
+
+    virtual void process(
+        imageproc::AbstractImageTransform const& xform,
+        ContentBox const& content_box);
+
+    bool collected() const
+    {
+        return m_collected;
+    }
+
+    QRectF const& contentRect() const
+    {
+        return m_contentRect;
+    }
 private:
-	QRectF m_contentRect;
-	bool m_collected;
+    QRectF m_contentRect;
+    bool m_collected;
 };
 
 
 ContentBoxPropagator::ContentBoxPropagator(
-	IntrusivePtr<page_layout::Filter> const& page_layout_filter,
-	IntrusivePtr<CompositeCacheDrivenTask> const& task)
-:	m_ptrPageLayoutFilter(page_layout_filter),
-	m_ptrTask(task)
+    IntrusivePtr<page_layout::Filter> const& page_layout_filter,
+    IntrusivePtr<CompositeCacheDrivenTask> const& task)
+    :	m_ptrPageLayoutFilter(page_layout_filter),
+      m_ptrTask(task)
 {
 }
 
@@ -63,37 +69,41 @@ ContentBoxPropagator::~ContentBoxPropagator()
 void
 ContentBoxPropagator::propagate(ProjectPages const& pages)
 {
-	PageSequence const sequence(pages.toPageSequence(PAGE_VIEW));
-	size_t const num_pages = sequence.numPages();
-	
-	for (size_t i = 0; i < num_pages; ++i) {
-		PageInfo const& page_info = sequence.pageAt(i);
-		Collector collector;
-		AffineImageTransform const identity(page_info.metadata().size());
-		m_ptrTask->process(page_info, identity, &collector);
-		if (collector.collected()) {
-			m_ptrPageLayoutFilter->setContentBox(
-				page_info.id(), collector.contentRect()
-			);
-		} else {
-			m_ptrPageLayoutFilter->invalidateContentBox(page_info.id());
-		}
-	}
+    PageSequence const sequence(pages.toPageSequence(PAGE_VIEW));
+    size_t const num_pages = sequence.numPages();
+
+    for (size_t i = 0; i < num_pages; ++i)
+    {
+        PageInfo const& page_info = sequence.pageAt(i);
+        Collector collector;
+        AffineImageTransform const identity(page_info.metadata().size());
+        m_ptrTask->process(page_info, identity, &collector);
+        if (collector.collected())
+        {
+            m_ptrPageLayoutFilter->setContentBox(
+                page_info.id(), collector.contentRect()
+            );
+        }
+        else
+        {
+            m_ptrPageLayoutFilter->invalidateContentBox(page_info.id());
+        }
+    }
 }
 
 
 /*=================== ContentBoxPropagator::Collector ====================*/
 
 ContentBoxPropagator::Collector::Collector()
-:	m_collected(false)
+    :	m_collected(false)
 {
 }
 
 void
 ContentBoxPropagator::Collector::process(
-	AbstractImageTransform const& xform,
-	ContentBox const& content_box)
+    AbstractImageTransform const& xform,
+    ContentBox const& content_box)
 {
-	m_contentRect = content_box.toTransformedRect(xform);
-	m_collected = true;
+    m_contentRect = content_box.toTransformedRect(xform);
+    m_collected = true;
 }

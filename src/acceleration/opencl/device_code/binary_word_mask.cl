@@ -22,9 +22,9 @@
  */
 uint binary_word_mask(uint word_idx, uint num_words, uint2 edge_masks)
 {
-	uint const is_left = word_idx == 0;
-	uint const is_right = word_idx + 1 == num_words;
+    uint const is_left = word_idx == 0;
+    uint const is_right = word_idx + 1 == num_words;
 
-	uint const inner_mask = ~(uint)0;
-	return select(select(inner_mask, edge_masks.s0, is_left), edge_masks.s1, is_right);
+    uint const inner_mask = ~(uint)0;
+    return select(select(inner_mask, edge_masks.s0, is_left), edge_masks.s1, is_right);
 }

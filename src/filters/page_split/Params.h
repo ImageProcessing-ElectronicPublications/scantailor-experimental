@@ -33,32 +33,50 @@ namespace page_split
 class Params
 {
 public:
-	// Member-wise copying is OK.
-	
-	Params(PageLayout const& layout,
-		Dependencies const& deps, AutoManualMode split_line_mode);
-	
-	Params(QDomElement const& el);
-	
-	~Params();
-	
-	PageLayout const& pageLayout() const { return m_layout; }
+    // Member-wise copying is OK.
 
-	void setPageLayout(PageLayout const& layout) { m_layout = layout; }
-	
-	Dependencies const& dependencies() const { return m_deps; }
+    Params(PageLayout const& layout,
+           Dependencies const& deps, AutoManualMode split_line_mode);
 
-	void setDependencies(Dependencies const& deps) { m_deps = deps; }
-	
-	AutoManualMode splitLineMode() const { return m_splitLineMode; }
+    Params(QDomElement const& el);
 
-	void setSplitLineMode(AutoManualMode mode) { m_splitLineMode = mode; }
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    ~Params();
+
+    PageLayout const& pageLayout() const
+    {
+        return m_layout;
+    }
+
+    void setPageLayout(PageLayout const& layout)
+    {
+        m_layout = layout;
+    }
+
+    Dependencies const& dependencies() const
+    {
+        return m_deps;
+    }
+
+    void setDependencies(Dependencies const& deps)
+    {
+        m_deps = deps;
+    }
+
+    AutoManualMode splitLineMode() const
+    {
+        return m_splitLineMode;
+    }
+
+    void setSplitLineMode(AutoManualMode mode)
+    {
+        m_splitLineMode = mode;
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	PageLayout m_layout;
-	Dependencies m_deps;
-	AutoManualMode m_splitLineMode;
+    PageLayout m_layout;
+    Dependencies m_deps;
+    AutoManualMode m_splitLineMode;
 };
 
 } // namespace page_split

@@ -38,93 +38,108 @@ Settings::~Settings()
 void
 Settings::clear()
 {
-	QMutexLocker locker(&m_mutex);
-	m_perPageParams.clear();
+    QMutexLocker locker(&m_mutex);
+    m_perPageParams.clear();
 }
 
 void
 Settings::performRelinking(AbstractRelinker const& relinker)
 {
-	QMutexLocker locker(&m_mutex);
-	PerPageParams new_params;
+    QMutexLocker locker(&m_mutex);
+    PerPageParams new_params;
 
-	BOOST_FOREACH(PerPageParams::value_type const& kv, m_perPageParams) {
-		RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
-		PageId new_page_id(kv.first);
-		new_page_id.imageId().setFilePath(relinker.substitutionPathFor(old_path));
-		new_params.insert(PerPageParams::value_type(new_page_id, kv.second));
-	}
+    BOOST_FOREACH(PerPageParams::value_type const& kv, m_perPageParams)
+    {
+        RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
+        PageId new_page_id(kv.first);
+        new_page_id.imageId().setFilePath(relinker.substitutionPathFor(old_path));
+        new_params.insert(PerPageParams::value_type(new_page_id, kv.second));
+    }
 
-	m_perPageParams.swap(new_params);
+    m_perPageParams.swap(new_params);
 }
 
 void
 Settings::setPageParams(PageId const& page_id, Params const& params)
 {
-	QMutexLocker locker(&m_mutex);
-	Utils::mapSetValue(m_perPageParams, page_id, params);
+    QMutexLocker locker(&m_mutex);
+    Utils::mapSetValue(m_perPageParams, page_id, params);
 }
 
 std::auto_ptr<Params>
 Settings::getPageParams(PageId const& page_id) const
 {
-	QMutexLocker locker(&m_mutex);
-	
-	PerPageParams::const_iterator it(m_perPageParams.find(page_id));
-	if (it != m_perPageParams.end()) {
-		return std::auto_ptr<Params>(new Params(it->second));
-	} else {
-		return std::auto_ptr<Params>();
-	}
+    QMutexLocker locker(&m_mutex);
+
+    PerPageParams::const_iterator it(m_perPageParams.find(page_id));
+    if (it != m_perPageParams.end())
+    {
+        return std::auto_ptr<Params>(new Params(it->second));
+    }
+    else
+    {
+        return std::auto_ptr<Params>();
+    }
 }
 
 DistortionType
 Settings::getDistortionType(PageId const& page_id) const
 {
-	QMutexLocker locker(&m_mutex);
+    QMutexLocker locker(&m_mutex);
 
-	PerPageParams::const_iterator it(m_perPageParams.find(page_id));
-	if (it != m_perPageParams.end()) {
-		return it->second.distortionType();
-	} else {
-		return Params::defaultDistortionType();
-	}
+    PerPageParams::const_iterator it(m_perPageParams.find(page_id));
+    if (it != m_perPageParams.end())
+    {
+        return it->second.distortionType();
+    }
+    else
+    {
+        return Params::defaultDistortionType();
+    }
 }
 
 void
 Settings::setDistortionType(
-	std::set<PageId> const& pages, DistortionType const& distortion_type)
+    std::set<PageId> const& pages, DistortionType const& distortion_type)
 {
-	QMutexLocker const locker(&m_mutex);
+    QMutexLocker const locker(&m_mutex);
 
-	for (PageId const& page_id : pages) {
-		PerPageParams::iterator it = m_perPageParams.find(page_id);
-		if (it != m_perPageParams.end()) {
-			it->second.setDistortionType(distortion_type);
-		} else {
-			Params params((Dependencies()));
-			params.setDistortionType(distortion_type);
-			Utils::mapSetValue(m_perPageParams, page_id, params);
-		}
-	}
+    for (PageId const& page_id : pages)
+    {
+        PerPageParams::iterator it = m_perPageParams.find(page_id);
+        if (it != m_perPageParams.end())
+        {
+            it->second.setDistortionType(distortion_type);
+        }
+        else
+        {
+            Params params((Dependencies()));
+            params.setDistortionType(distortion_type);
+            Utils::mapSetValue(m_perPageParams, page_id, params);
+        }
+    }
 }
 
 void
 Settings::setDepthPerception(
-	std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception)
+    std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception)
 {
-	QMutexLocker const locker(&m_mutex);
+    QMutexLocker const locker(&m_mutex);
 
-	for (PageId const& page_id : pages) {
-		PerPageParams::iterator it = m_perPageParams.find(page_id);
-		if (it != m_perPageParams.end()) {
-			it->second.dewarpingParams().setDepthPerception(depth_perception);
-		} else {
-			Params params((Dependencies()));
-			params.dewarpingParams().setDepthPerception(depth_perception);
-			Utils::mapSetValue(m_perPageParams, page_id, params);
-		}
-	}
+    for (PageId const& page_id : pages)
+    {
+        PerPageParams::iterator it = m_perPageParams.find(page_id);
+        if (it != m_perPageParams.end())
+        {
+            it->second.dewarpingParams().setDepthPerception(depth_perception);
+        }
+        else
+        {
+            Params params((Dependencies()));
+            params.dewarpingParams().setDepthPerception(depth_perception);
+            Utils::mapSetValue(m_perPageParams, page_id, params);
+        }
+    }
 }
 
 } // namespace deskew

@@ -38,24 +38,24 @@ class Scope;
 
 class ApplyDialog : public QDialog, private Ui::OrientationApplyDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ApplyDialog(QWidget* parent, PageId const& cur_page,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~ApplyDialog();
-signals:
-	void appliedTo(std::set<PageId> const& pages);
+    ApplyDialog(QWidget* parent, PageId const& cur_page,
+                PageSelectionAccessor const& page_selection_accessor);
 
-	void appliedToAllPages(std::set<PageId> const& pages);
+    virtual ~ApplyDialog();
+signals:
+    void appliedTo(std::set<PageId> const& pages);
+
+    void appliedToAllPages(std::set<PageId> const& pages);
 private slots:
-	void onSubmit();
+    void onSubmit();
 private:
-	PageSequence m_pages;
-	std::set<PageId> m_selectedPages;
-	std::vector<PageRange> m_selectedRanges;
-	PageId m_curPage;
-	QButtonGroup* m_pBtnGroup;
+    PageSequence m_pages;
+    std::set<PageId> m_selectedPages;
+    std::vector<PageRange> m_selectedRanges;
+    PageId m_curPage;
+    QButtonGroup* m_pBtnGroup;
 };
 
 } // namespace fix_orientation

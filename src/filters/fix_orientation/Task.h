@@ -33,12 +33,12 @@ class TaskStatus;
 
 namespace page_split
 {
-	class Task;
+class Task;
 }
 
 namespace imageproc
 {
-	class GrayImage;
+class GrayImage;
 }
 
 namespace fix_orientation
@@ -49,31 +49,31 @@ class Settings;
 
 class Task : public RefCountable
 {
-	DECLARE_NON_COPYABLE(Task)
+    DECLARE_NON_COPYABLE(Task)
 public:
-	Task(
-		ImageId const& image_id,
-		IntrusivePtr<Filter> const& filter,
-		IntrusivePtr<Settings> const& settings,
-		IntrusivePtr<page_split::Task> const& next_task,
-		bool batch_processing);
-	
-	virtual ~Task();
-	
-	FilterResultPtr process(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		imageproc::AffineImageTransform const& orig_image_transform);
+    Task(
+        ImageId const& image_id,
+        IntrusivePtr<Filter> const& filter,
+        IntrusivePtr<Settings> const& settings,
+        IntrusivePtr<page_split::Task> const& next_task,
+        bool batch_processing);
+
+    virtual ~Task();
+
+    FilterResultPtr process(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        imageproc::AffineImageTransform const& orig_image_transform);
 private:
-	class UiUpdater;
-	
-	IntrusivePtr<Filter> m_ptrFilter;
-	IntrusivePtr<page_split::Task> m_ptrNextTask; // if null, this task is the final one
-	IntrusivePtr<Settings> m_ptrSettings;
-	ImageId m_imageId;
-	bool m_batchProcessing;
+    class UiUpdater;
+
+    IntrusivePtr<Filter> m_ptrFilter;
+    IntrusivePtr<page_split::Task> m_ptrNextTask; // if null, this task is the final one
+    IntrusivePtr<Settings> m_ptrSettings;
+    ImageId m_imageId;
+    bool m_batchProcessing;
 };
 
 } // namespace fix_orientation

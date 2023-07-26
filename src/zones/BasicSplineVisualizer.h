@@ -30,28 +30,37 @@ class QTransform;
 class BasicSplineVisualizer
 {
 public:
-	BasicSplineVisualizer();
+    BasicSplineVisualizer();
 
-	QRgb solidColor() const { return m_solidColor; }
+    QRgb solidColor() const
+    {
+        return m_solidColor;
+    }
 
-	QRgb highlightBrightColor() const { return m_highlightBrightColor; }
+    QRgb highlightBrightColor() const
+    {
+        return m_highlightBrightColor;
+    }
 
-	QRgb highlightDarkColor() const { return m_highlightDarkColor; }
+    QRgb highlightDarkColor() const
+    {
+        return m_highlightDarkColor;
+    }
 
-	void drawVertex(QPainter& painter, QPointF const& pt, QColor const& color);
+    void drawVertex(QPainter& painter, QPointF const& pt, QColor const& color);
 
-	void drawSplines(QPainter& painter, QTransform const& to_screen,
-					 EditableZoneSet const& zones);
+    void drawSplines(QPainter& painter, QTransform const& to_screen,
+                     EditableZoneSet const& zones);
 
-	virtual void drawSpline(QPainter& painter, QTransform const& to_screen,
-							EditableSpline::Ptr const& spline);
+    virtual void drawSpline(QPainter& painter, QTransform const& to_screen,
+                            EditableSpline::Ptr const& spline);
 
-	virtual void prepareForSpline(QPainter& painter, EditableSpline::Ptr const& spline);
+    virtual void prepareForSpline(QPainter& painter, EditableSpline::Ptr const& spline);
 protected:
-	QRgb m_solidColor;
-	QRgb m_highlightBrightColor;
-	QRgb m_highlightDarkColor;
-	QPen m_pen;
+    QRgb m_solidColor;
+    QRgb m_highlightBrightColor;
+    QRgb m_highlightDarkColor;
+    QPen m_pen;
 };
 
 #endif

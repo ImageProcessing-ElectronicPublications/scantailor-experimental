@@ -33,57 +33,57 @@ bool
 Utils::overwritingRename(QString const& from, QString const& to)
 {
 #ifdef Q_OS_WIN
-	return MoveFileExW(
-		(WCHAR*)from.utf16(), (WCHAR*)to.utf16(),
-		MOVEFILE_REPLACE_EXISTING
-	) != 0;
+    return MoveFileExW(
+               (WCHAR*)from.utf16(), (WCHAR*)to.utf16(),
+               MOVEFILE_REPLACE_EXISTING
+           ) != 0;
 #else
-	return rename(
-		QFile::encodeName(from).data(),
-		QFile::encodeName(to).data()
-	) == 0;
+    return rename(
+               QFile::encodeName(from).data(),
+               QFile::encodeName(to).data()
+           ) == 0;
 #endif
 }
 
 QString
 Utils::richTextForLink(
-	QString const& label, QString const& target)
+    QString const& label, QString const& target)
 {
-	return QString::fromLatin1(
-		"<a href=\"%1\">%2</a>"
-	).arg(target.toHtmlEscaped(), label.toHtmlEscaped());
+    return QString::fromLatin1(
+               "<a href=\"%1\">%2</a>"
+           ).arg(target.toHtmlEscaped(), label.toHtmlEscaped());
 }
 
 void
 Utils::maybeCreateCacheDir(QString const& output_dir)
 {
-	QDir(output_dir).mkdir(QString::fromLatin1("cache"));
-	
-	// QDir::mkdir() returns false if the directory already exists,
-	// so to prevent confusion this function return void.
+    QDir(output_dir).mkdir(QString::fromLatin1("cache"));
+
+    // QDir::mkdir() returns false if the directory already exists,
+    // so to prevent confusion this function return void.
 }
 
 QString
 Utils::swappingDir()
 {
-        return QDir::tempPath()+QLatin1String("/scantailor-swap");
+    return QDir::tempPath()+QLatin1String("/scantailor-swap");
 }
 
 QString
 Utils::outputDirToThumbDir(QString const& output_dir)
 {
-	return output_dir+QLatin1String("/cache/thumbs");
+    return output_dir+QLatin1String("/cache/thumbs");
 }
 
 IntrusivePtr<ThumbnailPixmapCache>
 Utils::createThumbnailCache(QString const& output_dir,
-	std::shared_ptr<AcceleratableOperations> const& accel_ops)
+                            std::shared_ptr<AcceleratableOperations> const& accel_ops)
 {
-	QSize const max_pixmap_size(200, 200);
-	QString const thumbs_cache_path(outputDirToThumbDir(output_dir));
-	
-	return IntrusivePtr<ThumbnailPixmapCache>(
-		new ThumbnailPixmapCache(thumbs_cache_path, accel_ops, max_pixmap_size, 40, 5)
-	);
+    QSize const max_pixmap_size(200, 200);
+    QString const thumbs_cache_path(outputDirToThumbDir(output_dir));
+
+    return IntrusivePtr<ThumbnailPixmapCache>(
+               new ThumbnailPixmapCache(thumbs_cache_path, accel_ops, max_pixmap_size, 40, 5)
+           );
 }
 

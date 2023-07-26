@@ -33,44 +33,52 @@ static char const WARP[] = "warp";
 }
 
 DistortionType::DistortionType(Type type)
-:	m_type(type)
+    :	m_type(type)
 {
 }
 
 DistortionType::DistortionType(QString const& from_string)
 {
-	if (from_string == QLatin1String(str::ROTATION)) {
-		m_type = ROTATION;
-	} else if (from_string == QLatin1String(str::PERSPECTIVE)) {
-		m_type = PERSPECTIVE;
-	} else if (from_string == QLatin1String(str::WARP)) {
-		m_type = WARP;
-	} else {
-		m_type = NONE;
-	}
+    if (from_string == QLatin1String(str::ROTATION))
+    {
+        m_type = ROTATION;
+    }
+    else if (from_string == QLatin1String(str::PERSPECTIVE))
+    {
+        m_type = PERSPECTIVE;
+    }
+    else if (from_string == QLatin1String(str::WARP))
+    {
+        m_type = WARP;
+    }
+    else
+    {
+        m_type = NONE;
+    }
 }
 
 QString
 DistortionType::toString() const
 {
-	char const* s = str::NONE;
+    char const* s = str::NONE;
 
-	switch (m_type) {
-		case NONE:
-			s = str::NONE;
-			break;
-		case ROTATION:
-			s = str::ROTATION;
-			break;
-		case PERSPECTIVE:
-			s = str::PERSPECTIVE;
-			break;
-		case WARP:
-			s = str::WARP;
-			break;
-	}
+    switch (m_type)
+    {
+    case NONE:
+        s = str::NONE;
+        break;
+    case ROTATION:
+        s = str::ROTATION;
+        break;
+    case PERSPECTIVE:
+        s = str::PERSPECTIVE;
+        break;
+    case WARP:
+        s = str::WARP;
+        break;
+    }
 
-	return QLatin1String(s);
+    return QLatin1String(s);
 }
 
 } // namespace deskew

@@ -42,44 +42,44 @@ namespace page_split
 class Settings;
 
 class OptionsWidget :
-	public FilterOptionsWidget, private Ui::PageSplitOptionsWidget
+    public FilterOptionsWidget, private Ui::PageSplitOptionsWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	OptionsWidget(IntrusivePtr<Settings> const& settings,
-		IntrusivePtr<ProjectPages> const& page_sequence,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~OptionsWidget();
-	
-	void preUpdateUI(PageId const& page_id);
-	
-	void postUpdateUI(Params const& params, bool layout_type_auto_detected);
+    OptionsWidget(IntrusivePtr<Settings> const& settings,
+                  IntrusivePtr<ProjectPages> const& page_sequence,
+                  PageSelectionAccessor const& page_selection_accessor);
+
+    virtual ~OptionsWidget();
+
+    void preUpdateUI(PageId const& page_id);
+
+    void postUpdateUI(Params const& params, bool layout_type_auto_detected);
 signals:
-	void pageLayoutSetLocally(PageLayout const& page_layout);
+    void pageLayoutSetLocally(PageLayout const& page_layout);
 public slots:
-	void pageLayoutSetExternally(PageLayout const& page_layout);
+    void pageLayoutSetExternally(PageLayout const& page_layout);
 private slots:
-	void layoutTypeButtonToggled(bool checked);
-	
-	void showChangeDialog();
-	
-	void layoutTypeSet(
-		std::set<PageId> const& pages,
-		bool all_pages, LayoutType layout_type);
-	
-	void splitLineModeChanged(bool auto_mode);
+    void layoutTypeButtonToggled(bool checked);
+
+    void showChangeDialog();
+
+    void layoutTypeSet(
+        std::set<PageId> const& pages,
+        bool all_pages, LayoutType layout_type);
+
+    void splitLineModeChanged(bool auto_mode);
 private:
-	void commitCurrentParams();
-	
-	IntrusivePtr<Settings> m_ptrSettings;
-	IntrusivePtr<ProjectPages> m_ptrPages;
-	PageSelectionAccessor m_pageSelectionAccessor;
-	PageId m_pageId;
-	boost::optional<Params> m_params;
-	int m_ignoreAutoManualToggle;
-	int m_ignoreLayoutTypeToggle;
-	bool m_layoutTypeAutoDetected;
+    void commitCurrentParams();
+
+    IntrusivePtr<Settings> m_ptrSettings;
+    IntrusivePtr<ProjectPages> m_ptrPages;
+    PageSelectionAccessor m_pageSelectionAccessor;
+    PageId m_pageId;
+    boost::optional<Params> m_params;
+    int m_ignoreAutoManualToggle;
+    int m_ignoreLayoutTypeToggle;
+    bool m_layoutTypeAutoDetected;
 };
 
 } // namespace page_split

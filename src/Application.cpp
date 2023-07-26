@@ -21,17 +21,20 @@
 #include <new>
 
 Application::Application(int& argc, char** argv)
-:	QApplication(argc, argv)
+    :	QApplication(argc, argv)
 {
 }
 
 bool
 Application::notify(QObject* receiver, QEvent* e)
 {
-	try {
-		return QApplication::notify(receiver, e);
-	} catch (std::bad_alloc const&) {
-		OutOfMemoryHandler::instance().handleOutOfMemorySituation();
-		return false;
-	}
+    try
+    {
+        return QApplication::notify(receiver, e);
+    }
+    catch (std::bad_alloc const&)
+    {
+        OutOfMemoryHandler::instance().handleOutOfMemorySituation();
+        return false;
+    }
 }

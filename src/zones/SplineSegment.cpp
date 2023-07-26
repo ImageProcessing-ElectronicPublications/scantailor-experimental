@@ -20,21 +20,21 @@
 #include <assert.h>
 
 SplineSegment::SplineSegment(
-	SplineVertex::Ptr const& prev, SplineVertex::Ptr const& next)
-:	prev(prev),
-	next(next)
+    SplineVertex::Ptr const& prev, SplineVertex::Ptr const& next)
+    :	prev(prev),
+      next(next)
 {
 }
 
 SplineVertex::Ptr
 SplineSegment::splitAt(QPointF const& pt)
 {
-	assert(isValid());
-	return prev->insertAfter(pt);
+    assert(isValid());
+    return prev->insertAfter(pt);
 }
 
 bool
 SplineSegment::isValid() const
 {
-	return prev && next && prev->next(SplineVertex::LOOP_IF_BRIDGED) == next;
+    return prev && next && prev->next(SplineVertex::LOOP_IF_BRIDGED) == next;
 }

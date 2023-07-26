@@ -33,74 +33,84 @@ namespace
 
 int calcNumTerms(int const hor_degree, int const vert_degree)
 {
-	return (hor_degree + 1) * (vert_degree + 1);
+    return (hor_degree + 1) * (vert_degree + 1);
 }
 
 } // anonymous namespace
 
 
 SavGolKernel::SavGolKernel(
-	QSize const& size, QPoint const& origin,
-	int const hor_degree, int const vert_degree)
-:	m_horDegree(hor_degree),
-	m_vertDegree(vert_degree),
-	m_width(size.width()),
-	m_height(size.height()),
-	m_numTerms(calcNumTerms(hor_degree, vert_degree))
+    QSize const& size, QPoint const& origin,
+    int const hor_degree, int const vert_degree)
+    :	m_horDegree(hor_degree),
+      m_vertDegree(vert_degree),
+      m_width(size.width()),
+      m_height(size.height()),
+      m_numTerms(calcNumTerms(hor_degree, vert_degree))
 {
-	if (size.isEmpty()) {
-		throw std::invalid_argument("SavGolKernel: invalid size");
-	}
-	if (hor_degree < 0) {
-		throw std::invalid_argument("SavGolKernel: invalid hor_degree");
-	}
-	if (vert_degree < 0) {
-		throw std::invalid_argument("SavGolKernel: invalid vert_degree");
-	}
-	if (m_numTerms > m_width * m_height) {
-		throw std::invalid_argument("SavGolKernel: too high degree for this amount of data");
-	}
+    if (size.isEmpty())
+    {
+        throw std::invalid_argument("SavGolKernel: invalid size");
+    }
+    if (hor_degree < 0)
+    {
+        throw std::invalid_argument("SavGolKernel: invalid hor_degree");
+    }
+    if (vert_degree < 0)
+    {
+        throw std::invalid_argument("SavGolKernel: invalid vert_degree");
+    }
+    if (m_numTerms > m_width * m_height)
+    {
+        throw std::invalid_argument("SavGolKernel: too high degree for this amount of data");
+    }
 
-	VectorXd sample(m_numTerms);
-	MatrixXd AtA;
-	AtA.setZero(m_numTerms, m_numTerms);
+    VectorXd sample(m_numTerms);
+    MatrixXd AtA;
+    AtA.setZero(m_numTerms, m_numTerms);
 
-	for (int y = 1; y <= m_height; ++y) {
-		for (int x = 1; x <= m_width; ++x) {
-			fillSample(sample.data(), x, y, m_horDegree, m_vertDegree);
+    for (int y = 1; y <= m_height; ++y)
+    {
+        for (int x = 1; x <= m_width; ++x)
+        {
+            fillSample(sample.data(), x, y, m_horDegree, m_vertDegree);
 
-			for (int i = 0; i < m_numTerms; ++i) {
-				for (int j = 0; j <= i; ++j) {
-					AtA(i, j) += sample[i] * sample[j];
-				}
-			}
-		}
-	}
+            for (int i = 0; i < m_numTerms; ++i)
+            {
+                for (int j = 0; j <= i; ++j)
+                {
+                    AtA(i, j) += sample[i] * sample[j];
+                }
+            }
+        }
+    }
 
-	m_leastSquaresDecomp.compute(AtA);
-	AlignedArray<float, 4>(m_width * m_height).swap(m_kernel);
+    m_leastSquaresDecomp.compute(AtA);
+    AlignedArray<float, 4>(m_width * m_height).swap(m_kernel);
 
-	recalcForOrigin(origin);
+    recalcForOrigin(origin);
 }
 
 void
 SavGolKernel::recalcForOrigin(QPoint const& origin)
 {
-	VectorXd AtB(m_numTerms);
-	fillSample(AtB.data(), origin.x() + 1, origin.y() + 1, m_horDegree, m_vertDegree);
+    VectorXd AtB(m_numTerms);
+    fillSample(AtB.data(), origin.x() + 1, origin.y() + 1, m_horDegree, m_vertDegree);
 
-	m_leastSquaresDecomp.solveInPlace(AtB);
+    m_leastSquaresDecomp.solveInPlace(AtB);
 
-	VectorXd sample(m_numTerms);
-	float* p_kernel = m_kernel.data();
+    VectorXd sample(m_numTerms);
+    float* p_kernel = m_kernel.data();
 
-	for (int y = 1; y <= m_height; ++y) {
-		for (int x = 1; x <= m_width; ++x) {
-			fillSample(sample.data(), x, y, m_horDegree, m_vertDegree);
-			*p_kernel = static_cast<float>(AtB.dot(sample));
-			++p_kernel;
-		}
-	}
+    for (int y = 1; y <= m_height; ++y)
+    {
+        for (int x = 1; x <= m_width; ++x)
+        {
+            fillSample(sample.data(), x, y, m_horDegree, m_vertDegree);
+            *p_kernel = static_cast<float>(AtB.dot(sample));
+            ++p_kernel;
+        }
+    }
 }
 
 /**
@@ -112,14 +122,16 @@ SavGolKernel::recalcForOrigin(QPoint const& origin)
 void
 SavGolKernel::fillSample(double* sampleData, double x1, double y1, int hor_degree, int vert_degree)
 {
-	double pow1 = 1.0;
-	for (int i = 0; i <= vert_degree; ++i, pow1 *= y1) {
-		double pow2 = pow1;
-		for (int j = 0; j <= hor_degree; ++j, pow2 *= x1) {
-			*sampleData = pow2;
-			++sampleData;
-		}
-	}
+    double pow1 = 1.0;
+    for (int i = 0; i <= vert_degree; ++i, pow1 *= y1)
+    {
+        double pow2 = pow1;
+        for (int j = 0; j <= hor_degree; ++j, pow2 *= x1)
+        {
+            *sampleData = pow2;
+            ++sampleData;
+        }
+    }
 }
 
 } // namespace imageproc

@@ -35,10 +35,10 @@ namespace opencl
  * @note The @p grid dimensions are in words while @p pixel_rect dimensions are in pixels.
  */
 void binaryFillRect(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<uint32_t> const& grid, QRect const& pixel_rect, imageproc::BWColor fill_color,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<uint32_t> const& grid, QRect const& pixel_rect, imageproc::BWColor fill_color,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 /**
  * @brief Fills the area inside outer_pixel_rect but not inside inner_pixel_rect.
@@ -51,11 +51,11 @@ void binaryFillRect(
  * dimensions are in pixels.
  */
 void binaryFillFrame(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<uint32_t> const& grid, QRect const& outer_pixel_rect,
-	QRect const& inner_pixel_rect, imageproc::BWColor fill_color,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<uint32_t> const& grid, QRect const& outer_pixel_rect,
+    QRect const& inner_pixel_rect, imageproc::BWColor fill_color,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

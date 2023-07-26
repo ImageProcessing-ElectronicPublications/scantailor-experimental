@@ -42,11 +42,12 @@ namespace tests
 class GaussBlurFixture : protected DeviceListFixture, protected ProgramBuilderFixture
 {
 public:
-	GaussBlurFixture() {
-		addSource("transpose_grid.cl");
-		addSource("copy_1px_padding.cl");
-		addSource("gauss_blur.cl");
-	}
+    GaussBlurFixture()
+    {
+        addSource("transpose_grid.cl");
+        addSource("copy_1px_padding.cl");
+        addSource("gauss_blur.cl");
+    }
 };
 
 BOOST_FIXTURE_TEST_SUITE(GaussBlurTestSuite, GaussBlurFixture);
@@ -55,214 +56,256 @@ BOOST_FIXTURE_TEST_SUITE(GaussBlurTestSuite, GaussBlurFixture);
 
 BOOST_AUTO_TEST_CASE(test_axis_aligned_gauss_blur)
 {
-	float const h_sigma = 15.f;
-	float const v_sigma = 7.f;
+    float const h_sigma = 15.f;
+    float const v_sigma = 7.f;
 
-	boost::random::mt19937 rng;
-	boost::random::uniform_int_distribution<> dist(-1000, 1000);
-	Grid<float> input(1001, 999);
-	for (int y = 0; y < input.height(); ++y) {
-		for (int x = 0; x < input.width(); ++x) {
-			input(x, y) = float(dist(rng)) / 500.f;
-		}
-	}
-
-#if LOG_PERFORMANCE
-	PerformanceTimer ptimer1;
-#endif
-
-	Grid<float> control(input.width(), input.height());
-	imageproc::gaussBlurGeneric(
-		QSize(input.width(), input.height()), h_sigma, v_sigma,
-		input.data(), input.stride(), [](float val) { return val; },
-		control.data(), control.stride(), [](float& dst, float src) { dst = src; }
-	);
+    boost::random::mt19937 rng;
+    boost::random::uniform_int_distribution<> dist(-1000, 1000);
+    Grid<float> input(1001, 999);
+    for (int y = 0; y < input.height(); ++y)
+    {
+        for (int x = 0; x < input.width(); ++x)
+        {
+            input(x, y) = float(dist(rng)) / 500.f;
+        }
+    }
 
 #if LOG_PERFORMANCE
-	for (int i = 0; i < 99; ++i) {
-		imageproc::gaussBlurGeneric(
-			QSize(input.width(), input.height()), h_sigma, v_sigma,
-			input.data(), input.stride(), [](float val) { return val; },
-			control.data(), control.stride(), [](float& dst, float src) { dst = src; }
-		);
-	}
-
-	ptimer1.print("[aligned-gauss x100] Non-accelerated version:");
+    PerformanceTimer ptimer1;
 #endif
 
-	for (cl::Device const& device : m_devices) {
-		cl::Context context(device);
-		cl::CommandQueue command_queue(context, device);
-		cl::Program program = buildProgram(context);
-
-		std::vector<cl::Event> events;
-		cl::Event evt;
-
-		// Copy input to device.
-		cl::Buffer const src_buffer(context, CL_MEM_READ_ONLY, input.totalBytes());
-		OpenCLGrid<float> src_grid(src_buffer, input);
-		command_queue.enqueueWriteBuffer(
-			src_grid.buffer(), CL_FALSE, 0, input.totalBytes(), input.paddedData(), &events, &evt
-		);
-		indicateCompletion(&events, evt);
-
-		// The first invokation involves kernel compilation, so we don't include it into timing
-		// measurement.
-		OpenCLGrid<float> dst_grid = gaussBlur(
-			command_queue, program, src_grid, h_sigma, v_sigma, &events, &events
-		);
+    Grid<float> control(input.width(), input.height());
+    imageproc::gaussBlurGeneric(
+        QSize(input.width(), input.height()), h_sigma, v_sigma,
+        input.data(), input.stride(), [](float val)
+    {
+        return val;
+    },
+    control.data(), control.stride(), [](float& dst, float src)
+    {
+        dst = src;
+    }
+    );
 
 #if LOG_PERFORMANCE
-		cl::WaitForEvents(events);
-		PerformanceTimer ptimer2;
+    for (int i = 0; i < 99; ++i)
+    {
+        imageproc::gaussBlurGeneric(
+            QSize(input.width(), input.height()), h_sigma, v_sigma,
+            input.data(), input.stride(), [](float val)
+        {
+            return val;
+        },
+        control.data(), control.stride(), [](float& dst, float src)
+        {
+            dst = src;
+        }
+        );
+    }
 
-		for (int i = 0; i < 100; ++i) {
-			gaussBlur(command_queue, program, src_grid, h_sigma, v_sigma, &events, &events);
-			cl::WaitForEvents(events);
-		}
-
-		ptimer2.print(("[aligned-gauss x100] "+device.getInfo<CL_DEVICE_NAME>() + ":").c_str());
+    ptimer1.print("[aligned-gauss x100] Non-accelerated version:");
 #endif
 
-		// Copy output from device.
-		Grid<float> output(dst_grid.toUninitializedHostGrid());
-		command_queue.enqueueReadBuffer(
-			dst_grid.buffer(), CL_FALSE, 0, dst_grid.totalBytes(),
-			output.paddedData(), &events, &evt
-		);
-		indicateCompletion(&events, evt);
+    for (cl::Device const& device : m_devices)
+    {
+        cl::Context context(device);
+        cl::CommandQueue command_queue(context, device);
+        cl::Program program = buildProgram(context);
 
-		BOOST_REQUIRE_EQUAL(output.width(), input.width());
-		BOOST_REQUIRE_EQUAL(output.height(), input.height());
+        std::vector<cl::Event> events;
+        cl::Event evt;
 
-		cl::WaitForEvents(events);
+        // Copy input to device.
+        cl::Buffer const src_buffer(context, CL_MEM_READ_ONLY, input.totalBytes());
+        OpenCLGrid<float> src_grid(src_buffer, input);
+        command_queue.enqueueWriteBuffer(
+            src_grid.buffer(), CL_FALSE, 0, input.totalBytes(), input.paddedData(), &events, &evt
+        );
+        indicateCompletion(&events, evt);
 
-		bool correct = true;
-		for (int y = 0; y < output.height() && correct; ++y) {
-			for (int x = 0; x < output.width(); ++x) {
-				if (std::abs(output(x, y) - control(x, y)) > 1e-3f) {
-					correct = false;
-					break;
-				}
-			}
-		}
-		BOOST_CHECK(correct);
+        // The first invokation involves kernel compilation, so we don't include it into timing
+        // measurement.
+        OpenCLGrid<float> dst_grid = gaussBlur(
+                                         command_queue, program, src_grid, h_sigma, v_sigma, &events, &events
+                                     );
 
-	} // for (device)
+#if LOG_PERFORMANCE
+        cl::WaitForEvents(events);
+        PerformanceTimer ptimer2;
+
+        for (int i = 0; i < 100; ++i)
+        {
+            gaussBlur(command_queue, program, src_grid, h_sigma, v_sigma, &events, &events);
+            cl::WaitForEvents(events);
+        }
+
+        ptimer2.print(("[aligned-gauss x100] "+device.getInfo<CL_DEVICE_NAME>() + ":").c_str());
+#endif
+
+        // Copy output from device.
+        Grid<float> output(dst_grid.toUninitializedHostGrid());
+        command_queue.enqueueReadBuffer(
+            dst_grid.buffer(), CL_FALSE, 0, dst_grid.totalBytes(),
+            output.paddedData(), &events, &evt
+        );
+        indicateCompletion(&events, evt);
+
+        BOOST_REQUIRE_EQUAL(output.width(), input.width());
+        BOOST_REQUIRE_EQUAL(output.height(), input.height());
+
+        cl::WaitForEvents(events);
+
+        bool correct = true;
+        for (int y = 0; y < output.height() && correct; ++y)
+        {
+            for (int x = 0; x < output.width(); ++x)
+            {
+                if (std::abs(output(x, y) - control(x, y)) > 1e-3f)
+                {
+                    correct = false;
+                    break;
+                }
+            }
+        }
+        BOOST_CHECK(correct);
+
+    } // for (device)
 }
 
 BOOST_AUTO_TEST_CASE(test_oriented_gauss_blur)
 {
-	float const dir_sigma = 15.f;
-	float const ortho_dir_sigma = 7.f;
+    float const dir_sigma = 15.f;
+    float const ortho_dir_sigma = 7.f;
 
-	std::vector<Vec2f> directions;
-	for (int angle_deg = 0; angle_deg < 360; angle_deg += 18) {
-		float const angle_rad = angle_deg * imageproc::constants::DEG2RAD;
-		directions.emplace_back(std::cos(angle_rad), std::sin(angle_rad));
-	}
+    std::vector<Vec2f> directions;
+    for (int angle_deg = 0; angle_deg < 360; angle_deg += 18)
+    {
+        float const angle_rad = angle_deg * imageproc::constants::DEG2RAD;
+        directions.emplace_back(std::cos(angle_rad), std::sin(angle_rad));
+    }
 
-	boost::random::mt19937 rng;
-	boost::random::uniform_int_distribution<> dist(-1000, 1000);
-	Grid<float> input(1001, 999);
-	for (int y = 0; y < input.height(); ++y) {
-		for (int x = 0; x < input.width(); ++x) {
-			input(x, y) = float(dist(rng)) / 500.f;
-		}
-	}
+    boost::random::mt19937 rng;
+    boost::random::uniform_int_distribution<> dist(-1000, 1000);
+    Grid<float> input(1001, 999);
+    for (int y = 0; y < input.height(); ++y)
+    {
+        for (int x = 0; x < input.width(); ++x)
+        {
+            input(x, y) = float(dist(rng)) / 500.f;
+        }
+    }
 
-	Grid<float> control(input.width(), input.height());
-
-#if LOG_PERFORMANCE
-	PerformanceTimer ptimer1;
-
-	for (int i = 0; i < 100; ++i) {
-		float const angle_rad = double(i) * 3.6 * imageproc::constants::DEG2RAD;
-		Vec2f const dir(std::cos(angle_rad), std::sin(angle_rad));
-
-		imageproc::anisotropicGaussBlurGeneric(
-			QSize(input.width(), input.height()), dir[0], dir[1],
-			dir_sigma, ortho_dir_sigma,
-			input.data(), input.stride(), [](float val) { return val; },
-			control.data(), control.stride(), [](float& dst, float src) { dst = src; }
-		);
-	}
-
-	ptimer1.print("[oriented-gauss x100] Non-accelerated version:");
-#endif
-
-	for (cl::Device const& device : m_devices) {
-		cl::Context context(device);
-		cl::CommandQueue command_queue(context, device);
-		cl::Program program = buildProgram(context);
-
-		std::vector<cl::Event> events;
-		cl::Event evt;
-
-		// Copy input to device.
-		cl::Buffer const src_buffer(context, CL_MEM_READ_ONLY, input.totalBytes());
-		OpenCLGrid<float> src_grid(src_buffer, input);
-		command_queue.enqueueWriteBuffer(
-			src_grid.buffer(), CL_FALSE, 0, input.totalBytes(), input.paddedData(), &events, &evt
-		);
-		indicateCompletion(&events, evt);
-
-		for (Vec2f const dir : directions) {
-			OpenCLGrid<float> dst_grid = anisotropicGaussBlur(
-				command_queue, program, src_grid, dir[0], dir[1],
-				dir_sigma, ortho_dir_sigma, &events, &events
-			);
-
-			// Copy output from device.
-			Grid<float> output(dst_grid.toUninitializedHostGrid());
-			command_queue.enqueueReadBuffer(
-				dst_grid.buffer(), CL_FALSE, 0, dst_grid.totalBytes(),
-				output.paddedData(), &events, &evt
-			);
-			indicateCompletion(&events, evt);
-
-			BOOST_REQUIRE_EQUAL(output.width(), input.width());
-			BOOST_REQUIRE_EQUAL(output.height(), input.height());
-
-			cl::WaitForEvents(events);
-
-			imageproc::anisotropicGaussBlurGeneric(
-				QSize(input.width(), input.height()), dir[0], dir[1],
-				dir_sigma, ortho_dir_sigma,
-				input.data(), input.stride(), [](float val) { return val; },
-				control.data(), control.stride(), [](float& dst, float src) { dst = src; }
-			);
-
-			bool correct = true;
-			for (int y = 0; y < output.height() && correct; ++y) {
-				for (int x = 0; x < output.width(); ++x) {
-					if (std::abs(output(x, y) - control(x, y)) > 1e-3f) {
-						correct = false;
-						break;
-					}
-				}
-			}
-			BOOST_CHECK(correct);
-
-		} // for (directions)
+    Grid<float> control(input.width(), input.height());
 
 #if LOG_PERFORMANCE
-		PerformanceTimer ptimer2;
+    PerformanceTimer ptimer1;
 
-		for (int i = 0; i < 100; ++i) {
-			float const angle_rad = double(i) * 3.6 * imageproc::constants::DEG2RAD;
-			Vec2f const dir(std::cos(angle_rad), std::sin(angle_rad));
+    for (int i = 0; i < 100; ++i)
+    {
+        float const angle_rad = double(i) * 3.6 * imageproc::constants::DEG2RAD;
+        Vec2f const dir(std::cos(angle_rad), std::sin(angle_rad));
 
-			anisotropicGaussBlur(
-				command_queue, program, src_grid, dir[0], dir[1],
-				dir_sigma, ortho_dir_sigma, &events, &events
-			);
-			cl::WaitForEvents(events);
-		}
+        imageproc::anisotropicGaussBlurGeneric(
+            QSize(input.width(), input.height()), dir[0], dir[1],
+            dir_sigma, ortho_dir_sigma,
+            input.data(), input.stride(), [](float val)
+        {
+            return val;
+        },
+        control.data(), control.stride(), [](float& dst, float src)
+        {
+            dst = src;
+        }
+        );
+    }
 
-		ptimer2.print(("[oriented-gauss x100] "+device.getInfo<CL_DEVICE_NAME>() + ":").c_str());
+    ptimer1.print("[oriented-gauss x100] Non-accelerated version:");
 #endif
-	} // for (device)
+
+    for (cl::Device const& device : m_devices)
+    {
+        cl::Context context(device);
+        cl::CommandQueue command_queue(context, device);
+        cl::Program program = buildProgram(context);
+
+        std::vector<cl::Event> events;
+        cl::Event evt;
+
+        // Copy input to device.
+        cl::Buffer const src_buffer(context, CL_MEM_READ_ONLY, input.totalBytes());
+        OpenCLGrid<float> src_grid(src_buffer, input);
+        command_queue.enqueueWriteBuffer(
+            src_grid.buffer(), CL_FALSE, 0, input.totalBytes(), input.paddedData(), &events, &evt
+        );
+        indicateCompletion(&events, evt);
+
+        for (Vec2f const dir : directions)
+        {
+            OpenCLGrid<float> dst_grid = anisotropicGaussBlur(
+                                             command_queue, program, src_grid, dir[0], dir[1],
+                                             dir_sigma, ortho_dir_sigma, &events, &events
+                                         );
+
+            // Copy output from device.
+            Grid<float> output(dst_grid.toUninitializedHostGrid());
+            command_queue.enqueueReadBuffer(
+                dst_grid.buffer(), CL_FALSE, 0, dst_grid.totalBytes(),
+                output.paddedData(), &events, &evt
+            );
+            indicateCompletion(&events, evt);
+
+            BOOST_REQUIRE_EQUAL(output.width(), input.width());
+            BOOST_REQUIRE_EQUAL(output.height(), input.height());
+
+            cl::WaitForEvents(events);
+
+            imageproc::anisotropicGaussBlurGeneric(
+                QSize(input.width(), input.height()), dir[0], dir[1],
+                dir_sigma, ortho_dir_sigma,
+                input.data(), input.stride(), [](float val)
+            {
+                return val;
+            },
+            control.data(), control.stride(), [](float& dst, float src)
+            {
+                dst = src;
+            }
+            );
+
+            bool correct = true;
+            for (int y = 0; y < output.height() && correct; ++y)
+            {
+                for (int x = 0; x < output.width(); ++x)
+                {
+                    if (std::abs(output(x, y) - control(x, y)) > 1e-3f)
+                    {
+                        correct = false;
+                        break;
+                    }
+                }
+            }
+            BOOST_CHECK(correct);
+
+        } // for (directions)
+
+#if LOG_PERFORMANCE
+        PerformanceTimer ptimer2;
+
+        for (int i = 0; i < 100; ++i)
+        {
+            float const angle_rad = double(i) * 3.6 * imageproc::constants::DEG2RAD;
+            Vec2f const dir(std::cos(angle_rad), std::sin(angle_rad));
+
+            anisotropicGaussBlur(
+                command_queue, program, src_grid, dir[0], dir[1],
+                dir_sigma, ortho_dir_sigma, &events, &events
+            );
+            cl::WaitForEvents(events);
+        }
+
+        ptimer2.print(("[oriented-gauss x100] "+device.getInfo<CL_DEVICE_NAME>() + ":").c_str());
+#endif
+    } // for (device)
 }
 
 BOOST_AUTO_TEST_SUITE_END();

@@ -24,33 +24,33 @@ class DebugImages;
 
 namespace imageproc
 {
-	class BinaryImage;
+class BinaryImage;
 }
 
 class Despeckle
 {
 public:
-	enum Level { CAUTIOUS, NORMAL, AGGRESSIVE };
+    enum Level { CAUTIOUS, NORMAL, AGGRESSIVE };
 
-	/**
-	 * \brief Removes small speckles from a binary image.
-	 *
-	 * \param src The image to despeckle.  Must not be null.
-	 * \param level Despeckling aggressiveness.
-	 * \param dbg An optional sink for debugging images.
-	 * \param status For asynchronous task cancellation.
-	 * \return The despeckled image.
-	 */
-	static imageproc::BinaryImage despeckle(
-		imageproc::BinaryImage const& src, Level level,
-		TaskStatus const& status, DebugImages* dbg = 0);
+    /**
+     * \brief Removes small speckles from a binary image.
+     *
+     * \param src The image to despeckle.  Must not be null.
+     * \param level Despeckling aggressiveness.
+     * \param dbg An optional sink for debugging images.
+     * \param status For asynchronous task cancellation.
+     * \return The despeckled image.
+     */
+    static imageproc::BinaryImage despeckle(
+        imageproc::BinaryImage const& src, Level level,
+        TaskStatus const& status, DebugImages* dbg = 0);
 
-	/**
-	 * \brief A slightly faster, in-place version of despeckle().
-	 */
-	static void despeckleInPlace(
-		imageproc::BinaryImage& image, Level level,
-		TaskStatus const& status, DebugImages* dbg = 0);
+    /**
+     * \brief A slightly faster, in-place version of despeckle().
+     */
+    static void despeckleInPlace(
+        imageproc::BinaryImage& image, Level level,
+        TaskStatus const& status, DebugImages* dbg = 0);
 };
 
 #endif

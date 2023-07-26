@@ -36,8 +36,8 @@ class DebugImages;
 
 namespace imageproc
 {
-	class GrayImage;
-	class AffineTransformedImage;
+class GrayImage;
+class AffineTransformedImage;
 }
 
 namespace dewarping
@@ -48,36 +48,36 @@ class DistortionModelBuilder;
 class DEWARPING_EXPORT TextLineTracer
 {
 public:
-	static void trace(
-		imageproc::AffineTransformedImage const& input,
-		DistortionModelBuilder& output,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		TaskStatus const& status, DebugImages* dbg = nullptr);
+    static void trace(
+        imageproc::AffineTransformedImage const& input,
+        DistortionModelBuilder& output,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        TaskStatus const& status, DebugImages* dbg = nullptr);
 private:
-	static float attractionForceAt(
-		Grid<float> const& field, Vec2f pos, float outside_force);
+    static float attractionForceAt(
+        Grid<float> const& field, Vec2f pos, float outside_force);
 
-	static Grid<Vec2f> calcGradient(imageproc::GrayImage const& image, DebugImages* dbg);
+    static Grid<Vec2f> calcGradient(imageproc::GrayImage const& image, DebugImages* dbg);
 
-	static Grid<float> calcDirectionalDerivative(
-		Grid<Vec2f> const& gradient, Grid<Vec2f> const& downscaled_direction_map);
+    static Grid<float> calcDirectionalDerivative(
+        Grid<Vec2f> const& gradient, Grid<Vec2f> const& downscaled_direction_map);
 
-	static void filterOutOfBoundsCurves(
-		std::list<std::vector<QPointF>>& polylines,
-		QLineF const& left_bound, QLineF const& right_bound);
+    static void filterOutOfBoundsCurves(
+        std::list<std::vector<QPointF>>& polylines,
+        QLineF const& left_bound, QLineF const& right_bound);
 
-	static void filterShortCurves(
-		std::list<std::vector<QPointF>>& polylines,
-		QLineF const& left_bound, QLineF const& right_bound);
+    static void filterShortCurves(
+        std::list<std::vector<QPointF>>& polylines,
+        QLineF const& left_bound, QLineF const& right_bound);
 
-	static QImage visualizeVerticalBounds(
-		QImage const& background, std::pair<QLineF, QLineF> bounds);
+    static QImage visualizeVerticalBounds(
+        QImage const& background, std::pair<QLineF, QLineF> bounds);
 
-	static QImage visualizeGradient(QImage const& background, Grid<float> const& grad);
+    static QImage visualizeGradient(QImage const& background, Grid<float> const& grad);
 
-	static QImage visualizePolylines(
-		QImage const& background, std::list<std::vector<QPointF>> const& polylines,
-		std::pair<QLineF, QLineF> const* vert_bounds = 0);
+    static QImage visualizePolylines(
+        QImage const& background, std::list<std::vector<QPointF>> const& polylines,
+        std::pair<QLineF, QLineF> const* vert_bounds = 0);
 };
 
 } // namespace dewarping

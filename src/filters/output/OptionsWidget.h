@@ -37,67 +37,70 @@ namespace output
 class Settings;
 
 class OptionsWidget
-	: public FilterOptionsWidget, private Ui::OutputOptionsWidget
+    : public FilterOptionsWidget, private Ui::OutputOptionsWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	OptionsWidget(IntrusivePtr<Settings> const& settings,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~OptionsWidget();
-	
-	void preUpdateUI(PageId const& page_id);
-	
-	void postUpdateUI(QSize const& output_size);
+    OptionsWidget(IntrusivePtr<Settings> const& settings,
+                  PageSelectionAccessor const& page_selection_accessor);
 
-	ImageViewTab lastTab() const { return m_lastTab; }
+    virtual ~OptionsWidget();
+
+    void preUpdateUI(PageId const& page_id);
+
+    void postUpdateUI(QSize const& output_size);
+
+    ImageViewTab lastTab() const
+    {
+        return m_lastTab;
+    }
 signals:
-	void despeckleLevelChanged(DespeckleLevel level, bool* handled);
+    void despeckleLevelChanged(DespeckleLevel level, bool* handled);
 public slots:
-	void tabChanged(ImageViewTab tab);
+    void tabChanged(ImageViewTab tab);
 private slots:
-	void applyColorsButtonClicked();
+    void applyColorsButtonClicked();
 
-	void applyColorsConfirmed(std::set<PageId> const& pages);
+    void applyColorsConfirmed(std::set<PageId> const& pages);
 
-	void colorModeChanged(int idx);
-	
-	void whiteMarginsToggled(bool checked);
-	
-	void equalizeIlluminationToggled(bool checked);
-	
-	void setLighterThreshold();
-	
-	void setDarkerThreshold();
-	
-	void setNeutralThreshold();
-	
-	void bwThresholdChanged();
+    void colorModeChanged(int idx);
 
-	void applyDespeckleButtonClicked();
+    void whiteMarginsToggled(bool checked);
 
-	void applyDespeckleConfirmed(std::set<PageId> const& pages);
+    void equalizeIlluminationToggled(bool checked);
+
+    void setLighterThreshold();
+
+    void setDarkerThreshold();
+
+    void setNeutralThreshold();
+
+    void bwThresholdChanged();
+
+    void applyDespeckleButtonClicked();
+
+    void applyDespeckleConfirmed(std::set<PageId> const& pages);
 private:
-	void despeckleLevelSelected(DespeckleLevel level);
+    void despeckleLevelSelected(DespeckleLevel level);
 
-	void scaleChanged(double scale);
+    void scaleChanged(double scale);
 
-	void reloadIfNecessary();
+    void reloadIfNecessary();
 
-	void updateColorsDisplay();
+    void updateColorsDisplay();
 
-	void updateScaleDisplay();
-	
-	IntrusivePtr<Settings> m_ptrSettings;
-	PageSelectionAccessor m_pageSelectionAccessor;
-	PageId m_pageId;
-	ColorParams m_colorParams;
-	DespeckleLevel m_despeckleLevel;
-	boost::optional<QSize> m_thisPageOutputSize;
-	ImageViewTab m_lastTab;
-	int m_ignoreThresholdChanges;
-	int m_ignoreDespeckleLevelChanges;
-	int m_ignoreScaleChanges;
+    void updateScaleDisplay();
+
+    IntrusivePtr<Settings> m_ptrSettings;
+    PageSelectionAccessor m_pageSelectionAccessor;
+    PageId m_pageId;
+    ColorParams m_colorParams;
+    DespeckleLevel m_despeckleLevel;
+    boost::optional<QSize> m_thisPageOutputSize;
+    ImageViewTab m_lastTab;
+    int m_ignoreThresholdChanges;
+    int m_ignoreDespeckleLevelChanges;
+    int m_ignoreScaleChanges;
 };
 
 } // namespace output

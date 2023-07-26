@@ -26,22 +26,26 @@
 class SplineSegment
 {
 public:
-	SplineVertex::Ptr prev;
-	SplineVertex::Ptr next;
+    SplineVertex::Ptr prev;
+    SplineVertex::Ptr next;
 
-	SplineSegment() {}
+    SplineSegment() {}
 
-	SplineSegment(SplineVertex::Ptr const& prev, SplineVertex::Ptr const& next);
+    SplineSegment(SplineVertex::Ptr const& prev, SplineVertex::Ptr const& next);
 
-	SplineVertex::Ptr splitAt(QPointF const& pt);
+    SplineVertex::Ptr splitAt(QPointF const& pt);
 
-	bool isValid() const;
+    bool isValid() const;
 
-	bool operator==(SplineSegment const& other) const {
-		return prev == other.prev && next == other.next;
-	}
+    bool operator==(SplineSegment const& other) const
+    {
+        return prev == other.prev && next == other.next;
+    }
 
-	QLineF toLine() const { return QLineF(prev->point(), next->point()); }
+    QLineF toLine() const
+    {
+        return QLineF(prev->point(), next->point());
+    }
 };
 
 #endif

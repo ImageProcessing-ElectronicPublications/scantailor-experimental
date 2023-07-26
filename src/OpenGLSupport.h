@@ -24,17 +24,17 @@
 class OpenGLSupport
 {
 public:
-	/**
-	 * \brief Returns true if OpenGL support is present and provides the necessary features.
-	 */
-	static bool supported();
+    /**
+     * \brief Returns true if OpenGL support is present and provides the necessary features.
+     */
+    static bool supported();
 
-	/**
-	 * \brief Returns the device name (GL_RENDERER) associated with the default OpenGL context.
-	 *
-	 * \note This function has to be called from the GUI thread only.
-	 */
-	static QString deviceName();
+    /**
+     * \brief Returns the device name (GL_RENDERER) associated with the default OpenGL context.
+     *
+     * \note This function has to be called from the GUI thread only.
+     */
+    static QString deviceName();
 };
 
 #endif

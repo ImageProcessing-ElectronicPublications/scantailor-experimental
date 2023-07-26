@@ -36,162 +36,176 @@ namespace
 
 int calcNumTerms(int const hor_degree, int const vert_degree)
 {
-	return (hor_degree + 1) * (vert_degree + 1);
+    return (hor_degree + 1) * (vert_degree + 1);
 }
 
 } // anonymous namespace
 
 GrayImage savGolFilter(
-	GrayImage const& src, QSize const& window_size,
-	int const hor_degree, int const vert_degree)
+    GrayImage const& src, QSize const& window_size,
+    int const hor_degree, int const vert_degree)
 {
-	if (hor_degree < 0 || vert_degree < 0) {
-		throw std::invalid_argument("savGolFilter: invalid polynomial degree");
-	}
-	if (window_size.isEmpty()) {
-		throw std::invalid_argument("savGolFilter: invalid window size");
-	}
-	
-	if (calcNumTerms(hor_degree, vert_degree)
-			> window_size.width() * window_size.height()) {
-		throw std::invalid_argument(
-			"savGolFilter: order is too big for that window");
-	}
-	
-	int const width = src.width();
-	int const height = src.height();
+    if (hor_degree < 0 || vert_degree < 0)
+    {
+        throw std::invalid_argument("savGolFilter: invalid polynomial degree");
+    }
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("savGolFilter: invalid window size");
+    }
 
-	// Kernel width and height.
-	int const kw = window_size.width();
-	int const kh = window_size.height();
+    if (calcNumTerms(hor_degree, vert_degree)
+            > window_size.width() * window_size.height())
+    {
+        throw std::invalid_argument(
+            "savGolFilter: order is too big for that window");
+    }
 
-	if (kw > width || kh > height) {
-		return src;
-	}
+    int const width = src.width();
+    int const height = src.height();
 
-	/*
-	 * Consider a 5x5 kernel:
-	 * |x|x|T|x|x|
-	 * |x|x|T|x|x|
-	 * |L|L|C|R|R|
-	 * |x|x|B|x|x|
-	 * |x|x|B|x|x|
-	 */
+    // Kernel width and height.
+    int const kw = window_size.width();
+    int const kh = window_size.height();
 
-	// Co-ordinates of the central point (C) of the kernel.
-	QPoint const k_center(kw / 2, kh / 2);
+    if (kw > width || kh > height)
+    {
+        return src;
+    }
 
-	// Length of the top segment (T) of the kernel.
-	int const k_top = k_center.y();
+    /*
+     * Consider a 5x5 kernel:
+     * |x|x|T|x|x|
+     * |x|x|T|x|x|
+     * |L|L|C|R|R|
+     * |x|x|B|x|x|
+     * |x|x|B|x|x|
+     */
 
-	// Length of the bottom segment (B) of the kernel.
-	int const k_bottom = kh - k_top - 1;
+    // Co-ordinates of the central point (C) of the kernel.
+    QPoint const k_center(kw / 2, kh / 2);
 
-	// Length of the left segment (L) of the kernel.
-	int const k_left = k_center.x();
+    // Length of the top segment (T) of the kernel.
+    int const k_top = k_center.y();
 
-	// Length of the right segment (R) of the kernel.
-	int const k_right = kw - k_left - 1;
+    // Length of the bottom segment (B) of the kernel.
+    int const k_bottom = kh - k_top - 1;
 
-	uint8_t const* const src_data = src.data();
-	int const src_stride = src.stride();
+    // Length of the left segment (L) of the kernel.
+    int const k_left = k_center.x();
 
-	GrayImage dst(QSize(width, height));
-	uint8_t* const dst_data = dst.data();
-	int const dst_stride = dst.stride();
+    // Length of the right segment (R) of the kernel.
+    int const k_right = kw - k_left - 1;
 
-	// Take advantage of Savitzky-Golay filter being separable.
-	SavGolKernel const hor_kernel(
-		QSize(window_size.width(), 1),
-		QPoint(k_center.x(), 0), hor_degree, 0
-	);
-	SavGolKernel const vert_kernel(
-		QSize(1, window_size.height()),
-		QPoint(0, k_center.y()), 0, vert_degree
-	);
+    uint8_t const* const src_data = src.data();
+    int const src_stride = src.stride();
 
-	// Allocate a 16-byte aligned temporary storage.
-	// That may help the compiler to emit efficient SSE code.
-	int const temp_stride = (width + 3) & ~3;
-	AlignedArray<float, 4> temp_array(temp_stride * (height + kh - 1));
-	AlignedArray<float, 4> line_buffer(width + kw - 1);
+    GrayImage dst(QSize(width, height));
+    uint8_t* const dst_data = dst.data();
+    int const dst_stride = dst.stride();
 
-	// Horizontal pass.
-	uint8_t const* src_line = src_data;
-	float* temp_line = temp_array.data() + k_top * temp_stride;
-	for (int y = 0; y < height; ++y) {
-		// Fill the line buffer.
-		for (int x = 0; x < width; ++x) {
-			line_buffer[x + k_left] = static_cast<float>(src_line[x]);
-		}
+    // Take advantage of Savitzky-Golay filter being separable.
+    SavGolKernel const hor_kernel(
+        QSize(window_size.width(), 1),
+        QPoint(k_center.x(), 0), hor_degree, 0
+    );
+    SavGolKernel const vert_kernel(
+        QSize(1, window_size.height()),
+        QPoint(0, k_center.y()), 0, vert_degree
+    );
 
-		// Mirror the edge pixels.
-		std::reverse_copy(
-			line_buffer.data() + k_left + 1,
-			line_buffer.data() + k_left + 1 + k_left,
-			line_buffer.data()
-		);
-		std::reverse_copy(
-			line_buffer.data() + k_left + width - 1 - k_right,
-			line_buffer.data() + k_left + width - 1,
-			line_buffer.data() + k_left + width
-		);
+    // Allocate a 16-byte aligned temporary storage.
+    // That may help the compiler to emit efficient SSE code.
+    int const temp_stride = (width + 3) & ~3;
+    AlignedArray<float, 4> temp_array(temp_stride * (height + kh - 1));
+    AlignedArray<float, 4> line_buffer(width + kw - 1);
 
-		for (int x = 0; x < width; ++x) {
-			float sum = 0.0f;
-			float const* src = line_buffer.data() + x;
-			for (int i = 0; i < kw; ++i) {
-				sum += src[i] * hor_kernel[i];
-			}
-			temp_line[x] = sum;
-		}
+    // Horizontal pass.
+    uint8_t const* src_line = src_data;
+    float* temp_line = temp_array.data() + k_top * temp_stride;
+    for (int y = 0; y < height; ++y)
+    {
+        // Fill the line buffer.
+        for (int x = 0; x < width; ++x)
+        {
+            line_buffer[x + k_left] = static_cast<float>(src_line[x]);
+        }
 
-		temp_line += temp_stride;
-		src_line += src_stride;
-	}
+        // Mirror the edge pixels.
+        std::reverse_copy(
+            line_buffer.data() + k_left + 1,
+            line_buffer.data() + k_left + 1 + k_left,
+            line_buffer.data()
+        );
+        std::reverse_copy(
+            line_buffer.data() + k_left + width - 1 - k_right,
+            line_buffer.data() + k_left + width - 1,
+            line_buffer.data() + k_left + width
+        );
 
-	// Mirror the top and bottom areas in temp_array.
-	for (int x = 0; x < width; ++x) {
-		float* temp_src = temp_array.data() + x + (k_top + 1) * temp_stride;
-		float* temp_dst = temp_src - temp_stride * 2;
-		for (int i = 0; i < k_top; ++i) {
-			*temp_dst = *temp_src;
-			temp_dst -= temp_stride;
-			temp_src += temp_stride;
-		}
+        for (int x = 0; x < width; ++x)
+        {
+            float sum = 0.0f;
+            float const* src = line_buffer.data() + x;
+            for (int i = 0; i < kw; ++i)
+            {
+                sum += src[i] * hor_kernel[i];
+            }
+            temp_line[x] = sum;
+        }
 
-		temp_dst = temp_array.data() + x + (k_top + height) * temp_stride;
-		temp_src = temp_dst - temp_stride * 2;
-		for (int i = 0; i < k_bottom; ++i) {
-			*temp_dst = *temp_src;
-			temp_dst += temp_stride;
-			temp_src -= temp_stride;
-		}
-	}
+        temp_line += temp_stride;
+        src_line += src_stride;
+    }
 
-	// Vertical pass.
-	for (int x = 0; x < width; ++x) {
-		float const* p_tmp = temp_array.data() + x;
-		uint8_t* p_dst = dst_data + x;
+    // Mirror the top and bottom areas in temp_array.
+    for (int x = 0; x < width; ++x)
+    {
+        float* temp_src = temp_array.data() + x + (k_top + 1) * temp_stride;
+        float* temp_dst = temp_src - temp_stride * 2;
+        for (int i = 0; i < k_top; ++i)
+        {
+            *temp_dst = *temp_src;
+            temp_dst -= temp_stride;
+            temp_src += temp_stride;
+        }
 
-		for (int y = 0; y < height; ++y) {
-			float const* p_tmp1 = p_tmp;
-			float sum = 0.5f; // For rounding purposes.
+        temp_dst = temp_array.data() + x + (k_top + height) * temp_stride;
+        temp_src = temp_dst - temp_stride * 2;
+        for (int i = 0; i < k_bottom; ++i)
+        {
+            *temp_dst = *temp_src;
+            temp_dst += temp_stride;
+            temp_src -= temp_stride;
+        }
+    }
 
-			for (int i = 0; i < kh; ++i) {
-				sum += *p_tmp1 * vert_kernel[i];
-				p_tmp1 += temp_stride;
-			}
+    // Vertical pass.
+    for (int x = 0; x < width; ++x)
+    {
+        float const* p_tmp = temp_array.data() + x;
+        uint8_t* p_dst = dst_data + x;
 
-			int const val = static_cast<int>(sum);
-			*p_dst = static_cast<uint8_t>(qBound(0, val, 255));
+        for (int y = 0; y < height; ++y)
+        {
+            float const* p_tmp1 = p_tmp;
+            float sum = 0.5f; // For rounding purposes.
 
-			p_dst += dst_stride;
-			p_tmp += temp_stride;
-		}
-	}
+            for (int i = 0; i < kh; ++i)
+            {
+                sum += *p_tmp1 * vert_kernel[i];
+                p_tmp1 += temp_stride;
+            }
 
-	return dst;
+            int const val = static_cast<int>(sum);
+            *p_dst = static_cast<uint8_t>(qBound(0, val, 255));
+
+            p_dst += dst_stride;
+            p_tmp += temp_stride;
+        }
+    }
+
+    return dst;
 }
 
 } // namespace imageproc

@@ -33,48 +33,72 @@ namespace select_content
 
 class Params
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/**
-	 * @param content_box The content box.
-	 * @param content_size_px Used for page sorting. Corresponds to
-	 *        content_box.toTransformedRect(transform).size()
-	 * @param deps Dependencies are used to decide when we need to
-	 *        re-process the image due to changes made in previous stages.
-	 * @param mode Tells whether the content box was detected automatically or set manually.
-	 */
-	Params(ContentBox const& content_box, QSizeF const& content_size_px,
-		Dependencies const& deps, AutoManualMode mode);
-	
-	Params(Dependencies const& deps);
-	
-	Params(QDomElement const& filter_el);
-	
-	~Params();
-	
-	ContentBox const& contentBox() const { return m_contentBox; }
+    /**
+     * @param content_box The content box.
+     * @param content_size_px Used for page sorting. Corresponds to
+     *        content_box.toTransformedRect(transform).size()
+     * @param deps Dependencies are used to decide when we need to
+     *        re-process the image due to changes made in previous stages.
+     * @param mode Tells whether the content box was detected automatically or set manually.
+     */
+    Params(ContentBox const& content_box, QSizeF const& content_size_px,
+           Dependencies const& deps, AutoManualMode mode);
 
-	void setContentBox(ContentBox const& content_box) { m_contentBox = content_box; }
+    Params(Dependencies const& deps);
 
-	/** Used for page sorting by width / height. */
-	QSizeF const& contentSizePx() const { return m_contentSizePx; }
+    Params(QDomElement const& filter_el);
 
-	void setContentSizePx(QSizeF const& size) { m_contentSizePx = size; }
-	
-	Dependencies const& dependencies() const { return m_deps; }
+    ~Params();
 
-	void setDependencies(Dependencies const& deps) { m_deps = deps; }
-	
-	AutoManualMode mode() const { return m_mode; }
+    ContentBox const& contentBox() const
+    {
+        return m_contentBox;
+    }
 
-	void setMode(AutoManualMode mode) { m_mode = mode; }
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    void setContentBox(ContentBox const& content_box)
+    {
+        m_contentBox = content_box;
+    }
+
+    /** Used for page sorting by width / height. */
+    QSizeF const& contentSizePx() const
+    {
+        return m_contentSizePx;
+    }
+
+    void setContentSizePx(QSizeF const& size)
+    {
+        m_contentSizePx = size;
+    }
+
+    Dependencies const& dependencies() const
+    {
+        return m_deps;
+    }
+
+    void setDependencies(Dependencies const& deps)
+    {
+        m_deps = deps;
+    }
+
+    AutoManualMode mode() const
+    {
+        return m_mode;
+    }
+
+    void setMode(AutoManualMode mode)
+    {
+        m_mode = mode;
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	ContentBox m_contentBox;
-	QSizeF m_contentSizePx;
-	Dependencies m_deps;
-	AutoManualMode m_mode;
+    ContentBox m_contentBox;
+    QSizeF m_contentSizePx;
+    Dependencies m_deps;
+    AutoManualMode m_mode;
 };
 
 } // namespace select_content

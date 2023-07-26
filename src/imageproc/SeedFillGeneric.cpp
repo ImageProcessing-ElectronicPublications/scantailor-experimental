@@ -29,46 +29,50 @@ namespace seed_fill_generic
 
 void initHorTransitions(std::vector<HTransition>& transitions, int const width)
 {
-	transitions.reserve(width);
-	
-	if (width == 1) {
-		// No transitions allowed.
-		transitions.push_back(HTransition(0, 0));
-		return;
-	}
-	
-	// Only east transition is allowed.
-	transitions.push_back(HTransition(0, 1));
-	
-	for (int i = 1; i < width - 1; ++i) {
-		// Both transitions are allowed.
-		transitions.push_back(HTransition(-1, 1));
-	}
-	
-	// Only west transition is allowed.
-	transitions.push_back(HTransition(-1, 0));
+    transitions.reserve(width);
+
+    if (width == 1)
+    {
+        // No transitions allowed.
+        transitions.push_back(HTransition(0, 0));
+        return;
+    }
+
+    // Only east transition is allowed.
+    transitions.push_back(HTransition(0, 1));
+
+    for (int i = 1; i < width - 1; ++i)
+    {
+        // Both transitions are allowed.
+        transitions.push_back(HTransition(-1, 1));
+    }
+
+    // Only west transition is allowed.
+    transitions.push_back(HTransition(-1, 0));
 }
 
 void initVertTransitions(std::vector<VTransition>& transitions, int const height)
 {
-	transitions.reserve(height);
-	
-	if (height == 1) {
-		// No transitions allowed.
-		transitions.push_back(VTransition(0, 0));
-		return;
-	}
-	
-	// Only south transition is allowed.
-	transitions.push_back(VTransition(0, ~0));
-	
-	for (int i = 1; i < height - 1; ++i) {
-		// Both transitions are allowed.
-		transitions.push_back(VTransition(~0, ~0));
-	}
-	
-	// Only north transition is allowed.
-	transitions.push_back(VTransition(~0, 0));
+    transitions.reserve(height);
+
+    if (height == 1)
+    {
+        // No transitions allowed.
+        transitions.push_back(VTransition(0, 0));
+        return;
+    }
+
+    // Only south transition is allowed.
+    transitions.push_back(VTransition(0, ~0));
+
+    for (int i = 1; i < height - 1; ++i)
+    {
+        // Both transitions are allowed.
+        transitions.push_back(VTransition(~0, ~0));
+    }
+
+    // Only north transition is allowed.
+    transitions.push_back(VTransition(~0, 0));
 }
 
 } // namespace seed_fill_generic

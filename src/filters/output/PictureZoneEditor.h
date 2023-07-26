@@ -52,81 +52,81 @@ class Settings;
 
 class PictureZoneEditor : public ImageViewBase, private InteractionHandler
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 * @param accel_ops OpenCL-acceleratable operations.
-	 * @param transformed_orig_image The original image transformed
-	 *        into output image coordinates.
-	 * @param downscaled_transformed_orig_image A downscaled version of
-	 *        @p transformed_orig_image or a default-constructed ImagePixmapUnion.
-	 *        Use ImageViewBase::createDownscaledImage() to create a downscaled image.
-	 * @param output_picture_mask A binary image in output image coordinates
-	 *        where white pixels correspond to auto-detected picture areas.
-	 * @param page_id Identifies the page.
-	 * @param settings Output stage settings.
-	 * @param orig_to_output Mapper from original to output image coordinates.
-	 * @param output_to_orig Mapper from output to original image coordinates.
-	 */
-	PictureZoneEditor(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& transformed_orig_image,
-		ImagePixmapUnion const& downscaled_transformed_orig_image,
-		imageproc::BinaryImage const& output_picture_mask,
-		PageId const& page_id, IntrusivePtr<Settings> const& settings,
-		std::function<QPointF(QPointF const&)> const& orig_to_output,
-		std::function<QPointF(QPointF const&)> const& output_to_orig);
-	
-	virtual ~PictureZoneEditor();
+    /**
+     * @param accel_ops OpenCL-acceleratable operations.
+     * @param transformed_orig_image The original image transformed
+     *        into output image coordinates.
+     * @param downscaled_transformed_orig_image A downscaled version of
+     *        @p transformed_orig_image or a default-constructed ImagePixmapUnion.
+     *        Use ImageViewBase::createDownscaledImage() to create a downscaled image.
+     * @param output_picture_mask A binary image in output image coordinates
+     *        where white pixels correspond to auto-detected picture areas.
+     * @param page_id Identifies the page.
+     * @param settings Output stage settings.
+     * @param orig_to_output Mapper from original to output image coordinates.
+     * @param output_to_orig Mapper from output to original image coordinates.
+     */
+    PictureZoneEditor(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& transformed_orig_image,
+        ImagePixmapUnion const& downscaled_transformed_orig_image,
+        imageproc::BinaryImage const& output_picture_mask,
+        PageId const& page_id, IntrusivePtr<Settings> const& settings,
+        std::function<QPointF(QPointF const&)> const& orig_to_output,
+        std::function<QPointF(QPointF const&)> const& output_to_orig);
+
+    virtual ~PictureZoneEditor();
 signals:
-	void invalidateThumbnail(PageId const& page_id);
+    void invalidateThumbnail(PageId const& page_id);
 protected:
-	virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+    virtual void onPaint(QPainter& painter, InteractionState const& interaction);
 private slots:
-	void advancePictureMaskAnimation();
+    void advancePictureMaskAnimation();
 
-	void initiateBuildingScreenPictureMask();
+    void initiateBuildingScreenPictureMask();
 
-	void commitZones();
+    void commitZones();
 
-	void updateRequested();
+    void updateRequested();
 private:
-	class MaskTransformTask;
-	
-	bool validateScreenPictureMask() const;
+    class MaskTransformTask;
 
-	void schedulePictureMaskRebuild();
+    bool validateScreenPictureMask() const;
 
-	void screenPictureMaskBuilt(QPoint const& origin, QImage const& mask);
+    void schedulePictureMaskRebuild();
 
-	void paintOverPictureMask(QPainter& painter);
+    void screenPictureMaskBuilt(QPoint const& origin, QImage const& mask);
 
-	void showPropertiesDialog(EditableZoneSet::Zone const& zone);
+    void paintOverPictureMask(QPainter& painter);
 
-	std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
+    void showPropertiesDialog(EditableZoneSet::Zone const& zone);
 
-	EditableZoneSet m_zones;
+    std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
 
-	// Must go after m_zones.
-	ZoneInteractionContext m_context;
+    EditableZoneSet m_zones;
 
-	DragHandler m_dragHandler;
-	ZoomHandler m_zoomHandler;
+    // Must go after m_zones.
+    ZoneInteractionContext m_context;
 
-	imageproc::BinaryImage m_outputPictureMask;
-	QPixmap m_screenPictureMask;
-	QPoint m_screenPictureMaskOrigin;
-	QTransform m_screenPictureMaskXform;
-	QTransform m_potentialPictureMaskXform;
-	QTimer m_pictureMaskRebuildTimer;
-	QTimer m_pictureMaskAnimateTimer;
-	int m_pictureMaskAnimationPhase; // degrees
-	IntrusivePtr<MaskTransformTask> m_ptrMaskTransformTask;
+    DragHandler m_dragHandler;
+    ZoomHandler m_zoomHandler;
 
-	PageId m_pageId;
-	IntrusivePtr<Settings> m_ptrSettings;
-	std::function<QPointF(QPointF const&)> m_origToOutput;
-	std::function<QPointF(QPointF const&)> m_outputToOrig;
+    imageproc::BinaryImage m_outputPictureMask;
+    QPixmap m_screenPictureMask;
+    QPoint m_screenPictureMaskOrigin;
+    QTransform m_screenPictureMaskXform;
+    QTransform m_potentialPictureMaskXform;
+    QTimer m_pictureMaskRebuildTimer;
+    QTimer m_pictureMaskAnimateTimer;
+    int m_pictureMaskAnimationPhase; // degrees
+    IntrusivePtr<MaskTransformTask> m_ptrMaskTransformTask;
+
+    PageId m_pageId;
+    IntrusivePtr<Settings> m_ptrSettings;
+    std::function<QPointF(QPointF const&)> m_origToOutput;
+    std::function<QPointF(QPointF const&)> m_outputToOrig;
 };
 
 } // namespace output

@@ -40,67 +40,67 @@ class QRect;
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 namespace deskew
 {
 
 class ImageView :
-	public ImageViewBase,
-	private InteractionHandler
+    public ImageViewBase,
+    private InteractionHandler
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 * @param accel_ops OpenCL-acceleratable operations.
-	 * @param full_size_image The original, full size image plus a transformation
-	 *        excluding the rotation that's done at this stage.
-	 * @param downscaled_image A downscaled version of full_size_image.origImage().
-	 *        @see ImageViewBase::createDownscaledImage()
-	 * @param rotation_angle_deg Initial rotation angle, in degrees.
-	 */
-	ImageView(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		imageproc::AffineTransformedImage const& full_size_image,
-		ImagePixmapUnion const& downscaled_image,
-		double rotation_angle_deg);
-	
-	virtual ~ImageView();
+    /**
+     * @param accel_ops OpenCL-acceleratable operations.
+     * @param full_size_image The original, full size image plus a transformation
+     *        excluding the rotation that's done at this stage.
+     * @param downscaled_image A downscaled version of full_size_image.origImage().
+     *        @see ImageViewBase::createDownscaledImage()
+     * @param rotation_angle_deg Initial rotation angle, in degrees.
+     */
+    ImageView(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        imageproc::AffineTransformedImage const& full_size_image,
+        ImagePixmapUnion const& downscaled_image,
+        double rotation_angle_deg);
+
+    virtual ~ImageView();
 signals:
-	void manualDeskewAngleSet(double degrees);
+    void manualDeskewAngleSet(double degrees);
 public slots:
-	void manualDeskewAngleSetExternally(double degrees);
+    void manualDeskewAngleSetExternally(double degrees);
 protected:
-	virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+    virtual void onPaint(QPainter& painter, InteractionState const& interaction);
 
-	virtual void onWheelEvent(QWheelEvent* event, InteractionState& interaction);
+    virtual void onWheelEvent(QWheelEvent* event, InteractionState& interaction);
 private:
-	void setRotationAngle(double degrees, bool preserve_scale);
+    void setRotationAngle(double degrees, bool preserve_scale);
 
-	QPointF handlePosition(int idx) const;
+    QPointF handlePosition(int idx) const;
 
-	void handleMoveRequest(int idx, QPointF const& pos);
+    void handleMoveRequest(int idx, QPointF const& pos);
 
-	virtual void dragFinished();
+    virtual void dragFinished();
 
-	QPointF getImageRotationOrigin() const;
+    QPointF getImageRotationOrigin() const;
 
-	QRectF getRotationArcSquare() const;
+    QRectF getRotationArcSquare() const;
 
-	std::pair<QPointF, QPointF> getRotationHandles(QRectF const& arc_square) const;
+    std::pair<QPointF, QPointF> getRotationHandles(QRectF const& arc_square) const;
 
-	static int const m_cellSize;
-	static double const m_maxRotationDeg;
-	static double const m_maxRotationSin;
+    static int const m_cellSize;
+    static double const m_maxRotationDeg;
+    static double const m_maxRotationSin;
 
-	QPixmap m_handlePixmap;
-	DraggablePoint m_handles[2];
-	ObjectDragHandler m_handleInteractors[2];
-	DragHandler m_dragHandler;
-	ZoomHandler m_zoomHandler;
-	imageproc::AffineImageTransform m_beforeRotationTransform;
-	double m_rotationAngleDeg;
+    QPixmap m_handlePixmap;
+    DraggablePoint m_handles[2];
+    ObjectDragHandler m_handleInteractors[2];
+    DragHandler m_dragHandler;
+    ZoomHandler m_zoomHandler;
+    imageproc::AffineImageTransform m_beforeRotationTransform;
+    double m_rotationAngleDeg;
 };
 
 } // namespace deskew

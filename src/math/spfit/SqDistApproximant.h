@@ -46,49 +46,49 @@ class FrenetFrame;
  */
 struct MATH_EXPORT SqDistApproximant
 {
-	Eigen::Matrix2d A;
-	Eigen::Vector2d b;
-	double c;
+    Eigen::Matrix2d A;
+    Eigen::Vector2d b;
+    double c;
 
-	/**
-	 * Constructs a distance function that always evaluates to zero.
-	 * Passing it to Optimizer::addSample() will have no effect.
-	 */
-	SqDistApproximant();
+    /**
+     * Constructs a distance function that always evaluates to zero.
+     * Passing it to Optimizer::addSample() will have no effect.
+     */
+    SqDistApproximant();
 
-	/**
-	 * \brief The general case constructor.
-	 *
-	 * We have a coordinate system at \p origin with orthonormal basis formed
-	 * by vectors \p u and \p v.  Given a point p in the global coordinate system,
-	 * the appoximant will evaluate to:
-	 * \code
-	 * sqdist = m * i^2 + n * j^2;
-	 * // Where i and j are projections onto u and v respectively.
-	 * // More precisely:
-	 * i = (p - origin) . u;
-	 * j = (p - origin) . v;
-	 * \endcode
-	 */
-	SqDistApproximant(Eigen::Vector2d const& origin,
-		Eigen::Vector2d const& u, Eigen::Vector2d const& v, double m, double n);
+    /**
+     * \brief The general case constructor.
+     *
+     * We have a coordinate system at \p origin with orthonormal basis formed
+     * by vectors \p u and \p v.  Given a point p in the global coordinate system,
+     * the appoximant will evaluate to:
+     * \code
+     * sqdist = m * i^2 + n * j^2;
+     * // Where i and j are projections onto u and v respectively.
+     * // More precisely:
+     * i = (p - origin) . u;
+     * j = (p - origin) . v;
+     * \endcode
+     */
+    SqDistApproximant(Eigen::Vector2d const& origin,
+                      Eigen::Vector2d const& u, Eigen::Vector2d const& v, double m, double n);
 
-	static SqDistApproximant pointDistance(Eigen::Vector2d const& pt);
+    static SqDistApproximant pointDistance(Eigen::Vector2d const& pt);
 
-	static SqDistApproximant weightedPointDistance(
-		Eigen::Vector2d const& pt, double weight);
+    static SqDistApproximant weightedPointDistance(
+        Eigen::Vector2d const& pt, double weight);
 
-	static SqDistApproximant lineDistance(QLineF const& line);
+    static SqDistApproximant lineDistance(QLineF const& line);
 
-	static SqDistApproximant weightedLineDistance(QLineF const& line, double weight);
+    static SqDistApproximant weightedLineDistance(QLineF const& line, double weight);
 
-	static SqDistApproximant curveDistance(Eigen::Vector2d const& reference_point,
-		FrenetFrame const& frenet_frame, double signed_curvature);
+    static SqDistApproximant curveDistance(Eigen::Vector2d const& reference_point,
+                                           FrenetFrame const& frenet_frame, double signed_curvature);
 
-	static SqDistApproximant weightedCurveDistance(Eigen::Vector2d const& reference_point,
-		FrenetFrame const& frenet_frame, double signed_curvature, double weight);
+    static SqDistApproximant weightedCurveDistance(Eigen::Vector2d const& reference_point,
+            FrenetFrame const& frenet_frame, double signed_curvature, double weight);
 
-	double evaluate(Eigen::Vector2d const& pt) const;
+    double evaluate(Eigen::Vector2d const& pt) const;
 };
 
 } // namespace spfit

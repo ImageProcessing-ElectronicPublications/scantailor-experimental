@@ -31,29 +31,29 @@ class QImage;
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 class BasicImageView : public ImageViewBase
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	BasicImageView(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& full_size_image,
-		ImagePixmapUnion const& downscaled_image = ImagePixmapUnion(),
-		QMarginsF const& margins = QMarginsF());
+    BasicImageView(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& full_size_image,
+        ImagePixmapUnion const& downscaled_image = ImagePixmapUnion(),
+        QMarginsF const& margins = QMarginsF());
 
-	BasicImageView(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		imageproc::AffineTransformedImage const& full_size_image,
-		ImagePixmapUnion const& downscaled_image = ImagePixmapUnion(),
-		QMarginsF const& margins = QMarginsF());
-	
-	virtual ~BasicImageView();
+    BasicImageView(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        imageproc::AffineTransformedImage const& full_size_image,
+        ImagePixmapUnion const& downscaled_image = ImagePixmapUnion(),
+        QMarginsF const& margins = QMarginsF());
+
+    virtual ~BasicImageView();
 private:
-	DragHandler m_dragHandler;
-	ZoomHandler m_zoomHandler;
+    DragHandler m_dragHandler;
+    ZoomHandler m_zoomHandler;
 };
 
 #endif

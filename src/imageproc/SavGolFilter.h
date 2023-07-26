@@ -52,8 +52,8 @@ class GrayImage;
  * Good results for 300 dpi scans are achieved with 7x7 window and 4x4 degree.
  */
 IMAGEPROC_EXPORT GrayImage savGolFilter(
-	GrayImage const& src, QSize const& window_size,
-	int hor_degree, int vert_degree);
+    GrayImage const& src, QSize const& window_size,
+    int hor_degree, int vert_degree);
 
 } // namespace imageproc
 

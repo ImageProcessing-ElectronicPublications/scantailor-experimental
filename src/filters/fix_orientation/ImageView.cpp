@@ -28,22 +28,22 @@ namespace fix_orientation
 {
 
 ImageView::ImageView(
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	imageproc::AffineTransformedImage const& rotated_image,
-	ImagePixmapUnion const& downscaled_image)
-:	ImageViewBase(
-		accel_ops, rotated_image.origImage(), downscaled_image,
-		ImagePresentation(
-			rotated_image.xform().transform(),
-			rotated_image.xform().transformedCropArea()
-		)
-	),
-	m_dragHandler(*this),
-	m_zoomHandler(*this),
-	m_origImageSize(rotated_image.origImage().size())
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    imageproc::AffineTransformedImage const& rotated_image,
+    ImagePixmapUnion const& downscaled_image)
+    :	ImageViewBase(
+          accel_ops, rotated_image.origImage(), downscaled_image,
+          ImagePresentation(
+              rotated_image.xform().transform(),
+              rotated_image.xform().transformedCropArea()
+          )
+      ),
+      m_dragHandler(*this),
+      m_zoomHandler(*this),
+      m_origImageSize(rotated_image.origImage().size())
 {
-	rootInteractionHandler().makeLastFollower(m_dragHandler);
-	rootInteractionHandler().makeLastFollower(m_zoomHandler);
+    rootInteractionHandler().makeLastFollower(m_dragHandler);
+    rootInteractionHandler().makeLastFollower(m_zoomHandler);
 }
 
 ImageView::~ImageView()
@@ -53,10 +53,10 @@ ImageView::~ImageView()
 void
 ImageView::setPreRotation(OrthogonalRotation const rotation)
 {
-	QRectF const rect(QPointF(0, 0), rotation.rotate(m_origImageSize));
+    QRectF const rect(QPointF(0, 0), rotation.rotate(m_origImageSize));
 
-	// This should call update() by itself.
-	updateTransform(ImagePresentation(rotation.transform(m_origImageSize), rect));
+    // This should call update() by itself.
+    updateTransform(ImagePresentation(rotation.transform(m_origImageSize), rect));
 }
 
 } // namespace fix_orientation

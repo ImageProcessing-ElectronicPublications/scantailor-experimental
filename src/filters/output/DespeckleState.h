@@ -39,48 +39,51 @@ class DespeckleVisualization;
  */
 class DespeckleState
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	DespeckleState(QImage const& output,
-		imageproc::BinaryImage const& speckles, DespeckleLevel level);
+    DespeckleState(QImage const& output,
+                   imageproc::BinaryImage const& speckles, DespeckleLevel level);
 
-	DespeckleLevel level() const { return m_despeckleLevel; }
+    DespeckleLevel level() const
+    {
+        return m_despeckleLevel;
+    }
 
-	DespeckleVisualization visualize(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
+    DespeckleVisualization visualize(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
 
-	DespeckleState redespeckle(DespeckleLevel level,
-		TaskStatus const& status, DebugImages* dbg = 0) const;
+    DespeckleState redespeckle(DespeckleLevel level,
+                               TaskStatus const& status, DebugImages* dbg = 0) const;
 private:
-	static QImage overlaySpeckles(
-		QImage const& mixed, imageproc::BinaryImage const& speckles);
-	
-	static imageproc::BinaryImage extractBW(QImage const& mixed);
+    static QImage overlaySpeckles(
+        QImage const& mixed, imageproc::BinaryImage const& speckles);
 
-	/**
-	 * This image is the output image produced by OutputGenerator
-	 * with speckles added as black regions.  This image is always in RGB32,
-	 * because it only exists for display purposes, namely for being fed to
-	 * DespeckleVisualization.
-	 */
-	QImage m_everythingMixed;
+    static imageproc::BinaryImage extractBW(QImage const& mixed);
 
-	/**
-	 * The B/W part of m_everythingMixed.
-	 */
-	imageproc::BinaryImage m_everythingBW;
-	
-	/**
-	 * The speckles detected in m_everythingBW.
-	 * This image may be null, which is equivalent to having it all white.
-	 */
-	imageproc::BinaryImage m_speckles;
+    /**
+     * This image is the output image produced by OutputGenerator
+     * with speckles added as black regions.  This image is always in RGB32,
+     * because it only exists for display purposes, namely for being fed to
+     * DespeckleVisualization.
+     */
+    QImage m_everythingMixed;
 
-	/**
-	 * Despeckling level at which m_speckles was produced from
-	 * m_everythingBW.
-	 */
-	DespeckleLevel m_despeckleLevel;
+    /**
+     * The B/W part of m_everythingMixed.
+     */
+    imageproc::BinaryImage m_everythingBW;
+
+    /**
+     * The speckles detected in m_everythingBW.
+     * This image may be null, which is equivalent to having it all white.
+     */
+    imageproc::BinaryImage m_speckles;
+
+    /**
+     * Despeckling level at which m_speckles was produced from
+     * m_everythingBW.
+     */
+    DespeckleLevel m_despeckleLevel;
 };
 
 } // namespace output

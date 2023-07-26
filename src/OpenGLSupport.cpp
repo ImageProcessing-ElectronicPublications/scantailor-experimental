@@ -30,41 +30,45 @@ bool
 OpenGLSupport::supported()
 {
 #ifndef ENABLE_OPENGL
-	return false;
+    return false;
 #else
-	QSurfaceFormat format;
-	format.setSamples(2);
-	format.setAlphaBufferSize(8);
+    QSurfaceFormat format;
+    format.setSamples(2);
+    format.setAlphaBufferSize(8);
 
-	QOpenGLContext context;
-	context.setFormat(format);
-	if (!context.create()) {
-		return false;
-	}
-	format = context.format();
+    QOpenGLContext context;
+    context.setFormat(format);
+    if (!context.create())
+    {
+        return false;
+    }
+    format = context.format();
 
-	if (format.samples() < 2) {
-		return false;
-	}
-	if (!format.hasAlpha()) {
-		return false;
-	}
+    if (format.samples() < 2)
+    {
+        return false;
+    }
+    if (!format.hasAlpha())
+    {
+        return false;
+    }
 
-	return true;
+    return true;
 #endif
 }
 
 QString
 OpenGLSupport::deviceName()
 {
-	QString name;
+    QString name;
 #ifdef ENABLE_OPENGL
-	QOpenGLContext context;
-	QOffscreenSurface surface;
-	if (context.create() && (surface.create(), true) && context.makeCurrent(&surface)) {
-		name = QString::fromUtf8((char const*)context.functions()->glGetString(GL_RENDERER));
-		context.doneCurrent();
-	}
+    QOpenGLContext context;
+    QOffscreenSurface surface;
+    if (context.create() && (surface.create(), true) && context.makeCurrent(&surface))
+    {
+        name = QString::fromUtf8((char const*)context.functions()->glGetString(GL_RENDERER));
+        context.doneCurrent();
+    }
 #endif
-	return name;
+    return name;
 }

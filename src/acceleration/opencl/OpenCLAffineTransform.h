@@ -29,7 +29,7 @@
 
 namespace imageproc
 {
-	class OutsidePixels;
+class OutsidePixels;
 }
 
 namespace opencl
@@ -37,11 +37,11 @@ namespace opencl
 
 /** @see imageproc::affineTransform() */
 QImage affineTransform(
-	cl::CommandQueue const& command_queue,
-	cl::Program const& program,
-	QImage const& src, QTransform const& xform,
-	QRect const& dst_rect, imageproc::OutsidePixels const& outside_pixels,
-	QSizeF const& min_mapping_area = QSizeF(0.9, 0.9));
+    cl::CommandQueue const& command_queue,
+    cl::Program const& program,
+    QImage const& src, QTransform const& xform,
+    QRect const& dst_rect, imageproc::OutsidePixels const& outside_pixels,
+    QSizeF const& min_mapping_area = QSizeF(0.9, 0.9));
 
 } // namespace opencl
 

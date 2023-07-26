@@ -24,48 +24,49 @@
 #include <boost/foreach.hpp>
 
 BasicSplineVisualizer::BasicSplineVisualizer()
-:	m_solidColor(0xcc1420),
-	m_highlightBrightColor(0xfffe00),
-	m_highlightDarkColor(0xffa90e),
-	m_pen(m_solidColor)
+    :	m_solidColor(0xcc1420),
+      m_highlightBrightColor(0xfffe00),
+      m_highlightDarkColor(0xffa90e),
+      m_pen(m_solidColor)
 {
-	m_pen.setCosmetic(true);
-	m_pen.setWidthF(1.5);
+    m_pen.setCosmetic(true);
+    m_pen.setWidthF(1.5);
 }
 
 void
 BasicSplineVisualizer::drawSplines(
-	QPainter& painter, QTransform const& to_screen,
-	EditableZoneSet const& zones)
+    QPainter& painter, QTransform const& to_screen,
+    EditableZoneSet const& zones)
 {
-	BOOST_FOREACH(EditableZoneSet::Zone const& zone, zones) {
-		drawSpline(painter, to_screen, zone.spline());
-	}
+    BOOST_FOREACH(EditableZoneSet::Zone const& zone, zones)
+    {
+        drawSpline(painter, to_screen, zone.spline());
+    }
 }
 
 void
 BasicSplineVisualizer::drawSpline(
-	QPainter& painter, QTransform const& to_screen, EditableSpline::Ptr const& spline)
+    QPainter& painter, QTransform const& to_screen, EditableSpline::Ptr const& spline)
 {
-	prepareForSpline(painter, spline);
-	painter.drawPolygon(to_screen.map(spline->toPolygon()), Qt::WindingFill);
+    prepareForSpline(painter, spline);
+    painter.drawPolygon(to_screen.map(spline->toPolygon()), Qt::WindingFill);
 }
 
 void
 BasicSplineVisualizer::drawVertex(QPainter& painter, QPointF const& pt, QColor const& color)
 {
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(color);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(color);
 
-	QRectF rect(0, 0, 4, 4);
-	rect.moveCenter(pt);
-	painter.drawEllipse(rect);
+    QRectF rect(0, 0, 4, 4);
+    rect.moveCenter(pt);
+    painter.drawEllipse(rect);
 }
 
 void
 BasicSplineVisualizer::prepareForSpline(
-	QPainter& painter, EditableSpline::Ptr const&)
+    QPainter& painter, EditableSpline::Ptr const&)
 {
-	painter.setPen(m_pen);
-	painter.setBrush(Qt::NoBrush);
+    painter.setPen(m_pen);
+    painter.setBrush(Qt::NoBrush);
 }

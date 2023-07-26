@@ -28,7 +28,7 @@ class PageId;
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 namespace deskew
@@ -37,16 +37,16 @@ namespace deskew
 class RotationThumbnail : public ThumbnailBase
 {
 public:
-	RotationThumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		QSizeF const& max_display_size, PageId const& page_id,
-		imageproc::AffineImageTransform const& full_size_image_transform,
-		double compensation_angle_deg, bool draw_grid);
-	
-	virtual void paintOverImage(
-		QPainter& painter, QTransform const& transformed_to_display,
-		QTransform const& thumb_to_display);
+    RotationThumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+                      QSizeF const& max_display_size, PageId const& page_id,
+                      imageproc::AffineImageTransform const& full_size_image_transform,
+                      double compensation_angle_deg, bool draw_grid);
+
+    virtual void paintOverImage(
+        QPainter& painter, QTransform const& transformed_to_display,
+        QTransform const& thumb_to_display);
 private:
-	bool m_drawGrid;
+    bool m_drawGrid;
 };
 
 } // namespace deskew

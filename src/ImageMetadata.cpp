@@ -21,5 +21,5 @@
 bool
 ImageMetadata::operator==(ImageMetadata const& other) const
 {
-	return m_size == other.m_size;
+    return m_size == other.m_size;
 }

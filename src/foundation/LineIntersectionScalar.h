@@ -28,12 +28,12 @@
  * lines are parallel or if any of the lines have zero length and therefore no direction.
  */
 FOUNDATION_EXPORT bool lineIntersectionScalar(
-	QLineF const& line1, QLineF const& line2, double& s1, double& s2);
+    QLineF const& line1, QLineF const& line2, double& s1, double& s2);
 
 /**
  * Same as the one above, but doesn't bother to calculate s2.
  */
 FOUNDATION_EXPORT bool lineIntersectionScalar(
-	QLineF const& line1, QLineF const& line2, double& s1);
+    QLineF const& line1, QLineF const& line2, double& s1);
 
 #endif

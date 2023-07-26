@@ -29,13 +29,13 @@ namespace select_content
 class OrderByWidthProvider : public PageOrderProvider
 {
 public:
-	OrderByWidthProvider(IntrusivePtr<Settings> const& settings);
+    OrderByWidthProvider(IntrusivePtr<Settings> const& settings);
 
-	virtual bool precedes(
-		PageId const& lhs_page, bool lhs_incomplete,
-		PageId const& rhs_page, bool rhs_incomplete) const;
+    virtual bool precedes(
+        PageId const& lhs_page, bool lhs_incomplete,
+        PageId const& rhs_page, bool rhs_incomplete) const;
 private:
-	IntrusivePtr<Settings> m_ptrSettings;
+    IntrusivePtr<Settings> m_ptrSettings;
 };
 
 } // namespace select_content

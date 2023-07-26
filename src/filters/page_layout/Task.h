@@ -35,13 +35,13 @@ class QImage;
 
 namespace imageproc
 {
-	class GrayImage;
-	class AbstractImageTransform;
+class GrayImage;
+class AbstractImageTransform;
 }
 
 namespace output
 {
-	class Task;
+class Task;
 }
 
 namespace page_layout
@@ -52,31 +52,31 @@ class Settings;
 
 class Task : public RefCountable
 {
-	DECLARE_NON_COPYABLE(Task)
+    DECLARE_NON_COPYABLE(Task)
 public:
-	Task(IntrusivePtr<Filter> const& filter,
-		IntrusivePtr<output::Task> const& next_task,
-		IntrusivePtr<Settings> const& settings,
-		PageId const& page_id, bool batch, bool debug);
-	
-	virtual ~Task();
-	
-	FilterResultPtr process(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
-		boost::optional<imageproc::AffineTransformedImage> pre_transformed_image,
-		ContentBox const& content_box);
+    Task(IntrusivePtr<Filter> const& filter,
+         IntrusivePtr<output::Task> const& next_task,
+         IntrusivePtr<Settings> const& settings,
+         PageId const& page_id, bool batch, bool debug);
+
+    virtual ~Task();
+
+    FilterResultPtr process(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
+        boost::optional<imageproc::AffineTransformedImage> pre_transformed_image,
+        ContentBox const& content_box);
 private:
-	class UiUpdater;
-	
-	IntrusivePtr<Filter> m_ptrFilter;
-	IntrusivePtr<output::Task> m_ptrNextTask;
-	IntrusivePtr<Settings> m_ptrSettings;
-	PageId m_pageId;
-	bool m_batchProcessing;
+    class UiUpdater;
+
+    IntrusivePtr<Filter> m_ptrFilter;
+    IntrusivePtr<output::Task> m_ptrNextTask;
+    IntrusivePtr<Settings> m_ptrSettings;
+    PageId m_pageId;
+    bool m_batchProcessing;
 };
 
 } // namespace page_layout

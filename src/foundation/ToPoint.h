@@ -26,17 +26,17 @@
 
 inline QPoint toPoint(Eigen::Vector2i const& vec)
 {
-	return QPoint(vec[0], vec[1]);
+    return QPoint(vec[0], vec[1]);
 }
 
 inline QPointF toPoint(Eigen::Vector2f const& vec)
 {
-	return QPointF(vec[0], vec[1]);
+    return QPointF(vec[0], vec[1]);
 }
 
 inline QPointF toPoint(Eigen::Vector2d const& vec)
 {
-	return QPointF(vec[0], vec[1]);
+    return QPointF(vec[0], vec[1]);
 }
 
 #endif

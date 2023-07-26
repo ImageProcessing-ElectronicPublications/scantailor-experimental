@@ -30,7 +30,7 @@
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 namespace fix_orientation
@@ -38,20 +38,20 @@ namespace fix_orientation
 
 class ImageView : public ImageViewBase
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ImageView(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		imageproc::AffineTransformedImage const& rotated_image,
-		ImagePixmapUnion const& downscaled_image);
-	
-	virtual ~ImageView();
+    ImageView(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        imageproc::AffineTransformedImage const& rotated_image,
+        ImagePixmapUnion const& downscaled_image);
+
+    virtual ~ImageView();
 public slots:
-	void setPreRotation(OrthogonalRotation rotation);
+    void setPreRotation(OrthogonalRotation rotation);
 private:
-	DragHandler m_dragHandler;
-	ZoomHandler m_zoomHandler;
-	QSizeF m_origImageSize;
+    DragHandler m_dragHandler;
+    ZoomHandler m_zoomHandler;
+    QSizeF m_origImageSize;
 };
 
 } // namespace fix_orientation

@@ -31,7 +31,7 @@ class QRectF;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 /**
@@ -49,20 +49,20 @@ namespace imageproc
 class IncompleteThumbnail : public ThumbnailBase
 {
 public:
-	IncompleteThumbnail(
-		IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		QSizeF const& max_display_size, PageId const& page_id,
-		imageproc::AbstractImageTransform const& full_size_image_transform);
-	
-	virtual ~IncompleteThumbnail();
-	
-	static void drawQuestionMark(QPainter& painter, QRectF const& bounding_rect);
+    IncompleteThumbnail(
+        IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+        QSizeF const& max_display_size, PageId const& page_id,
+        imageproc::AbstractImageTransform const& full_size_image_transform);
+
+    virtual ~IncompleteThumbnail();
+
+    static void drawQuestionMark(QPainter& painter, QRectF const& bounding_rect);
 protected:
-	virtual void paintOverImage(
-		QPainter& painter, QTransform const& transformed_to_display,
-		QTransform const& thumb_to_display);
+    virtual void paintOverImage(
+        QPainter& painter, QTransform const& transformed_to_display,
+        QTransform const& thumb_to_display);
 private:
-	static QPainterPath m_sCachedPath;
+    static QPainterPath m_sCachedPath;
 };
 
 #endif

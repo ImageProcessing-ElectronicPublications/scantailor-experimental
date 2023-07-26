@@ -30,12 +30,12 @@ class AbstractFilterDataCollector;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 namespace page_layout
 {
-	class CacheDrivenTask;
+class CacheDrivenTask;
 }
 
 namespace select_content
@@ -45,19 +45,19 @@ class Settings;
 
 class CacheDrivenTask : public RefCountable
 {
-	DECLARE_NON_COPYABLE(CacheDrivenTask)
+    DECLARE_NON_COPYABLE(CacheDrivenTask)
 public:
-	CacheDrivenTask(IntrusivePtr<Settings> const& settings,
-		IntrusivePtr<page_layout::CacheDrivenTask> const& next_task);
-	
-	virtual ~CacheDrivenTask();
-	
-	void process(PageInfo const& page_info,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
-		AbstractFilterDataCollector* collector);
+    CacheDrivenTask(IntrusivePtr<Settings> const& settings,
+                    IntrusivePtr<page_layout::CacheDrivenTask> const& next_task);
+
+    virtual ~CacheDrivenTask();
+
+    void process(PageInfo const& page_info,
+                 std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
+                 AbstractFilterDataCollector* collector);
 private:
-	IntrusivePtr<Settings> m_ptrSettings;
-	IntrusivePtr<page_layout::CacheDrivenTask> m_ptrNextTask;
+    IntrusivePtr<Settings> m_ptrSettings;
+    IntrusivePtr<page_layout::CacheDrivenTask> m_ptrNextTask;
 };
 
 } // namespace select_content

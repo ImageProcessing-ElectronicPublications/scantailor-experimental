@@ -30,49 +30,51 @@ namespace select_content
 {
 
 Thumbnail::Thumbnail(
-	IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-	QSizeF const& max_display_size, PageId const& page_id,
-	imageproc::AbstractImageTransform const& full_size_image_transform,
-	ContentBox const& content_box)
-:	ThumbnailBase(
-		thumbnail_cache, max_display_size,
-		page_id, full_size_image_transform
-	)
+    IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+    QSizeF const& max_display_size, PageId const& page_id,
+    imageproc::AbstractImageTransform const& full_size_image_transform,
+    ContentBox const& content_box)
+    :	ThumbnailBase(
+          thumbnail_cache, max_display_size,
+          page_id, full_size_image_transform
+      )
 {
-	if (content_box.isValid()) {
-		m_transformedContentRect = content_box.toTransformedRect(
-			full_size_image_transform
-		);
-	}
+    if (content_box.isValid())
+    {
+        m_transformedContentRect = content_box.toTransformedRect(
+                                       full_size_image_transform
+                                   );
+    }
 }
 
 void
 Thumbnail::paintOverImage(
-	QPainter& painter, QTransform const& transformed_to_display,
-	QTransform const& thumb_to_display)
+    QPainter& painter, QTransform const& transformed_to_display,
+    QTransform const& thumb_to_display)
 {
-	if (m_transformedContentRect.isNull()) {
-		return;
-	}
-	
-	painter.setRenderHint(QPainter::Antialiasing, false);
-	
-	QPen pen(QColor(0x00, 0x00, 0xff));
-	pen.setWidth(1);
-	pen.setCosmetic(true);
-	painter.setPen(pen);
-	
-	painter.setBrush(QColor(0x00, 0x00, 0xff, 50));
-	
-	QRectF content_rect(toThumb().mapRect(m_transformedContentRect));
-	
-	// Adjust to compensate for pen width.
-	content_rect.adjust(-1, -1, 1, 1);
-	
-	// toRect() is necessary because we turn off antialiasing.
-	// For some reason, if we let Qt round the coordinates,
-	// the result is slightly different.
-	painter.drawRect(content_rect.toRect());
+    if (m_transformedContentRect.isNull())
+    {
+        return;
+    }
+
+    painter.setRenderHint(QPainter::Antialiasing, false);
+
+    QPen pen(QColor(0x00, 0x00, 0xff));
+    pen.setWidth(1);
+    pen.setCosmetic(true);
+    painter.setPen(pen);
+
+    painter.setBrush(QColor(0x00, 0x00, 0xff, 50));
+
+    QRectF content_rect(toThumb().mapRect(m_transformedContentRect));
+
+    // Adjust to compensate for pen width.
+    content_rect.adjust(-1, -1, 1, 1);
+
+    // toRect() is necessary because we turn off antialiasing.
+    // For some reason, if we let Qt round the coordinates,
+    // the result is slightly different.
+    painter.drawRect(content_rect.toRect());
 }
 
 } // namespace select_content

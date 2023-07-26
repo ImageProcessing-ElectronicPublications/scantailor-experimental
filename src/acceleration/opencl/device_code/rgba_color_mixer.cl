@@ -19,19 +19,20 @@
 /** @see imageproc::ColorMixer */
 void rgba_color_mixer_add(float4* accum, float4 color, float weight)
 {
-	float const weighted_alpha = color.s3 * weight;
-	color.s3 = 1.f;
-	*accum += color * weighted_alpha;
+    float const weighted_alpha = color.s3 * weight;
+    color.s3 = 1.f;
+    *accum += color * weighted_alpha;
 }
 
 /** @see imageproc::ColorMixer */
 float4 rgba_color_mixer_mix(float4 accum, float total_weight)
 {
-	if (accum.s3 < 1e-5f) {
-		return (float4)(0.f, 0.f, 0.f, 0.f);
-	}
+    if (accum.s3 < 1e-5f)
+    {
+        return (float4)(0.f, 0.f, 0.f, 0.f);
+    }
 
-	float const scale = 1.f / accum.s3;
-	accum.s3 /= total_weight * scale;
-	return accum * scale;
+    float const scale = 1.f / accum.s3;
+    accum.s3 /= total_weight * scale;
+    return accum * scale;
 }

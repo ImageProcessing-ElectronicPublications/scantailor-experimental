@@ -29,16 +29,16 @@ Dependencies::Dependencies()
 }
 
 Dependencies::Dependencies(QString const& transform_fingerprint)
-:	m_transformFingerprint(transform_fingerprint)
+    :	m_transformFingerprint(transform_fingerprint)
 {
 }
 
 Dependencies::Dependencies(QDomElement const& deps_el)
-:	m_transformFingerprint(
-		deps_el.namedItem(
-			QStringLiteral("transform-fingerprint")
-		).toElement().text().trimmed().toLatin1()
-	)
+    :	m_transformFingerprint(
+          deps_el.namedItem(
+              QStringLiteral("transform-fingerprint")
+          ).toElement().text().trimmed().toLatin1()
+      )
 {
 }
 
@@ -49,21 +49,21 @@ Dependencies::~Dependencies()
 bool
 Dependencies::matches(Dependencies const& other) const
 {
-	return m_transformFingerprint == other.m_transformFingerprint;
+    return m_transformFingerprint == other.m_transformFingerprint;
 }
 
 QDomElement
 Dependencies::toXml(QDomDocument& doc, QString const& name) const
 {
-	QDomElement fingerprint_el(
-		doc.createElement(QStringLiteral("transform-fingerprint"))
-	);
-	fingerprint_el.appendChild(doc.createTextNode(m_transformFingerprint));
+    QDomElement fingerprint_el(
+        doc.createElement(QStringLiteral("transform-fingerprint"))
+    );
+    fingerprint_el.appendChild(doc.createTextNode(m_transformFingerprint));
 
-	QDomElement deps_el(doc.createElement(name));
-	deps_el.appendChild(std::move(fingerprint_el));
-	
-	return deps_el;
+    QDomElement deps_el(doc.createElement(name));
+    deps_el.appendChild(std::move(fingerprint_el));
+
+    return deps_el;
 }
 
 } // namespace select_content

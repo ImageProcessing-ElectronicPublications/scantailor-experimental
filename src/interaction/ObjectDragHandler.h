@@ -32,43 +32,46 @@ class QString;
 
 class ObjectDragHandler : public InteractionHandler
 {
-	DECLARE_NON_COPYABLE(ObjectDragHandler)
+    DECLARE_NON_COPYABLE(ObjectDragHandler)
 public:
-	ObjectDragHandler(DraggableObject* obj = 0);
+    ObjectDragHandler(DraggableObject* obj = 0);
 
-	void setObject(DraggableObject* obj) { m_pObj = obj; }
+    void setObject(DraggableObject* obj)
+    {
+        m_pObj = obj;
+    }
 
-	void setProximityCursor(QCursor const& cursor);
+    void setProximityCursor(QCursor const& cursor);
 
-	void setInteractionCursor(QCursor const& cursor);
+    void setInteractionCursor(QCursor const& cursor);
 
-	void setProximityStatusTip(QString const& tip);
+    void setProximityStatusTip(QString const& tip);
 
-	void setInteractionStatusTip(QString const& tip);
+    void setInteractionStatusTip(QString const& tip);
 
-	bool interactionInProgress(InteractionState const& interaction) const;
+    bool interactionInProgress(InteractionState const& interaction) const;
 
-	bool proximityLeader(InteractionState const& interaction) const;
+    bool proximityLeader(InteractionState const& interaction) const;
 
-	void forceEnterDragState(InteractionState& interaction, QPoint widget_mouse_pos);
+    void forceEnterDragState(InteractionState& interaction, QPoint widget_mouse_pos);
 protected:
-	virtual void onPaint(
-		QPainter& painter, InteractionState const& interaction);
+    virtual void onPaint(
+        QPainter& painter, InteractionState const& interaction);
 
-	virtual void onProximityUpdate(
-		QPointF const& screen_mouse_pos, InteractionState& interaction);
+    virtual void onProximityUpdate(
+        QPointF const& screen_mouse_pos, InteractionState& interaction);
 
-	virtual void onMousePressEvent(
-		QMouseEvent* event, InteractionState& interaction);
+    virtual void onMousePressEvent(
+        QMouseEvent* event, InteractionState& interaction);
 
-	virtual void onMouseReleaseEvent(
-		QMouseEvent* event, InteractionState& interaction);
+    virtual void onMouseReleaseEvent(
+        QMouseEvent* event, InteractionState& interaction);
 
-	virtual void onMouseMoveEvent(
-		QMouseEvent* event, InteractionState& interaction);
+    virtual void onMouseMoveEvent(
+        QMouseEvent* event, InteractionState& interaction);
 private:
-	DraggableObject* m_pObj;
-	InteractionState::Captor m_interaction;
+    DraggableObject* m_pObj;
+    InteractionState::Captor m_interaction;
 };
 
 #endif

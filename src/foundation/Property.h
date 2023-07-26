@@ -29,9 +29,9 @@ class QDomElement;
 class FOUNDATION_EXPORT Property : public RefCountable
 {
 public:
-	virtual IntrusivePtr<Property> clone() const = 0;
+    virtual IntrusivePtr<Property> clone() const = 0;
 
-	virtual QDomElement toXml(QDomDocument& doc, QString const& name) const = 0;
+    virtual QDomElement toXml(QDomDocument& doc, QString const& name) const = 0;
 };
 
 #endif

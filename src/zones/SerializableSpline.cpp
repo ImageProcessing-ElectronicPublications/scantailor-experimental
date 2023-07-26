@@ -30,64 +30,71 @@
 
 SerializableSpline::SerializableSpline(EditableSpline const& spline)
 {
-	SplineVertex::Ptr vertex(spline.firstVertex());
-	for (; vertex; vertex = vertex->next(SplineVertex::NO_LOOP)) {
-		m_points.push_back(vertex->point());
-	}
+    SplineVertex::Ptr vertex(spline.firstVertex());
+    for (; vertex; vertex = vertex->next(SplineVertex::NO_LOOP))
+    {
+        m_points.push_back(vertex->point());
+    }
 }
 
 SerializableSpline::SerializableSpline(QDomElement const& el)
 {
-	QString const point_str("point");
+    QString const point_str("point");
 
-	QDomNode node(el.firstChild());
-	for (; !node.isNull(); node = node.nextSibling()) {
-		if (!node.isElement()) {
-			continue;
-		}
-		if (node.nodeName() != point_str) {
-			continue;
-		}
+    QDomNode node(el.firstChild());
+    for (; !node.isNull(); node = node.nextSibling())
+    {
+        if (!node.isElement())
+        {
+            continue;
+        }
+        if (node.nodeName() != point_str)
+        {
+            continue;
+        }
 
-		m_points.push_back(XmlUnmarshaller::pointF(node.toElement()));
-	}
+        m_points.push_back(XmlUnmarshaller::pointF(node.toElement()));
+    }
 }
 
 QDomElement
 SerializableSpline::toXml(QDomDocument& doc, QString const& name) const
 {
-	QDomElement el(doc.createElement(name));
+    QDomElement el(doc.createElement(name));
 
-	QString const point_str("point");
-	XmlMarshaller marshaller(doc);
-	BOOST_FOREACH(QPointF const& pt, m_points) {
-		el.appendChild(marshaller.pointF(pt, point_str));
-	}
+    QString const point_str("point");
+    XmlMarshaller marshaller(doc);
+    BOOST_FOREACH(QPointF const& pt, m_points)
+    {
+        el.appendChild(marshaller.pointF(pt, point_str));
+    }
 
-	return el;
+    return el;
 }
 
 SerializableSpline
 SerializableSpline::transformed(QTransform const& xform) const
 {
-	SerializableSpline transformed(*this);
+    SerializableSpline transformed(*this);
 
-	BOOST_FOREACH(QPointF& pt, transformed.m_points) {
-		pt = xform.map(pt);
-	}
+    BOOST_FOREACH(QPointF& pt, transformed.m_points)
+    {
+        pt = xform.map(pt);
+    }
 
-	return transformed;
+    return transformed;
 }
 
 SerializableSpline
 SerializableSpline::transformed(
-	boost::function<QPointF(QPointF const&)> const& xform) const
+    boost::function<QPointF(QPointF const&)> const& xform) const
 {
-	SerializableSpline transformed(*this);
+    SerializableSpline transformed(*this);
 
-	BOOST_FOREACH(QPointF& pt, transformed.m_points) {
-		pt = xform(pt);
-	}
+    BOOST_FOREACH(QPointF& pt, transformed.m_points)
+    {
+        pt = xform(pt);
+    }
 
-	return transformed;
+    return transformed;
 }

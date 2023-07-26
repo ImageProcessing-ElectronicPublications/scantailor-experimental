@@ -27,17 +27,20 @@ namespace deskew
 class DewarpingMode
 {
 public:
-	enum Mode { OFF, AUTO, MANUAL };
+    enum Mode { OFF, AUTO, MANUAL };
 
-	DewarpingMode(Mode mode = OFF) : m_mode(mode) {}
+    DewarpingMode(Mode mode = OFF) : m_mode(mode) {}
 
-	explicit DewarpingMode(QString const& str);
-	
-	QString toString() const;
+    explicit DewarpingMode(QString const& str);
 
-	operator Mode() const { return m_mode; }
+    QString toString() const;
+
+    operator Mode() const
+    {
+        return m_mode;
+    }
 private:
-	Mode m_mode;
+    Mode m_mode;
 };
 
 } // namespace output

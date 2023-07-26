@@ -31,7 +31,7 @@ class PageId;
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 namespace deskew
@@ -40,22 +40,22 @@ namespace deskew
 class DewarpingThumbnail : public ThumbnailBase
 {
 public:
-	DewarpingThumbnail(
-		IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		QSizeF const& max_display_size, PageId const& page_id,
-		imageproc::AffineImageTransform const& full_size_image_transform,
-		std::vector<QPointF> const& top_curve,
-		std::vector<QPointF> const& bottom_curve,
-		dewarping::DepthPerception const& depth_perception);
-	
-	virtual void paintOverImage(
-		QPainter& painter, QTransform const& transformed_to_display,
-		QTransform const& thumb_to_display);
+    DewarpingThumbnail(
+        IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+        QSizeF const& max_display_size, PageId const& page_id,
+        imageproc::AffineImageTransform const& full_size_image_transform,
+        std::vector<QPointF> const& top_curve,
+        std::vector<QPointF> const& bottom_curve,
+        dewarping::DepthPerception const& depth_perception);
+
+    virtual void paintOverImage(
+        QPainter& painter, QTransform const& transformed_to_display,
+        QTransform const& thumb_to_display);
 private:
-	std::vector<QPointF> m_topCurve;
-	std::vector<QPointF> m_bottomCurve;
-	dewarping::DepthPerception m_depthPerception;
-	bool m_isValidModel;
+    std::vector<QPointF> m_topCurve;
+    std::vector<QPointF> m_bottomCurve;
+    dewarping::DepthPerception m_depthPerception;
+    bool m_isValidModel;
 };
 
 } // namespace deskew

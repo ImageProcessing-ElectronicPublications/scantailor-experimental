@@ -33,30 +33,36 @@ namespace output
 class PictureLayerProperty : public Property
 {
 public:
-	enum Layer { NO_OP, ERASER1, PAINTER2, ERASER3 };
+    enum Layer { NO_OP, ERASER1, PAINTER2, ERASER3 };
 
-	PictureLayerProperty(Layer layer = NO_OP) : m_layer(layer) {}
+    PictureLayerProperty(Layer layer = NO_OP) : m_layer(layer) {}
 
-	PictureLayerProperty(QDomElement const& el);
+    PictureLayerProperty(QDomElement const& el);
 
-	static void registerIn(PropertyFactory& factory);
+    static void registerIn(PropertyFactory& factory);
 
-	virtual IntrusivePtr<Property> clone() const;
+    virtual IntrusivePtr<Property> clone() const;
 
-	virtual QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    virtual QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-	Layer layer() const { return m_layer; }
+    Layer layer() const
+    {
+        return m_layer;
+    }
 
-	void setLayer(Layer layer) { m_layer = layer; }
+    void setLayer(Layer layer)
+    {
+        m_layer = layer;
+    }
 private:
-	static IntrusivePtr<Property> construct(QDomElement const& el);
+    static IntrusivePtr<Property> construct(QDomElement const& el);
 
-	static Layer layerFromString(QString const& str);
+    static Layer layerFromString(QString const& str);
 
-	static QString layerToString(Layer layer);
+    static QString layerToString(Layer layer);
 
-	static char const m_propertyName[];
-	Layer m_layer;
+    static char const m_propertyName[];
+    Layer m_layer;
 };
 
 } // namespace output

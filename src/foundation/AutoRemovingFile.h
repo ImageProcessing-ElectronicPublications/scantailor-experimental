@@ -31,36 +31,42 @@
 class FOUNDATION_EXPORT AutoRemovingFile
 {
 private:
-	struct CopyHelper
-	{
-		AutoRemovingFile* obj;
+    struct CopyHelper
+    {
+        AutoRemovingFile* obj;
 
-		CopyHelper(AutoRemovingFile* o) : obj(o) {}
-	};
+        CopyHelper(AutoRemovingFile* o) : obj(o) {}
+    };
 public:
-	AutoRemovingFile();
+    AutoRemovingFile();
 
-	AutoRemovingFile(QString const& file_path);
+    AutoRemovingFile(QString const& file_path);
 
-	AutoRemovingFile(AutoRemovingFile& other);
+    AutoRemovingFile(AutoRemovingFile& other);
 
-	AutoRemovingFile(CopyHelper other);
+    AutoRemovingFile(CopyHelper other);
 
-	~AutoRemovingFile();
+    ~AutoRemovingFile();
 
-	AutoRemovingFile& operator=(AutoRemovingFile& other);
+    AutoRemovingFile& operator=(AutoRemovingFile& other);
 
-	AutoRemovingFile& operator=(CopyHelper other);
+    AutoRemovingFile& operator=(CopyHelper other);
 
-	operator CopyHelper() { return CopyHelper(this); }
+    operator CopyHelper()
+    {
+        return CopyHelper(this);
+    }
 
-	QString const& get() const { return m_file; }
+    QString const& get() const
+    {
+        return m_file;
+    }
 
-	void reset(QString const& file);
+    void reset(QString const& file);
 
-	QString release();
+    QString release();
 private:
-	QString m_file;
+    QString m_file;
 };
 
 #endif

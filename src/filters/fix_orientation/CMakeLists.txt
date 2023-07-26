@@ -3,14 +3,14 @@ PROJECT("Fix Orientation Filter")
 INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_BINARY_DIR}")
 
 SET(
-	sources
-	ImageView.cpp ImageView.h
-	Filter.cpp Filter.h
-	OptionsWidget.cpp OptionsWidget.h
-	ApplyDialog.cpp ApplyDialog.h
-	Settings.cpp Settings.h
-	Task.cpp Task.h
-	CacheDrivenTask.cpp CacheDrivenTask.h
+    sources
+    ImageView.cpp ImageView.h
+    Filter.cpp Filter.h
+    OptionsWidget.cpp OptionsWidget.h
+    ApplyDialog.cpp ApplyDialog.h
+    Settings.cpp Settings.h
+    Task.cpp Task.h
+    CacheDrivenTask.cpp CacheDrivenTask.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

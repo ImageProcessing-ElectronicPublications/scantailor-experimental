@@ -41,13 +41,16 @@ GrayImage wienerFilter(
 void wienerFilterInPlace(
     GrayImage& image, QSize const& window_size, double const noise_sigma)
 {
-    if (window_size.isEmpty()) {
+    if (window_size.isEmpty())
+    {
         throw std::invalid_argument("wienerFilter: empty window_size");
     }
-    if (noise_sigma < 0) {
+    if (noise_sigma < 0)
+    {
         throw std::invalid_argument("wienerFilter: negative noise_sigma");
     }
-    if (image.isNull()) {
+    if (image.isNull())
+    {
         return;
     }
 
@@ -61,10 +64,12 @@ void wienerFilterInPlace(
     uint8_t* image_line = image.data();
     int const image_stride = image.stride();
 
-    for (int y = 0; y < h; ++y, image_line += image_stride) {
+    for (int y = 0; y < h; ++y, image_line += image_stride)
+    {
         integral_image.beginRow();
         integral_sqimage.beginRow();
-        for (int x = 0; x < w; ++x) {
+        for (int x = 0; x < w; ++x)
+        {
             uint32_t const pixel = image_line[x];
             integral_image.push(pixel);
             integral_sqimage.push(pixel * pixel);
@@ -77,11 +82,13 @@ void wienerFilterInPlace(
     int const window_right_half = window_size.width() - window_left_half;
 
     image_line = image.data();
-    for (int y = 0; y < h; ++y, image_line += image_stride) {
+    for (int y = 0; y < h; ++y, image_line += image_stride)
+    {
         int const top = std::max(0, y - window_lower_half);
         int const bottom = std::min(h, y + window_upper_half); // exclusive
 
-        for (int x = 0; x < w; ++x) {
+        for (int x = 0; x < w; ++x)
+        {
             int const left = std::max(0, x - window_left_half);
             int const right = std::min(w, x + window_right_half); // exclusive
             int const area = (bottom - top) * (right - left);
@@ -96,10 +103,11 @@ void wienerFilterInPlace(
             double const sqmean = window_sqsum * r_area;
             double const variance = sqmean - mean * mean;
 
-            if (variance > 1e-6) {
+            if (variance > 1e-6)
+            {
                 double const src_pixel = static_cast<double>(image_line[x]);
                 double const dst_pixel = mean + (src_pixel - mean) *
-                    std::max<double>(0.0, variance - noise_variance) / variance;
+                                         std::max<double>(0.0, variance - noise_variance) / variance;
                 image_line[x] = static_cast<uint8_t>(std::lround(dst_pixel));
             }
         }

@@ -49,12 +49,12 @@ namespace opencl
  *        the same vector of events as both @p dependencies and @p completion_set.
  */
 void hitMissMatch(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<uint32_t> const& src, int const src_pixel_width,
-	imageproc::BWColor src_surroundings, OpenCLGrid<uint32_t> const& dst,
-	std::vector<QPoint> const& hits, std::vector<QPoint> const& misses,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<uint32_t> const& src, int const src_pixel_width,
+    imageproc::BWColor src_surroundings, OpenCLGrid<uint32_t> const& dst,
+    std::vector<QPoint> const& hits, std::vector<QPoint> const& misses,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 /**
  * @brief Switches some pixels between black and white, but only when a specified
@@ -78,12 +78,12 @@ void hitMissMatch(
  *        the same vector of events as both @p dependencies and @p completion_set.
  */
 void hitMissReplaceInPlace(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<uint32_t> const& image, int image_pixel_width,
-	imageproc::BWColor image_surroundings, OpenCLGrid<uint32_t> const& tmp,
-	char const* pattern, int pattern_width, int pattern_height,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<uint32_t> const& image, int image_pixel_width,
+    imageproc::BWColor image_surroundings, OpenCLGrid<uint32_t> const& tmp,
+    char const* pattern, int pattern_width, int pattern_height,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

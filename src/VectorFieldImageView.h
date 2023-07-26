@@ -32,27 +32,27 @@
 
 class VectorFieldImageView : public ImageViewBase, public InteractionHandler
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	VectorFieldImageView(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& image, Grid<Vec2f> const& directions, float max_dir_magnitude);
-	
-	virtual ~VectorFieldImageView();
-protected:
-	virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+    VectorFieldImageView(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& image, Grid<Vec2f> const& directions, float max_dir_magnitude);
 
-	virtual void onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction);
+    virtual ~VectorFieldImageView();
+protected:
+    virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+
+    virtual void onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction);
 private:
-	DragHandler m_dragHandler;
-	ZoomHandler m_zoomHandler;
-	Grid<Vec2f> m_directions;
-	QRect m_imageRect;
-	QPoint m_imageFocalPoint;
-	float m_repDirMagnitudeRecip;
-	float m_dirScale;
-	QSize m_lastWidgetSize;
-	double m_lastZoomLevel;
+    DragHandler m_dragHandler;
+    ZoomHandler m_zoomHandler;
+    Grid<Vec2f> m_directions;
+    QRect m_imageRect;
+    QPoint m_imageFocalPoint;
+    float m_repDirMagnitudeRecip;
+    float m_dirScale;
+    QSize m_lastWidgetSize;
+    double m_lastZoomLevel;
 };
 
 #endif

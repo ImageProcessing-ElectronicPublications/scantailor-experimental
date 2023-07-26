@@ -31,26 +31,38 @@ namespace output
 class Params
 {
 public:
-	Params();
-	
-	Params(QDomElement const& el);
+    Params();
 
-	ColorParams const& colorParams() const { return m_colorParams; }
+    Params(QDomElement const& el);
 
-	void setColorParams(ColorParams const& params) { m_colorParams = params; }
+    ColorParams const& colorParams() const
+    {
+        return m_colorParams;
+    }
 
-	DespeckleLevel despeckleLevel() const { return m_despeckleLevel; }
+    void setColorParams(ColorParams const& params)
+    {
+        m_colorParams = params;
+    }
 
-	void setDespeckleLevel(DespeckleLevel level) { m_despeckleLevel = level; }
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    DespeckleLevel despeckleLevel() const
+    {
+        return m_despeckleLevel;
+    }
+
+    void setDespeckleLevel(DespeckleLevel level)
+    {
+        m_despeckleLevel = level;
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	static ColorParams::ColorMode parseColorMode(QString const& str);
-	
-	static QString formatColorMode(ColorParams::ColorMode mode);
-	
-	ColorParams m_colorParams;
-	DespeckleLevel m_despeckleLevel;
+    static ColorParams::ColorMode parseColorMode(QString const& str);
+
+    static QString formatColorMode(ColorParams::ColorMode mode);
+
+    ColorParams m_colorParams;
+    DespeckleLevel m_despeckleLevel;
 };
 
 } // namespace output

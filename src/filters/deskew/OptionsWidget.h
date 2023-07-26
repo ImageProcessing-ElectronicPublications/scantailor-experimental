@@ -32,7 +32,7 @@
 
 namespace dewarping
 {
-	class DistortionModel;
+class DistortionModel;
 }
 
 namespace deskew
@@ -43,91 +43,91 @@ class Settings;
 
 class OptionsWidget : public FilterOptionsWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	OptionsWidget(IntrusivePtr<Settings> const& settings,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~OptionsWidget();
+    OptionsWidget(IntrusivePtr<Settings> const& settings,
+                  PageSelectionAccessor const& page_selection_accessor);
+
+    virtual ~OptionsWidget();
 signals:
-	void manualDeskewAngleSet(double degrees);
+    void manualDeskewAngleSet(double degrees);
 
-	void depthPerceptionSetByUser(double depth_perception);
+    void depthPerceptionSetByUser(double depth_perception);
 public slots:
-	void manualDeskewAngleSetExternally(double degrees);
+    void manualDeskewAngleSetExternally(double degrees);
 
-	void manualDistortionModelSetExternally(
-		dewarping::DistortionModel const& model);
+    void manualDistortionModelSetExternally(
+        dewarping::DistortionModel const& model);
 public:
-	void preUpdateUI(PageId const& page_id, DistortionType const& distortion_type);
-	
-	void postUpdateUI(Params const& page_params);
+    void preUpdateUI(PageId const& page_id, DistortionType const& distortion_type);
+
+    void postUpdateUI(Params const& page_params);
 private slots:
-	void noDistortionToggled(bool checked);
+    void noDistortionToggled(bool checked);
 
-	void rotationDistortionToggled(bool checked);
+    void rotationDistortionToggled(bool checked);
 
-	void perspectiveDistortionToggled(bool checked);
+    void perspectiveDistortionToggled(bool checked);
 
-	void warpDistortionToggled(bool checked);
+    void warpDistortionToggled(bool checked);
 
-	void spinBoxValueChanged(double skew_degrees);
-	
-	void modeChanged(bool auto_mode);
+    void spinBoxValueChanged(double skew_degrees);
 
-	void depthPerceptionSliderMoved(int value);
+    void modeChanged(bool auto_mode);
 
-	void depthPerceptionSliderReleased();
+    void depthPerceptionSliderMoved(int value);
 
-	void showApplyDistortionTypeDialog();
+    void depthPerceptionSliderReleased();
 
-	void distortionTypeAppliedTo(std::set<PageId> const& pages);
+    void showApplyDistortionTypeDialog();
 
-	void distortionTypeAppliedToAllPages(std::set<PageId> const& pages);
+    void distortionTypeAppliedTo(std::set<PageId> const& pages);
 
-	void showApplyDepthPerceptionDialog();
+    void distortionTypeAppliedToAllPages(std::set<PageId> const& pages);
 
-	void depthPerceptionAppliedTo(std::set<PageId> const& pages);
+    void showApplyDepthPerceptionDialog();
 
-	void depthPerceptionAppliedToAllPages(std::set<PageId> const& pages);
+    void depthPerceptionAppliedTo(std::set<PageId> const& pages);
+
+    void depthPerceptionAppliedToAllPages(std::set<PageId> const& pages);
 private:
-	void setupDistortionTypeButtons();
+    void setupDistortionTypeButtons();
 
-	void hideDistortionDependentUiElements();
+    void hideDistortionDependentUiElements();
 
-	void setupUiForDistortionType(DistortionType::Type type);
+    void setupUiForDistortionType(DistortionType::Type type);
 
-	void updateModeIndication(AutoManualMode mode);
-	
-	void setSpinBoxUnknownState();
-	
-	void setSpinBoxKnownState(double angle);
-	
-	static double spinBoxToDegrees(double sb_value);
-	
-	static double degreesToSpinBox(double degrees);
+    void updateModeIndication(AutoManualMode mode);
 
-	static int depthPerceptionToSlider(double depth_perception);
+    void setSpinBoxUnknownState();
 
-	static double sliderToDepthPerception(int slider_value);
-	
-	static double const MAX_ANGLE;
-	
-	Ui::DeskewOptionsWidget ui;
-	IntrusivePtr<Settings> m_ptrSettings;
-	PageId m_pageId;
+    void setSpinBoxKnownState(double angle);
 
-	/**
-	 * m_pageParams is not always up to date. We make sure not to commit
-	 * it to m_ptrSettings between preUpdateUI() and postUpdateUI(),
-	 * where it's certainly not up to date.
-	 */
-	Params m_pageParams;
+    static double spinBoxToDegrees(double sb_value);
 
-	QAbstractButton* m_distortionTypeButtons[DistortionType::LAST + 1];
-	int m_ignoreSignalsFromUiControls;
-	
-	PageSelectionAccessor m_pageSelectionAccessor;
+    static double degreesToSpinBox(double degrees);
+
+    static int depthPerceptionToSlider(double depth_perception);
+
+    static double sliderToDepthPerception(int slider_value);
+
+    static double const MAX_ANGLE;
+
+    Ui::DeskewOptionsWidget ui;
+    IntrusivePtr<Settings> m_ptrSettings;
+    PageId m_pageId;
+
+    /**
+     * m_pageParams is not always up to date. We make sure not to commit
+     * it to m_ptrSettings between preUpdateUI() and postUpdateUI(),
+     * where it's certainly not up to date.
+     */
+    Params m_pageParams;
+
+    QAbstractButton* m_distortionTypeButtons[DistortionType::LAST + 1];
+    int m_ignoreSignalsFromUiControls;
+
+    PageSelectionAccessor m_pageSelectionAccessor;
 };
 
 } // namespace deskew

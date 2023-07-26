@@ -28,19 +28,19 @@ namespace output
 
 class TabbedImageView : public QTabWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	TabbedImageView(QWidget* parent = 0);
+    TabbedImageView(QWidget* parent = 0);
 
-	void addTab(QWidget* widget, QString const& label, ImageViewTab tab);
+    void addTab(QWidget* widget, QString const& label, ImageViewTab tab);
 public slots:
-	void setCurrentTab(ImageViewTab tab);
+    void setCurrentTab(ImageViewTab tab);
 signals:
-	void tabChanged(ImageViewTab tab);
+    void tabChanged(ImageViewTab tab);
 private slots:
-	void tabChangedSlot(int idx);
+    void tabChangedSlot(int idx);
 private:
-	std::map<QWidget*, ImageViewTab> m_registry;
+    std::map<QWidget*, ImageViewTab> m_registry;
 };
 
 } // namespace output

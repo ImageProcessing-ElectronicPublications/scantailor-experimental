@@ -31,7 +31,7 @@ class PageId;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 namespace page_layout
@@ -40,17 +40,17 @@ namespace page_layout
 class Thumbnail : public ThumbnailBase
 {
 public:
-	Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		QSizeF const& max_display_size, PageId const& page_id, Params const& params,
-		imageproc::AbstractImageTransform const& full_size_image_transform,
-		PageLayout const& page_layout);
-	
-	virtual void paintOverImage(
-		QPainter& painter, QTransform const& transformed_to_display,
-		QTransform const& thumb_to_display);
+    Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+              QSizeF const& max_display_size, PageId const& page_id, Params const& params,
+              imageproc::AbstractImageTransform const& full_size_image_transform,
+              PageLayout const& page_layout);
+
+    virtual void paintOverImage(
+        QPainter& painter, QTransform const& transformed_to_display,
+        QTransform const& thumb_to_display);
 private:
-	Params m_params;
-	PageLayout m_pageLayout;
+    Params m_params;
+    PageLayout m_pageLayout;
 };
 
 } // namespace page_layout

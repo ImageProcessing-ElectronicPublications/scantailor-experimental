@@ -43,7 +43,7 @@ IMAGEPROC_EXPORT BinaryImage upscaleIntegerTimes(BinaryImage const& src, int xsc
  * adding a padding to reach the requested size.
  */
 IMAGEPROC_EXPORT BinaryImage upscaleIntegerTimes(
-	BinaryImage const& src, QSize const& dst_size, BWColor padding);
+    BinaryImage const& src, QSize const& dst_size, BWColor padding);
 
 } // namespace imageproc
 

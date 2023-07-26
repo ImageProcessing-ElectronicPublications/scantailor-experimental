@@ -37,8 +37,8 @@ namespace opencl
  * @return The rendered surface.
  */
 imageproc::GrayImage renderPolynomialSurface(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	int width, int height, Eigen::MatrixXd const& coeffs);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    int width, int height, Eigen::MatrixXd const& coeffs);
 
 } // namespace opencl
 

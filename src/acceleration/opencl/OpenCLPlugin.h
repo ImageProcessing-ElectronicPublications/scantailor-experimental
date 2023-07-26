@@ -33,28 +33,28 @@ namespace opencl
 
 class OpenCLPlugin : public QObject, public AccelerationPlugin
 {
-	Q_OBJECT
-	Q_PLUGIN_METADATA(IID AccelerationPlugin_iid)
-	Q_INTERFACES(AccelerationPlugin)
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID AccelerationPlugin_iid)
+    Q_INTERFACES(AccelerationPlugin)
 public:
-	OpenCLPlugin();
+    OpenCLPlugin();
 
-	virtual ~OpenCLPlugin();
+    virtual ~OpenCLPlugin();
 
-	virtual std::vector<std::string> devices() const;
+    virtual std::vector<std::string> devices() const;
 
-	virtual void selectDevice(std::string const& device_name);
+    virtual void selectDevice(std::string const& device_name);
 
-	virtual std::string selectedDevice() const;
+    virtual std::string selectedDevice() const;
 
-	virtual std::shared_ptr<AcceleratableOperations> getOperations(
-		std::shared_ptr<AcceleratableOperations> const& fallback);
+    virtual std::shared_ptr<AcceleratableOperations> getOperations(
+        std::shared_ptr<AcceleratableOperations> const& fallback);
 
-	virtual void releaseResources();
+    virtual void releaseResources();
 private:
-	std::vector<cl::Device> m_devices;
-	cl::Device m_selectedDevice;
-	std::shared_ptr<AcceleratableOperations> m_ptrCachedOps;
+    std::vector<cl::Device> m_devices;
+    cl::Device m_selectedDevice;
+    std::shared_ptr<AcceleratableOperations> m_ptrCachedOps;
 };
 
 } // namespace opencl

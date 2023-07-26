@@ -35,109 +35,111 @@ namespace output
 {
 
 class OnDemandPictureZoneEditor::ImageTransformationTask :
-	public AbstractCommand0<BackgroundExecutor::TaskResultPtr>
+    public AbstractCommand0<BackgroundExecutor::TaskResultPtr>
 {
 public:
-	ImageTransformationTask(
-		OnDemandPictureZoneEditor* owner,
-		CachingFactory<QImage> const& cached_transformed_orig_image,
-		CachingFactory<QImage> const& cached_downscaled_transformed_orig_image);
+    ImageTransformationTask(
+        OnDemandPictureZoneEditor* owner,
+        CachingFactory<QImage> const& cached_transformed_orig_image,
+        CachingFactory<QImage> const& cached_downscaled_transformed_orig_image);
 
-	virtual BackgroundExecutor::TaskResultPtr operator()();
+    virtual BackgroundExecutor::TaskResultPtr operator()();
 private:
-	QPointer<OnDemandPictureZoneEditor> m_ptrOwner;
-	CachingFactory<QImage> m_cachedTransformedOrigImage;
-	CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
+    QPointer<OnDemandPictureZoneEditor> m_ptrOwner;
+    CachingFactory<QImage> m_cachedTransformedOrigImage;
+    CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
 };
 
 
 class OnDemandPictureZoneEditor::ImageTransformationResult : public AbstractCommand0<void>
 {
 public:
-	ImageTransformationResult(QPointer<OnDemandPictureZoneEditor> const& owner);
+    ImageTransformationResult(QPointer<OnDemandPictureZoneEditor> const& owner);
 
-	virtual void operator()();
+    virtual void operator()();
 private:
-	QPointer<OnDemandPictureZoneEditor> m_ptrOwner;
+    QPointer<OnDemandPictureZoneEditor> m_ptrOwner;
 };
 
 
 /*========================== OnDemandPictureZoneEditor ==========================*/
 
 OnDemandPictureZoneEditor::OnDemandPictureZoneEditor(
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	CachingFactory<QImage> const& cached_transformed_orig_image,
-	CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
-	imageproc::BinaryImage const& output_picture_mask,
-	PageId const& page_id, IntrusivePtr<Settings> const& settings,
-	std::function<QPointF(QPointF const&)> const& orig_to_output,
-	std::function<QPointF(QPointF const&)> const& output_to_orig)
-:	m_ptrAccelOps(accel_ops)
-,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
-,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
-,	m_outputPictureMask(output_picture_mask)
-,	m_pageId(page_id)
-,	m_ptrSettings(settings)
-,	m_origToOutput(orig_to_output)
-,	m_outputToOrig(output_to_orig)
-,	m_pProcessingIndicator(new ProcessingIndicationWidget(this))
-,	m_backgroundTaskSubmitted(false)
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    CachingFactory<QImage> const& cached_transformed_orig_image,
+    CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
+    imageproc::BinaryImage const& output_picture_mask,
+    PageId const& page_id, IntrusivePtr<Settings> const& settings,
+    std::function<QPointF(QPointF const&)> const& orig_to_output,
+    std::function<QPointF(QPointF const&)> const& output_to_orig)
+    :	m_ptrAccelOps(accel_ops)
+    ,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
+    ,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
+    ,	m_outputPictureMask(output_picture_mask)
+    ,	m_pageId(page_id)
+    ,	m_ptrSettings(settings)
+    ,	m_origToOutput(orig_to_output)
+    ,	m_outputToOrig(output_to_orig)
+    ,	m_pProcessingIndicator(new ProcessingIndicationWidget(this))
+    ,	m_backgroundTaskSubmitted(false)
 {
-	addWidget(m_pProcessingIndicator);
+    addWidget(m_pProcessingIndicator);
 
-	if (cached_transformed_orig_image.isCached()) {
-		buildRealPictureZoneEditor();
-	}
+    if (cached_transformed_orig_image.isCached())
+    {
+        buildRealPictureZoneEditor();
+    }
 }
 
 void
 OnDemandPictureZoneEditor::showEvent(QShowEvent* evt)
 {
-	QStackedWidget::showEvent(evt);
+    QStackedWidget::showEvent(evt);
 
-	if (!m_backgroundTaskSubmitted && currentWidget() == m_pProcessingIndicator) {
-		BackgroundExecutor::TaskPtr const task(
-			new ImageTransformationTask(
-				this, m_cachedTransformedOrigImage,
-				m_cachedDownscaledTransformedOrigImage
-			)
-		);
-		ImageViewBase::backgroundExecutor().enqueueTask(task);
-		m_backgroundTaskSubmitted = true;
-	}
+    if (!m_backgroundTaskSubmitted && currentWidget() == m_pProcessingIndicator)
+    {
+        BackgroundExecutor::TaskPtr const task(
+            new ImageTransformationTask(
+                this, m_cachedTransformedOrigImage,
+                m_cachedDownscaledTransformedOrigImage
+            )
+        );
+        ImageViewBase::backgroundExecutor().enqueueTask(task);
+        m_backgroundTaskSubmitted = true;
+    }
 }
 
 void
 OnDemandPictureZoneEditor::buildRealPictureZoneEditor()
 {
-	std::unique_ptr<QWidget> widget(
-		new PictureZoneEditor(
-			m_ptrAccelOps,
-			m_cachedTransformedOrigImage(),
-			m_cachedDownscaledTransformedOrigImage(),
-			m_outputPictureMask, m_pageId, m_ptrSettings,
-			m_origToOutput, m_outputToOrig
-		)
-	);
+    std::unique_ptr<QWidget> widget(
+        new PictureZoneEditor(
+            m_ptrAccelOps,
+            m_cachedTransformedOrigImage(),
+            m_cachedDownscaledTransformedOrigImage(),
+            m_outputPictureMask, m_pageId, m_ptrSettings,
+            m_origToOutput, m_outputToOrig
+        )
+    );
 
-	connect(
-		widget.get(), SIGNAL(invalidateThumbnail(PageId const&)),
-		this, SIGNAL(invalidateThumbnail(PageId const&))
-	);
+    connect(
+        widget.get(), SIGNAL(invalidateThumbnail(PageId const&)),
+        this, SIGNAL(invalidateThumbnail(PageId const&))
+    );
 
-	setCurrentIndex(addWidget(widget.release()));
+    setCurrentIndex(addWidget(widget.release()));
 }
 
 
 /*========================= ImageTransformationTask =======================*/
 
 OnDemandPictureZoneEditor::ImageTransformationTask::ImageTransformationTask(
-	OnDemandPictureZoneEditor* owner,
-	CachingFactory<QImage> const& cached_transformed_orig_image,
-	CachingFactory<QImage> const& cached_downscaled_transformed_orig_image)
-:	m_ptrOwner(owner)
-,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
-,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
+    OnDemandPictureZoneEditor* owner,
+    CachingFactory<QImage> const& cached_transformed_orig_image,
+    CachingFactory<QImage> const& cached_downscaled_transformed_orig_image)
+    :	m_ptrOwner(owner)
+    ,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
+    ,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
 {
 }
 
@@ -145,21 +147,21 @@ OnDemandPictureZoneEditor::ImageTransformationTask::ImageTransformationTask(
 BackgroundExecutor::TaskResultPtr
 OnDemandPictureZoneEditor::ImageTransformationTask::operator()()
 {
-	// Create images and populate the cache.
-	m_cachedTransformedOrigImage();
-	m_cachedDownscaledTransformedOrigImage();
+    // Create images and populate the cache.
+    m_cachedTransformedOrigImage();
+    m_cachedDownscaledTransformedOrigImage();
 
-	return BackgroundExecutor::TaskResultPtr(
-		new ImageTransformationResult(m_ptrOwner)
-	);
+    return BackgroundExecutor::TaskResultPtr(
+               new ImageTransformationResult(m_ptrOwner)
+           );
 }
 
 
 /*===================== ImageTransformationResult ======================*/
 
 OnDemandPictureZoneEditor::ImageTransformationResult::ImageTransformationResult(
-	QPointer<OnDemandPictureZoneEditor> const& owner)
-:	m_ptrOwner(owner)
+    QPointer<OnDemandPictureZoneEditor> const& owner)
+    :	m_ptrOwner(owner)
 {
 }
 
@@ -167,9 +169,10 @@ OnDemandPictureZoneEditor::ImageTransformationResult::ImageTransformationResult(
 void
 OnDemandPictureZoneEditor::ImageTransformationResult::operator()()
 {
-	if (OnDemandPictureZoneEditor* owner = m_ptrOwner) {
-		owner->buildRealPictureZoneEditor();
-	}
+    if (OnDemandPictureZoneEditor* owner = m_ptrOwner)
+    {
+        owner->buildRealPictureZoneEditor();
+    }
 }
 
 } // namespace output

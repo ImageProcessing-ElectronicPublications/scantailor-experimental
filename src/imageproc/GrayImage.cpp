@@ -25,32 +25,34 @@ namespace imageproc
 
 GrayImage::GrayImage(QSize size)
 {
-	if (size.isEmpty()) {
-		return;
-	}
+    if (size.isEmpty())
+    {
+        return;
+    }
 
-	m_image = QImage(size, QImage::Format_Indexed8);
-	m_image.setColorTable(createGrayscalePalette());
-	if (m_image.isNull()) {
-		throw std::bad_alloc();
-	}
+    m_image = QImage(size, QImage::Format_Indexed8);
+    m_image.setColorTable(createGrayscalePalette());
+    if (m_image.isNull())
+    {
+        throw std::bad_alloc();
+    }
 }
 
 GrayImage::GrayImage(QImage const& image)
-:	m_image(toGrayscale(image))
+    :	m_image(toGrayscale(image))
 {
 }
 
 GridAccessor<uint8_t const>
 GrayImage::accessor() const
 {
-	return GridAccessor<uint8_t const>{data(), stride(), width(), height()};
+    return GridAccessor<uint8_t const> {data(), stride(), width(), height()};
 }
 
 GridAccessor<uint8_t>
 GrayImage::accessor()
 {
-	return GridAccessor<uint8_t>{data(), stride(), width(), height()};
+    return GridAccessor<uint8_t> {data(), stride(), width(), height()};
 }
 
 

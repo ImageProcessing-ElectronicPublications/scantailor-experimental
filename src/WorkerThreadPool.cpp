@@ -30,23 +30,29 @@
 class WorkerThreadPool::TaskResultEvent : public QEvent
 {
 public:
-	TaskResultEvent(BackgroundTaskPtr const& task, FilterResultPtr const& result)
-	: QEvent(User), m_ptrTask(task), m_ptrResult(result) {}
-	
-	BackgroundTaskPtr const& task() const { return m_ptrTask; }
-	
-	FilterResultPtr const& result() const { return m_ptrResult; }
+    TaskResultEvent(BackgroundTaskPtr const& task, FilterResultPtr const& result)
+        : QEvent(User), m_ptrTask(task), m_ptrResult(result) {}
+
+    BackgroundTaskPtr const& task() const
+    {
+        return m_ptrTask;
+    }
+
+    FilterResultPtr const& result() const
+    {
+        return m_ptrResult;
+    }
 private:
-	BackgroundTaskPtr m_ptrTask;
-	FilterResultPtr m_ptrResult;
+    BackgroundTaskPtr m_ptrTask;
+    FilterResultPtr m_ptrResult;
 };
 
 
 WorkerThreadPool::WorkerThreadPool(QObject* parent)
-:	QObject(parent),
-	m_pPool(new QThreadPool(this))
+    :	QObject(parent),
+      m_pPool(new QThreadPool(this))
 {
-	updateNumberOfThreads();
+    updateNumberOfThreads();
 }
 
 WorkerThreadPool::~WorkerThreadPool()
@@ -56,70 +62,79 @@ WorkerThreadPool::~WorkerThreadPool()
 void
 WorkerThreadPool::shutdown()
 {
-	m_pPool->waitForDone();
+    m_pPool->waitForDone();
 }
 
 bool
 WorkerThreadPool::hasSpareCapacity() const
 {
-	return m_pPool->activeThreadCount() < m_pPool->maxThreadCount();
+    return m_pPool->activeThreadCount() < m_pPool->maxThreadCount();
 }
 
 void
 WorkerThreadPool::submitTask(BackgroundTaskPtr const& task)
 {
-	class Runnable : public QRunnable
-	{
-	public:
-		Runnable(WorkerThreadPool& owner, BackgroundTaskPtr const& task)
-				: m_rOwner(owner), m_ptrTask(task) {
-			setAutoDelete(true);
-		}
+    class Runnable : public QRunnable
+    {
+    public:
+        Runnable(WorkerThreadPool& owner, BackgroundTaskPtr const& task)
+            : m_rOwner(owner), m_ptrTask(task)
+        {
+            setAutoDelete(true);
+        }
 
-		virtual void run() override {
-			if (m_ptrTask->isCancelled()) {
-				return;
-			}
+        virtual void run() override
+        {
+            if (m_ptrTask->isCancelled())
+            {
+                return;
+            }
 
-			try {
-				FilterResultPtr const result((*m_ptrTask)());
-				if (result) {
-					QCoreApplication::postEvent(
-						&m_rOwner, new TaskResultEvent(m_ptrTask, result)
-					);
-				}
-			} catch (std::bad_alloc const&) {
-				OutOfMemoryHandler::instance().handleOutOfMemorySituation();
-			}
-		}
-	private:
-		WorkerThreadPool& m_rOwner;
-		BackgroundTaskPtr m_ptrTask;
-	};
+            try
+            {
+                FilterResultPtr const result((*m_ptrTask)());
+                if (result)
+                {
+                    QCoreApplication::postEvent(
+                        &m_rOwner, new TaskResultEvent(m_ptrTask, result)
+                    );
+                }
+            }
+            catch (std::bad_alloc const&)
+            {
+                OutOfMemoryHandler::instance().handleOutOfMemorySituation();
+            }
+        }
+    private:
+        WorkerThreadPool& m_rOwner;
+        BackgroundTaskPtr m_ptrTask;
+    };
 
-	updateNumberOfThreads();
-	m_pPool->start(new Runnable(*this, task));
+    updateNumberOfThreads();
+    m_pPool->start(new Runnable(*this, task));
 }
 
 void
 WorkerThreadPool::customEvent(QEvent* event)
 {
-	if (TaskResultEvent* evt = dynamic_cast<TaskResultEvent*>(event)) {
-		emit taskResult(evt->task(), evt->result());
-	}
+    if (TaskResultEvent* evt = dynamic_cast<TaskResultEvent*>(event))
+    {
+        emit taskResult(evt->task(), evt->result());
+    }
 }
 
 void
 WorkerThreadPool::updateNumberOfThreads()
 {
-	int max_threads = 1;
-	if (sizeof(void*) > 4) {
-		// We only allow parallel processing on 64-bit builds due to
-		// address space constraints.
-		max_threads = QThread::idealThreadCount();
-	}
+    int max_threads = 1;
+    if (sizeof(void*) > 4)
+    {
+        // We only allow parallel processing on 64-bit builds due to
+        // address space constraints.
+        max_threads = QThread::idealThreadCount();
+    }
 
-	int num_threads = m_settings.value("settings/batch_processing_threads", max_threads).toInt();
-	num_threads = std::min<int>(num_threads, max_threads);
-	m_pPool->setMaxThreadCount(num_threads);
+    int num_threads = m_settings.value("settings/batch_processing_threads", max_threads).toInt();
+    num_threads = std::min<int>(num_threads, max_threads);
+    m_pPool->setMaxThreadCount(num_threads);
 }

@@ -39,65 +39,71 @@ namespace deskew
 {
 
 DewarpingThumbnail::DewarpingThumbnail(
-	IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-	QSizeF const& max_display_size, PageId const& page_id,
-	AffineImageTransform const& full_size_image_transform,
-	std::vector<QPointF> const& top_curve,
-	std::vector<QPointF> const& bottom_curve,
-	dewarping::DepthPerception const& depth_perception)
-:	ThumbnailBase(
-		thumbnail_cache, max_display_size,
-		page_id, full_size_image_transform
-	)
-,	m_topCurve(top_curve)
-,	m_bottomCurve(bottom_curve)
-,	m_depthPerception(depth_perception)
+    IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+    QSizeF const& max_display_size, PageId const& page_id,
+    AffineImageTransform const& full_size_image_transform,
+    std::vector<QPointF> const& top_curve,
+    std::vector<QPointF> const& bottom_curve,
+    dewarping::DepthPerception const& depth_perception)
+    :	ThumbnailBase(
+          thumbnail_cache, max_display_size,
+          page_id, full_size_image_transform
+      )
+    ,	m_topCurve(top_curve)
+    ,	m_bottomCurve(bottom_curve)
+    ,	m_depthPerception(depth_perception)
 {
-	dewarping::DistortionModel distortion_model;
-	distortion_model.setTopCurve(Curve(m_topCurve));
-	distortion_model.setBottomCurve(Curve(m_bottomCurve));
-	m_isValidModel = distortion_model.isValid();
+    dewarping::DistortionModel distortion_model;
+    distortion_model.setTopCurve(Curve(m_topCurve));
+    distortion_model.setBottomCurve(Curve(m_bottomCurve));
+    m_isValidModel = distortion_model.isValid();
 }
 
 void
 DewarpingThumbnail::paintOverImage(
-	QPainter& painter, QTransform const& transformed_to_display,
-	QTransform const& thumb_to_display)
+    QPainter& painter, QTransform const& transformed_to_display,
+    QTransform const& thumb_to_display)
 {
-	if (!m_isValidModel) {
-		return;
-	}
-	
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	painter.setTransform(fullSizeImageTransform().toAffine().transform() * transformed_to_display);
+    if (!m_isValidModel)
+    {
+        return;
+    }
 
-	QPen pen(QColor(0, 0, 255, 150));
-	pen.setWidthF(1.0);
-	pen.setCosmetic(true);
-	painter.setPen(pen);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setTransform(fullSizeImageTransform().toAffine().transform() * transformed_to_display);
 
-	unsigned const num_horizontal_curves = 15;
-	unsigned const num_vertical_lines = 10;
-	std::vector<std::vector<QPointF>> horizontal_curves;
-	std::vector<QLineF> vertical_lines;
+    QPen pen(QColor(0, 0, 255, 150));
+    pen.setWidthF(1.0);
+    pen.setCosmetic(true);
+    painter.setPen(pen);
 
-	try {
-		Utils::buildWarpVisualization(
-			m_topCurve, m_bottomCurve, m_depthPerception,
-			num_horizontal_curves, num_vertical_lines,
-			horizontal_curves, vertical_lines
-		);
+    unsigned const num_horizontal_curves = 15;
+    unsigned const num_vertical_lines = 10;
+    std::vector<std::vector<QPointF>> horizontal_curves;
+    std::vector<QLineF> vertical_lines;
 
-		for (auto const& curve : horizontal_curves) {
-			painter.drawPolyline(curve.data(), curve.size());
-		}
+    try
+    {
+        Utils::buildWarpVisualization(
+            m_topCurve, m_bottomCurve, m_depthPerception,
+            num_horizontal_curves, num_vertical_lines,
+            horizontal_curves, vertical_lines
+        );
 
-		for (auto const& line : vertical_lines) {
-			painter.drawLine(line);
-		}
-	} catch (std::runtime_error const&) {
-		// Invalid model?
-	}
+        for (auto const& curve : horizontal_curves)
+        {
+            painter.drawPolyline(curve.data(), curve.size());
+        }
+
+        for (auto const& line : vertical_lines)
+        {
+            painter.drawLine(line);
+        }
+    }
+    catch (std::runtime_error const&)
+    {
+        // Invalid model?
+    }
 }
 
 } // namespace deskew

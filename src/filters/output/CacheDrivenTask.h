@@ -32,12 +32,12 @@ class AbstractFilterDataCollector;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 namespace page_layout
 {
-	class PageLayout;
+class PageLayout;
 }
 
 namespace output
@@ -47,28 +47,28 @@ class Settings;
 
 class CacheDrivenTask : public RefCountable
 {
-	DECLARE_NON_COPYABLE(CacheDrivenTask)
+    DECLARE_NON_COPYABLE(CacheDrivenTask)
 public:
-	CacheDrivenTask(
-		IntrusivePtr<Settings> const& settings,
-		OutputFileNameGenerator const& out_file_name_gen);
-	
-	virtual ~CacheDrivenTask();
+    CacheDrivenTask(
+        IntrusivePtr<Settings> const& settings,
+        OutputFileNameGenerator const& out_file_name_gen);
 
-	void process(
-		PageInfo const& page_info,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
-		QRectF const& content_rect, QRectF const& outer_rect,
-		AbstractFilterDataCollector* collector);
+    virtual ~CacheDrivenTask();
+
+    void process(
+        PageInfo const& page_info,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
+        QRectF const& content_rect, QRectF const& outer_rect,
+        AbstractFilterDataCollector* collector);
 private:
-	void processScaled(
-		PageInfo const& page_info,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
-		QRectF const& content_rect, QRectF const& outer_rect,
-		AbstractFilterDataCollector* collector);
+    void processScaled(
+        PageInfo const& page_info,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
+        QRectF const& content_rect, QRectF const& outer_rect,
+        AbstractFilterDataCollector* collector);
 
-	IntrusivePtr<Settings> m_ptrSettings;
-	OutputFileNameGenerator m_outFileNameGen;
+    IntrusivePtr<Settings> m_ptrSettings;
+    OutputFileNameGenerator m_outFileNameGen;
 };
 
 } // namespace output

@@ -40,12 +40,12 @@ namespace opencl
  * @see binary_raster_op.cl
  */
 void binaryRasterOp(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	std::string const& kernel_name_base,
-	OpenCLGrid<uint32_t> const& src_grid, QRect const& src_pixel_rect,
-	OpenCLGrid<uint32_t> const& dst_grid, QRect const& dst_pixel_rect,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    std::string const& kernel_name_base,
+    OpenCLGrid<uint32_t> const& src_grid, QRect const& src_pixel_rect,
+    OpenCLGrid<uint32_t> const& dst_grid, QRect const& dst_pixel_rect,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

@@ -25,7 +25,7 @@
 
 namespace imageproc
 {
-	class BinaryImage;
+class BinaryImage;
 }
 
 namespace output
@@ -34,33 +34,42 @@ namespace output
 class DespeckleVisualization
 {
 public:
-	/*
-	 * Constructs a null visualization.
-	 */
-	DespeckleVisualization() {}
+    /*
+     * Constructs a null visualization.
+     */
+    DespeckleVisualization() {}
 
-	/**
-	 * \param accel_ops OpenCL-acceleratable operations.
-	 * \param output The output file, as produced by OutputGenerator::process().
-	 *        If this one is null, the visualization will be null as well.
-	 * \param speckles Speckles detected in the image.
-	 *        If this one is null, it is considered no speckles were detected.
-	 */
-	DespeckleVisualization(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& output, imageproc::BinaryImage const& speckles);
+    /**
+     * \param accel_ops OpenCL-acceleratable operations.
+     * \param output The output file, as produced by OutputGenerator::process().
+     *        If this one is null, the visualization will be null as well.
+     * \param speckles Speckles detected in the image.
+     *        If this one is null, it is considered no speckles were detected.
+     */
+    DespeckleVisualization(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& output, imageproc::BinaryImage const& speckles);
 
-	bool isNull() const { return m_image.isNull(); }
+    bool isNull() const
+    {
+        return m_image.isNull();
+    }
 
-	QImage const& image() const { return m_image; }
+    QImage const& image() const
+    {
+        return m_image;
+    }
 
-	QImage const& downscaledImage() const { return m_downscaledImage; }
+    QImage const& downscaledImage() const
+    {
+        return m_downscaledImage;
+    }
 private:
-	static void colorizeSpeckles(
-		QImage& image, imageproc::BinaryImage const& speckles);
+    static void colorizeSpeckles(
+        QImage& image, imageproc::BinaryImage const& speckles);
 
-	QImage m_image;
-	QImage m_downscaledImage;
+    QImage m_image;
+    QImage m_downscaledImage;
 };
 
 } // namespace output

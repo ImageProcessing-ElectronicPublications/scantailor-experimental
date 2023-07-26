@@ -35,27 +35,33 @@ class BinaryImage;
 class IMAGEPROC_EXPORT GrayscaleHistogram
 {
 public:
-	explicit GrayscaleHistogram(QImage const& img);
-	
-	GrayscaleHistogram(QImage const& img, BinaryImage const& mask);
-	
-	int& operator[](int idx) { return m_pixels[idx]; }
-	
-	int operator[](int idx) const { return m_pixels[idx]; }
+    explicit GrayscaleHistogram(QImage const& img);
+
+    GrayscaleHistogram(QImage const& img, BinaryImage const& mask);
+
+    int& operator[](int idx)
+    {
+        return m_pixels[idx];
+    }
+
+    int operator[](int idx) const
+    {
+        return m_pixels[idx];
+    }
 private:
-	void fromMonoImage(QImage const& img);
-	
-	void fromMonoMSBImage(QImage const& img, BinaryImage const& mask);
-	
-	void fromGrayscaleImage(QImage const& img);
-	
-	void fromGrayscaleImage(QImage const& img, BinaryImage const& mask);
-	
-	void fromAnyImage(QImage const& img);
-	
-	void fromAnyImage(QImage const& img, BinaryImage const& mask);
-	
-	int m_pixels[256];
+    void fromMonoImage(QImage const& img);
+
+    void fromMonoMSBImage(QImage const& img, BinaryImage const& mask);
+
+    void fromGrayscaleImage(QImage const& img);
+
+    void fromGrayscaleImage(QImage const& img, BinaryImage const& mask);
+
+    void fromAnyImage(QImage const& img);
+
+    void fromAnyImage(QImage const& img, BinaryImage const& mask);
+
+    int m_pixels[256];
 };
 
 /**
@@ -84,7 +90,7 @@ IMAGEPROC_EXPORT QImage toGrayscale(QImage const& src);
  * \return A grayscale image, or a null image, if \p src was null.
  */
 IMAGEPROC_EXPORT GrayImage stretchGrayRange(GrayImage const& src,
-	double black_clip_fraction = 0.0, double white_clip_fraction = 0.0);
+        double black_clip_fraction = 0.0, double white_clip_fraction = 0.0);
 
 /**
  * \brief Create a grayscale image consisting of a 1 pixel frame and an inner area.
@@ -95,8 +101,8 @@ IMAGEPROC_EXPORT GrayImage stretchGrayRange(GrayImage const& src,
  * \return The resulting image.
  */
 IMAGEPROC_EXPORT GrayImage createFramedImage(
-	QSize const& size, unsigned char inner_color = 0xff,
-	unsigned char frame_color = 0x00);
+    QSize const& size, unsigned char inner_color = 0xff,
+    unsigned char frame_color = 0x00);
 
 /**
  * \brief Find the darkest gray level of an image.

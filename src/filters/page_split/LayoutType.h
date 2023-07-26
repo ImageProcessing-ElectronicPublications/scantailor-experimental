@@ -24,11 +24,12 @@
 namespace page_split
 {
 
-enum LayoutType {
-	AUTO_LAYOUT_TYPE,
-	SINGLE_PAGE_UNCUT,
-	PAGE_PLUS_OFFCUT,
-	TWO_PAGES
+enum LayoutType
+{
+    AUTO_LAYOUT_TYPE,
+    SINGLE_PAGE_UNCUT,
+    PAGE_PLUS_OFFCUT,
+    TWO_PAGES
 };
 
 QString layoutTypeToString(LayoutType type);

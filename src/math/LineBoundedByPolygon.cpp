@@ -22,36 +22,41 @@
 
 bool lineBoundedByPolygon(QLineF& line, QPolygonF const& poly)
 {
-	double min_line_proj = std::numeric_limits<double>::max();
-	double max_line_proj = std::numeric_limits<double>::lowest();
-	int const num_vertices = poly.size() - (poly.isClosed() ? 1 : 0);
+    double min_line_proj = std::numeric_limits<double>::max();
+    double max_line_proj = std::numeric_limits<double>::lowest();
+    int const num_vertices = poly.size() - (poly.isClosed() ? 1 : 0);
 
-	for (int src = 0; src < num_vertices; ++src) {
-		int const dst = (src + 1) % num_vertices;
-		QLineF const edge(QLineF(poly[src], poly[dst]));
+    for (int src = 0; src < num_vertices; ++src)
+    {
+        int const dst = (src + 1) % num_vertices;
+        QLineF const edge(QLineF(poly[src], poly[dst]));
 
-		double edge_proj;
-		double line_proj;
-		if (!lineIntersectionScalar(edge, line, edge_proj, line_proj)) {
-			continue;
-		}
+        double edge_proj;
+        double line_proj;
+        if (!lineIntersectionScalar(edge, line, edge_proj, line_proj))
+        {
+            continue;
+        }
 
-		if (edge_proj < -std::numeric_limits<double>::epsilon()) {
-			continue;
-		}
+        if (edge_proj < -std::numeric_limits<double>::epsilon())
+        {
+            continue;
+        }
 
-		if (edge_proj > 1.0 + std::numeric_limits<double>::epsilon()) {
-			continue;
-		}
+        if (edge_proj > 1.0 + std::numeric_limits<double>::epsilon())
+        {
+            continue;
+        }
 
-		min_line_proj = std::min<double>(min_line_proj, line_proj);
-		max_line_proj = std::max<double>(max_line_proj, line_proj);
-	}
+        min_line_proj = std::min<double>(min_line_proj, line_proj);
+        max_line_proj = std::max<double>(max_line_proj, line_proj);
+    }
 
-	if (max_line_proj > min_line_proj) {
-		line = QLineF(line.pointAt(min_line_proj), line.pointAt(max_line_proj));
-		return true;
-	}
+    if (max_line_proj > min_line_proj)
+    {
+        line = QLineF(line.pointAt(min_line_proj), line.pointAt(max_line_proj));
+        return true;
+    }
 
-	return false;
+    return false;
 }

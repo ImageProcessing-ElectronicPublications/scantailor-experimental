@@ -203,36 +203,36 @@ BINARY_ROP_KERNEL_SRC_AHEAD_OF_DST(binary_rop_kernel_ ## action ## _src_dst, bin
 
 uint binary_rop_src(uint src, uint dst)
 {
-	return src;
+    return src;
 }
 BINARY_ROP_KERNEL(src)
 
 uint binary_rop_not_src(uint src, uint dst)
 {
-	return ~src;
+    return ~src;
 }
 BINARY_ROP_KERNEL(not_src)
 
 uint binary_rop_dst_and_not_src(uint src, uint dst)
 {
-	return dst & ~src;
+    return dst & ~src;
 }
 BINARY_ROP_KERNEL(dst_and_not_src)
 
 uint binary_rop_and(uint src, uint dst)
 {
-	return src & dst;
+    return src & dst;
 }
 BINARY_ROP_KERNEL(and)
 
 uint binary_rop_or(uint src, uint dst)
 {
-	return src | dst;
+    return src | dst;
 }
 BINARY_ROP_KERNEL(or)
 
 uint binary_rop_xor(uint src, uint dst)
 {
-	return src ^ dst;
+    return src ^ dst;
 }
 BINARY_ROP_KERNEL(xor)

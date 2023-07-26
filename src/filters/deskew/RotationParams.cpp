@@ -27,47 +27,48 @@ namespace deskew
 {
 
 RotationParams::RotationParams()
-:	m_compensationAngleDeg(0)
-,	m_mode(MODE_AUTO)
-,	m_isValid(false)
+    :	m_compensationAngleDeg(0)
+    ,	m_mode(MODE_AUTO)
+    ,	m_isValid(false)
 {
 }
 
 RotationParams::RotationParams(QDomElement const& el)
-:	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    :	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
-	m_compensationAngleDeg = el.attribute("angle").toDouble(&m_isValid);
+    m_compensationAngleDeg = el.attribute("angle").toDouble(&m_isValid);
 }
 
 void
 RotationParams::invalidate()
 {
-	*this = RotationParams();
+    *this = RotationParams();
 }
 
 void
 RotationParams::setCompensationAngleDeg(double angle_deg)
 {
-	using namespace std;
+    using namespace std;
 
-	if (isfinite(angle_deg))
-	{
-		m_compensationAngleDeg = angle_deg;
-		m_isValid = true;
-	}
+    if (isfinite(angle_deg))
+    {
+        m_compensationAngleDeg = angle_deg;
+        m_isValid = true;
+    }
 }
 
 QDomElement
 RotationParams::toXml(QDomDocument& doc, QString const& name) const
 {
-	if (!m_isValid) {
-		return QDomElement();
-	}
+    if (!m_isValid)
+    {
+        return QDomElement();
+    }
 
-	QDomElement el(doc.createElement(name));
-	el.setAttribute("angle", Utils::doubleToString(m_compensationAngleDeg));
-	el.setAttribute("mode", m_mode == MODE_AUTO ? "auto" : "manual");
-	return el;
+    QDomElement el(doc.createElement(name));
+    el.setAttribute("angle", Utils::doubleToString(m_compensationAngleDeg));
+    el.setAttribute("mode", m_mode == MODE_AUTO ? "auto" : "manual");
+    return el;
 }
 
 } // namespace deskew

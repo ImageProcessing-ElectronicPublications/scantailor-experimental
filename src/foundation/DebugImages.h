@@ -30,7 +30,7 @@ class QWidget;
 
 namespace imageproc
 {
-	class BinaryImage;
+class BinaryImage;
 }
 
 /**
@@ -39,43 +39,43 @@ namespace imageproc
 class FOUNDATION_EXPORT DebugImages
 {
 public:
-	virtual ~DebugImages();
+    virtual ~DebugImages();
 
-	virtual QString swappingDir() const = 0;
+    virtual QString swappingDir() const = 0;
 
-	virtual void add(QImage const& image, QString const& label) = 0;
-	
-	virtual void add(imageproc::BinaryImage const& image, QString const& label) = 0;
+    virtual void add(QImage const& image, QString const& label) = 0;
 
-	virtual void addVectorFieldView(
-		QImage const& image, Grid<Vec2f> const& vector_field, QString const& label) = 0;
+    virtual void add(imageproc::BinaryImage const& image, QString const& label) = 0;
 
-	/**
-	 * \brief The most general add() function.
-	 *
-	 * Usage example:
-	 * \code
-	 * QImage image = ...;
-	 * Grid<Vec2f> vector_field = ...; 
-	 * ObjectSwapperFactory factory(swap_dir);
-	 * ObjectSwapper<QImage> image_swapper(factory(image));
-	 * ObjectSwapper<Grid<Vec2f> > vector_field_swapper(factory(vector_field));
-	 * DebugImages* dbg = ...;
-	 * dbg->add(
-	 *     "label", [=]() {
-	 *         return new CustomImageView(
-	 *             image_swapper.constObject(), vector_field_swapper.constObject());
-	 *         );
-	 *     },
-	 *     [=]() mutable { image_swapper.swapIn(); vector_field_swapper.swapIn(); },
-	 *     [=]() mutable { image_swapper.swapOut(); vector_field_swapper.swapOut(); }
-	 * );
-	 * \endcode
-	 */
-	virtual void add(QString const& label,
-		boost::function<QWidget*()> const& image_view_factory,
-		boost::function<void()> const& swap_in_action,
-		boost::function<void()> const& swap_out_action, bool swap_out_now = true) = 0;
+    virtual void addVectorFieldView(
+        QImage const& image, Grid<Vec2f> const& vector_field, QString const& label) = 0;
+
+    /**
+     * \brief The most general add() function.
+     *
+     * Usage example:
+     * \code
+     * QImage image = ...;
+     * Grid<Vec2f> vector_field = ...;
+     * ObjectSwapperFactory factory(swap_dir);
+     * ObjectSwapper<QImage> image_swapper(factory(image));
+     * ObjectSwapper<Grid<Vec2f> > vector_field_swapper(factory(vector_field));
+     * DebugImages* dbg = ...;
+     * dbg->add(
+     *     "label", [=]() {
+     *         return new CustomImageView(
+     *             image_swapper.constObject(), vector_field_swapper.constObject());
+     *         );
+     *     },
+     *     [=]() mutable { image_swapper.swapIn(); vector_field_swapper.swapIn(); },
+     *     [=]() mutable { image_swapper.swapOut(); vector_field_swapper.swapOut(); }
+     * );
+     * \endcode
+     */
+    virtual void add(QString const& label,
+                     boost::function<QWidget*()> const& image_view_factory,
+                     boost::function<void()> const& swap_in_action,
+                     boost::function<void()> const& swap_out_action, bool swap_out_now = true) = 0;
 };
 
 #endif

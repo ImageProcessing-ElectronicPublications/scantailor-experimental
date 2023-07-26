@@ -34,37 +34,38 @@ namespace spfit
 
 class MATH_EXPORT PolylineModelShape : public ModelShape
 {
-	DECLARE_NON_COPYABLE(PolylineModelShape)
+    DECLARE_NON_COPYABLE(PolylineModelShape)
 public:
-	enum Flags {
-		DEFAULT_FLAGS  = 0,
-		POLYLINE_FRONT = 1 << 0,
-		POLYLINE_BACK  = 1 << 1
-	};
+    enum Flags
+    {
+        DEFAULT_FLAGS  = 0,
+        POLYLINE_FRONT = 1 << 0,
+        POLYLINE_BACK  = 1 << 1
+    };
 
-	PolylineModelShape(std::vector<QPointF> const& polyline);
+    PolylineModelShape(std::vector<QPointF> const& polyline);
 
-	virtual SqDistApproximant localSqDistApproximant(
-		QPointF const& pt, FittableSpline::SampleFlags sample_flags) const;
+    virtual SqDistApproximant localSqDistApproximant(
+        QPointF const& pt, FittableSpline::SampleFlags sample_flags) const;
 
-	void uniformArcLengthSampling(int num_samples,
-		std::function<void(QPointF const& pt, double abs_curvature)> const& sink) const;
+    void uniformArcLengthSampling(int num_samples,
+                                  std::function<void(QPointF const& pt, double abs_curvature)> const& sink) const;
 protected:
-	virtual SqDistApproximant calcApproximant(
-		QPointF const& pt, FittableSpline::SampleFlags sample_flags,
-		Flags polyline_flags, FrenetFrame const& frenet_frame, double signed_curvature) const;
+    virtual SqDistApproximant calcApproximant(
+        QPointF const& pt, FittableSpline::SampleFlags sample_flags,
+        Flags polyline_flags, FrenetFrame const& frenet_frame, double signed_curvature) const;
 private:
-	struct Vertex
-	{
-		XSpline::PointAndDerivs pd;
+    struct Vertex
+    {
+        XSpline::PointAndDerivs pd;
 
-		double signedCurvature;
+        double signedCurvature;
 
-		/** Arc length from the beginning of a spline to this vertex. */
-		double cumulativeArcLength;
-	};
+        /** Arc length from the beginning of a spline to this vertex. */
+        double cumulativeArcLength;
+    };
 
-	std::vector<Vertex> m_vertices;
+    std::vector<Vertex> m_vertices;
 };
 
 DEFINE_FLAG_OPS(PolylineModelShape::Flags)

@@ -26,36 +26,39 @@ namespace page_layout
 {
 
 OrderByHeightProvider::OrderByHeightProvider(IntrusivePtr<Settings> const& settings)
-:	m_ptrSettings(settings)
+    :	m_ptrSettings(settings)
 {
 }
 
 bool
 OrderByHeightProvider::precedes(
-	PageId const& lhs_page, bool const lhs_incomplete,
-	PageId const& rhs_page, bool const rhs_incomplete) const
+    PageId const& lhs_page, bool const lhs_incomplete,
+    PageId const& rhs_page, bool const rhs_incomplete) const
 {
-	std::auto_ptr<Params> const lhs_params(m_ptrSettings->getPageParams(lhs_page));
-	std::auto_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
-	
-	QSizeF lhs_size;
-	if (lhs_params.get()) {
-		lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
-	}
-	QSizeF rhs_size;
-	if (rhs_params.get()) {
-		rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
-	}
-	
-	bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();
-	bool const rhs_valid = !rhs_incomplete && rhs_size.isValid();
+    std::auto_ptr<Params> const lhs_params(m_ptrSettings->getPageParams(lhs_page));
+    std::auto_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
 
-	if (lhs_valid != rhs_valid) {
-		// Invalid (unknown) sizes go to the back.
-		return lhs_valid;
-	}
+    QSizeF lhs_size;
+    if (lhs_params.get())
+    {
+        lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
+    }
+    QSizeF rhs_size;
+    if (rhs_params.get())
+    {
+        rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
+    }
 
-	return lhs_size.height() < rhs_size.height();
+    bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();
+    bool const rhs_valid = !rhs_incomplete && rhs_size.isValid();
+
+    if (lhs_valid != rhs_valid)
+    {
+        // Invalid (unknown) sizes go to the back.
+        return lhs_valid;
+    }
+
+    return lhs_size.height() < rhs_size.height();
 }
 
 } // namespace page_layout

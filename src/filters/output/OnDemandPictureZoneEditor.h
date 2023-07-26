@@ -41,39 +41,39 @@ namespace output
  */
 class OnDemandPictureZoneEditor : public QStackedWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 * @see PictureZoneEditor::PictureZoneEditor()
-	 */
-	OnDemandPictureZoneEditor(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		CachingFactory<QImage> const& cached_transformed_orig_image,
-		CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
-		imageproc::BinaryImage const& output_picture_mask,
-		PageId const& page_id, IntrusivePtr<Settings> const& settings,
-		std::function<QPointF(QPointF const&)> const& orig_to_output,
-		std::function<QPointF(QPointF const&)> const& output_to_orig);
+    /**
+     * @see PictureZoneEditor::PictureZoneEditor()
+     */
+    OnDemandPictureZoneEditor(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        CachingFactory<QImage> const& cached_transformed_orig_image,
+        CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
+        imageproc::BinaryImage const& output_picture_mask,
+        PageId const& page_id, IntrusivePtr<Settings> const& settings,
+        std::function<QPointF(QPointF const&)> const& orig_to_output,
+        std::function<QPointF(QPointF const&)> const& output_to_orig);
 signals:
-	void invalidateThumbnail(PageId const& page_id);
+    void invalidateThumbnail(PageId const& page_id);
 protected:
-	virtual void showEvent(QShowEvent* evt);
+    virtual void showEvent(QShowEvent* evt);
 private:
-	class ImageTransformationTask;
-	class ImageTransformationResult;
+    class ImageTransformationTask;
+    class ImageTransformationResult;
 
-	void buildRealPictureZoneEditor();
+    void buildRealPictureZoneEditor();
 
-	std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-	CachingFactory<QImage> m_cachedTransformedOrigImage;
-	CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
-	imageproc::BinaryImage m_outputPictureMask;
-	PageId m_pageId;
-	IntrusivePtr<Settings> m_ptrSettings;
-	std::function<QPointF(QPointF const&)> m_origToOutput;
-	std::function<QPointF(QPointF const&)> m_outputToOrig;
-	ProcessingIndicationWidget* m_pProcessingIndicator;
-	bool m_backgroundTaskSubmitted;
+    std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
+    CachingFactory<QImage> m_cachedTransformedOrigImage;
+    CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
+    imageproc::BinaryImage m_outputPictureMask;
+    PageId m_pageId;
+    IntrusivePtr<Settings> m_ptrSettings;
+    std::function<QPointF(QPointF const&)> m_origToOutput;
+    std::function<QPointF(QPointF const&)> m_outputToOrig;
+    ProcessingIndicationWidget* m_pProcessingIndicator;
+    bool m_backgroundTaskSubmitted;
 };
 
 } // namespace output

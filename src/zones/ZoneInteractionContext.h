@@ -32,113 +32,129 @@ class EditableZoneSet;
 class ZoneInteractionContext
 {
 public:
-	typedef boost::function<
-		InteractionHandler* ()
-	> DefaultInteractionCreator;
+    typedef boost::function<
+    InteractionHandler* ()
+    > DefaultInteractionCreator;
 
-	typedef boost::function<
-		InteractionHandler* (InteractionState& interaction)
-	> ZoneCreationInteractionCreator;
+    typedef boost::function<
+    InteractionHandler* (InteractionState& interaction)
+    > ZoneCreationInteractionCreator;
 
-	typedef boost::function<
-		InteractionHandler* (
-			InteractionState& interaction,
-			EditableSpline::Ptr const& spline, SplineVertex::Ptr const& vertex
-		)
-	> VertexDragInteractionCreator;
+    typedef boost::function<
+    InteractionHandler* (
+        InteractionState& interaction,
+        EditableSpline::Ptr const& spline, SplineVertex::Ptr const& vertex
+    )
+    > VertexDragInteractionCreator;
 
-	typedef boost::function<
-		InteractionHandler* (InteractionState& interaction)
-	> ContextMenuInteractionCreator;
+    typedef boost::function<
+    InteractionHandler* (InteractionState& interaction)
+    > ContextMenuInteractionCreator;
 
-	typedef boost::function<
-		void (EditableZoneSet::Zone const& zone)
-	> ShowPropertiesCommand;
+    typedef boost::function<
+    void (EditableZoneSet::Zone const& zone)
+    > ShowPropertiesCommand;
 
-	ZoneInteractionContext(ImageViewBase& image_view, EditableZoneSet& zones);
+    ZoneInteractionContext(ImageViewBase& image_view, EditableZoneSet& zones);
 
-	virtual ~ZoneInteractionContext();
+    virtual ~ZoneInteractionContext();
 
-	ImageViewBase& imageView() { return m_rImageView; }
+    ImageViewBase& imageView()
+    {
+        return m_rImageView;
+    }
 
-	EditableZoneSet& zones() { return m_rZones; }
+    EditableZoneSet& zones()
+    {
+        return m_rZones;
+    }
 
-	virtual InteractionHandler* createDefaultInteraction() {
-		return m_defaultInteractionCreator();
-	}
+    virtual InteractionHandler* createDefaultInteraction()
+    {
+        return m_defaultInteractionCreator();
+    }
 
-	void setDefaultInteractionCreator(DefaultInteractionCreator const& creator) {
-		m_defaultInteractionCreator = creator;
-	}
+    void setDefaultInteractionCreator(DefaultInteractionCreator const& creator)
+    {
+        m_defaultInteractionCreator = creator;
+    }
 
-	virtual InteractionHandler* createZoneCreationInteraction(InteractionState& interaction) {
-		return m_zoneCreationInteractionCreator(interaction);
-	}
+    virtual InteractionHandler* createZoneCreationInteraction(InteractionState& interaction)
+    {
+        return m_zoneCreationInteractionCreator(interaction);
+    }
 
-	void setZoneCreationInteractionCreator(ZoneCreationInteractionCreator const& creator) {
-		m_zoneCreationInteractionCreator = creator;
-	}
+    void setZoneCreationInteractionCreator(ZoneCreationInteractionCreator const& creator)
+    {
+        m_zoneCreationInteractionCreator = creator;
+    }
 
-	virtual InteractionHandler* createVertexDragInteraction(
-			InteractionState& interaction, EditableSpline::Ptr const& spline,
-			SplineVertex::Ptr const& vertex) {
-		return m_vertexDragInteractionCreator(interaction, spline, vertex);
-	}
+    virtual InteractionHandler* createVertexDragInteraction(
+        InteractionState& interaction, EditableSpline::Ptr const& spline,
+        SplineVertex::Ptr const& vertex)
+    {
+        return m_vertexDragInteractionCreator(interaction, spline, vertex);
+    }
 
-	void setVertexDragInteractionCreator(VertexDragInteractionCreator const& creator) {
-		m_vertexDragInteractionCreator = creator;
-	}
+    void setVertexDragInteractionCreator(VertexDragInteractionCreator const& creator)
+    {
+        m_vertexDragInteractionCreator = creator;
+    }
 
-	/**
-	 * \note This function may refuse to create a context menu interaction by returning null.
-	 */
-	virtual InteractionHandler* createContextMenuInteraction(InteractionState& interaction) {
-		return m_contextMenuInteractionCreator(interaction);
-	}
+    /**
+     * \note This function may refuse to create a context menu interaction by returning null.
+     */
+    virtual InteractionHandler* createContextMenuInteraction(InteractionState& interaction)
+    {
+        return m_contextMenuInteractionCreator(interaction);
+    }
 
-	void setContextMenuInteractionCreator(ContextMenuInteractionCreator const& creator) {
-		m_contextMenuInteractionCreator = creator;
-	}
+    void setContextMenuInteractionCreator(ContextMenuInteractionCreator const& creator)
+    {
+        m_contextMenuInteractionCreator = creator;
+    }
 
-	virtual void showPropertiesCommand(EditableZoneSet::Zone const& zone) {
-		m_showPropertiesCommand(zone);
-	}
+    virtual void showPropertiesCommand(EditableZoneSet::Zone const& zone)
+    {
+        m_showPropertiesCommand(zone);
+    }
 
-	void setShowPropertiesCommand(ShowPropertiesCommand const& command) {
-		m_showPropertiesCommand = command;
-	}
+    void setShowPropertiesCommand(ShowPropertiesCommand const& command)
+    {
+        m_showPropertiesCommand = command;
+    }
 private:
-	/**
-	 * Creates an instance of ZoneDefaultInteraction.
-	 */
-	InteractionHandler* createStdDefaultInteraction();
+    /**
+     * Creates an instance of ZoneDefaultInteraction.
+     */
+    InteractionHandler* createStdDefaultInteraction();
 
-	/**
-	 * Creates an instance of ZoneCreationInteraction.
-	 */
-	InteractionHandler* createStdZoneCreationInteraction(InteractionState& interaction);
+    /**
+     * Creates an instance of ZoneCreationInteraction.
+     */
+    InteractionHandler* createStdZoneCreationInteraction(InteractionState& interaction);
 
-	/**
-	 * Creates an instance of ZoneVertexDragInteraction.
-	 */
-	InteractionHandler* createStdVertexDragInteraction(
-		InteractionState& interaction, EditableSpline::Ptr const& spline,
-		SplineVertex::Ptr const& vertex);
+    /**
+     * Creates an instance of ZoneVertexDragInteraction.
+     */
+    InteractionHandler* createStdVertexDragInteraction(
+        InteractionState& interaction, EditableSpline::Ptr const& spline,
+        SplineVertex::Ptr const& vertex);
 
-	/**
-	 * Creates an instance of ZoneContextMenuInteraction.  May return null.
-	 */
-	InteractionHandler* createStdContextMenuInteraction(InteractionState& interaction);
+    /**
+     * Creates an instance of ZoneContextMenuInteraction.  May return null.
+     */
+    InteractionHandler* createStdContextMenuInteraction(InteractionState& interaction);
 
-	static void showPropertiesStub(EditableZoneSet::Zone const&) {}
+    static void showPropertiesStub(EditableZoneSet::Zone const&) {}
 
-	ImageViewBase& m_rImageView;
-	EditableZoneSet& m_rZones;
-	DefaultInteractionCreator m_defaultInteractionCreator;
-	ZoneCreationInteractionCreator m_zoneCreationInteractionCreator;
-	VertexDragInteractionCreator m_vertexDragInteractionCreator;
-	ContextMenuInteractionCreator m_contextMenuInteractionCreator;
-	ShowPropertiesCommand m_showPropertiesCommand;
+    ImageViewBase& m_rImageView;
+    EditableZoneSet& m_rZones;
+    DefaultInteractionCreator m_defaultInteractionCreator;
+    ZoneCreationInteractionCreator m_zoneCreationInteractionCreator;
+    VertexDragInteractionCreator m_vertexDragInteractionCreator;
+    ContextMenuInteractionCreator m_contextMenuInteractionCreator;
+    ShowPropertiesCommand m_showPropertiesCommand;
 };
 
 #endif

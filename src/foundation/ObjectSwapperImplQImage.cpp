@@ -23,41 +23,44 @@
 #include <assert.h>
 
 ObjectSwapperImpl<QImage>::ObjectSwapperImpl(QString const& swap_dir)
-:	m_swapDir(swap_dir)
+    :	m_swapDir(swap_dir)
 {
 }
 
 boost::shared_ptr<QImage>
 ObjectSwapperImpl<QImage>::swapIn()
 {
-	return boost::shared_ptr<QImage>(new QImage(m_file.get()));
+    return boost::shared_ptr<QImage>(new QImage(m_file.get()));
 }
 
 void
 ObjectSwapperImpl<QImage>::swapOut(boost::shared_ptr<QImage> const& obj)
 {
-	assert(obj.get());
+    assert(obj.get());
 
-	if (!m_file.get().isEmpty()) {
-		// We don't swap out the same stuff twice.
-		return;
-	}
+    if (!m_file.get().isEmpty())
+    {
+        // We don't swap out the same stuff twice.
+        return;
+    }
 
-	QTemporaryFile file(m_swapDir+"/XXXXXX.png");
-	if (!file.open()) {
-		qDebug() << "Unable to create a temporary file in " << m_swapDir;
-		return;
-	}
+    QTemporaryFile file(m_swapDir+"/XXXXXX.png");
+    if (!file.open())
+    {
+        qDebug() << "Unable to create a temporary file in " << m_swapDir;
+        return;
+    }
 
-	AutoRemovingFile remover(file.fileName());
-	file.setAutoRemove(false);
+    AutoRemovingFile remover(file.fileName());
+    file.setAutoRemove(false);
 
-	QImageWriter writer(&file, "png");
-	writer.setCompression(2); // Trade space for speed.
-	if (!writer.write(*obj)) {
-		qDebug() << "Unable to swap out an image";
-		return;
-	}
+    QImageWriter writer(&file, "png");
+    writer.setCompression(2); // Trade space for speed.
+    if (!writer.write(*obj))
+    {
+        qDebug() << "Unable to swap out an image";
+        return;
+    }
 
-	m_file = remover;
+    m_file = remover;
 }

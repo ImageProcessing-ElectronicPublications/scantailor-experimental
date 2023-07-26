@@ -32,44 +32,54 @@ namespace deskew
 
 class DewarpingParams
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/** Defaults to invalid state with MODE_AUTO. */
-	DewarpingParams();
-	
-	DewarpingParams(QDomElement const& el);
+    /** Defaults to invalid state with MODE_AUTO. */
+    DewarpingParams();
 
-	~DewarpingParams();
+    DewarpingParams(QDomElement const& el);
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    ~DewarpingParams();
 
-	bool isValid() const;
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-	void invalidate();
+    bool isValid() const;
 
-	AutoManualMode mode() const { return m_mode; }
+    void invalidate();
 
-	void setMode(AutoManualMode mode) { m_mode = mode; }
+    AutoManualMode mode() const
+    {
+        return m_mode;
+    }
 
-	dewarping::DistortionModel const& distortionModel() const {
-		return m_distortionModel;
-	}
+    void setMode(AutoManualMode mode)
+    {
+        m_mode = mode;
+    }
 
-	void setDistortionModel(dewarping::DistortionModel const& distortion_model) {
-		m_distortionModel = distortion_model;
-	}
+    dewarping::DistortionModel const& distortionModel() const
+    {
+        return m_distortionModel;
+    }
 
-	dewarping::DepthPerception const& depthPerception() const {
-		return m_depthPerception;
-	}
+    void setDistortionModel(dewarping::DistortionModel const& distortion_model)
+    {
+        m_distortionModel = distortion_model;
+    }
 
-	void setDepthPerception(dewarping::DepthPerception const& depth_perception) {
-		m_depthPerception = depth_perception;
-	}
+    dewarping::DepthPerception const& depthPerception() const
+    {
+        return m_depthPerception;
+    }
+
+    void setDepthPerception(dewarping::DepthPerception const& depth_perception)
+    {
+        m_depthPerception = depth_perception;
+    }
 private:
-	dewarping::DistortionModel m_distortionModel;
-	dewarping::DepthPerception m_depthPerception;
-	AutoManualMode m_mode;
+    dewarping::DistortionModel m_distortionModel;
+    dewarping::DepthPerception m_depthPerception;
+    AutoManualMode m_mode;
 };
 
 } // namespace deskew

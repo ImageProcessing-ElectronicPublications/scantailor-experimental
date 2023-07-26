@@ -44,7 +44,7 @@ namespace dewarping
  *         failure, one or both of the returned lines will be null.
  */
 DEWARPING_EXPORT std::pair<QLineF, QLineF> detectVerticalBounds(
-	std::list<std::vector<QPointF>> const& curves, double dist_threshold);
+    std::list<std::vector<QPointF>> const& curves, double dist_threshold);
 
 } // namespace dewarping
 

@@ -26,32 +26,38 @@
 #include "config.h"
 
 DefaultAccelerationProvider::DefaultAccelerationProvider(QObject* parent)
-:	QObject(parent)
-,	m_pPlugin(nullptr)
-,	m_ptrNonAcceleratedOperations(std::make_shared<NonAcceleratedOperations>())
+    :	QObject(parent)
+    ,	m_pPlugin(nullptr)
+    ,	m_ptrNonAcceleratedOperations(std::make_shared<NonAcceleratedOperations>())
 {
-	processUpdatedConfiguration();
+    processUpdatedConfiguration();
 }
 
 void
 DefaultAccelerationProvider::processUpdatedConfiguration()
 {
-	QSettings settings;
+    QSettings settings;
 
 #ifdef ENABLE_OPENCL
-	if (settings.value("settings/enable_opencl", false).toBool()) {
-		QPluginLoader loader("opencl_plugin");
-		if (loader.load()) {
-			m_pPlugin = qobject_cast<AccelerationPlugin*>(loader.instance());
-		} else {
-			qDebug() << "OpenCL plugin failed to load: " << loader.errorString();
-		}
-	} else {
-		m_pPlugin = nullptr;
-		// It will be kept in memory till unload() is called on QPluginLoader.
-		// That happens automatically by static destruction process, though we
-		// do that explicitly in main().
-	}
+    if (settings.value("settings/enable_opencl", false).toBool())
+    {
+        QPluginLoader loader("opencl_plugin");
+        if (loader.load())
+        {
+            m_pPlugin = qobject_cast<AccelerationPlugin*>(loader.instance());
+        }
+        else
+        {
+            qDebug() << "OpenCL plugin failed to load: " << loader.errorString();
+        }
+    }
+    else
+    {
+        m_pPlugin = nullptr;
+        // It will be kept in memory till unload() is called on QPluginLoader.
+        // That happens automatically by static destruction process, though we
+        // do that explicitly in main().
+    }
 #endif
 }
 
@@ -59,28 +65,34 @@ void
 DefaultAccelerationProvider::releaseResources()
 {
 #ifdef ENABLE_OPENCL
-	// We could have just called unload() on QPluginLoader, but
-	// unfortunately Qt's reference counting on plugins prevents
-	// that from working.
-	AccelerationPlugin* opencl_plugin = m_pPlugin;
-	if (!opencl_plugin) {
-		QPluginLoader loader("opencl_plugin");
-		if (loader.isLoaded()) {
-			opencl_plugin = qobject_cast<AccelerationPlugin*>(loader.instance());
-		}
-	}
-	if (opencl_plugin) {
-		opencl_plugin->releaseResources();
-	}
+    // We could have just called unload() on QPluginLoader, but
+    // unfortunately Qt's reference counting on plugins prevents
+    // that from working.
+    AccelerationPlugin* opencl_plugin = m_pPlugin;
+    if (!opencl_plugin)
+    {
+        QPluginLoader loader("opencl_plugin");
+        if (loader.isLoaded())
+        {
+            opencl_plugin = qobject_cast<AccelerationPlugin*>(loader.instance());
+        }
+    }
+    if (opencl_plugin)
+    {
+        opencl_plugin->releaseResources();
+    }
 #endif
 }
 
 std::shared_ptr<AcceleratableOperations>
 DefaultAccelerationProvider::getOperations()
 {
-	if (m_pPlugin) {
-		return m_pPlugin->getOperations(m_ptrNonAcceleratedOperations);
-	} else {
-		return m_ptrNonAcceleratedOperations;
-	}
+    if (m_pPlugin)
+    {
+        return m_pPlugin->getOperations(m_ptrNonAcceleratedOperations);
+    }
+    else
+    {
+        return m_ptrNonAcceleratedOperations;
+    }
 }

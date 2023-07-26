@@ -56,75 +56,88 @@ namespace imageproc
  */
 template<typename T>
 void plugHoles(GridAccessor<T> const grid,
-	Connectivity conn, boost::optional<T> const max_label = boost::none)
+               Connectivity conn, boost::optional<T> const max_label = boost::none)
 {
-	static_assert(std::is_integral<T>::value, "plugHoles() only works with integral labels");
+    static_assert(std::is_integral<T>::value, "plugHoles() only works with integral labels");
 
-	struct Region
-	{
-		T lowestNeighbour = std::numeric_limits<T>::max();
-		T highestNeighbour = std::numeric_limits<T>::min();
+    struct Region
+    {
+        T lowestNeighbour = std::numeric_limits<T>::max();
+        T highestNeighbour = std::numeric_limits<T>::min();
 
-		bool const hasExactlyOneNeighbour() const {
-			return lowestNeighbour == highestNeighbour;
-		}
-	};
+        bool const hasExactlyOneNeighbour() const
+        {
+            return lowestNeighbour == highestNeighbour;
+        }
+    };
 
-	std::vector<Region> regions;
-	if (max_label) {
-		regions.resize(*max_label + 1);
-	}
+    std::vector<Region> regions;
+    if (max_label)
+    {
+        regions.resize(*max_label + 1);
+    }
 
-	QPoint const offsets4[] = {
-		QPoint(0, -1),
-		QPoint(-1, 0), QPoint(1, 0),
-		QPoint(0, 1)
-	};
+    QPoint const offsets4[] =
+    {
+        QPoint(0, -1),
+        QPoint(-1, 0), QPoint(1, 0),
+        QPoint(0, 1)
+    };
 
-	QPoint const offsets8[] = {
-		QPoint(-1, -1), QPoint(0, -1), QPoint(1, -1),
-		QPoint(-1, 0),                 QPoint(1, 0),
-		QPoint(-1, 1),  QPoint(0, 1),  QPoint(1, 1)
-	};
+    QPoint const offsets8[] =
+    {
+        QPoint(-1, -1), QPoint(0, -1), QPoint(1, -1),
+        QPoint(-1, 0),                 QPoint(1, 0),
+        QPoint(-1, 1),  QPoint(0, 1),  QPoint(1, 1)
+    };
 
-	QPoint const* offsets = conn == CONN4 ? offsets4 : offsets8;
-	int const num_neighbours = conn == CONN4 ? 4 : 8;
+    QPoint const* offsets = conn == CONN4 ? offsets4 : offsets8;
+    int const num_neighbours = conn == CONN4 ? 4 : 8;
 
-	QRect const rect(0, 0, grid.width, grid.height);
-	T* line = grid.data;
-	for (int y = 0; y < grid.height; ++y, line += grid.stride) {
-		for (int x = 0; x < grid.width; ++x) {
-			QPoint const pos(x, y);
+    QRect const rect(0, 0, grid.width, grid.height);
+    T* line = grid.data;
+    for (int y = 0; y < grid.height; ++y, line += grid.stride)
+    {
+        for (int x = 0; x < grid.width; ++x)
+        {
+            QPoint const pos(x, y);
 
-			T const label = line[x];
-			if (label >= regions.size()) {
-				regions.resize(label + 1);
-			}
-			Region& reg = regions[label];
+            T const label = line[x];
+            if (label >= regions.size())
+            {
+                regions.resize(label + 1);
+            }
+            Region& reg = regions[label];
 
-			for (int i = 0; i < num_neighbours; ++i) {
-				QPoint const nbh_pos(pos + offsets[i]);
-				if (rect.contains(nbh_pos)) {
-					T const nbh_label = grid.data[grid.stride * nbh_pos.y() + nbh_pos.x()];
-					if (nbh_label != label) {
-						reg.highestNeighbour = std::max<T>(reg.highestNeighbour, nbh_label);
-						reg.lowestNeighbour = std::min<T>(reg.lowestNeighbour, nbh_label);
-					}
-				}
-			}
-		}
-	}
+            for (int i = 0; i < num_neighbours; ++i)
+            {
+                QPoint const nbh_pos(pos + offsets[i]);
+                if (rect.contains(nbh_pos))
+                {
+                    T const nbh_label = grid.data[grid.stride * nbh_pos.y() + nbh_pos.x()];
+                    if (nbh_label != label)
+                    {
+                        reg.highestNeighbour = std::max<T>(reg.highestNeighbour, nbh_label);
+                        reg.lowestNeighbour = std::min<T>(reg.lowestNeighbour, nbh_label);
+                    }
+                }
+            }
+        }
+    }
 
-	traverseBorders(grid, [&regions](T label) {
-		regions[label] = Region();
-	});
+    traverseBorders(grid, [&regions](T label)
+    {
+        regions[label] = Region();
+    });
 
-	rasterOpGeneric([&regions](T& label) {
-		Region const reg(regions[label]);
-		if (reg.hasExactlyOneNeighbour()) {
-			label = reg.lowestNeighbour;
-		}
-	}, grid);
+    rasterOpGeneric([&regions](T& label)
+    {
+        Region const reg(regions[label]);
+        if (reg.hasExactlyOneNeighbour())
+        {
+            label = reg.lowestNeighbour;
+        }
+    }, grid);
 }
 
 } // namespace imageproc

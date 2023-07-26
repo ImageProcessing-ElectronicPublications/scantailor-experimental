@@ -30,57 +30,81 @@ class QString;
 /**
  * \brief Handles swapping in and out of a single object.
  *
- * \note Copying an ObjectSwapper object produces a shallow copy. 
+ * \note Copying an ObjectSwapper object produces a shallow copy.
  */
 template<typename Obj>
 class ObjectSwapper
 {
 private:
-	typedef ObjectSwapperImpl<Obj> Impl;
+    typedef ObjectSwapperImpl<Obj> Impl;
 public:
-	class ConstObjectAccessor
-	{
-	public:
-		typedef Obj const& result_type;
+    class ConstObjectAccessor
+    {
+    public:
+        typedef Obj const& result_type;
 
-		ConstObjectAccessor(ObjectSwapper<Obj> const& obj_swapper) : m_objectSwapper(obj_swapper) {}
+        ConstObjectAccessor(ObjectSwapper<Obj> const& obj_swapper) : m_objectSwapper(obj_swapper) {}
 
-		Obj const& operator()() const { return m_objectSwapper.constObject(); }
-	private:
-		ObjectSwapper<Obj> m_objectSwapper;
-	};
+        Obj const& operator()() const
+        {
+            return m_objectSwapper.constObject();
+        }
+    private:
+        ObjectSwapper<Obj> m_objectSwapper;
+    };
 
-	ObjectSwapper(Obj const& obj, QString const& swap_dir)
-		: m_ptrObj(new Obj(obj)), m_ptrImpl(new Impl(swap_dir)) {}
+    ObjectSwapper(Obj const& obj, QString const& swap_dir)
+        : m_ptrObj(new Obj(obj)), m_ptrImpl(new Impl(swap_dir)) {}
 
-	ObjectSwapper(std::auto_ptr<Obj> obj, QString const& swap_dir)
-		: m_ptrObj(obj.release()), m_ptrImpl(new Impl(swap_dir)) {
-		assert(m_ptrObj.get());
-	}
+    ObjectSwapper(std::auto_ptr<Obj> obj, QString const& swap_dir)
+        : m_ptrObj(obj.release()), m_ptrImpl(new Impl(swap_dir))
+    {
+        assert(m_ptrObj.get());
+    }
 
-	void swapIn() { if (!m_ptrObj.get()) m_ptrObj = m_ptrImpl->swapIn(); }
+    void swapIn()
+    {
+        if (!m_ptrObj.get()) m_ptrObj = m_ptrImpl->swapIn();
+    }
 
-	void swapOut() { if (m_ptrObj.get()) { m_ptrImpl->swapOut(m_ptrObj); m_ptrObj.reset(); } }
+    void swapOut()
+    {
+        if (m_ptrObj.get())
+        {
+            m_ptrImpl->swapOut(m_ptrObj);
+            m_ptrObj.reset();
+        }
+    }
 
-	bool swappedOut() const { return !m_ptrObj.get(); }
+    bool swappedOut() const
+    {
+        return !m_ptrObj.get();
+    }
 
-	/**
-	 * \brief Exposes the stored object through a const reference.
-	 *
-	 * \note Calling this function when the object is swapped out results in undefined behavior.
-	 */
-	Obj const& constObject() const { assert(m_ptrObj.get()); return *m_ptrObj; }
+    /**
+     * \brief Exposes the stored object through a const reference.
+     *
+     * \note Calling this function when the object is swapped out results in undefined behavior.
+     */
+    Obj const& constObject() const
+    {
+        assert(m_ptrObj.get());
+        return *m_ptrObj;
+    }
 
-	/**
-	 * Returns a functor that returns Obj const& when called without arguments.
-	 */
-	ConstObjectAccessor accessor() const { return ConstObjectAccessor(*this); }
+    /**
+     * Returns a functor that returns Obj const& when called without arguments.
+     */
+    ConstObjectAccessor accessor() const
+    {
+        return ConstObjectAccessor(*this);
+    }
 private:
-	/** A null m_ptrObj indicates the object has been swapped out. */
-	boost::shared_ptr<Obj> m_ptrObj;
+    /** A null m_ptrObj indicates the object has been swapped out. */
+    boost::shared_ptr<Obj> m_ptrObj;
 
-	/** m_ptrImpl is always set. */
-	boost::shared_ptr<Impl> m_ptrImpl;
+    /** m_ptrImpl is always set. */
+    boost::shared_ptr<Impl> m_ptrImpl;
 };
 
 #endif

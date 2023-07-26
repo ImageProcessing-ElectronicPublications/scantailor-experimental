@@ -25,10 +25,11 @@ namespace imageproc
 
 QImage const& badAllocIfNull(QImage const& image)
 {
-	if (image.isNull()) {
-		throw std::bad_alloc();
-	}
-	return image;
+    if (image.isNull())
+    {
+        throw std::bad_alloc();
+    }
+    return image;
 }
 
 } // namespace imageproc

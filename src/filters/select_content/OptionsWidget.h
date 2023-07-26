@@ -39,37 +39,37 @@ namespace select_content
 class Settings;
 
 class OptionsWidget :
-	public FilterOptionsWidget, private Ui::SelectContentOptionsWidget
+    public FilterOptionsWidget, private Ui::SelectContentOptionsWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	OptionsWidget(IntrusivePtr<Settings> const& settings,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~OptionsWidget();
-	
-	void preUpdateUI(PageId const& page_id);
-	
-	void postUpdateUI(Params const& params);
+    OptionsWidget(IntrusivePtr<Settings> const& settings,
+                  PageSelectionAccessor const& page_selection_accessor);
+
+    virtual ~OptionsWidget();
+
+    void preUpdateUI(PageId const& page_id);
+
+    void postUpdateUI(Params const& params);
 public slots:
-	void manualContentBoxSet(
-		ContentBox const& content_box, QSizeF const& content_size_px);
+    void manualContentBoxSet(
+        ContentBox const& content_box, QSizeF const& content_size_px);
 private slots:
-	void showApplyToDialog();
+    void showApplyToDialog();
 
-	void applySelection(std::set<PageId> const& pages);
+    void applySelection(std::set<PageId> const& pages);
 
-	void modeChanged(bool auto_mode);
+    void modeChanged(bool auto_mode);
 private:
-	void updateModeIndication(AutoManualMode const mode);
-	
-	void commitCurrentParams();
-	
-	IntrusivePtr<Settings> m_ptrSettings;
-	boost::optional<Params> m_params;
-	PageSelectionAccessor m_pageSelectionAccessor;
-	PageId m_pageId;
-	int m_ignoreAutoManualToggle;
+    void updateModeIndication(AutoManualMode const mode);
+
+    void commitCurrentParams();
+
+    IntrusivePtr<Settings> m_ptrSettings;
+    boost::optional<Params> m_params;
+    PageSelectionAccessor m_pageSelectionAccessor;
+    PageId m_pageId;
+    int m_ignoreAutoManualToggle;
 };
 
 } // namespace select_content

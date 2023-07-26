@@ -26,7 +26,7 @@ class RelativeMargins;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 namespace page_layout
@@ -38,35 +38,44 @@ class MatchSizeMode;
 class PageLayout
 {
 public:
-	PageLayout(
-		QRectF const& unscaled_content_rect, QSizeF const& aggregate_hard_size,
-		MatchSizeMode const& match_size_mode, Alignment const& alignment,
-		RelativeMargins const& margins);
+    PageLayout(
+        QRectF const& unscaled_content_rect, QSizeF const& aggregate_hard_size,
+        MatchSizeMode const& match_size_mode, Alignment const& alignment,
+        RelativeMargins const& margins);
 
-	QRectF const& innerRect() const { return m_innerRect; }
+    QRectF const& innerRect() const
+    {
+        return m_innerRect;
+    }
 
-	QRectF const& middleRect() const { return m_middleRect; }
+    QRectF const& middleRect() const
+    {
+        return m_middleRect;
+    }
 
-	QRectF const& outerRect() const { return m_outerRect; }
+    QRectF const& outerRect() const
+    {
+        return m_outerRect;
+    }
 
-	/**
-	 * If match_size_mode passed into the constructor was set to SCALE,
-	 * the 3 rectangles already incorporate the appropriate scaling factor.
-	 * This method incorporates that scaling factor into the provided transform.
-	 */
-	void absorbScalingIntoTransform(imageproc::AbstractImageTransform& transform) const;
+    /**
+     * If match_size_mode passed into the constructor was set to SCALE,
+     * the 3 rectangles already incorporate the appropriate scaling factor.
+     * This method incorporates that scaling factor into the provided transform.
+     */
+    void absorbScalingIntoTransform(imageproc::AbstractImageTransform& transform) const;
 private:
-	/** Content rectangle, in transformed coordinates. */
-	QRectF m_innerRect;
+    /** Content rectangle, in transformed coordinates. */
+    QRectF m_innerRect;
 
-	/** Rectangle around content plus hard margins, in transformed coordinates. */
-	QRectF m_middleRect;
+    /** Rectangle around content plus hard margins, in transformed coordinates. */
+    QRectF m_middleRect;
 
-	/** Rectangle around content plus hard and soft margins, in transformed coordinates. */
-	QRectF m_outerRect;
+    /** Rectangle around content plus hard and soft margins, in transformed coordinates. */
+    QRectF m_outerRect;
 
-	/** Scaling applied as a result of MatchSizeMode::SCALE. */
-	qreal m_scaleFactor;
+    /** Scaling applied as a result of MatchSizeMode::SCALE. */
+    qreal m_scaleFactor;
 };
 
 } // namespace page_layout

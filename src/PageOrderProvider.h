@@ -29,14 +29,14 @@ class PageId;
 class PageOrderProvider : public RefCountable
 {
 public:
-	/**
-	 * Returns true if \p lhs_page precedes \p rhs_page.
-	 * \p lhs_incomplete and \p rhs_incomplete indicate whether
-	 * a page is represented by IncompleteThumbnail.
-	 */
-	virtual bool precedes(
-		PageId const& lhs_page, bool lhs_incomplete,
-		PageId const& rhs_page, bool rhs_incomplete) const = 0;
+    /**
+     * Returns true if \p lhs_page precedes \p rhs_page.
+     * \p lhs_incomplete and \p rhs_incomplete indicate whether
+     * a page is represented by IncompleteThumbnail.
+     */
+    virtual bool precedes(
+        PageId const& lhs_page, bool lhs_incomplete,
+        PageId const& rhs_page, bool rhs_incomplete) const = 0;
 };
 
 #endif

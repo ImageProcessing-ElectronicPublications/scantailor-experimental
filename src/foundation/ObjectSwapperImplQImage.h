@@ -30,14 +30,14 @@ template<>
 class FOUNDATION_EXPORT ObjectSwapperImpl<QImage>
 {
 public:
-	ObjectSwapperImpl(QString const& swap_dir);
+    ObjectSwapperImpl(QString const& swap_dir);
 
-	boost::shared_ptr<QImage> swapIn();
+    boost::shared_ptr<QImage> swapIn();
 
-	void swapOut(boost::shared_ptr<QImage> const& obj);
+    void swapOut(boost::shared_ptr<QImage> const& obj);
 private:
-	QString m_swapDir;
-	AutoRemovingFile m_file;
+    QString m_swapDir;
+    AutoRemovingFile m_file;
 };
 
 #endif

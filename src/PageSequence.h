@@ -26,21 +26,24 @@
 
 class PageSequence
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	void append(PageInfo const& page_info);
-	
-	size_t numPages() const { return m_pages.size(); }
-	
-	PageInfo const& pageAt(size_t idx) const;
+    void append(PageInfo const& page_info);
 
-	std::set<PageId> selectAll() const;
+    size_t numPages() const
+    {
+        return m_pages.size();
+    }
 
-	std::set<PageId> selectPagePlusFollowers(PageId const& page) const;
+    PageInfo const& pageAt(size_t idx) const;
 
-	std::set<PageId> selectEveryOther(PageId const& base) const;
+    std::set<PageId> selectAll() const;
+
+    std::set<PageId> selectPagePlusFollowers(PageId const& page) const;
+
+    std::set<PageId> selectEveryOther(PageId const& base) const;
 private:
-	std::vector<PageInfo> m_pages;
+    std::vector<PageInfo> m_pages;
 };
 
 #endif

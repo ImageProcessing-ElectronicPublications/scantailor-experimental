@@ -30,11 +30,11 @@ class PageRange;
 class PageSelectionProvider : public RefCountable
 {
 public:
-	virtual PageSequence allPages() const = 0;
+    virtual PageSequence allPages() const = 0;
 
-	virtual std::set<PageId> selectedPages() const = 0;
-	
-	virtual std::vector<PageRange> selectedRanges() const = 0;
+    virtual std::set<PageId> selectedPages() const = 0;
+
+    virtual std::vector<PageRange> selectedRanges() const = 0;
 };
 
 #endif

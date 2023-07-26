@@ -35,55 +35,82 @@ namespace deskew
 
 class Params
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	Params(Dependencies const& deps);
-	
-	Params(QDomElement const& deskew_el);
-	
-	~Params();
+    Params(Dependencies const& deps);
 
-	static DistortionType defaultDistortionType();
+    Params(QDomElement const& deskew_el);
 
-	DistortionType distortionType() const { return m_distortionType; }
+    ~Params();
 
-	void setDistortionType(DistortionType type) { m_distortionType = type; }
+    static DistortionType defaultDistortionType();
 
-	RotationParams& rotationParams() { return m_rotationParams; }
+    DistortionType distortionType() const
+    {
+        return m_distortionType;
+    }
 
-	RotationParams const& rotationParams() const { return m_rotationParams; }
+    void setDistortionType(DistortionType type)
+    {
+        m_distortionType = type;
+    }
 
-	PerspectiveParams& perspectiveParams() { return m_perspectiveParams; }
+    RotationParams& rotationParams()
+    {
+        return m_rotationParams;
+    }
 
-	PerspectiveParams const& perspectiveParams() const { return m_perspectiveParams; }
+    RotationParams const& rotationParams() const
+    {
+        return m_rotationParams;
+    }
 
-	DewarpingParams& dewarpingParams() { return m_dewarpingParams; }
+    PerspectiveParams& perspectiveParams()
+    {
+        return m_perspectiveParams;
+    }
 
-	DewarpingParams const& dewarpingParams() const { return m_dewarpingParams; }
+    PerspectiveParams const& perspectiveParams() const
+    {
+        return m_perspectiveParams;
+    }
 
-	Dependencies const& dependencies() const { return m_deps; }
+    DewarpingParams& dewarpingParams()
+    {
+        return m_dewarpingParams;
+    }
 
-	/**
-	 * Looks up the mode associated with the current distortion type.
-	 * DistortionType::NONE always produces MODE_MANUAL.
-	 */
-	AutoManualMode mode() const;
+    DewarpingParams const& dewarpingParams() const
+    {
+        return m_dewarpingParams;
+    }
 
-	/**
-	 * We may have enough / valid data for some distortion types but
-	 * not for others.
-	 */
-	bool validForDistortionType(DistortionType const& distortion_type) const;
+    Dependencies const& dependencies() const
+    {
+        return m_deps;
+    }
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    /**
+     * Looks up the mode associated with the current distortion type.
+     * DistortionType::NONE always produces MODE_MANUAL.
+     */
+    AutoManualMode mode() const;
 
-	void takeManualSettingsFrom(Params const& other);
+    /**
+     * We may have enough / valid data for some distortion types but
+     * not for others.
+     */
+    bool validForDistortionType(DistortionType const& distortion_type) const;
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    void takeManualSettingsFrom(Params const& other);
 private:
-	DistortionType m_distortionType;
-	RotationParams m_rotationParams;
-	PerspectiveParams m_perspectiveParams;
-	DewarpingParams m_dewarpingParams;
-	Dependencies m_deps;
+    DistortionType m_distortionType;
+    RotationParams m_rotationParams;
+    PerspectiveParams m_perspectiveParams;
+    DewarpingParams m_dewarpingParams;
+    Dependencies m_deps;
 };
 
 } // namespace deskew

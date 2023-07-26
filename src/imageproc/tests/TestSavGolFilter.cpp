@@ -42,68 +42,77 @@ BOOST_AUTO_TEST_SUITE(SavGolFilterTestSuite);
 
 BOOST_AUTO_TEST_CASE(TestBlackImageRemainsUnchanged)
 {
-	GrayImage black_image(QSize(99, 101));
-	black_image.fill(0x00);
+    GrayImage black_image(QSize(99, 101));
+    black_image.fill(0x00);
 
-	BOOST_CHECK(black_image == savGolFilter(black_image, QSize(5, 5), 3, 3));
+    BOOST_CHECK(black_image == savGolFilter(black_image, QSize(5, 5), 3, 3));
 }
 
 BOOST_AUTO_TEST_CASE(TestWhiteImageRemainsUnchanged)
 {
-	GrayImage white_image(QSize(99, 101));
-	white_image.fill(0xff);
+    GrayImage white_image(QSize(99, 101));
+    white_image.fill(0xff);
 
-	BOOST_CHECK(white_image == savGolFilter(white_image, QSize(5, 5), 3, 3));
+    BOOST_CHECK(white_image == savGolFilter(white_image, QSize(5, 5), 3, 3));
 }
 
 BOOST_AUTO_TEST_CASE(TestSolidGrayImageRemainsUnchanged)
 {
-	GrayImage gray_image(QSize(99, 101));
-	gray_image.fill(0x80);
+    GrayImage gray_image(QSize(99, 101));
+    gray_image.fill(0x80);
 
-	BOOST_CHECK(gray_image == savGolFilter(gray_image, QSize(5, 5), 3, 3));
+    BOOST_CHECK(gray_image == savGolFilter(gray_image, QSize(5, 5), 3, 3));
 }
 
 
 BOOST_AUTO_TEST_CASE(TestEdgePixelsAreHandledByMirroring)
 {
-	GrayImage src(randomGrayImage(104, 104));
-	QRect const inner_rect(2, 2, 100, 100);
+    GrayImage src(randomGrayImage(104, 104));
+    QRect const inner_rect(2, 2, 100, 100);
 
-	// Apply mirroring.
-	GridAccessor<uint8_t> const pixels(src.accessor());
-	for (int y = 0; y < 104; ++y) {
-		for (int x = 0; x < 104; ++x) {
-			int mx = x;
-			int my = y;
+    // Apply mirroring.
+    GridAccessor<uint8_t> const pixels(src.accessor());
+    for (int y = 0; y < 104; ++y)
+    {
+        for (int x = 0; x < 104; ++x)
+        {
+            int mx = x;
+            int my = y;
 
-			if (x < inner_rect.left()) {
-				mx = inner_rect.left() + (inner_rect.left() - x);
-			} else if (x > inner_rect.right()) {
-				mx = inner_rect.right() - (x - inner_rect.right());
-			}
+            if (x < inner_rect.left())
+            {
+                mx = inner_rect.left() + (inner_rect.left() - x);
+            }
+            else if (x > inner_rect.right())
+            {
+                mx = inner_rect.right() - (x - inner_rect.right());
+            }
 
-			if (y < inner_rect.top()) {
-				my = inner_rect.top() + (inner_rect.top() - y);
-			} else if (y > inner_rect.bottom()) {
-				my = inner_rect.bottom() - (y - inner_rect.bottom());
-			}
+            if (y < inner_rect.top())
+            {
+                my = inner_rect.top() + (inner_rect.top() - y);
+            }
+            else if (y > inner_rect.bottom())
+            {
+                my = inner_rect.bottom() - (y - inner_rect.bottom());
+            }
 
-			pixels(x, y) = pixels(mx, my);
-		}
-	}
+            pixels(x, y) = pixels(mx, my);
+        }
+    }
 
-	GrayImage const full_filtered = savGolFilter(src, QSize(5, 5), 3, 3);
-	GrayImage const inner_filtered = savGolFilter(
-		GrayImage(src.toQImage().copy(inner_rect)), QSize(5, 5), 3, 3
-	);
+    GrayImage const full_filtered = savGolFilter(src, QSize(5, 5), 3, 3);
+    GrayImage const inner_filtered = savGolFilter(
+                                         GrayImage(src.toQImage().copy(inner_rect)), QSize(5, 5), 3, 3
+                                     );
 
-	int max_err = 0;
-	rasterOpGeneric([&max_err](int px1, int px2) {
-		max_err = std::max<int>(max_err, std::abs(px1 - px2));
-	}, inner_filtered, GrayImage(full_filtered.toQImage().copy(inner_rect)));
+    int max_err = 0;
+    rasterOpGeneric([&max_err](int px1, int px2)
+    {
+        max_err = std::max<int>(max_err, std::abs(px1 - px2));
+    }, inner_filtered, GrayImage(full_filtered.toQImage().copy(inner_rect)));
 
-	BOOST_CHECK_LE(max_err, 1);
+    BOOST_CHECK_LE(max_err, 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END();

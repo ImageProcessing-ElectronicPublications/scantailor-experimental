@@ -34,26 +34,26 @@ namespace select_content
 
 class Settings : public RefCountable
 {
-	DECLARE_NON_COPYABLE(Settings)
+    DECLARE_NON_COPYABLE(Settings)
 public:
-	Settings();
-	
-	virtual ~Settings();
-	
-	void clear();
-	
-	void performRelinking(AbstractRelinker const& relinker);
+    Settings();
 
-	void setPageParams(PageId const& page_id, Params const& params);
-	
-	void clearPageParams(PageId const& page_id);
-	
-	std::auto_ptr<Params> getPageParams(PageId const& page_id) const;
+    virtual ~Settings();
+
+    void clear();
+
+    void performRelinking(AbstractRelinker const& relinker);
+
+    void setPageParams(PageId const& page_id, Params const& params);
+
+    void clearPageParams(PageId const& page_id);
+
+    std::auto_ptr<Params> getPageParams(PageId const& page_id) const;
 private:
-	typedef std::map<PageId, Params> PageParams;
-	
-	mutable QMutex m_mutex;
-	PageParams m_pageParams;
+    typedef std::map<PageId, Params> PageParams;
+
+    mutable QMutex m_mutex;
+    PageParams m_pageParams;
 };
 
 } // namespace select_content

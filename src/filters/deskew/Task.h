@@ -35,15 +35,15 @@ class DebugImagesImpl;
 
 namespace imageproc
 {
-	class BinaryImage;
-	class GrayImage;
-	class AffineImageTransform;
-	class AffineTransformedImage;
+class BinaryImage;
+class GrayImage;
+class AffineImageTransform;
+class AffineTransformedImage;
 };
 
 namespace select_content
 {
-	class Task;
+class Task;
 }
 
 namespace deskew
@@ -55,64 +55,64 @@ class Params;
 
 class Task : public RefCountable
 {
-	DECLARE_NON_COPYABLE(Task)
+    DECLARE_NON_COPYABLE(Task)
 public:
-	Task(IntrusivePtr<Filter> const& filter,
-		IntrusivePtr<Settings> const& settings,
-		IntrusivePtr<select_content::Task> const& next_task,
-		PageId const& page_id, bool batch_processing, bool debug);
-	
-	virtual ~Task();
-	
-	FilterResultPtr process(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		imageproc::AffineImageTransform const& orig_image_transform,
-		OrthogonalRotation const& pre_rotation);
+    Task(IntrusivePtr<Filter> const& filter,
+         IntrusivePtr<Settings> const& settings,
+         IntrusivePtr<select_content::Task> const& next_task,
+         PageId const& page_id, bool batch_processing, bool debug);
+
+    virtual ~Task();
+
+    FilterResultPtr process(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        imageproc::AffineImageTransform const& orig_image_transform,
+        OrthogonalRotation const& pre_rotation);
 private:
-	class NoDistortionUiUpdater;
-	class RotationUiUpdater;
-	class PerspectiveUiUpdater;
-	class DewarpingUiUpdater;
+    class NoDistortionUiUpdater;
+    class RotationUiUpdater;
+    class PerspectiveUiUpdater;
+    class DewarpingUiUpdater;
 
-	FilterResultPtr processNoDistortion(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		imageproc::AffineImageTransform const& orig_image_transform, Params& params);
+    FilterResultPtr processNoDistortion(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        imageproc::AffineImageTransform const& orig_image_transform, Params& params);
 
-	FilterResultPtr processRotationDistortion(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		imageproc::AffineImageTransform const& orig_image_transform, Params& params);
+    FilterResultPtr processRotationDistortion(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        imageproc::AffineImageTransform const& orig_image_transform, Params& params);
 
-	FilterResultPtr processPerspectiveDistortion(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		imageproc::AffineImageTransform const& orig_image_transform, Params& params);
+    FilterResultPtr processPerspectiveDistortion(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        imageproc::AffineImageTransform const& orig_image_transform, Params& params);
 
-	FilterResultPtr processWarpDistortion(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		imageproc::AffineImageTransform const& orig_image_transform, Params& params);
+    FilterResultPtr processWarpDistortion(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        imageproc::AffineImageTransform const& orig_image_transform, Params& params);
 
-	static void cleanup(TaskStatus const& status, imageproc::BinaryImage& img);
-	
-	IntrusivePtr<Filter> m_ptrFilter;
-	IntrusivePtr<Settings> m_ptrSettings;
-	IntrusivePtr<select_content::Task> m_ptrNextTask;
-	std::auto_ptr<DebugImagesImpl> m_ptrDbg;
-	PageId m_pageId;
-	bool m_batchProcessing;
+    static void cleanup(TaskStatus const& status, imageproc::BinaryImage& img);
+
+    IntrusivePtr<Filter> m_ptrFilter;
+    IntrusivePtr<Settings> m_ptrSettings;
+    IntrusivePtr<select_content::Task> m_ptrNextTask;
+    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    PageId m_pageId;
+    bool m_batchProcessing;
 };
 
 } // namespace deskew

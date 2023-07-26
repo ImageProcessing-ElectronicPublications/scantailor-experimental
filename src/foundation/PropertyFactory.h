@@ -29,18 +29,18 @@ class QDomElement;
 
 class FOUNDATION_EXPORT PropertyFactory
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	virtual ~PropertyFactory() {}
+    virtual ~PropertyFactory() {}
 
-	typedef IntrusivePtr<Property> (*PropertyConstructor)(QDomElement const& el);
+    typedef IntrusivePtr<Property> (*PropertyConstructor)(QDomElement const& el);
 
-	void registerProperty(QString const& property, PropertyConstructor constructor);
+    void registerProperty(QString const& property, PropertyConstructor constructor);
 
-	IntrusivePtr<Property> construct(QDomElement const& el) const;
+    IntrusivePtr<Property> construct(QDomElement const& el) const;
 private:
-	typedef std::map<QString, PropertyConstructor> Registry;
-	Registry m_registry;
+    typedef std::map<QString, PropertyConstructor> Registry;
+    Registry m_registry;
 };
 
 #endif

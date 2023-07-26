@@ -35,90 +35,104 @@ DistortionModel::DistortionModel()
 }
 
 DistortionModel::DistortionModel(QDomElement const& el)
-:	m_topCurve(el.namedItem("top-curve").toElement()),
-	m_bottomCurve(el.namedItem("bottom-curve").toElement())
+    :	m_topCurve(el.namedItem("top-curve").toElement()),
+      m_bottomCurve(el.namedItem("bottom-curve").toElement())
 {
 }
 
 QDomElement
 DistortionModel::toXml(QDomDocument& doc, QString const& name) const
 {
-	if (!isValid()) {
-		return QDomElement();
-	}
+    if (!isValid())
+    {
+        return QDomElement();
+    }
 
-	QDomElement el(doc.createElement(name));
-	el.appendChild(m_topCurve.toXml(doc, "top-curve"));
-	el.appendChild(m_bottomCurve.toXml(doc, "bottom-curve"));
-	return el;
+    QDomElement el(doc.createElement(name));
+    el.appendChild(m_topCurve.toXml(doc, "top-curve"));
+    el.appendChild(m_bottomCurve.toXml(doc, "bottom-curve"));
+    return el;
 }
 
 bool
 DistortionModel::isValid() const
 {
-	if (!m_topCurve.isValid() || !m_bottomCurve.isValid()) {
-		return false;
-	}
+    if (!m_topCurve.isValid() || !m_bottomCurve.isValid())
+    {
+        return false;
+    }
 
-	Vec2d const poly[4] = {
-		m_topCurve.polyline().front(),
-		m_topCurve.polyline().back(),
-		m_bottomCurve.polyline().back(),
-		m_bottomCurve.polyline().front()
-	};
+    Vec2d const poly[4] =
+    {
+        m_topCurve.polyline().front(),
+        m_topCurve.polyline().back(),
+        m_bottomCurve.polyline().back(),
+        m_bottomCurve.polyline().front()
+    };
 
-	double min_dot = NumericTraits<double>::max();
-	double max_dot = NumericTraits<double>::min();
+    double min_dot = NumericTraits<double>::max();
+    double max_dot = NumericTraits<double>::min();
 
-	for (int i = 0; i < 4; ++i) {
-		Vec2d const cur(poly[i]);
-		Vec2d const prev(poly[(i + 3) & 3]);
-		Vec2d const next(poly[(i + 1) & 3]);
-		
-		Vec2d prev_normal(cur - prev);
-		std::swap(prev_normal[0], prev_normal[1]);
-		prev_normal[0] = -prev_normal[0];
+    for (int i = 0; i < 4; ++i)
+    {
+        Vec2d const cur(poly[i]);
+        Vec2d const prev(poly[(i + 3) & 3]);
+        Vec2d const next(poly[(i + 1) & 3]);
 
-		double const dot = prev_normal.dot(next - cur);
-		if (dot < min_dot) {
-			min_dot = dot;
-		}
-		if (dot > max_dot) {
-			max_dot = dot;
-		}
-	}
+        Vec2d prev_normal(cur - prev);
+        std::swap(prev_normal[0], prev_normal[1]);
+        prev_normal[0] = -prev_normal[0];
 
-	if (min_dot * max_dot <= 0) {
-		// Not convex.
-		return false;
-	}
+        double const dot = prev_normal.dot(next - cur);
+        if (dot < min_dot)
+        {
+            min_dot = dot;
+        }
+        if (dot > max_dot)
+        {
+            max_dot = dot;
+        }
+    }
 
-	if (fabs(min_dot) < 0.01 || fabs(max_dot) < 0.01) {
-		// Too close - possible problems with calculating homography.
-		return false;
-	}
+    if (min_dot * max_dot <= 0)
+    {
+        // Not convex.
+        return false;
+    }
 
-	return true;
+    if (fabs(min_dot) < 0.01 || fabs(max_dot) < 0.01)
+    {
+        // Too close - possible problems with calculating homography.
+        return false;
+    }
+
+    return true;
 }
 
 bool
 DistortionModel::matches(DistortionModel const& other) const
 {
-	bool const this_valid = isValid();
-	bool const other_valid = other.isValid();
-	if (!this_valid && !other_valid) {
-		return true;
-	} else if (this_valid != other_valid) {
-		return false;
-	}
+    bool const this_valid = isValid();
+    bool const other_valid = other.isValid();
+    if (!this_valid && !other_valid)
+    {
+        return true;
+    }
+    else if (this_valid != other_valid)
+    {
+        return false;
+    }
 
-	if (!m_topCurve.matches(other.m_topCurve)) {
-		return false;
-	} else if (!m_bottomCurve.matches(other.m_bottomCurve)) {
-		return false;
-	}
+    if (!m_topCurve.matches(other.m_topCurve))
+    {
+        return false;
+    }
+    else if (!m_bottomCurve.matches(other.m_bottomCurve))
+    {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 } // namespace dewarping

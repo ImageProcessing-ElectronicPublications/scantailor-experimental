@@ -33,7 +33,7 @@ class AbstractRelinker;
 
 namespace dewarping
 {
-	class DepthPerception;
+class DepthPerception;
 }
 
 namespace deskew
@@ -43,32 +43,32 @@ class DistortionType;
 
 class Settings : public RefCountable
 {
-	DECLARE_NON_COPYABLE(Settings)
+    DECLARE_NON_COPYABLE(Settings)
 public:
-	Settings();
-	
-	virtual ~Settings();
+    Settings();
 
-	void clear();
+    virtual ~Settings();
 
-	void performRelinking(AbstractRelinker const& relinker);
-	
-	void setPageParams(PageId const& page_id, Params const& params);
+    void clear();
 
-	std::auto_ptr<Params> getPageParams(PageId const& page_id) const;
-	
-	DistortionType getDistortionType(PageId const& page_id) const;
+    void performRelinking(AbstractRelinker const& relinker);
 
-	void setDistortionType(
-		std::set<PageId> const& pages, DistortionType const& distortion_type);
+    void setPageParams(PageId const& page_id, Params const& params);
 
-	void setDepthPerception(
-		std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception);
+    std::auto_ptr<Params> getPageParams(PageId const& page_id) const;
+
+    DistortionType getDistortionType(PageId const& page_id) const;
+
+    void setDistortionType(
+        std::set<PageId> const& pages, DistortionType const& distortion_type);
+
+    void setDepthPerception(
+        std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception);
 private:
-	typedef std::map<PageId, Params> PerPageParams;
-	
-	mutable QMutex m_mutex;
-	PerPageParams m_perPageParams;
+    typedef std::map<PageId, Params> PerPageParams;
+
+    mutable QMutex m_mutex;
+    PerPageParams m_perPageParams;
 };
 
 } // namespace deskew

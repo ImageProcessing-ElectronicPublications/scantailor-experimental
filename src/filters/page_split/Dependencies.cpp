@@ -33,69 +33,75 @@ Dependencies::Dependencies()
 }
 
 Dependencies::Dependencies(QDomElement const& el)
-:	m_imageSize(XmlUnmarshaller::size(el.namedItem("size").toElement())),
-	m_rotation(el.namedItem("rotation").toElement()),
-	m_layoutType(
-		layoutTypeFromString(
-			XmlUnmarshaller::string(el.namedItem("layoutType").toElement())
-		)
-	)
+    :	m_imageSize(XmlUnmarshaller::size(el.namedItem("size").toElement())),
+      m_rotation(el.namedItem("rotation").toElement()),
+      m_layoutType(
+          layoutTypeFromString(
+              XmlUnmarshaller::string(el.namedItem("layoutType").toElement())
+          )
+      )
 {
 }
 
 Dependencies::Dependencies(
-	QSize const& image_size, OrthogonalRotation const rotation,
-	LayoutType const layout_type)
-:	m_imageSize(image_size),
-	m_rotation(rotation),
-	m_layoutType(layout_type)
+    QSize const& image_size, OrthogonalRotation const rotation,
+    LayoutType const layout_type)
+    :	m_imageSize(image_size),
+      m_rotation(rotation),
+      m_layoutType(layout_type)
 {
 }
 
 bool
 Dependencies::compatibleWith(Params const& params) const
 {
-	Dependencies const& deps = params.dependencies();
-	
-	if (m_imageSize != deps.m_imageSize) {
-		return false;
-	}
-	if (m_rotation != deps.m_rotation) {
-		return false;
-	}
-	if (m_layoutType == deps.m_layoutType) {
-		return true;
-	}
-	if (m_layoutType == SINGLE_PAGE_UNCUT) {
-		// The split line doesn't matter here.
-		return true;
-	}
-	if (m_layoutType == TWO_PAGES && params.splitLineMode() == MODE_MANUAL) {
-		// Two pages and a specified split line means we have all the data.
-		// Note that if layout type was PAGE_PLUS_OFFCUT, we would
-		// not know if that page is to the left or to the right of the
-		// split line.
-		return true;
-	}
-	
-	return false;
+    Dependencies const& deps = params.dependencies();
+
+    if (m_imageSize != deps.m_imageSize)
+    {
+        return false;
+    }
+    if (m_rotation != deps.m_rotation)
+    {
+        return false;
+    }
+    if (m_layoutType == deps.m_layoutType)
+    {
+        return true;
+    }
+    if (m_layoutType == SINGLE_PAGE_UNCUT)
+    {
+        // The split line doesn't matter here.
+        return true;
+    }
+    if (m_layoutType == TWO_PAGES && params.splitLineMode() == MODE_MANUAL)
+    {
+        // Two pages and a specified split line means we have all the data.
+        // Note that if layout type was PAGE_PLUS_OFFCUT, we would
+        // not know if that page is to the left or to the right of the
+        // split line.
+        return true;
+    }
+
+    return false;
 }
 
 QDomElement
 Dependencies::toXml(QDomDocument& doc, QString const& tag_name) const
 {
-	if (isNull()) {
-		return QDomElement();
-	}
-	
-	XmlMarshaller marshaller(doc);
-	
-	QDomElement el(doc.createElement(tag_name));
-	el.appendChild(m_rotation.toXml(doc, "rotation"));
-	el.appendChild(marshaller.size(m_imageSize, "size"));
-	el.appendChild(marshaller.string(layoutTypeToString(m_layoutType), "layoutType"));
-	
-	return el;
+    if (isNull())
+    {
+        return QDomElement();
+    }
+
+    XmlMarshaller marshaller(doc);
+
+    QDomElement el(doc.createElement(tag_name));
+    el.appendChild(m_rotation.toXml(doc, "rotation"));
+    el.appendChild(marshaller.size(m_imageSize, "size"));
+    el.appendChild(marshaller.string(layoutTypeToString(m_layoutType), "layoutType"));
+
+    return el;
 }
 
 } // namespace page_split

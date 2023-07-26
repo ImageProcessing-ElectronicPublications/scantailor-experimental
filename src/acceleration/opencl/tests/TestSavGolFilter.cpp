@@ -42,9 +42,10 @@ namespace tests
 class SavGolFilterFixture : protected DeviceListFixture, protected ProgramBuilderFixture
 {
 public:
-	SavGolFilterFixture() {
-		addSource("sav_gol_filter.cl");
-	}
+    SavGolFilterFixture()
+    {
+        addSource("sav_gol_filter.cl");
+    }
 };
 
 BOOST_FIXTURE_TEST_SUITE(SavGolFilterTestSuite, SavGolFilterFixture);
@@ -53,65 +54,71 @@ BOOST_FIXTURE_TEST_SUITE(SavGolFilterTestSuite, SavGolFilterFixture);
 
 BOOST_AUTO_TEST_CASE(test1)
 {
-	boost::random::mt19937 rng;
-	boost::random::uniform_int_distribution<> dist(0, 255);
-	GrayImage input(QSize(1000, 1000));
-	rasterOpGeneric([&dist, &rng](uint8_t& px) {
-		px = dist(rng);
-	}, input);
+    boost::random::mt19937 rng;
+    boost::random::uniform_int_distribution<> dist(0, 255);
+    GrayImage input(QSize(1000, 1000));
+    rasterOpGeneric([&dist, &rng](uint8_t& px)
+    {
+        px = dist(rng);
+    }, input);
 
 #if LOG_PERFORMANCE
-	PerformanceTimer ptimer1;
+    PerformanceTimer ptimer1;
 #endif
 
-	GrayImage const control = imageproc::savGolFilter(input, QSize(5, 5), 3, 3);
+    GrayImage const control = imageproc::savGolFilter(input, QSize(5, 5), 3, 3);
 
 #if LOG_PERFORMANCE
-	for (int i = 0; i < 99; ++i) {
-		imageproc::savGolFilter(input, QSize(5, 5), 3, 3);
-	}
+    for (int i = 0; i < 99; ++i)
+    {
+        imageproc::savGolFilter(input, QSize(5, 5), 3, 3);
+    }
 
-	ptimer1.print("[sav-gol-filter x100] Non-accelerated version:");
+    ptimer1.print("[sav-gol-filter x100] Non-accelerated version:");
 #endif
 
-	for (cl::Device const& device : m_devices) {
-		cl::Context context(device);
-		cl::CommandQueue command_queue(context, device);
-		cl::Program program(buildProgram(context));
+    for (cl::Device const& device : m_devices)
+    {
+        cl::Context context(device);
+        cl::CommandQueue command_queue(context, device);
+        cl::Program program(buildProgram(context));
 
 #if LOG_PERFORMANCE
-		PerformanceTimer ptimer2;
+        PerformanceTimer ptimer2;
 #endif
 
-		GrayImage const output = savGolFilter(command_queue, program, input, QSize(5, 5), 3, 3);
+        GrayImage const output = savGolFilter(command_queue, program, input, QSize(5, 5), 3, 3);
 
 #if LOG_PERFORMANCE
-		for (int i = 0; i < 99; ++i) {
-			savGolFilter(command_queue, program, input, QSize(5, 5), 3, 3);
-		}
+        for (int i = 0; i < 99; ++i)
+        {
+            savGolFilter(command_queue, program, input, QSize(5, 5), 3, 3);
+        }
 
-		ptimer2.print(("[sav-gol-filter x100] "+device.getInfo<CL_DEVICE_NAME>() + ":").c_str());
+        ptimer2.print(("[sav-gol-filter x100] "+device.getInfo<CL_DEVICE_NAME>() + ":").c_str());
 #endif
 
-		int max_err = 0;
-		int max_err_x = 0;
-		int max_err_y = 0;
-		rasterOpGenericXY(
-			[&max_err, &max_err_x, &max_err_y](int px1, int px2, int x, int y) {
-				int const err = std::abs(px1 - px2);
-				if (err > max_err) {
-					max_err = err;
-					max_err_x = x;
-					max_err_y = y;
-				}
-			},
-			output, control
-		);
+        int max_err = 0;
+        int max_err_x = 0;
+        int max_err_y = 0;
+        rasterOpGenericXY(
+            [&max_err, &max_err_x, &max_err_y](int px1, int px2, int x, int y)
+        {
+            int const err = std::abs(px1 - px2);
+            if (err > max_err)
+            {
+                max_err = err;
+                max_err_x = x;
+                max_err_y = y;
+            }
+        },
+        output, control
+        );
 
-		//BOOST_TEST_MESSAGE("SavGolFilter max error at: (" << max_err_x << ", " << max_err_y << ")");
-		BOOST_CHECK_LE(max_err, 1);
+        //BOOST_TEST_MESSAGE("SavGolFilter max error at: (" << max_err_x << ", " << max_err_y << ")");
+        BOOST_CHECK_LE(max_err, 1);
 
-	} // for (device)
+    } // for (device)
 }
 
 BOOST_AUTO_TEST_SUITE_END();

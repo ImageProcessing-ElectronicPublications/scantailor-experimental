@@ -40,9 +40,9 @@ class QImage;
 
 namespace imageproc
 {
-	class BinaryImage;
-	class GrayImage;
-	class AbstractImageTransform;
+class BinaryImage;
+class GrayImage;
+class AbstractImageTransform;
 }
 
 namespace output
@@ -53,45 +53,45 @@ class Settings;
 
 class Task : public RefCountable
 {
-	DECLARE_NON_COPYABLE(Task)
+    DECLARE_NON_COPYABLE(Task)
 public:
-	Task(IntrusivePtr<Filter> const& filter,
-		IntrusivePtr<Settings> const& settings,
-		IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		PageId const& page_id, OutputFileNameGenerator const& out_file_name_gen,
-		ImageViewTab last_tab, bool batch, bool debug);
-	
-	virtual ~Task();
-	
-	FilterResultPtr process(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
-		QRectF const& content_rect, QRectF const& outer_rect);
+    Task(IntrusivePtr<Filter> const& filter,
+         IntrusivePtr<Settings> const& settings,
+         IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+         PageId const& page_id, OutputFileNameGenerator const& out_file_name_gen,
+         ImageViewTab last_tab, bool batch, bool debug);
+
+    virtual ~Task();
+
+    FilterResultPtr process(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
+        QRectF const& content_rect, QRectF const& outer_rect);
 private:
-	class UiUpdater;
-	
-	FilterResultPtr processScaled(
-		TaskStatus const& status,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& orig_image,
-		CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-		std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
-		QRectF const& content_rect, QRectF const& outer_rect);
+    class UiUpdater;
 
-	void deleteMutuallyExclusiveOutputFiles();
+    FilterResultPtr processScaled(
+        TaskStatus const& status,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
+        QRectF const& content_rect, QRectF const& outer_rect);
 
-	IntrusivePtr<Filter> m_ptrFilter;
-	IntrusivePtr<Settings> m_ptrSettings;
-	IntrusivePtr<ThumbnailPixmapCache> m_ptrThumbnailCache;
-	std::auto_ptr<DebugImagesImpl> m_ptrDbg;
-	PageId m_pageId;
-	OutputFileNameGenerator m_outFileNameGen;
-	ImageViewTab m_lastTab;
-	bool m_batchProcessing;
-	bool m_debug;
+    void deleteMutuallyExclusiveOutputFiles();
+
+    IntrusivePtr<Filter> m_ptrFilter;
+    IntrusivePtr<Settings> m_ptrSettings;
+    IntrusivePtr<ThumbnailPixmapCache> m_ptrThumbnailCache;
+    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    PageId m_pageId;
+    OutputFileNameGenerator m_outFileNameGen;
+    ImageViewTab m_lastTab;
+    bool m_batchProcessing;
+    bool m_debug;
 };
 
 } // namespace output

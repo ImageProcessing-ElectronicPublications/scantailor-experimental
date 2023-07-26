@@ -26,39 +26,45 @@ namespace page_layout
 
 MatchSizeMode::MatchSizeMode(QDomElement const& el)
 {
-	QString const mode(el.attribute("mode"));
-	
-	if (mode == "disabled") {
-		m_mode = DISABLED;
-	} else if (mode == "scale") {
-		m_mode = SCALE;
-	} else {
-		// Default mode for backwards compatibility.
-		m_mode = GROW_MARGINS;
-	}
+    QString const mode(el.attribute("mode"));
+
+    if (mode == "disabled")
+    {
+        m_mode = DISABLED;
+    }
+    else if (mode == "scale")
+    {
+        m_mode = SCALE;
+    }
+    else
+    {
+        // Default mode for backwards compatibility.
+        m_mode = GROW_MARGINS;
+    }
 }
 
 QDomElement
 MatchSizeMode::toXml(QDomDocument& doc, QString const& name) const
 {
-	char const* mode = "";
+    char const* mode = "";
 
-	switch (m_mode) {
-		case DISABLED:
-			mode = "disabled";
-			break;
-		case GROW_MARGINS:
-			mode = "margins";
-			break;
-		case SCALE:
-			mode = "scale";
-			break;
-	}
-	
-	QDomElement el(doc.createElement(name));
-	el.setAttribute("mode", QLatin1String(mode));
+    switch (m_mode)
+    {
+    case DISABLED:
+        mode = "disabled";
+        break;
+    case GROW_MARGINS:
+        mode = "margins";
+        break;
+    case SCALE:
+        mode = "scale";
+        break;
+    }
 
-	return el;
+    QDomElement el(doc.createElement(name));
+    el.setAttribute("mode", QLatin1String(mode));
+
+    return el;
 }
 
 } // namespace page_layout

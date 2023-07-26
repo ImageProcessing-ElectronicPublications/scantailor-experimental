@@ -33,29 +33,41 @@ namespace page_layout
 
 class Params
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	Params(RelativeMargins const& hard_margins,
-		QSizeF const& content_size,
-		MatchSizeMode const& match_size_mode,
-		Alignment const& alignment);
-	
-	Params(QDomElement const& el);
-	
-	RelativeMargins const& hardMargins() const { return m_hardMargins; }
-	
-	QSizeF const& contentSize() const { return m_contentSize; }
-	
-	MatchSizeMode matchSizeMode() const { return m_matchSizeMode; }
+    Params(RelativeMargins const& hard_margins,
+           QSizeF const& content_size,
+           MatchSizeMode const& match_size_mode,
+           Alignment const& alignment);
 
-	Alignment const& alignment() const { return m_alignment; }
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    Params(QDomElement const& el);
+
+    RelativeMargins const& hardMargins() const
+    {
+        return m_hardMargins;
+    }
+
+    QSizeF const& contentSize() const
+    {
+        return m_contentSize;
+    }
+
+    MatchSizeMode matchSizeMode() const
+    {
+        return m_matchSizeMode;
+    }
+
+    Alignment const& alignment() const
+    {
+        return m_alignment;
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	RelativeMargins m_hardMargins;
-	QSizeF m_contentSize;
-	MatchSizeMode m_matchSizeMode;
-	Alignment m_alignment;
+    RelativeMargins m_hardMargins;
+    QSizeF m_contentSize;
+    MatchSizeMode m_matchSizeMode;
+    Alignment m_alignment;
 };
 
 } // namespace page_layout

@@ -24,11 +24,12 @@ class QString;
 namespace output
 {
 
-enum DespeckleLevel {
-	DESPECKLE_OFF,
-	DESPECKLE_CAUTIOUS,
-	DESPECKLE_NORMAL,
-	DESPECKLE_AGGRESSIVE
+enum DespeckleLevel
+{
+    DESPECKLE_OFF,
+    DESPECKLE_CAUTIOUS,
+    DESPECKLE_NORMAL,
+    DESPECKLE_AGGRESSIVE
 };
 
 QString despeckleLevelToString(DespeckleLevel level);

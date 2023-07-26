@@ -36,33 +36,45 @@ class CylindricalSurfaceDewarper;
 class DEWARPING_EXPORT DistortionModel
 {
 public:
-	/**
-	 * \brief Constructs a null distortion model.
-	 */
-	DistortionModel();
+    /**
+     * \brief Constructs a null distortion model.
+     */
+    DistortionModel();
 
-	explicit DistortionModel(QDomElement const& el);
+    explicit DistortionModel(QDomElement const& el);
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
-	
-	/**
-	 * Returns true if the model is not null and in addition meets certain
-	 * criteria, like curve endpoints forming a convex quadrilateral.
-	 */
-	bool isValid() const;
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-	void setTopCurve(Curve const& curve) { m_topCurve = curve; }
+    /**
+     * Returns true if the model is not null and in addition meets certain
+     * criteria, like curve endpoints forming a convex quadrilateral.
+     */
+    bool isValid() const;
 
-	void setBottomCurve(Curve const& curve) { m_bottomCurve = curve; }
+    void setTopCurve(Curve const& curve)
+    {
+        m_topCurve = curve;
+    }
 
-	Curve const& topCurve() const { return m_topCurve; }
+    void setBottomCurve(Curve const& curve)
+    {
+        m_bottomCurve = curve;
+    }
 
-	Curve const& bottomCurve() const { return m_bottomCurve; }
+    Curve const& topCurve() const
+    {
+        return m_topCurve;
+    }
 
-	bool matches(DistortionModel const& other) const;
+    Curve const& bottomCurve() const
+    {
+        return m_bottomCurve;
+    }
+
+    bool matches(DistortionModel const& other) const;
 private:
-	Curve m_topCurve;
-	Curve m_bottomCurve;
+    Curve m_topCurve;
+    Curve m_bottomCurve;
 };
 
 } // namespace dewarping

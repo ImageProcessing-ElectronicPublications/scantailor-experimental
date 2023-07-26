@@ -43,10 +43,10 @@ namespace opencl
  * @return The transposed grid.
  */
 OpenCLGrid<float> transpose(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<float> const& src_grid, int dst_padding,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<float> const& src_grid, int dst_padding,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 /**
  * @brief Transponse the grid of float values but not the padding.
@@ -64,10 +64,10 @@ OpenCLGrid<float> transpose(
  * @return The transposed grid.
  */
 void transpose(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<float> const& src_grid, OpenCLGrid<float>& dst_grid,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<float> const& src_grid, OpenCLGrid<float>& dst_grid,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

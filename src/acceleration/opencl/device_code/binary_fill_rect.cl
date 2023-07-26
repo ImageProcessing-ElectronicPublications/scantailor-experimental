@@ -19,27 +19,31 @@
 // REQUIRES: binary_word_mask.cl
 
 kernel void binary_fill_rect(
-	int const rect_width, int const rect_height,
-	global uint* image, int const image_offset, int const image_stride,
-	uint const fill_word, uint2 const edge_masks)
+    int const rect_width, int const rect_height,
+    global uint* image, int const image_offset, int const image_stride,
+    uint const fill_word, uint2 const edge_masks)
 {
-	int const word_x = get_global_id(0);
-	int const word_y = get_global_id(1);
+    int const word_x = get_global_id(0);
+    int const word_y = get_global_id(1);
 
-	if (word_x >= rect_width | word_y >= rect_height) {
-		return;
-	}
+    if (word_x >= rect_width | word_y >= rect_height)
+    {
+        return;
+    }
 
-	image += image_offset + mad24(word_y, image_stride, word_x);
+    image += image_offset + mad24(word_y, image_stride, word_x);
 
-	uint const mask = binary_word_mask(get_global_id(0), rect_width, edge_masks);
+    uint const mask = binary_word_mask(get_global_id(0), rect_width, edge_masks);
 
-	if (mask == ~(uint)0) {
-		*image = fill_word;
-	} else {
-		// This branch alone would do just fine, though having two
-		// branches does result in slightly better performance on all 3
-		// OpenCL devices I've got.
-		*image = bitselect(*image, fill_word, mask);
-	}
+    if (mask == ~(uint)0)
+    {
+        *image = fill_word;
+    }
+    else
+    {
+        // This branch alone would do just fine, though having two
+        // branches does result in slightly better performance on all 3
+        // OpenCL devices I've got.
+        *image = bitselect(*image, fill_word, mask);
+    }
 }

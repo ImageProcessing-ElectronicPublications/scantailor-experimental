@@ -30,13 +30,13 @@ class OrthogonalRotation;
 
 namespace imageproc
 {
-	class AffineImageTransform;
-	class AffineTransformedImage;
+class AffineImageTransform;
+class AffineTransformedImage;
 }
 
 namespace deskew
 {
-	class CacheDrivenTask;
+class CacheDrivenTask;
 }
 
 namespace page_split
@@ -46,21 +46,21 @@ class Settings;
 
 class CacheDrivenTask : public RefCountable
 {
-	DECLARE_NON_COPYABLE(CacheDrivenTask)
+    DECLARE_NON_COPYABLE(CacheDrivenTask)
 public:
-	CacheDrivenTask(
-		IntrusivePtr<Settings> const& settings,
-		IntrusivePtr<deskew::CacheDrivenTask> const& next_task);
-	
-	virtual ~CacheDrivenTask();
-	
-	void process(PageInfo const& page_info,
-		OrthogonalRotation const& pre_rotation,
-		imageproc::AffineImageTransform const& image_transform,
-		AbstractFilterDataCollector* collector);
+    CacheDrivenTask(
+        IntrusivePtr<Settings> const& settings,
+        IntrusivePtr<deskew::CacheDrivenTask> const& next_task);
+
+    virtual ~CacheDrivenTask();
+
+    void process(PageInfo const& page_info,
+                 OrthogonalRotation const& pre_rotation,
+                 imageproc::AffineImageTransform const& image_transform,
+                 AbstractFilterDataCollector* collector);
 private:
-	IntrusivePtr<deskew::CacheDrivenTask> m_ptrNextTask;
-	IntrusivePtr<Settings> m_ptrSettings;
+    IntrusivePtr<deskew::CacheDrivenTask> m_ptrNextTask;
+    IntrusivePtr<Settings> m_ptrSettings;
 };
 
 } // namespace page_split

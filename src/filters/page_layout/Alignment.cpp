@@ -26,59 +26,71 @@ namespace page_layout
 
 Alignment::Alignment(QDomElement const& el)
 {
-	QString const vert(el.attribute("vert"));
-	QString const hor(el.attribute("hor"));
-	
-	if (vert == "top") {
-		m_vert = TOP;
-	} else if (vert == "bottom") {
-		m_vert = BOTTOM;
-	} else {
-		m_vert = VCENTER;
-	}
-	
-	if (hor == "left") {
-		m_hor = LEFT;
-	} else if (hor == "right") {
-		m_hor = RIGHT;
-	} else {
-		m_hor = HCENTER;
-	}
+    QString const vert(el.attribute("vert"));
+    QString const hor(el.attribute("hor"));
+
+    if (vert == "top")
+    {
+        m_vert = TOP;
+    }
+    else if (vert == "bottom")
+    {
+        m_vert = BOTTOM;
+    }
+    else
+    {
+        m_vert = VCENTER;
+    }
+
+    if (hor == "left")
+    {
+        m_hor = LEFT;
+    }
+    else if (hor == "right")
+    {
+        m_hor = RIGHT;
+    }
+    else
+    {
+        m_hor = HCENTER;
+    }
 }
 
 QDomElement
 Alignment::toXml(QDomDocument& doc, QString const& name) const
 {
-	char const* vert = 0;
-	switch (m_vert) {
-		case TOP:
-			vert = "top";
-			break;
-		case VCENTER:
-			vert = "vcenter";
-			break;
-		case BOTTOM:
-			vert = "bottom";
-			break;
-	}
-	
-	char const* hor = 0;
-	switch (m_hor) {
-		case LEFT:
-			hor = "left";
-			break;
-		case HCENTER:
-			hor = "hcenter";
-			break;
-		case RIGHT:
-			hor = "right";
-			break;
-	}
-	
-	QDomElement el(doc.createElement(name));
-	el.setAttribute("vert", QString::fromUtf8(vert));
-	el.setAttribute("hor", QString::fromUtf8(hor));
-	return el;
+    char const* vert = 0;
+    switch (m_vert)
+    {
+    case TOP:
+        vert = "top";
+        break;
+    case VCENTER:
+        vert = "vcenter";
+        break;
+    case BOTTOM:
+        vert = "bottom";
+        break;
+    }
+
+    char const* hor = 0;
+    switch (m_hor)
+    {
+    case LEFT:
+        hor = "left";
+        break;
+    case HCENTER:
+        hor = "hcenter";
+        break;
+    case RIGHT:
+        hor = "right";
+        break;
+    }
+
+    QDomElement el(doc.createElement(name));
+    el.setAttribute("vert", QString::fromUtf8(vert));
+    el.setAttribute("hor", QString::fromUtf8(hor));
+    return el;
 }
 
 } // namespace page_layout

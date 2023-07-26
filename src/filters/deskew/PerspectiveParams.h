@@ -35,34 +35,46 @@ namespace deskew
  */
 class PerspectiveParams
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	enum Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT };
+    enum Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT };
 
-	/**
-	 * Defaults to all corners at origin (making isValid() return false)
-	 * and MODE_AUTO.
-	 */
-	PerspectiveParams();
-	
-	PerspectiveParams(QDomElement const& el);
+    /**
+     * Defaults to all corners at origin (making isValid() return false)
+     * and MODE_AUTO.
+     */
+    PerspectiveParams();
 
-	bool isValid() const;
+    PerspectiveParams(QDomElement const& el);
 
-	void invalidate();
+    bool isValid() const;
 
-	AutoManualMode mode() const { return m_mode; }
+    void invalidate();
 
-	void setMode(AutoManualMode mode) { m_mode = mode; }
+    AutoManualMode mode() const
+    {
+        return m_mode;
+    }
 
-	QPointF const& corner(Corner idx) const { return m_corners[idx]; }
+    void setMode(AutoManualMode mode)
+    {
+        m_mode = mode;
+    }
 
-	void setCorner(Corner idx, QPointF const& corner) { m_corners[idx] = corner; }
+    QPointF const& corner(Corner idx) const
+    {
+        return m_corners[idx];
+    }
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    void setCorner(Corner idx, QPointF const& corner)
+    {
+        m_corners[idx] = corner;
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	QPointF m_corners[4];
-	AutoManualMode m_mode;
+    QPointF m_corners[4];
+    AutoManualMode m_mode;
 };
 
 } // namespace deskew

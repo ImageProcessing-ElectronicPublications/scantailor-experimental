@@ -30,90 +30,97 @@ namespace page_layout
 
 QMarginsF
 Utils::calcSoftMarginsPx(
-	QSizeF const& hard_size_px, QSizeF const& aggregate_hard_size_px,
-	MatchSizeMode const& match_size_mode, Alignment const& alignment)
+    QSizeF const& hard_size_px, QSizeF const& aggregate_hard_size_px,
+    MatchSizeMode const& match_size_mode, Alignment const& alignment)
 {
-	if (match_size_mode.get() == MatchSizeMode::DISABLED) {
-		// We are not aligning this page with others.
-		return QMarginsF();
-	}
+    if (match_size_mode.get() == MatchSizeMode::DISABLED)
+    {
+        // We are not aligning this page with others.
+        return QMarginsF();
+    }
 
-	qreal top = 0.0;
-	qreal bottom = 0.0;
-	qreal left = 0.0;
-	qreal right = 0.0;
+    qreal top = 0.0;
+    qreal bottom = 0.0;
+    qreal left = 0.0;
+    qreal right = 0.0;
 
-	qreal const delta_width = aggregate_hard_size_px.width() - hard_size_px.width();
-	if (delta_width > 0.0) {
-		switch (alignment.horizontal()) {
-			case Alignment::LEFT:
-				right = delta_width;
-				break;
-			case Alignment::HCENTER:
-				left = right = 0.5 * delta_width;
-				break;
-			case Alignment::RIGHT:
-				left = delta_width;
-				break;
-		}
-	}
+    qreal const delta_width = aggregate_hard_size_px.width() - hard_size_px.width();
+    if (delta_width > 0.0)
+    {
+        switch (alignment.horizontal())
+        {
+        case Alignment::LEFT:
+            right = delta_width;
+            break;
+        case Alignment::HCENTER:
+            left = right = 0.5 * delta_width;
+            break;
+        case Alignment::RIGHT:
+            left = delta_width;
+            break;
+        }
+    }
 
-	qreal const delta_height = aggregate_hard_size_px.height() - hard_size_px.height();
-	if (delta_height > 0.0) {
-		switch (alignment.vertical()) {
-			case Alignment::TOP:
-				bottom = delta_height;
-				break;
-			case Alignment::VCENTER:
-				top = bottom = 0.5 * delta_height;
-				break;
-			case Alignment::BOTTOM:
-				top = delta_height;
-				break;
-		}
-	}
-	
-	return QMarginsF(left, top, right, bottom);
+    qreal const delta_height = aggregate_hard_size_px.height() - hard_size_px.height();
+    if (delta_height > 0.0)
+    {
+        switch (alignment.vertical())
+        {
+        case Alignment::TOP:
+            bottom = delta_height;
+            break;
+        case Alignment::VCENTER:
+            top = bottom = 0.5 * delta_height;
+            break;
+        case Alignment::BOTTOM:
+            top = delta_height;
+            break;
+        }
+    }
+
+    return QMarginsF(left, top, right, bottom);
 }
 
 QColor
 Utils::borderColorForMatchSizeMode(MatchSizeMode const& mode)
 {
-	QColor color;
+    QColor color;
 
-	switch (mode.get()) {
-		case MatchSizeMode::DISABLED:
-			color = QColor(0x00, 0x52, 0xff);
-			break;
-		case MatchSizeMode::GROW_MARGINS:
-			color = QColor(0xbe, 0x5b, 0xec);
-			break;
-		case MatchSizeMode::SCALE:
-			color = QColor(0xff, 0x80, 0x00);
-			break;
-	}
+    switch (mode.get())
+    {
+    case MatchSizeMode::DISABLED:
+        color = QColor(0x00, 0x52, 0xff);
+        break;
+    case MatchSizeMode::GROW_MARGINS:
+        color = QColor(0xbe, 0x5b, 0xec);
+        break;
+    case MatchSizeMode::SCALE:
+        color = QColor(0xff, 0x80, 0x00);
+        break;
+    }
 
-	return color;
+    return color;
 }
 
 QColor
 Utils::backgroundColorForMatchSizeMode(MatchSizeMode const& mode)
 {
-	QColor color;
+    QColor color;
 
-	switch (mode.get()) {
-		case MatchSizeMode::DISABLED:
-			color = QColor(0x58, 0x7f, 0xf4, 70);
-			break;
-		case MatchSizeMode::GROW_MARGINS:
-			color = QColor(0xbb, 0x00, 0xff, 40);
-			break;
-		case MatchSizeMode::SCALE:
-			color = QColor(0xff, 0xa9, 0x00, 70);
-			break;
-	}
+    switch (mode.get())
+    {
+    case MatchSizeMode::DISABLED:
+        color = QColor(0x58, 0x7f, 0xf4, 70);
+        break;
+    case MatchSizeMode::GROW_MARGINS:
+        color = QColor(0xbb, 0x00, 0xff, 40);
+        break;
+    case MatchSizeMode::SCALE:
+        color = QColor(0xff, 0xa9, 0x00, 70);
+        break;
+    }
 
-	return color;
+    return color;
 }
 
 } // namespace page_layout

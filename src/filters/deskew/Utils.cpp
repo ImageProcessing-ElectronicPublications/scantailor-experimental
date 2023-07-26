@@ -31,38 +31,40 @@ namespace deskew
 
 void
 Utils::buildWarpVisualization(
-	std::vector<QPointF> const& top_curve,
-	std::vector<QPointF> const& bottom_curve,
-	dewarping::DepthPerception const& depth_perception,
-	unsigned num_horizontal_curves, unsigned num_vertical_lines,
-	std::vector<std::vector<QPointF>>& out_horizontal_curves,
-	std::vector<QLineF>& out_vertical_lines)
+    std::vector<QPointF> const& top_curve,
+    std::vector<QPointF> const& bottom_curve,
+    dewarping::DepthPerception const& depth_perception,
+    unsigned num_horizontal_curves, unsigned num_vertical_lines,
+    std::vector<std::vector<QPointF>>& out_horizontal_curves,
+    std::vector<QLineF>& out_vertical_lines)
 {
-	assert(out_horizontal_curves.empty());
-	assert(out_vertical_lines.empty());
-	assert(num_vertical_lines > 1);
-	assert(num_horizontal_curves > 1);
+    assert(out_horizontal_curves.empty());
+    assert(out_vertical_lines.empty());
+    assert(num_vertical_lines > 1);
+    assert(num_horizontal_curves > 1);
 
-	out_horizontal_curves.resize(num_horizontal_curves);
-	out_vertical_lines.reserve(num_vertical_lines);
+    out_horizontal_curves.resize(num_horizontal_curves);
+    out_vertical_lines.reserve(num_vertical_lines);
 
-	CylindricalSurfaceDewarper const dewarper(
-		top_curve, bottom_curve, depth_perception.value()
-	);
-	CylindricalSurfaceDewarper::State state;
+    CylindricalSurfaceDewarper const dewarper(
+        top_curve, bottom_curve, depth_perception.value()
+    );
+    CylindricalSurfaceDewarper::State state;
 
-	for (unsigned j = 0; j < num_vertical_lines; ++j) {
-		double const x = j / (num_vertical_lines - 1.0);
-		CylindricalSurfaceDewarper::Generatrix const gtx(dewarper.mapGeneratrix(x, state));
-		QPointF const gtx_p0(gtx.imgLine.pointAt(gtx.pln2img(0)));
-		QPointF const gtx_p1(gtx.imgLine.pointAt(gtx.pln2img(1)));
-		out_vertical_lines.push_back(QLineF(gtx_p0, gtx_p1));
+    for (unsigned j = 0; j < num_vertical_lines; ++j)
+    {
+        double const x = j / (num_vertical_lines - 1.0);
+        CylindricalSurfaceDewarper::Generatrix const gtx(dewarper.mapGeneratrix(x, state));
+        QPointF const gtx_p0(gtx.imgLine.pointAt(gtx.pln2img(0)));
+        QPointF const gtx_p1(gtx.imgLine.pointAt(gtx.pln2img(1)));
+        out_vertical_lines.push_back(QLineF(gtx_p0, gtx_p1));
 
-		for (unsigned i = 0; i < num_horizontal_curves; ++i) {
-			double const y = i / (num_horizontal_curves- 1.0);
-			out_horizontal_curves[i].push_back(gtx.imgLine.pointAt(gtx.pln2img(y)));
-		}
-	}
+        for (unsigned i = 0; i < num_horizontal_curves; ++i)
+        {
+            double const y = i / (num_horizontal_curves- 1.0);
+            out_horizontal_curves[i].push_back(gtx.imgLine.pointAt(gtx.pln2img(y)));
+        }
+    }
 }
 
 } // namespace deskew

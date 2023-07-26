@@ -34,29 +34,47 @@
  */
 class ImagePresentation
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	ImagePresentation(QTransform const& xform, QPolygonF const& crop_area)
-			: m_xform(xform), m_cropArea(crop_area), m_displayArea(crop_area.boundingRect()) {}
+    ImagePresentation(QTransform const& xform, QPolygonF const& crop_area)
+        : m_xform(xform), m_cropArea(crop_area), m_displayArea(crop_area.boundingRect()) {}
 
-	ImagePresentation(QTransform const& xform, QPolygonF const& crop_area, QRectF const& display_area)
-			: m_xform(xform), m_cropArea(crop_area), m_displayArea(display_area) {}
+    ImagePresentation(QTransform const& xform, QPolygonF const& crop_area, QRectF const& display_area)
+        : m_xform(xform), m_cropArea(crop_area), m_displayArea(display_area) {}
 
-	QTransform const& transform() const { return m_xform; }
+    QTransform const& transform() const
+    {
+        return m_xform;
+    }
 
-	void setTransform(QTransform const& xform) { m_xform = xform; }
+    void setTransform(QTransform const& xform)
+    {
+        m_xform = xform;
+    }
 
-	QPolygonF const& cropArea() const { return m_cropArea; }
+    QPolygonF const& cropArea() const
+    {
+        return m_cropArea;
+    }
 
-	void setCropArea(QPolygonF const& crop_area) { m_cropArea = crop_area; }
+    void setCropArea(QPolygonF const& crop_area)
+    {
+        m_cropArea = crop_area;
+    }
 
-	QRectF const& displayArea() const { return m_displayArea; }
+    QRectF const& displayArea() const
+    {
+        return m_displayArea;
+    }
 
-	void setDisplayArea(QRectF const& display_area) { m_displayArea = display_area; }
+    void setDisplayArea(QRectF const& display_area)
+    {
+        m_displayArea = display_area;
+    }
 private:
-	QTransform m_xform;
-	QPolygonF m_cropArea;
-	QRectF m_displayArea;
+    QTransform m_xform;
+    QPolygonF m_cropArea;
+    QRectF m_displayArea;
 };
 
 #endif

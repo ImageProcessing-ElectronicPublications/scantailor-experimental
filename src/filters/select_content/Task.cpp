@@ -47,43 +47,47 @@ namespace select_content
 class Task::UiUpdater : public FilterResult
 {
 public:
-	UiUpdater(IntrusivePtr<Filter> const& filter,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		PageId const& page_id, Params const& params,
-		std::auto_ptr<DebugImagesImpl> dbg,
-		std::shared_ptr<AbstractImageTransform const> const& orig_transform,
-		AffineTransformedImage const& affine_transformed_image,
-		bool batch);
-	
-	virtual void updateUI(FilterUiInterface* ui);
-	
-	virtual IntrusivePtr<AbstractFilter> filter() { return m_ptrFilter; }
+    UiUpdater(IntrusivePtr<Filter> const& filter,
+              std::shared_ptr<AcceleratableOperations> const& accel_ops,
+              PageId const& page_id, Params const& params,
+              std::auto_ptr<DebugImagesImpl> dbg,
+              std::shared_ptr<AbstractImageTransform const> const& orig_transform,
+              AffineTransformedImage const& affine_transformed_image,
+              bool batch);
+
+    virtual void updateUI(FilterUiInterface* ui);
+
+    virtual IntrusivePtr<AbstractFilter> filter()
+    {
+        return m_ptrFilter;
+    }
 private:
-	IntrusivePtr<Filter> m_ptrFilter;
-	std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-	PageId m_pageId;
-	Params m_params;
-	std::auto_ptr<DebugImagesImpl> m_ptrDbg;
-	std::shared_ptr<AbstractImageTransform const> m_ptrOrigTransform;
-	AffineTransformedImage m_affineTransformedImage;
-	QImage m_downscaledImage;
-	bool m_batchProcessing;
+    IntrusivePtr<Filter> m_ptrFilter;
+    std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
+    PageId m_pageId;
+    Params m_params;
+    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::shared_ptr<AbstractImageTransform const> m_ptrOrigTransform;
+    AffineTransformedImage m_affineTransformedImage;
+    QImage m_downscaledImage;
+    bool m_batchProcessing;
 };
 
 
 Task::Task(IntrusivePtr<Filter> const& filter,
-	IntrusivePtr<page_layout::Task> const& next_task,
-	IntrusivePtr<Settings> const& settings,
-	PageId const& page_id, bool const batch, bool const debug)
-:	m_ptrFilter(filter),
-	m_ptrNextTask(next_task),
-	m_ptrSettings(settings),
-	m_pageId(page_id),
-	m_batchProcessing(batch)
+           IntrusivePtr<page_layout::Task> const& next_task,
+           IntrusivePtr<Settings> const& settings,
+           PageId const& page_id, bool const batch, bool const debug)
+    :	m_ptrFilter(filter),
+      m_ptrNextTask(next_task),
+      m_ptrSettings(settings),
+      m_pageId(page_id),
+      m_batchProcessing(batch)
 {
-	if (debug) {
-		m_ptrDbg.reset(new DebugImagesImpl);
-	}
+    if (debug)
+    {
+        m_ptrDbg.reset(new DebugImagesImpl);
+    }
 }
 
 Task::~Task()
@@ -92,130 +96,140 @@ Task::~Task()
 
 FilterResultPtr
 Task::process(
-	TaskStatus const& status,
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	QImage const& orig_image,
-	CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-	std::shared_ptr<AbstractImageTransform const> const& orig_image_transform)
+    TaskStatus const& status,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    QImage const& orig_image,
+    CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+    std::shared_ptr<AbstractImageTransform const> const& orig_image_transform)
 {
-	assert(!orig_image.isNull());
-	assert(orig_image_transform);
+    assert(!orig_image.isNull());
+    assert(orig_image_transform);
 
-	status.throwIfCancelled();
-	
-	Dependencies const deps(orig_image_transform->fingerprint());
+    status.throwIfCancelled();
 
-	std::auto_ptr<Params> params(m_ptrSettings->getPageParams(m_pageId));
-	if (params.get() && !params->dependencies().matches(deps)) {
-		// Dependency mismatch.
-		if (params->mode() == MODE_AUTO) {
-			params.reset();
-		} else {
-			// If the content box was set manually, we don't want to lose it
-			// just because the user went back and adjusted the warping grid slightly.
-			// We still need to update params->contentSizePx() however.
-			params->setContentSizePx(
-				params->contentBox().toTransformedRect(*orig_image_transform).size()
-			);
-			params->setDependencies(deps);
-			m_ptrSettings->setPageParams(m_pageId, *params);
-		}
+    Dependencies const deps(orig_image_transform->fingerprint());
 
-	}
+    std::auto_ptr<Params> params(m_ptrSettings->getPageParams(m_pageId));
+    if (params.get() && !params->dependencies().matches(deps))
+    {
+        // Dependency mismatch.
+        if (params->mode() == MODE_AUTO)
+        {
+            params.reset();
+        }
+        else
+        {
+            // If the content box was set manually, we don't want to lose it
+            // just because the user went back and adjusted the warping grid slightly.
+            // We still need to update params->contentSizePx() however.
+            params->setContentSizePx(
+                params->contentBox().toTransformedRect(*orig_image_transform).size()
+            );
+            params->setDependencies(deps);
+            m_ptrSettings->setPageParams(m_pageId, *params);
+        }
 
-	boost::optional<AffineTransformedImage> dewarped;
+    }
 
-	if (!params.get()) {
-		dewarped = orig_image_transform->toAffine(
-			orig_image, Qt::transparent, accel_ops
-		);
+    boost::optional<AffineTransformedImage> dewarped;
 
-		QRectF const content_rect(
-			ContentBoxFinder::findContentBox(status, accel_ops, *dewarped, m_ptrDbg.get())
-		);
+    if (!params.get())
+    {
+        dewarped = orig_image_transform->toAffine(
+                       orig_image, Qt::transparent, accel_ops
+                   );
 
-		params.reset(
-			new Params(
-				ContentBox(*orig_image_transform, content_rect),
-				content_rect.size(), deps, MODE_AUTO
-			)
-		);
+        QRectF const content_rect(
+            ContentBoxFinder::findContentBox(status, accel_ops, *dewarped, m_ptrDbg.get())
+        );
 
-		m_ptrSettings->setPageParams(m_pageId, *params);
-	}
-	
-	status.throwIfCancelled();
+        params.reset(
+            new Params(
+                ContentBox(*orig_image_transform, content_rect),
+                content_rect.size(), deps, MODE_AUTO
+            )
+        );
 
-	if (m_ptrNextTask) {
-		return m_ptrNextTask->process(
-			status, accel_ops, orig_image, gray_orig_image_factory,
-			orig_image_transform, dewarped, params->contentBox()
-		);
-	} else {
-		if (!dewarped) {
-			dewarped = orig_image_transform->toAffine(
-				orig_image, Qt::transparent, accel_ops
-			);
-		}
+        m_ptrSettings->setPageParams(m_pageId, *params);
+    }
 
-		return FilterResultPtr(
-			new UiUpdater(
-				m_ptrFilter, accel_ops, m_pageId, *params, m_ptrDbg,
-				orig_image_transform, *dewarped, m_batchProcessing
-			)
-		);
-	}
+    status.throwIfCancelled();
+
+    if (m_ptrNextTask)
+    {
+        return m_ptrNextTask->process(
+                   status, accel_ops, orig_image, gray_orig_image_factory,
+                   orig_image_transform, dewarped, params->contentBox()
+               );
+    }
+    else
+    {
+        if (!dewarped)
+        {
+            dewarped = orig_image_transform->toAffine(
+                           orig_image, Qt::transparent, accel_ops
+                       );
+        }
+
+        return FilterResultPtr(
+                   new UiUpdater(
+                       m_ptrFilter, accel_ops, m_pageId, *params, m_ptrDbg,
+                       orig_image_transform, *dewarped, m_batchProcessing
+                   )
+               );
+    }
 }
 
 
 /*============================ Task::UiUpdater ==========================*/
 
 Task::UiUpdater::UiUpdater(
-	IntrusivePtr<Filter> const& filter,
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	PageId const& page_id,
-	Params const& params, std::auto_ptr<DebugImagesImpl> dbg,
-	std::shared_ptr<AbstractImageTransform const> const& orig_transform,
-	AffineTransformedImage const& affine_transformed_image, bool const batch)
-:	m_ptrFilter(filter),
-	m_ptrAccelOps(accel_ops),
-	m_pageId(page_id),
-	m_params(params),
-	m_ptrDbg(dbg),
-	m_ptrOrigTransform(orig_transform),
-	m_affineTransformedImage(affine_transformed_image),
-	m_downscaledImage(
-		ImageViewBase::createDownscaledImage(affine_transformed_image.origImage(), accel_ops)
-	),
-	m_batchProcessing(batch)
+    IntrusivePtr<Filter> const& filter,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    PageId const& page_id,
+    Params const& params, std::auto_ptr<DebugImagesImpl> dbg,
+    std::shared_ptr<AbstractImageTransform const> const& orig_transform,
+    AffineTransformedImage const& affine_transformed_image, bool const batch)
+    :	m_ptrFilter(filter),
+      m_ptrAccelOps(accel_ops),
+      m_pageId(page_id),
+      m_params(params),
+      m_ptrDbg(dbg),
+      m_ptrOrigTransform(orig_transform),
+      m_affineTransformedImage(affine_transformed_image),
+      m_downscaledImage(
+          ImageViewBase::createDownscaledImage(affine_transformed_image.origImage(), accel_ops)
+      ),
+      m_batchProcessing(batch)
 {
 }
 
 void
 Task::UiUpdater::updateUI(FilterUiInterface* ui)
 {
-	// This function is executed from the GUI thread.
-	
-	OptionsWidget* const opt_widget = m_ptrFilter->optionsWidget();
-	opt_widget->postUpdateUI(m_params);
-	ui->setOptionsWidget(opt_widget, ui->KEEP_OWNERSHIP);
-	
-	ui->invalidateThumbnail(m_pageId);
-	
-	if (m_batchProcessing) {
-		return;
-	}
-	
-	ImageView* view = new ImageView(
-		m_ptrAccelOps, m_ptrOrigTransform, m_affineTransformedImage,
-		m_downscaledImage, m_params.contentBox()
-	);
-	ui->setImageWidget(view, ui->TRANSFER_OWNERSHIP, m_ptrDbg.get());
-	
-	QObject::connect(
-		view, SIGNAL(manualContentBoxSet(ContentBox const&, QSizeF const&)),
-		opt_widget, SLOT(manualContentBoxSet(ContentBox const&, QSizeF const&))
-	);
+    // This function is executed from the GUI thread.
+
+    OptionsWidget* const opt_widget = m_ptrFilter->optionsWidget();
+    opt_widget->postUpdateUI(m_params);
+    ui->setOptionsWidget(opt_widget, ui->KEEP_OWNERSHIP);
+
+    ui->invalidateThumbnail(m_pageId);
+
+    if (m_batchProcessing)
+    {
+        return;
+    }
+
+    ImageView* view = new ImageView(
+        m_ptrAccelOps, m_ptrOrigTransform, m_affineTransformedImage,
+        m_downscaledImage, m_params.contentBox()
+    );
+    ui->setImageWidget(view, ui->TRANSFER_OWNERSHIP, m_ptrDbg.get());
+
+    QObject::connect(
+        view, SIGNAL(manualContentBoxSet(ContentBox const&, QSizeF const&)),
+        opt_widget, SLOT(manualContentBoxSet(ContentBox const&, QSizeF const&))
+    );
 }
 
 } // namespace select_content

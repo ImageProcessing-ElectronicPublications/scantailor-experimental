@@ -33,25 +33,31 @@ class QDomDocument;
 
 class ProjectOpeningContext : public QObject
 {
-	Q_OBJECT
-	DECLARE_NON_COPYABLE(ProjectOpeningContext)
+    Q_OBJECT
+    DECLARE_NON_COPYABLE(ProjectOpeningContext)
 public:
-	ProjectOpeningContext(
-		QWidget* parent, QString const& project_file, QDomDocument const& doc);
-	
-	virtual ~ProjectOpeningContext();
-	
-	void proceed();
-	
-	QString const& projectFile() const { return m_projectFile; }
-	
-	ProjectReader* projectReader() { return &m_reader; }
+    ProjectOpeningContext(
+        QWidget* parent, QString const& project_file, QDomDocument const& doc);
+
+    virtual ~ProjectOpeningContext();
+
+    void proceed();
+
+    QString const& projectFile() const
+    {
+        return m_projectFile;
+    }
+
+    ProjectReader* projectReader()
+    {
+        return &m_reader;
+    }
 signals:
-	void done(ProjectOpeningContext* context);
+    void done(ProjectOpeningContext* context);
 private:
-	QString m_projectFile;
-	ProjectReader m_reader;
-	QWidget* m_pParent;
+    QString m_projectFile;
+    ProjectReader m_reader;
+    QWidget* m_pParent;
 };
 
 #endif

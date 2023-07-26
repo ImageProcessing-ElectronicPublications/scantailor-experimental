@@ -25,15 +25,15 @@ class ContentBox;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 class ContentBoxCollector : public AbstractFilterDataCollector
 {
 public:
-	virtual void process(
-		imageproc::AbstractImageTransform const& xform,
-		ContentBox const& content_box) = 0;
+    virtual void process(
+        imageproc::AbstractImageTransform const& xform,
+        ContentBox const& content_box) = 0;
 };
 
 #endif

@@ -28,9 +28,9 @@ namespace opencl
 
 /** @see imageproc::savGolFilter() */
 imageproc::GrayImage savGolFilter(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	imageproc::GrayImage const& src, QSize const& window_size,
-	int hor_degree, int vert_degree);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    imageproc::GrayImage const& src, QSize const& window_size,
+    int hor_degree, int vert_degree);
 
 } // namespace opencl
 

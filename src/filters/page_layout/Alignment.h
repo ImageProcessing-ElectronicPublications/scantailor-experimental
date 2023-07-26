@@ -29,36 +29,50 @@ namespace page_layout
 class Alignment
 {
 public:
-	enum Vertical { TOP, VCENTER, BOTTOM };
-	
-	enum Horizontal { LEFT, HCENTER, RIGHT };
-	
-	Alignment() : m_vert(VCENTER), m_hor(HCENTER) {}
-	
-	Alignment(Vertical vert, Horizontal hor) : m_vert(vert), m_hor(hor) {}
-	
-	Alignment(QDomElement const& el);
-	
-	Vertical vertical() const { return m_vert; }
-	
-	void setVertical(Vertical vert) { m_vert = vert; }
-	
-	Horizontal horizontal() const { return m_hor; }
-	
-	void setHorizontal(Horizontal hor) { m_hor = hor; }
-	
-	bool operator==(Alignment const& other) const {
-		return m_vert == other.m_vert && m_hor == other.m_hor;
-	}
-	
-	bool operator!=(Alignment const& other) const {
-		return !(*this == other);
-	}
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    enum Vertical { TOP, VCENTER, BOTTOM };
+
+    enum Horizontal { LEFT, HCENTER, RIGHT };
+
+    Alignment() : m_vert(VCENTER), m_hor(HCENTER) {}
+
+    Alignment(Vertical vert, Horizontal hor) : m_vert(vert), m_hor(hor) {}
+
+    Alignment(QDomElement const& el);
+
+    Vertical vertical() const
+    {
+        return m_vert;
+    }
+
+    void setVertical(Vertical vert)
+    {
+        m_vert = vert;
+    }
+
+    Horizontal horizontal() const
+    {
+        return m_hor;
+    }
+
+    void setHorizontal(Horizontal hor)
+    {
+        m_hor = hor;
+    }
+
+    bool operator==(Alignment const& other) const
+    {
+        return m_vert == other.m_vert && m_hor == other.m_hor;
+    }
+
+    bool operator!=(Alignment const& other) const
+    {
+        return !(*this == other);
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	Vertical m_vert;
-	Horizontal m_hor;
+    Vertical m_vert;
+    Horizontal m_hor;
 };
 
 } // namespace page_layout

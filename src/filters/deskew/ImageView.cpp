@@ -43,61 +43,62 @@ namespace deskew
 
 double const ImageView::m_maxRotationDeg = 45.0;
 double const ImageView::m_maxRotationSin = sin(
-	m_maxRotationDeg * imageproc::constants::DEG2RAD
-);
+            m_maxRotationDeg * imageproc::constants::DEG2RAD
+        );
 int const ImageView::m_cellSize = 20;
 
 ImageView::ImageView(
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	AffineTransformedImage const& full_size_image,
-	ImagePixmapUnion const& downscaled_image,
-	double const rotation_angle_deg)
-:	ImageViewBase(
-		accel_ops, full_size_image.origImage(), downscaled_image,
-		ImagePresentation(
-			full_size_image.xform().transform(),
-			full_size_image.xform().transformedCropArea()
-		)
-	),
-	m_handlePixmap(":/icons/aqua-sphere.png"),
-	m_dragHandler(*this),
-	m_zoomHandler(*this),
-	m_beforeRotationTransform(full_size_image.xform()),
-	m_rotationAngleDeg(0)
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    AffineTransformedImage const& full_size_image,
+    ImagePixmapUnion const& downscaled_image,
+    double const rotation_angle_deg)
+    :	ImageViewBase(
+          accel_ops, full_size_image.origImage(), downscaled_image,
+          ImagePresentation(
+              full_size_image.xform().transform(),
+              full_size_image.xform().transformedCropArea()
+          )
+      ),
+      m_handlePixmap(":/icons/aqua-sphere.png"),
+      m_dragHandler(*this),
+      m_zoomHandler(*this),
+      m_beforeRotationTransform(full_size_image.xform()),
+      m_rotationAngleDeg(0)
 {
-	setRotationAngle(rotation_angle_deg, /*preserve_scale=*/false);
+    setRotationAngle(rotation_angle_deg, /*preserve_scale=*/false);
 
-	setMouseTracking(true);
+    setMouseTracking(true);
 
-	interactionState().setDefaultStatusTip(
-		tr("Use Ctrl+Wheel to rotate or Ctrl+Shift+Wheel for finer rotation.")
-	);
+    interactionState().setDefaultStatusTip(
+        tr("Use Ctrl+Wheel to rotate or Ctrl+Shift+Wheel for finer rotation.")
+    );
 
-	QString const tip(tr("Drag this handle to rotate the image."));
-	double const hit_radius = std::max<double>(0.5 * m_handlePixmap.width(), 15.0);
-	for (int i = 0; i < 2; ++i) {
-		m_handles[i].setHitRadius(hit_radius);
-		m_handles[i].setPositionCallback(
-			boost::bind(&ImageView::handlePosition, this, i)
-		);
-		m_handles[i].setMoveRequestCallback(
-			boost::bind(&ImageView::handleMoveRequest, this, i, _1)
-		);
-		m_handles[i].setDragFinishedCallback(
-			boost::bind(&ImageView::dragFinished, this)
-		);
+    QString const tip(tr("Drag this handle to rotate the image."));
+    double const hit_radius = std::max<double>(0.5 * m_handlePixmap.width(), 15.0);
+    for (int i = 0; i < 2; ++i)
+    {
+        m_handles[i].setHitRadius(hit_radius);
+        m_handles[i].setPositionCallback(
+            boost::bind(&ImageView::handlePosition, this, i)
+        );
+        m_handles[i].setMoveRequestCallback(
+            boost::bind(&ImageView::handleMoveRequest, this, i, _1)
+        );
+        m_handles[i].setDragFinishedCallback(
+            boost::bind(&ImageView::dragFinished, this)
+        );
 
-		m_handleInteractors[i].setProximityStatusTip(tip);
-		m_handleInteractors[i].setObject(&m_handles[i]);
+        m_handleInteractors[i].setProximityStatusTip(tip);
+        m_handleInteractors[i].setObject(&m_handles[i]);
 
-		makeLastFollower(m_handleInteractors[i]);
-	}
+        makeLastFollower(m_handleInteractors[i]);
+    }
 
-	m_zoomHandler.setFocus(ZoomHandler::CENTER);
+    m_zoomHandler.setFocus(ZoomHandler::CENTER);
 
-	rootInteractionHandler().makeLastFollower(*this);
-	rootInteractionHandler().makeLastFollower(m_dragHandler);
-	rootInteractionHandler().makeLastFollower(m_zoomHandler);
+    rootInteractionHandler().makeLastFollower(*this);
+    rootInteractionHandler().makeLastFollower(m_dragHandler);
+    rootInteractionHandler().makeLastFollower(m_zoomHandler);
 }
 
 ImageView::~ImageView()
@@ -106,168 +107,187 @@ ImageView::~ImageView()
 
 void
 ImageView::manualDeskewAngleSetExternally(double const degrees)
-{	
-	setRotationAngle(degrees, /*preserve_scale=*/false);
+{
+    setRotationAngle(degrees, /*preserve_scale=*/false);
 }
 
 void
 ImageView::setRotationAngle(double const degrees, bool preserve_scale)
 {
-	m_rotationAngleDeg = degrees;
+    m_rotationAngleDeg = degrees;
 
-	AffineImageTransform rotated_transform(m_beforeRotationTransform);
-	rotated_transform.rotate(degrees);
+    AffineImageTransform rotated_transform(m_beforeRotationTransform);
+    rotated_transform.rotate(degrees);
 
-	ImagePresentation const presentation(
-		rotated_transform.transform(), rotated_transform.transformedCropArea()
-	);
+    ImagePresentation const presentation(
+        rotated_transform.transform(), rotated_transform.transformedCropArea()
+    );
 
-	if (preserve_scale) {
-		updateTransformPreservingScale(presentation);
-	} else {
-		updateTransform(presentation);
-	}
+    if (preserve_scale)
+    {
+        updateTransformPreservingScale(presentation);
+    }
+    else
+    {
+        updateTransform(presentation);
+    }
 }
 
 void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
-	painter.setWorldMatrixEnabled(false);
-	painter.setRenderHints(QPainter::Antialiasing, false);
+    painter.setWorldMatrixEnabled(false);
+    painter.setRenderHints(QPainter::Antialiasing, false);
 
-	double const w = maxViewportRect().width();
-	double const h = maxViewportRect().height();
-	QPointF const center(getImageRotationOrigin());
+    double const w = maxViewportRect().width();
+    double const h = maxViewportRect().height();
+    QPointF const center(getImageRotationOrigin());
 
-	// Draw the semi-transparent grid.
-	QPen pen(QColor(0, 0, 255, 90));
-	pen.setCosmetic(true);
-	pen.setWidth(1);
-	painter.setPen(pen);
-	QVector<QLineF> lines;
-	for (double y = center.y(); (y -= m_cellSize) > 0.0;) {
-		lines.push_back(QLineF(0.5, y, w - 0.5, y));
-	}
-	for (double y = center.y(); (y += m_cellSize) < h;) {
-		lines.push_back(QLineF(0.5, y, w - 0.5, y));
-	}
-	for (double x = center.x(); (x -= m_cellSize) > 0.0;) {
-		lines.push_back(QLineF(x, 0.5, x, h - 0.5));
-	}
-	for (double x = center.x(); (x += m_cellSize) < w;) {
-		lines.push_back(QLineF(x, 0.5, x, h - 0.5));
-	}
-	painter.drawLines(lines);
+    // Draw the semi-transparent grid.
+    QPen pen(QColor(0, 0, 255, 90));
+    pen.setCosmetic(true);
+    pen.setWidth(1);
+    painter.setPen(pen);
+    QVector<QLineF> lines;
+    for (double y = center.y(); (y -= m_cellSize) > 0.0;)
+    {
+        lines.push_back(QLineF(0.5, y, w - 0.5, y));
+    }
+    for (double y = center.y(); (y += m_cellSize) < h;)
+    {
+        lines.push_back(QLineF(0.5, y, w - 0.5, y));
+    }
+    for (double x = center.x(); (x -= m_cellSize) > 0.0;)
+    {
+        lines.push_back(QLineF(x, 0.5, x, h - 0.5));
+    }
+    for (double x = center.x(); (x += m_cellSize) < w;)
+    {
+        lines.push_back(QLineF(x, 0.5, x, h - 0.5));
+    }
+    painter.drawLines(lines);
 
-	// Draw the horizontal and vertical line crossing at the center.
-	pen.setColor(QColor(0, 0, 255));
-	painter.setPen(pen);
-	painter.setBrush(Qt::NoBrush);
-	painter.drawLine(
-		QPointF(0.5, center.y()),
-		QPointF(w - 0.5, center.y())
-	);
-	painter.drawLine(
-		QPointF(center.x(), 0.5),
-		QPointF(center.x(), h - 0.5)
-	);
+    // Draw the horizontal and vertical line crossing at the center.
+    pen.setColor(QColor(0, 0, 255));
+    painter.setPen(pen);
+    painter.setBrush(Qt::NoBrush);
+    painter.drawLine(
+        QPointF(0.5, center.y()),
+        QPointF(w - 0.5, center.y())
+    );
+    painter.drawLine(
+        QPointF(center.x(), 0.5),
+        QPointF(center.x(), h - 0.5)
+    );
 
-	// Draw the rotation arcs.
-	// Those will look like this (  )
-	QRectF const arc_square(getRotationArcSquare());
+    // Draw the rotation arcs.
+    // Those will look like this (  )
+    QRectF const arc_square(getRotationArcSquare());
 
-	painter.setRenderHints(QPainter::Antialiasing, true);
-	pen.setWidthF(1.5);
-	painter.setPen(pen);
-	painter.setBrush(Qt::NoBrush);
-	painter.drawArc(
-		arc_square,
-		qRound(16 * -m_maxRotationDeg),
-		qRound(16 * 2 * m_maxRotationDeg)
-	);
-	painter.drawArc(
-		arc_square,
-		qRound(16 * (180 - m_maxRotationDeg)),
-		qRound(16 * 2 * m_maxRotationDeg)
-	);
+    painter.setRenderHints(QPainter::Antialiasing, true);
+    pen.setWidthF(1.5);
+    painter.setPen(pen);
+    painter.setBrush(Qt::NoBrush);
+    painter.drawArc(
+        arc_square,
+        qRound(16 * -m_maxRotationDeg),
+        qRound(16 * 2 * m_maxRotationDeg)
+    );
+    painter.drawArc(
+        arc_square,
+        qRound(16 * (180 - m_maxRotationDeg)),
+        qRound(16 * 2 * m_maxRotationDeg)
+    );
 
-	std::pair<QPointF, QPointF> const handles(
-		getRotationHandles(arc_square)
-	);
+    std::pair<QPointF, QPointF> const handles(
+        getRotationHandles(arc_square)
+    );
 
-	QRectF rect(m_handlePixmap.rect());
-	rect.moveCenter(handles.first);
-	painter.drawPixmap(rect.topLeft(), m_handlePixmap);
-	rect.moveCenter(handles.second);
-	painter.drawPixmap(rect.topLeft(), m_handlePixmap);
+    QRectF rect(m_handlePixmap.rect());
+    rect.moveCenter(handles.first);
+    painter.drawPixmap(rect.topLeft(), m_handlePixmap);
+    rect.moveCenter(handles.second);
+    painter.drawPixmap(rect.topLeft(), m_handlePixmap);
 }
 
 void
 ImageView::onWheelEvent(QWheelEvent* event, InteractionState& interaction)
 {
-	if (interaction.captured()) {
-		return;
-	}
+    if (interaction.captured())
+    {
+        return;
+    }
 
-	double degree_fraction = 0;
+    double degree_fraction = 0;
 
-	if (event->modifiers() == Qt::ControlModifier) {
-		degree_fraction = 0.1;
-	} else if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier)) {
-		degree_fraction = 0.05;
-	} else {
-		return;
-	}
-	
-	event->accept();
-	double const delta = degree_fraction * event->delta() / 120;
-	double angle_deg = m_rotationAngleDeg - delta;
-	angle_deg = qBound(-m_maxRotationDeg, angle_deg, m_maxRotationDeg);
-	if (angle_deg == m_rotationAngleDeg) {
-		return;
-	}
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        degree_fraction = 0.1;
+    }
+    else if (event->modifiers() == (Qt::ControlModifier|Qt::ShiftModifier))
+    {
+        degree_fraction = 0.05;
+    }
+    else
+    {
+        return;
+    }
 
-	setRotationAngle(angle_deg, /*preserve_scale=*/false);
-	emit manualDeskewAngleSet(angle_deg);
+    event->accept();
+    double const delta = degree_fraction * event->delta() / 120;
+    double angle_deg = m_rotationAngleDeg - delta;
+    angle_deg = qBound(-m_maxRotationDeg, angle_deg, m_maxRotationDeg);
+    if (angle_deg == m_rotationAngleDeg)
+    {
+        return;
+    }
+
+    setRotationAngle(angle_deg, /*preserve_scale=*/false);
+    emit manualDeskewAngleSet(angle_deg);
 }
 
 QPointF
 ImageView::handlePosition(int idx) const
 {
-	std::pair<QPointF, QPointF> const handles(getRotationHandles(getRotationArcSquare()));
-	if (idx == 0) {
-		return handles.first;
-	} else {
-		return handles.second;
-	}
+    std::pair<QPointF, QPointF> const handles(getRotationHandles(getRotationArcSquare()));
+    if (idx == 0)
+    {
+        return handles.first;
+    }
+    else
+    {
+        return handles.second;
+    }
 }
 
 void
 ImageView::handleMoveRequest(int idx, QPointF const& pos)
 {
-	QRectF const arc_square(getRotationArcSquare());
-	double const arc_radius = 0.5 * arc_square.width();
-	double const abs_y = pos.y();
-	double rel_y = abs_y - arc_square.center().y();
-	rel_y = qBound(-arc_radius, rel_y, arc_radius);
+    QRectF const arc_square(getRotationArcSquare());
+    double const arc_radius = 0.5 * arc_square.width();
+    double const abs_y = pos.y();
+    double rel_y = abs_y - arc_square.center().y();
+    rel_y = qBound(-arc_radius, rel_y, arc_radius);
 
-	double angle_rad = asin(rel_y / arc_radius);
-	if (idx == 0) {
-		angle_rad = -angle_rad;
-	}
-	double angle_deg = angle_rad * imageproc::constants::RAD2DEG;
-	angle_deg = qBound(-m_maxRotationDeg, angle_deg, m_maxRotationDeg);
-	if (angle_deg == m_rotationAngleDeg) {
-		return;
-	}
+    double angle_rad = asin(rel_y / arc_radius);
+    if (idx == 0)
+    {
+        angle_rad = -angle_rad;
+    }
+    double angle_deg = angle_rad * imageproc::constants::RAD2DEG;
+    angle_deg = qBound(-m_maxRotationDeg, angle_deg, m_maxRotationDeg);
+    if (angle_deg == m_rotationAngleDeg)
+    {
+        return;
+    }
 
-	setRotationAngle(angle_deg, /*preserve_scale=*/true);
+    setRotationAngle(angle_deg, /*preserve_scale=*/true);
 }
 
 void
 ImageView::dragFinished()
 {
-	emit manualDeskewAngleSet(m_rotationAngleDeg);
+    emit manualDeskewAngleSet(m_rotationAngleDeg);
 }
 
 /**
@@ -277,11 +297,11 @@ ImageView::dragFinished()
 QPointF
 ImageView::getImageRotationOrigin() const
 {
-	QRectF const viewport_rect(maxViewportRect());
-	return QPointF(
-		floor(0.5 * viewport_rect.width()) + 0.5,
-		floor(0.5 * viewport_rect.height()) + 0.5
-	);
+    QRectF const viewport_rect(maxViewportRect());
+    return QPointF(
+               floor(0.5 * viewport_rect.width()) + 0.5,
+               floor(0.5 * viewport_rect.height()) + 0.5
+           );
 }
 
 /**
@@ -290,38 +310,38 @@ ImageView::getImageRotationOrigin() const
 QRectF
 ImageView::getRotationArcSquare() const
 {
-	double const h_margin = 0.5 * m_handlePixmap.width()
-		+ verticalScrollBar()->style()->pixelMetric(QStyle::PM_ScrollBarExtent, 0, verticalScrollBar());
-	double const v_margin = 0.5 * m_handlePixmap.height()
-		+ horizontalScrollBar()->style()->pixelMetric(QStyle::PM_ScrollBarExtent, 0, horizontalScrollBar());
+    double const h_margin = 0.5 * m_handlePixmap.width()
+                            + verticalScrollBar()->style()->pixelMetric(QStyle::PM_ScrollBarExtent, 0, verticalScrollBar());
+    double const v_margin = 0.5 * m_handlePixmap.height()
+                            + horizontalScrollBar()->style()->pixelMetric(QStyle::PM_ScrollBarExtent, 0, horizontalScrollBar());
 
-	QRectF reduced_screen_rect(maxViewportRect());
-	reduced_screen_rect.adjust(h_margin, v_margin, -h_margin, -v_margin);
+    QRectF reduced_screen_rect(maxViewportRect());
+    reduced_screen_rect.adjust(h_margin, v_margin, -h_margin, -v_margin);
 
-	QSizeF arc_size(1.0, m_maxRotationSin);
-	arc_size.scale(reduced_screen_rect.size(), Qt::KeepAspectRatio);
-	arc_size.setHeight(arc_size.width());
+    QSizeF arc_size(1.0, m_maxRotationSin);
+    arc_size.scale(reduced_screen_rect.size(), Qt::KeepAspectRatio);
+    arc_size.setHeight(arc_size.width());
 
-	QRectF arc_square(QPointF(0, 0), arc_size);
-	arc_square.moveCenter(reduced_screen_rect.center());
+    QRectF arc_square(QPointF(0, 0), arc_size);
+    arc_square.moveCenter(reduced_screen_rect.center());
 
-	return arc_square;
+    return arc_square;
 }
 
 std::pair<QPointF, QPointF>
 ImageView::getRotationHandles(QRectF const& arc_square) const
 {
-	using imageproc::constants::DEG2RAD;
+    using imageproc::constants::DEG2RAD;
 
-	double const rot_sin = sin(m_rotationAngleDeg * DEG2RAD);
-	double const rot_cos = cos(m_rotationAngleDeg * DEG2RAD);
-	double const arc_radius = 0.5 * arc_square.width();
-	QPointF const arc_center(arc_square.center());
-	QPointF left_handle(-rot_cos * arc_radius, -rot_sin * arc_radius);
-	left_handle += arc_center;
-	QPointF right_handle(rot_cos * arc_radius, rot_sin * arc_radius);
-	right_handle += arc_center;
-	return std::make_pair(left_handle, right_handle);
+    double const rot_sin = sin(m_rotationAngleDeg * DEG2RAD);
+    double const rot_cos = cos(m_rotationAngleDeg * DEG2RAD);
+    double const arc_radius = 0.5 * arc_square.width();
+    QPointF const arc_center(arc_square.center());
+    QPointF left_handle(-rot_cos * arc_radius, -rot_sin * arc_radius);
+    left_handle += arc_center;
+    QPointF right_handle(rot_cos * arc_radius, rot_sin * arc_radius);
+    right_handle += arc_center;
+    return std::make_pair(left_handle, right_handle);
 }
 
 } // namespace deskew

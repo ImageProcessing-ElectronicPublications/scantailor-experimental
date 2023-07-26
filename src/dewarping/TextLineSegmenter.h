@@ -36,10 +36,10 @@ class QLineF;
 
 namespace imageproc
 {
-	class GrayImage;
-	class BinaryImage;
-	class ConnectivityMap;
-	class AffineTransformedImage;
+class GrayImage;
+class BinaryImage;
+class ConnectivityMap;
+class AffineTransformedImage;
 }
 
 namespace dewarping
@@ -47,64 +47,64 @@ namespace dewarping
 
 class DEWARPING_EXPORT TextLineSegmenter
 {
-	DECLARE_NON_COPYABLE(TextLineSegmenter);
+    DECLARE_NON_COPYABLE(TextLineSegmenter);
 public:
-	struct DEWARPING_EXPORT Result
-	{
-		/**
-		 * @brief Roughly traced text lines or other long
-		 *        horizontal features in original image coordinates.
-		 *
-		 * Lines are sampled from left to right (when mapped to the
-		 * transformed coordinates) and rather densely.
-		 */
-		std::list<std::vector<QPointF>> tracedCurves;
+    struct DEWARPING_EXPORT Result
+    {
+        /**
+         * @brief Roughly traced text lines or other long
+         *        horizontal features in original image coordinates.
+         *
+         * Lines are sampled from left to right (when mapped to the
+         * transformed coordinates) and rather densely.
+         */
+        std::list<std::vector<QPointF>> tracedCurves;
 
-		/**
-		 * @brief A vector field corresponding to a downscaled version of
-		 *        the transformed image, containing flow directions for
-		 *        every pixel.
-		 *
-		 * Directions are normalized to a unit L2 norm and point along
-		 * the direction of a nearby line, from left to right.
-		 */
-		Grid<Vec2f> flowDirectionMap;
-	};
+        /**
+         * @brief A vector field corresponding to a downscaled version of
+         *        the transformed image, containing flow directions for
+         *        every pixel.
+         *
+         * Directions are normalized to a unit L2 norm and point along
+         * the direction of a nearby line, from left to right.
+         */
+        Grid<Vec2f> flowDirectionMap;
+    };
 
-	static Result process(
-		imageproc::AffineTransformedImage const& image,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		TaskStatus const& status, DebugImages* dbg = nullptr);
+    static Result process(
+        imageproc::AffineTransformedImage const& image,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        TaskStatus const& status, DebugImages* dbg = nullptr);
 private:
-	static Result processDownscaled(
-		imageproc::GrayImage const& image, QPolygonF const& crop_area,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		TaskStatus const& status, DebugImages* dbg);
+    static Result processDownscaled(
+        imageproc::GrayImage const& image, QPolygonF const& crop_area,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        TaskStatus const& status, DebugImages* dbg);
 
-	static double findSkewAngleRad(
-		imageproc::GrayImage const& image,
-		TaskStatus const& status, DebugImages* dbg);
+    static double findSkewAngleRad(
+        imageproc::GrayImage const& image,
+        TaskStatus const& status, DebugImages* dbg);
 
-	static imageproc::ConnectivityMap initialSegmentation(
-		imageproc::GrayImage const& image, Grid<float> const& blurred,
-		imageproc::BinaryImage const& peaks, TaskStatus const& status, DebugImages* dbg);
+    static imageproc::ConnectivityMap initialSegmentation(
+        imageproc::GrayImage const& image, Grid<float> const& blurred,
+        imageproc::BinaryImage const& peaks, TaskStatus const& status, DebugImages* dbg);
 
-	static void makePathsUnique(
-		imageproc::ConnectivityMap& cmap, Grid<float> const& blurred);
+    static void makePathsUnique(
+        imageproc::ConnectivityMap& cmap, Grid<float> const& blurred);
 
-	static std::list<std::vector<QPointF>> refineSegmentation(
-		imageproc::GrayImage const& image, QPolygonF const& crop_area,
-		imageproc::ConnectivityMap& cmap, TaskStatus const& status, DebugImages* dbg);
+    static std::list<std::vector<QPointF>> refineSegmentation(
+                                            imageproc::GrayImage const& image, QPolygonF const& crop_area,
+                                            imageproc::ConnectivityMap& cmap, TaskStatus const& status, DebugImages* dbg);
 
-	static imageproc::BinaryImage calcPageMask(
-		imageproc::GrayImage const& no_content,
-		TaskStatus const& status, DebugImages* dbg);
+    static imageproc::BinaryImage calcPageMask(
+        imageproc::GrayImage const& no_content,
+        TaskStatus const& status, DebugImages* dbg);
 
-	static void maskTextLines(
-		std::list<std::vector<QPointF>>& lines,
-		imageproc::GrayImage const& image,
-		imageproc::BinaryImage const& mask,
-		TaskStatus const& status, DebugImages* dbg);
+    static void maskTextLines(
+        std::list<std::vector<QPointF>>& lines,
+        imageproc::GrayImage const& image,
+        imageproc::BinaryImage const& mask,
+        TaskStatus const& status, DebugImages* dbg);
 };
 
 } // namespace dewarping

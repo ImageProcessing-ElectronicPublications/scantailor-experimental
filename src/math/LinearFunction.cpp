@@ -24,44 +24,44 @@
 using namespace Eigen;
 
 LinearFunction::LinearFunction(size_t num_vars)
-:	a(num_vars)
-,	b(0)
+    :	a(num_vars)
+    ,	b(0)
 {
-	a.setZero();
+    a.setZero();
 }
 
 void
 LinearFunction::reset()
 {
-	a.setZero();
-	b = 0;
+    a.setZero();
+    b = 0;
 }
 
 double
 LinearFunction::evaluate(VectorXd const& x) const
 {
-	return a.dot(x) + b;
+    return a.dot(x) + b;
 }
 
 void
 LinearFunction::swap(LinearFunction& other)
 {
-	a.swap(other.a);
-	std::swap(b, other.b);
+    a.swap(other.a);
+    std::swap(b, other.b);
 }
 
 LinearFunction&
 LinearFunction::operator+=(LinearFunction const& other)
 {
-	a += other.a;
-	b += other.b;
-	return *this;
+    a += other.a;
+    b += other.b;
+    return *this;
 }
 
 LinearFunction&
 LinearFunction::operator*=(double scalar)
 {
-	a *= scalar;
-	b *= scalar;
-	return *this;
+    a *= scalar;
+    b *= scalar;
+    return *this;
 }

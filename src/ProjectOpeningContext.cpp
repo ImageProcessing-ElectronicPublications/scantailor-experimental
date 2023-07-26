@@ -25,10 +25,10 @@
 #include <assert.h>
 
 ProjectOpeningContext::ProjectOpeningContext(
-	QWidget* parent, QString const& project_file, QDomDocument const& doc)
-:	m_projectFile(project_file),
-	m_reader(doc),
-	m_pParent(parent)
+    QWidget* parent, QString const& project_file, QDomDocument const& doc)
+    :	m_projectFile(project_file),
+      m_reader(doc),
+      m_pParent(parent)
 {
 }
 
@@ -39,15 +39,16 @@ ProjectOpeningContext::~ProjectOpeningContext()
 void
 ProjectOpeningContext::proceed()
 {
-	if (!m_reader.success()) {
-		deleteLater();
-		QMessageBox::warning(
-			m_pParent, tr("Error"),
-			tr("Unable to interpret the project file.")
-		);
-		return;
-	}
-	
-	deleteLater();
-	emit done(this);
+    if (!m_reader.success())
+    {
+        deleteLater();
+        QMessageBox::warning(
+            m_pParent, tr("Error"),
+            tr("Unable to interpret the project file.")
+        );
+        return;
+    }
+
+    deleteLater();
+    emit done(this);
 }

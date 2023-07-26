@@ -35,23 +35,23 @@ class QPolygonF;
 class FOUNDATION_EXPORT XmlUnmarshaller
 {
 public:
-	static QString string(QDomElement const& el);
-	
-	static QSize size(QDomElement const& el);
-	
-	static QSizeF sizeF(QDomElement const& el);
-	
-	static RelativeMargins relativeMargins(QDomElement const& el);
-	
-	static QPointF pointF(QDomElement const& el);
-	
-	static QLineF lineF(QDomElement const& el);
-	
-	static QRect rect(QDomElement const& el);
-	
-	static QRectF rectF(QDomElement const& el);
-	
-	static QPolygonF polygonF(QDomElement const& el);
+    static QString string(QDomElement const& el);
+
+    static QSize size(QDomElement const& el);
+
+    static QSizeF sizeF(QDomElement const& el);
+
+    static RelativeMargins relativeMargins(QDomElement const& el);
+
+    static QPointF pointF(QDomElement const& el);
+
+    static QLineF lineF(QDomElement const& el);
+
+    static QRect rect(QDomElement const& el);
+
+    static QRectF rectF(QDomElement const& el);
+
+    static QPolygonF polygonF(QDomElement const& el);
 };
 
 #endif

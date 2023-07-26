@@ -38,78 +38,99 @@ class GrayImage;
 class IMAGEPROC_EXPORT WatershedSegmentation
 {
 public:
-	/**
-	 * \brief Constructs a null (zero size) segmentation.
-	 */
-	WatershedSegmentation();
+    /**
+     * \brief Constructs a null (zero size) segmentation.
+     */
+    WatershedSegmentation();
 
-	/**
-	 * \brief Builds a segmentation from a grayscale image.
-	 *
-	 * Grayscale values are interpreted as an altitude. The water flows
-	 * from higher (light) pixels to smaller (dark) ones. Label 0 is reserved
-	 * and won't be used in the segmentation.
-	 */
-	explicit WatershedSegmentation(GrayImage const& image, Connectivity conn);
-	
-	void swap(WatershedSegmentation& other);
+    /**
+     * \brief Builds a segmentation from a grayscale image.
+     *
+     * Grayscale values are interpreted as an altitude. The water flows
+     * from higher (light) pixels to smaller (dark) ones. Label 0 is reserved
+     * and won't be used in the segmentation.
+     */
+    explicit WatershedSegmentation(GrayImage const& image, Connectivity conn);
 
-	GridAccessor<uint32_t const> accessor() const { return m_grid.accessor(); }
+    void swap(WatershedSegmentation& other);
 
-	GridAccessor<uint32_t> accessor() { return m_grid.accessor(); }
-	
-	/**
-	 * \brief Returns a pointer to the top-left corner of label grid.
-	 *
-	 * The data is stored in row-major order, and may be padded,
-	 * so moving to the next line requires adding stride() rather
-	 * than size().width().
-	 */
-	uint32_t const* data() const { return m_grid.data(); }
-	
-	/**
-	 * \brief Returns a pointer to the top-left corner of label grid.
-	 *
-	 * The data is stored in row-major order, and may be padded,
-	 * so moving to the next line requires adding stride() rather
-	 * than size().width().
-	 */
-	uint32_t* data() { return m_grid.data(); }
-	
-	/**
-	 * \brief Returns the dimensions of the label grid.
-	 */
-	QSize size() const { return QSize(m_grid.width(), m_grid.height()); }
-	
-	/**
-	 * \brief Returns the number of units on a line of labels.
-	 *
-	 * This number may be larger than size.width(). Adding this number
-	 *to a data pointer will move it one line down.
-	 */
-	int stride() const { return m_grid.stride(); }
-	
-	/**
-	 * \brief Returns the maximum label present in the segmentation.
-	 *
-	 * The label of zero is not used in segmentation, though a null
-	 * (empty) segmentation will report its maximum label as zero.
-	 */
-	uint32_t maxLabel() const { return m_maxLabel; }
-	
-	/**
-	 * \brief Visualizes each label with a different color.
-	 */
-	QImage visualized() const;
+    GridAccessor<uint32_t const> accessor() const
+    {
+        return m_grid.accessor();
+    }
+
+    GridAccessor<uint32_t> accessor()
+    {
+        return m_grid.accessor();
+    }
+
+    /**
+     * \brief Returns a pointer to the top-left corner of label grid.
+     *
+     * The data is stored in row-major order, and may be padded,
+     * so moving to the next line requires adding stride() rather
+     * than size().width().
+     */
+    uint32_t const* data() const
+    {
+        return m_grid.data();
+    }
+
+    /**
+     * \brief Returns a pointer to the top-left corner of label grid.
+     *
+     * The data is stored in row-major order, and may be padded,
+     * so moving to the next line requires adding stride() rather
+     * than size().width().
+     */
+    uint32_t* data()
+    {
+        return m_grid.data();
+    }
+
+    /**
+     * \brief Returns the dimensions of the label grid.
+     */
+    QSize size() const
+    {
+        return QSize(m_grid.width(), m_grid.height());
+    }
+
+    /**
+     * \brief Returns the number of units on a line of labels.
+     *
+     * This number may be larger than size.width(). Adding this number
+     *to a data pointer will move it one line down.
+     */
+    int stride() const
+    {
+        return m_grid.stride();
+    }
+
+    /**
+     * \brief Returns the maximum label present in the segmentation.
+     *
+     * The label of zero is not used in segmentation, though a null
+     * (empty) segmentation will report its maximum label as zero.
+     */
+    uint32_t maxLabel() const
+    {
+        return m_maxLabel;
+    }
+
+    /**
+     * \brief Visualizes each label with a different color.
+     */
+    QImage visualized() const;
 private:
-	Grid<uint32_t> m_grid;
-	uint32_t m_maxLabel;
+    Grid<uint32_t> m_grid;
+    uint32_t m_maxLabel;
 };
 
 
 inline void swap(WatershedSegmentation& o1, WatershedSegmentation& o2)
 {
-	o1.swap(o2);
+    o1.swap(o2);
 }
 
 } // namespace imageproc

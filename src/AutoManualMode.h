@@ -21,8 +21,8 @@
 
 enum AutoManualMode
 {
-	MODE_AUTO,
-	MODE_MANUAL
+    MODE_AUTO,
+    MODE_MANUAL
 };
 
 #endif

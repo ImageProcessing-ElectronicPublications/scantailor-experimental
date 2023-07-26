@@ -33,53 +33,65 @@ namespace imageproc
 class IMAGEPROC_EXPORT SavGolKernel
 {
 public:
-	SavGolKernel(
-		QSize const& size, QPoint const& origin,
-		int hor_degree, int vert_degree);
-	
-	void recalcForOrigin(QPoint const& origin);
-	
-	int width() const { return m_width; }
-	
-	int height() const { return m_height; }
-	
-	float const* data() const { return m_kernel.data(); }
-	
-	float operator[](size_t idx) const { return m_kernel[idx]; }
+    SavGolKernel(
+        QSize const& size, QPoint const& origin,
+        int hor_degree, int vert_degree);
+
+    void recalcForOrigin(QPoint const& origin);
+
+    int width() const
+    {
+        return m_width;
+    }
+
+    int height() const
+    {
+        return m_height;
+    }
+
+    float const* data() const
+    {
+        return m_kernel.data();
+    }
+
+    float operator[](size_t idx) const
+    {
+        return m_kernel[idx];
+    }
 private:
-	static void fillSample(double* sampleData, double x, double y, int hor_degree, int vert_degree);
-	
-	Eigen::LLT<Eigen::MatrixXd, Eigen::Lower> m_leastSquaresDecomp;
-	
-	/**
-	 * 16-byte aligned convolution kernel of size m_numDataPoints.
-	 */
-	AlignedArray<float, 4> m_kernel;
-	
-	/**
-	 * The degree of the polynomial in horizontal direction.
-	 */
-	int m_horDegree;
-	
-	/**
-	 * The degree of the polynomial in vertical direction.
-	 */
-	int m_vertDegree;
-	
-	/**
-	 * The width of the convolution kernel.
-	 */
-	int m_width;
-	
-	/**
-	 * The height of the convolution kernel.
-	 */
-	int m_height;
-	
-	/**
-	 * The number of terms in the polynomial.
-	 */
-	int m_numTerms;
+    static void fillSample(double* sampleData, double x, double y, int hor_degree, int vert_degree);
+
+    Eigen::LLT<Eigen::MatrixXd, Eigen::Lower> m_leastSquaresDecomp;
+
+    /**
+     * 16-byte aligned convolution kernel of size m_numDataPoints.
+     */
+    AlignedArray<float, 4> m_kernel;
+
+    /**
+     * The degree of the polynomial in horizontal direction.
+     */
+    int m_horDegree;
+
+    /**
+     * The degree of the polynomial in vertical direction.
+     */
+    int m_vertDegree;
+
+    /**
+     * The width of the convolution kernel.
+     */
+    int m_width;
+
+    /**
+     * The height of the convolution kernel.
+     */
+    int m_height;
+
+    /**
+     * The number of terms in the polynomial.
+     */
+    int m_numTerms;
 };
 
 } // namespace imageproc

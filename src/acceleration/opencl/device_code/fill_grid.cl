@@ -17,33 +17,35 @@
 */
 
 kernel void fill_byte_grid(
-	int const width, int const height,
-	global uchar* grid, int const grid_offset, int const grid_stride,
-	uchar const value)
+    int const width, int const height,
+    global uchar* grid, int const grid_offset, int const grid_stride,
+    uchar const value)
 {
-	int const x = get_global_id(0);
-	int const y = get_global_id(1);
+    int const x = get_global_id(0);
+    int const y = get_global_id(1);
 
-	bool const outside_bounds = (x >= width) | (y >= height);
-	if (outside_bounds) {
-		return;
-	}
+    bool const outside_bounds = (x >= width) | (y >= height);
+    if (outside_bounds)
+    {
+        return;
+    }
 
-	grid[grid_offset + x + y * grid_stride] = value;
+    grid[grid_offset + x + y * grid_stride] = value;
 }
 
 kernel void fill_float_grid(
-	int const width, int const height,
-	global float* grid, int const grid_offset, int const grid_stride,
-	float const value)
+    int const width, int const height,
+    global float* grid, int const grid_offset, int const grid_stride,
+    float const value)
 {
-	int const x = get_global_id(0);
-	int const y = get_global_id(1);
+    int const x = get_global_id(0);
+    int const y = get_global_id(1);
 
-	bool const outside_bounds = (x >= width) | (y >= height);
-	if (outside_bounds) {
-		return;
-	}
+    bool const outside_bounds = (x >= width) | (y >= height);
+    if (outside_bounds)
+    {
+        return;
+    }
 
-	grid[grid_offset + x + y * grid_stride] = value;
+    grid[grid_offset + x + y * grid_stride] = value;
 }

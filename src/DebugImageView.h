@@ -28,29 +28,29 @@
 class QImage;
 
 class DebugImageView :
-	public QStackedWidget,
-	public boost::intrusive::list_base_hook<
-		boost::intrusive::link_mode<boost::intrusive::auto_unlink>
-	>
+    public QStackedWidget,
+    public boost::intrusive::list_base_hook<
+    boost::intrusive::link_mode<boost::intrusive::auto_unlink>
+    >
 {
 public:
-	DebugImageView(IntrusivePtr<DebugViewFactory> const& factory, QWidget* parent = 0);
+    DebugImageView(IntrusivePtr<DebugViewFactory> const& factory, QWidget* parent = 0);
 
-	/**
-	 * Tells this widget to either display the actual image or just
-	 * a placeholder.
-	 */
-	void setLive(bool live);
+    /**
+     * Tells this widget to either display the actual image or just
+     * a placeholder.
+     */
+    void setLive(bool live);
 private:
-	class BackgroundLoadResult;
-	class BackgroundLoader;
+    class BackgroundLoadResult;
+    class BackgroundLoader;
 
-	void factoryReady();
+    void factoryReady();
 
-	IntrusivePtr<DebugViewFactory> m_ptrFactory;
-	QWidget* m_pPlaceholderWidget;
-	int m_numBgTasksInitiated;
-	bool m_isLive; // True if displaying the actual thing rather than a placeholder.
+    IntrusivePtr<DebugViewFactory> m_ptrFactory;
+    QWidget* m_pPlaceholderWidget;
+    int m_numBgTasksInitiated;
+    bool m_isLive; // True if displaying the actual thing rather than a placeholder.
 };
 
 #endif

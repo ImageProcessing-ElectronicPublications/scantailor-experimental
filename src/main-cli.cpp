@@ -28,36 +28,43 @@
 
 int main(int argc, char **argv)
 {
-	QCoreApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
 
 #ifdef _WIN32
-	// Get rid of all references to Qt's installation directory.
-	app.setLibraryPaths(QStringList(app.applicationDirPath()));
+    // Get rid of all references to Qt's installation directory.
+    app.setLibraryPaths(QStringList(app.applicationDirPath()));
 #endif
 
-	// parse command line arguments
-	CommandLine cli(app.arguments(), false);
-	CommandLine::set(cli);
+    // parse command line arguments
+    CommandLine cli(app.arguments(), false);
+    CommandLine::set(cli);
 
-	if (cli.hasHelp() || cli.outputDirectory().isEmpty() || (cli.images().size()==0 && cli.projectFile().isEmpty())) {
-		cli.printHelp();
-		return 0;
-	}
+    if (cli.hasHelp() || cli.outputDirectory().isEmpty() || (cli.images().size()==0 && cli.projectFile().isEmpty()))
+    {
+        cli.printHelp();
+        return 0;
+    }
 
-	std::auto_ptr<ConsoleBatch> cbatch;
+    std::auto_ptr<ConsoleBatch> cbatch;
 
-	try {
-		if (!cli.projectFile().isEmpty()) {
-			cbatch.reset(new ConsoleBatch(cli.projectFile()));
-		} else {
-			cbatch.reset(new ConsoleBatch(cli.images(), cli.outputDirectory(), cli.getLayoutDirection()));
-		}
-		cbatch->process();
-	} catch(std::exception const& e) {
-		std::cerr << e.what() << std::endl;
-		exit(1);
-	}
+    try
+    {
+        if (!cli.projectFile().isEmpty())
+        {
+            cbatch.reset(new ConsoleBatch(cli.projectFile()));
+        }
+        else
+        {
+            cbatch.reset(new ConsoleBatch(cli.images(), cli.outputDirectory(), cli.getLayoutDirection()));
+        }
+        cbatch->process();
+    }
+    catch(std::exception const& e)
+    {
+        std::cerr << e.what() << std::endl;
+        exit(1);
+    }
 
-	if (cli.hasOutputProject())
-		cbatch->saveProject(cli.outputProjectFile());
+    if (cli.hasOutputProject())
+        cbatch->saveProject(cli.outputProjectFile());
 }

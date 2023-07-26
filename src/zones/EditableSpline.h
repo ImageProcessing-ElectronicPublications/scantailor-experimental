@@ -31,39 +31,51 @@ class SerializableSpline;
 class EditableSpline : public RefCountable
 {
 public:
-	typedef IntrusivePtr<EditableSpline> Ptr;
+    typedef IntrusivePtr<EditableSpline> Ptr;
 
-	class SegmentIterator
-	{
-	public:
-		SegmentIterator(EditableSpline& spline) : m_ptrNextVertex(spline.firstVertex()) {}
+    class SegmentIterator
+    {
+    public:
+        SegmentIterator(EditableSpline& spline) : m_ptrNextVertex(spline.firstVertex()) {}
 
-		bool hasNext() const;
+        bool hasNext() const;
 
-		SplineSegment next();
-	private:
-		SplineVertex::Ptr m_ptrNextVertex;
-	};
+        SplineSegment next();
+    private:
+        SplineVertex::Ptr m_ptrNextVertex;
+    };
 
-	EditableSpline();
+    EditableSpline();
 
-	EditableSpline(SerializableSpline const& spline);
+    EditableSpline(SerializableSpline const& spline);
 
-	void appendVertex(QPointF const& pt);
+    void appendVertex(QPointF const& pt);
 
-	SplineVertex::Ptr firstVertex() const { return m_sentinel.firstVertex(); }
+    SplineVertex::Ptr firstVertex() const
+    {
+        return m_sentinel.firstVertex();
+    }
 
-	SplineVertex::Ptr lastVertex() const{ return m_sentinel.lastVertex(); }
+    SplineVertex::Ptr lastVertex() const
+    {
+        return m_sentinel.lastVertex();
+    }
 
-	bool hasAtLeastSegments(int num) const;
+    bool hasAtLeastSegments(int num) const;
 
-	bool bridged() const { return m_sentinel.bridged(); }
+    bool bridged() const
+    {
+        return m_sentinel.bridged();
+    }
 
-	void setBridged(bool bridged) { m_sentinel.setBridged(true); }
+    void setBridged(bool bridged)
+    {
+        m_sentinel.setBridged(true);
+    }
 
-	QPolygonF toPolygon() const;
+    QPolygonF toPolygon() const;
 private:
-	SentinelSplineVertex m_sentinel;
+    SentinelSplineVertex m_sentinel;
 };
 
 #endif

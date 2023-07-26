@@ -25,14 +25,15 @@ template<typename T>
 class GridAccessor
 {
 public:
-	T* data;
-	int stride;
-	int width;
-	int height;
+    T* data;
+    int stride;
+    int width;
+    int height;
 
-	T& operator()(int x, int y) const {
-		return data[stride * y + x];
-	}
+    T& operator()(int x, int y) const
+    {
+        return data[stride * y + x];
+    }
 };
 
 #endif

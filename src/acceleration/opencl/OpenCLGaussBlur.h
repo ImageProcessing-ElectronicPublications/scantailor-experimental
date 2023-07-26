@@ -42,12 +42,12 @@ namespace opencl
  * @return The filtered grid.
  */
 OpenCLGrid<float> gaussBlur(
-	cl::CommandQueue const& command_queue,
-	cl::Program const& program,
-	OpenCLGrid<float> const& src_grid,
-	float h_sigma, float v_sigma,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue,
+    cl::Program const& program,
+    OpenCLGrid<float> const& src_grid,
+    float h_sigma, float v_sigma,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 /**
  * @brief Applies an oriented 2D gaussian filter to a float-valued grid.
@@ -70,13 +70,13 @@ OpenCLGrid<float> gaussBlur(
  * @return The filtered grid.
  */
 OpenCLGrid<float> anisotropicGaussBlur(
-	cl::CommandQueue const& command_queue,
-	cl::Program const& program,
-	OpenCLGrid<float> const& src_grid,
-	float dir_x, float dir_y,
-	float dir_sigma, float ortho_dir_sigma,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue,
+    cl::Program const& program,
+    OpenCLGrid<float> const& src_grid,
+    float dir_x, float dir_y,
+    float dir_sigma, float ortho_dir_sigma,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

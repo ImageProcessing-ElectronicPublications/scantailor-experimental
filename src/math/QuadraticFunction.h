@@ -37,62 +37,65 @@
  */
 class MATH_EXPORT QuadraticFunction
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/**
-	 * Quadratic function's gradient can be written in matrix form as:
-	 * \code
-	 * nabla F(x) = A * x + b
-	 * \endcode
-	 */
-	class MATH_EXPORT Gradient
-	{
-	public:
-		Eigen::MatrixXd A;
-		Eigen::VectorXd b;
-	};
+    /**
+     * Quadratic function's gradient can be written in matrix form as:
+     * \code
+     * nabla F(x) = A * x + b
+     * \endcode
+     */
+    class MATH_EXPORT Gradient
+    {
+    public:
+        Eigen::MatrixXd A;
+        Eigen::VectorXd b;
+    };
 
-	Eigen::MatrixXd A;
-	Eigen::VectorXd b;
-	double c;
+    Eigen::MatrixXd A;
+    Eigen::VectorXd b;
+    double c;
 
-	/**
-	 * Constructs a quadratic function of the given number of variables,
-	 * initializing everything to zero.
-	 */
-	QuadraticFunction(size_t num_vars = 0);
+    /**
+     * Constructs a quadratic function of the given number of variables,
+     * initializing everything to zero.
+     */
+    QuadraticFunction(size_t num_vars = 0);
 
-	/**
-	 * Resets everything to zero, so that F(x) = 0
-	 */
-	void reset();
+    /**
+     * Resets everything to zero, so that F(x) = 0
+     */
+    void reset();
 
-	size_t numVars() const { return b.size(); }
+    size_t numVars() const
+    {
+        return b.size();
+    }
 
-	/**
-	 * Evaluates x^T * A * x + b^T * x + c
-	 */
-	double evaluate(Eigen::VectorXd const& x) const;
+    /**
+     * Evaluates x^T * A * x + b^T * x + c
+     */
+    double evaluate(Eigen::VectorXd const& x) const;
 
-	Gradient gradient() const;
+    Gradient gradient() const;
 
-	/**
-	 * f(x) is our function.  This method will replace f(x) with g(x) so that
-	 * g(x) = f(x + translation)
-	 */
-	void recalcForTranslatedArguments(double const* translation);
+    /**
+     * f(x) is our function.  This method will replace f(x) with g(x) so that
+     * g(x) = f(x + translation)
+     */
+    void recalcForTranslatedArguments(double const* translation);
 
-	void swap(QuadraticFunction& other);
+    void swap(QuadraticFunction& other);
 
-	QuadraticFunction& operator+=(QuadraticFunction const& other);
+    QuadraticFunction& operator+=(QuadraticFunction const& other);
 
-	QuadraticFunction& operator*=(double scalar);
+    QuadraticFunction& operator*=(double scalar);
 };
 
 
 inline void swap(QuadraticFunction& f1, QuadraticFunction& f2)
 {
-	f1.swap(f2);
+    f1.swap(f2);
 }
 
 #endif

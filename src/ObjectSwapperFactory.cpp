@@ -21,11 +21,13 @@
 #include <QDebug>
 
 ObjectSwapperFactory::ObjectSwapperFactory(QString const& swap_dir, bool ensure_exists)
-:	m_swapDir(swap_dir)
+    :	m_swapDir(swap_dir)
 {
-	if (ensure_exists) {
-		if (!QDir().mkpath(swap_dir)) {
-			qDebug() << "Unable to create swap directory " << swap_dir;
-		}
-	}
+    if (ensure_exists)
+    {
+        if (!QDir().mkpath(swap_dir))
+        {
+            qDebug() << "Unable to create swap directory " << swap_dir;
+        }
+    }
 }

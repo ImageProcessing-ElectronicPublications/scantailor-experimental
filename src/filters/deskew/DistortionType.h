@@ -26,45 +26,55 @@ namespace deskew
 
 class DistortionType
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	enum Type {
-		FIRST,
-		NONE = FIRST,
-		ROTATION,
-		PERSPECTIVE,
-		WARP,
-		LAST = WARP
-	};
+    enum Type
+    {
+        FIRST,
+        NONE = FIRST,
+        ROTATION,
+        PERSPECTIVE,
+        WARP,
+        LAST = WARP
+    };
 
-	/**
-	 * @brief Constructs a DistortionType from a numberic value.
-	 *
-	 * No validation is performed on the argument.
-	 */
-	DistortionType(Type type = DistortionType::NONE);
+    /**
+     * @brief Constructs a DistortionType from a numberic value.
+     *
+     * No validation is performed on the argument.
+     */
+    DistortionType(Type type = DistortionType::NONE);
 
-	/**
-	 * @brief Builds a DistortionType from a string.
-	 *
-	 * Unknown string values are silently converted to DistortionType::NONE.
-	 */
-	explicit DistortionType(QString const& from_string);
+    /**
+     * @brief Builds a DistortionType from a string.
+     *
+     * Unknown string values are silently converted to DistortionType::NONE.
+     */
+    explicit DistortionType(QString const& from_string);
 
-	QString toString() const;
+    QString toString() const;
 
-	Type get() const { return m_type; }
+    Type get() const
+    {
+        return m_type;
+    }
 
-	operator Type() const { return m_type; }
+    operator Type() const
+    {
+        return m_type;
+    }
 
-	/**
-	 * @brief Set the distortion type to a numeric value.
-	 *
-	 * No validation is performed on the argument.
-	 */
-	void set(Type type) { m_type = type; }
+    /**
+     * @brief Set the distortion type to a numeric value.
+     *
+     * No validation is performed on the argument.
+     */
+    void set(Type type)
+    {
+        m_type = type;
+    }
 private:
-	Type m_type;
+    Type m_type;
 };
 
 } // namespace deskew

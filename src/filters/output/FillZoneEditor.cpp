@@ -48,167 +48,173 @@ namespace output
 class FillZoneEditor::MenuCustomizer
 {
 private:
-	typedef ZoneContextMenuInteraction::StandardMenuItems StdMenuItems;
+    typedef ZoneContextMenuInteraction::StandardMenuItems StdMenuItems;
 public:
-	MenuCustomizer(FillZoneEditor* editor) : m_pEditor(editor) {}
+    MenuCustomizer(FillZoneEditor* editor) : m_pEditor(editor) {}
 
-	std::vector<ZoneContextMenuItem> operator()(
-		EditableZoneSet::Zone const& zone, StdMenuItems const& std_items);
+    std::vector<ZoneContextMenuItem> operator()(
+        EditableZoneSet::Zone const& zone, StdMenuItems const& std_items);
 private:
-	FillZoneEditor* m_pEditor;
+    FillZoneEditor* m_pEditor;
 };
 
 
 FillZoneEditor::FillZoneEditor(
-	std::shared_ptr<AcceleratableOperations> const& accel_ops,
-	QImage const& image, ImagePixmapUnion const& downscaled_version,
-	boost::function<QPointF(QPointF const&)> const& orig_to_image,
-	boost::function<QPointF(QPointF const&)> const& image_to_orig,
-	PageId const& page_id, IntrusivePtr<Settings> const& settings)
-:	ImageViewBase(
-		accel_ops, image, downscaled_version,
-		ImagePresentation(QTransform(), QRectF(image.rect())),
-		OutputMargins()
-	),
-	m_colorAdapter(colorAdapterFor(image)),
-	m_context(*this, m_zones),
-	m_colorPickupInteraction(m_zones, m_context),
-	m_dragHandler(*this),
-	m_zoomHandler(*this),
-	m_origToImage(orig_to_image),
-	m_imageToOrig(image_to_orig),
-	m_pageId(page_id),
-	m_ptrSettings(settings)
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    QImage const& image, ImagePixmapUnion const& downscaled_version,
+    boost::function<QPointF(QPointF const&)> const& orig_to_image,
+    boost::function<QPointF(QPointF const&)> const& image_to_orig,
+    PageId const& page_id, IntrusivePtr<Settings> const& settings)
+    :	ImageViewBase(
+          accel_ops, image, downscaled_version,
+          ImagePresentation(QTransform(), QRectF(image.rect())),
+          OutputMargins()
+      ),
+      m_colorAdapter(colorAdapterFor(image)),
+      m_context(*this, m_zones),
+      m_colorPickupInteraction(m_zones, m_context),
+      m_dragHandler(*this),
+      m_zoomHandler(*this),
+      m_origToImage(orig_to_image),
+      m_imageToOrig(image_to_orig),
+      m_pageId(page_id),
+      m_ptrSettings(settings)
 {
-	m_zones.setDefaultProperties(m_ptrSettings->defaultFillZoneProperties());
+    m_zones.setDefaultProperties(m_ptrSettings->defaultFillZoneProperties());
 
-	setMouseTracking(true);
+    setMouseTracking(true);
 
-	m_context.setContextMenuInteractionCreator(
-		boost::bind(&FillZoneEditor::createContextMenuInteraction, this, _1)
-	);
+    m_context.setContextMenuInteractionCreator(
+        boost::bind(&FillZoneEditor::createContextMenuInteraction, this, _1)
+    );
 
-	connect(&m_zones, SIGNAL(committed()), SLOT(commitZones()));
+    connect(&m_zones, SIGNAL(committed()), SLOT(commitZones()));
 
-	makeLastFollower(*m_context.createDefaultInteraction());
+    makeLastFollower(*m_context.createDefaultInteraction());
 
-	rootInteractionHandler().makeLastFollower(*this);
+    rootInteractionHandler().makeLastFollower(*this);
 
-	// We want these handlers after zone interaction handlers,
-	// as some of those have their own drag and zoom handlers,
-	// which need to get events before these standard ones.
-	rootInteractionHandler().makeLastFollower(m_dragHandler);
-	rootInteractionHandler().makeLastFollower(m_zoomHandler);
+    // We want these handlers after zone interaction handlers,
+    // as some of those have their own drag and zoom handlers,
+    // which need to get events before these standard ones.
+    rootInteractionHandler().makeLastFollower(m_dragHandler);
+    rootInteractionHandler().makeLastFollower(m_zoomHandler);
 
-	BOOST_FOREACH(Zone const& zone, m_ptrSettings->fillZonesForPage(page_id)) {
-		EditableSpline::Ptr spline(
-			new EditableSpline(zone.spline().transformed(m_origToImage))
-		);
-		m_zones.addZone(spline, zone.properties());
-	}
+    BOOST_FOREACH(Zone const& zone, m_ptrSettings->fillZonesForPage(page_id))
+    {
+        EditableSpline::Ptr spline(
+            new EditableSpline(zone.spline().transformed(m_origToImage))
+        );
+        m_zones.addZone(spline, zone.properties());
+    }
 }
 
 FillZoneEditor::~FillZoneEditor()
 {
-	m_ptrSettings->setDefaultFillZoneProperties(m_zones.defaultProperties());
+    m_ptrSettings->setDefaultFillZoneProperties(m_zones.defaultProperties());
 }
 
 void
 FillZoneEditor::onPaint(QPainter& painter, InteractionState const& interaction)
 {
-	if (m_colorPickupInteraction.isActive(interaction)) {
-		return;
-	}
+    if (m_colorPickupInteraction.isActive(interaction))
+    {
+        return;
+    }
 
-	painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setRenderHint(QPainter::Antialiasing, false);
 
-	painter.setPen(Qt::NoPen);
+    painter.setPen(Qt::NoPen);
 
-	BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones) {
-		typedef FillColorProperty FCP;
-		QColor const color(zone.properties()->locateOrDefault<FCP>()->color());
-		painter.setBrush(m_colorAdapter(color));
-		painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
-	}
+    BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones)
+    {
+        typedef FillColorProperty FCP;
+        QColor const color(zone.properties()->locateOrDefault<FCP>()->color());
+        painter.setBrush(m_colorAdapter(color));
+        painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
+    }
 }
 
 InteractionHandler*
 FillZoneEditor::createContextMenuInteraction(InteractionState& interaction)
 {
-	// Return a standard ZoneContextMenuInteraction but with a customized menu.
-	return ZoneContextMenuInteraction::create(
-		m_context, interaction, MenuCustomizer(this)
-	);
+    // Return a standard ZoneContextMenuInteraction but with a customized menu.
+    return ZoneContextMenuInteraction::create(
+               m_context, interaction, MenuCustomizer(this)
+           );
 }
 
 InteractionHandler*
 FillZoneEditor::createColorPickupInteraction(
-	EditableZoneSet::Zone const& zone, InteractionState& interaction)
+    EditableZoneSet::Zone const& zone, InteractionState& interaction)
 {
-	m_colorPickupInteraction.startInteraction(zone, interaction);
-	return &m_colorPickupInteraction;
+    m_colorPickupInteraction.startInteraction(zone, interaction);
+    return &m_colorPickupInteraction;
 }
 
 void
 FillZoneEditor::commitZones()
 {
-	ZoneSet zones;
+    ZoneSet zones;
 
-	BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones) {
-		SerializableSpline const spline(
-			SerializableSpline(*zone.spline()).transformed(m_imageToOrig)
-		);
-		zones.add(Zone(spline, *zone.properties()));
-	}
-	
-	m_ptrSettings->setFillZones(m_pageId, zones);
-	
-	emit invalidateThumbnail(m_pageId);
+    BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones)
+    {
+        SerializableSpline const spline(
+            SerializableSpline(*zone.spline()).transformed(m_imageToOrig)
+        );
+        zones.add(Zone(spline, *zone.properties()));
+    }
+
+    m_ptrSettings->setFillZones(m_pageId, zones);
+
+    emit invalidateThumbnail(m_pageId);
 }
 
 void
 FillZoneEditor::updateRequested()
 {
-	update();
+    update();
 }
 
 QColor
 FillZoneEditor::toOpaque(QColor const& color)
 {
-	QColor adapted(color);
-	adapted.setAlpha(0xff);
-	return adapted;
+    QColor adapted(color);
+    adapted.setAlpha(0xff);
+    return adapted;
 }
 
 QColor
 FillZoneEditor::toGrayscale(QColor const& color)
 {
-	int const gray = qGray(color.rgb());
-	return QColor(gray, gray, gray);
+    int const gray = qGray(color.rgb());
+    return QColor(gray, gray, gray);
 }
 
 QColor
 FillZoneEditor::toBlackWhite(QColor const& color)
 {
-	int const gray = qGray(color.rgb());
-	return gray < 128 ? Qt::black : Qt::white;
+    int const gray = qGray(color.rgb());
+    return gray < 128 ? Qt::black : Qt::white;
 }
 
 FillZoneEditor::ColorAdapter
 FillZoneEditor::colorAdapterFor(QImage const& image)
 {
-	switch (image.format()) {
-		case QImage::Format_Mono:
-		case QImage::Format_MonoLSB:
-			return &FillZoneEditor::toBlackWhite;
-		case QImage::Format_Indexed8:
-			if (image.allGray()) {
-				return &FillZoneEditor::toGrayscale;
-			}
-			// fall through
-		default:
-			return &FillZoneEditor::toOpaque;
-	}
+    switch (image.format())
+    {
+    case QImage::Format_Mono:
+    case QImage::Format_MonoLSB:
+        return &FillZoneEditor::toBlackWhite;
+    case QImage::Format_Indexed8:
+        if (image.allGray())
+        {
+            return &FillZoneEditor::toGrayscale;
+        }
+    // fall through
+    default:
+        return &FillZoneEditor::toOpaque;
+    }
 }
 
 
@@ -216,22 +222,22 @@ FillZoneEditor::colorAdapterFor(QImage const& image)
 
 std::vector<ZoneContextMenuItem>
 FillZoneEditor::MenuCustomizer::operator()(
-	EditableZoneSet::Zone const& zone, StdMenuItems const& std_items)
+    EditableZoneSet::Zone const& zone, StdMenuItems const& std_items)
 {
-	std::vector<ZoneContextMenuItem> items;
-	items.reserve(2);
-	items.push_back(
-		ZoneContextMenuItem(
-			tr("Pick color"),
-			boost::bind(
-				&FillZoneEditor::createColorPickupInteraction,
-				m_pEditor, zone, _1
-			)
-		)
-	);
-	items.push_back(std_items.deleteItem);
+    std::vector<ZoneContextMenuItem> items;
+    items.reserve(2);
+    items.push_back(
+        ZoneContextMenuItem(
+            tr("Pick color"),
+            boost::bind(
+                &FillZoneEditor::createColorPickupInteraction,
+                m_pEditor, zone, _1
+            )
+        )
+    );
+    items.push_back(std_items.deleteItem);
 
-	return items;
+    return items;
 }
 
 } // namespace output

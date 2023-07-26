@@ -20,29 +20,31 @@
 #include "DebugImageView.h"
 
 TabbedDebugImages::TabbedDebugImages(QWidget* parent)
-:	QTabWidget(parent)
+    :	QTabWidget(parent)
 {
-	setDocumentMode(true);
-	connect(this, SIGNAL(currentChanged(int)), SLOT(currentTabChanged(int)));
+    setDocumentMode(true);
+    connect(this, SIGNAL(currentChanged(int)), SLOT(currentTabChanged(int)));
 }
 
 void
 TabbedDebugImages::currentTabChanged(int const idx)
 {
-	if (DebugImageView* div = dynamic_cast<DebugImageView*>(widget(idx))) {
-		div->unlink();
-		m_liveViews.push_back(*div);
-		removeExcessLiveViews();
-		div->setLive(true);
-	}
+    if (DebugImageView* div = dynamic_cast<DebugImageView*>(widget(idx)))
+    {
+        div->unlink();
+        m_liveViews.push_back(*div);
+        removeExcessLiveViews();
+        div->setLive(true);
+    }
 }
 
 void
 TabbedDebugImages::removeExcessLiveViews()
 {
-	int remaining = m_liveViews.size();
-	for (; remaining > MAX_LIVE_VIEWS; --remaining) {
-		m_liveViews.front().setLive(false);
-		m_liveViews.erase(m_liveViews.begin());
-	}
+    int remaining = m_liveViews.size();
+    for (; remaining > MAX_LIVE_VIEWS; --remaining)
+    {
+        m_liveViews.front().setLive(false);
+        m_liveViews.erase(m_liveViews.begin());
+    }
 }

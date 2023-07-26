@@ -34,27 +34,27 @@ class Alignment;
 class Utils
 {
 public:
-	/**
-	 * \brief Calculates margins to extend hard_size_px to aggregate_hard_size_px.
-	 *
-	 * \param hard_size_px Source size in pixels after applying AbstractImageTransform.
-	 * \param aggregate_hard_size_mm Target size in pixels after applying AbstractImageTransform
-	 *        and optionally applying additional scaling according to MatchSizeMode::SCALE.
-	 * \param match_size_mode Determines whether and how to match the size of other pages.
-	 * \param alignment Determines how to grow margins to match the size of other pages.
-	 * \return Non-negative margins that extend \p hard_size_px to
-	 *         \p aggregate_hard_size_px. If \p match_size_mode is MatchSizeMode::DISABLED,
-	 *         zero margins are returned.
-	 */
-	static QMarginsF calcSoftMarginsPx(
-		QSizeF const& hard_size_px,
-		QSizeF const& aggregate_hard_size_px,
-		MatchSizeMode const& match_size_mode,
-		Alignment const& alignment);
+    /**
+     * \brief Calculates margins to extend hard_size_px to aggregate_hard_size_px.
+     *
+     * \param hard_size_px Source size in pixels after applying AbstractImageTransform.
+     * \param aggregate_hard_size_mm Target size in pixels after applying AbstractImageTransform
+     *        and optionally applying additional scaling according to MatchSizeMode::SCALE.
+     * \param match_size_mode Determines whether and how to match the size of other pages.
+     * \param alignment Determines how to grow margins to match the size of other pages.
+     * \return Non-negative margins that extend \p hard_size_px to
+     *         \p aggregate_hard_size_px. If \p match_size_mode is MatchSizeMode::DISABLED,
+     *         zero margins are returned.
+     */
+    static QMarginsF calcSoftMarginsPx(
+        QSizeF const& hard_size_px,
+        QSizeF const& aggregate_hard_size_px,
+        MatchSizeMode const& match_size_mode,
+        Alignment const& alignment);
 
-	static QColor borderColorForMatchSizeMode(MatchSizeMode const& mode);
+    static QColor borderColorForMatchSizeMode(MatchSizeMode const& mode);
 
-	static QColor backgroundColorForMatchSizeMode(MatchSizeMode const& mode);
+    static QColor backgroundColorForMatchSizeMode(MatchSizeMode const& mode);
 };
 
 } // namespace page_layout

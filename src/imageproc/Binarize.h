@@ -48,8 +48,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeOtsu(QImage const& src);
  * \see Help -> About -> References -> [8]
  */
 IMAGEPROC_EXPORT BinaryImage binarizeMokji(
-	QImage const& src, unsigned max_edge_width = 3,
-	unsigned min_edge_magnitude = 20);
+    QImage const& src, unsigned max_edge_width = 3,
+    unsigned min_edge_magnitude = 20);
 
 /**
   * \brief Image binarization using Niblack's local thresholding method.
@@ -87,8 +87,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(QImage const& src, QSize window_siz
  * \param upper_bound The maximum possible gray level that can be made black.
  */
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
-	QImage const& src, QSize window_size,
-	unsigned char lower_bound = 1, unsigned char upper_bound = 254);
+    QImage const& src, QSize window_size,
+    unsigned char lower_bound = 1, unsigned char upper_bound = 254);
 
 } // namespace imageproc
 

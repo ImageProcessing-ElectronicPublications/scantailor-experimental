@@ -73,14 +73,14 @@ struct IndexSequence
 
 template<size_t remaining, size_t... Indices>
 struct IndexSequenceGenerator :
-	public IndexSequenceGenerator<remaining - 1, remaining - 1, Indices...>
+    public IndexSequenceGenerator<remaining - 1, remaining - 1, Indices...>
 {
 };
 
 template<size_t... Indices>
 struct IndexSequenceGenerator<size_t(0), Indices...>
 {
-	using type = IndexSequence<Indices...>;
+    using type = IndexSequence<Indices...>;
 };
 
 #endif

@@ -41,74 +41,89 @@ namespace imageproc
 class IMAGEPROC_EXPORT AffineImageTransform : public AbstractImageTransform
 {
 public:
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 
-	AffineImageTransform(QSize const& orig_size);
+    AffineImageTransform(QSize const& orig_size);
 
-	virtual ~AffineImageTransform();
+    virtual ~AffineImageTransform();
 
-	virtual std::unique_ptr<AbstractImageTransform> clone() const;
+    virtual std::unique_ptr<AbstractImageTransform> clone() const;
 
-	virtual bool isAffine() const { return true; }
+    virtual bool isAffine() const
+    {
+        return true;
+    }
 
-	virtual QString fingerprint() const;
+    virtual QString fingerprint() const;
 
-	virtual QSize const& origSize() const { return m_origSize; }
+    virtual QSize const& origSize() const
+    {
+        return m_origSize;
+    }
 
-	virtual QPolygonF const& origCropArea() const { return m_origCropArea; }
+    virtual QPolygonF const& origCropArea() const
+    {
+        return m_origCropArea;
+    }
 
-	void setOrigCropArea(QPolygonF const& area) { m_origCropArea = area; }
+    void setOrigCropArea(QPolygonF const& area)
+    {
+        m_origCropArea = area;
+    }
 
-	QTransform const& transform() const { return m_transform; }
+    QTransform const& transform() const
+    {
+        return m_transform;
+    }
 
-	void setTransform(QTransform const& transform);
+    void setTransform(QTransform const& transform);
 
-	virtual QPolygonF transformedCropArea() const;
+    virtual QPolygonF transformedCropArea() const;
 
-	void adjustForScaledOrigImage(QSize const& orig_size);
+    void adjustForScaledOrigImage(QSize const& orig_size);
 
-	/**
-	 * Adds translation to the current transformation such that
-	 * \p transformed_pt moves to position \p target_pos.
-	 */
-	void translateSoThatPointBecomes(QPointF const& transformed_pt, QPointF const& target_pos);
+    /**
+     * Adds translation to the current transformation such that
+     * \p transformed_pt moves to position \p target_pos.
+     */
+    void translateSoThatPointBecomes(QPointF const& transformed_pt, QPointF const& target_pos);
 
-	virtual QTransform scale(qreal xscale, qreal yscale);
+    virtual QTransform scale(qreal xscale, qreal yscale);
 
-	void scaleTo(QSizeF const& size, Qt::AspectRatioMode mode);
+    void scaleTo(QSizeF const& size, Qt::AspectRatioMode mode);
 
-	void rotate(qreal degrees);
+    void rotate(qreal degrees);
 
-	/**
-	 * Returns a version of this transformation modified by a client-provided
-	 * adjuster.
-	 *
-	 * The @p adjuster will be called like this:
-	 * @code
-	 * AffineImageTransform xform(*this);
-	 * adjuster(xform);
-	 * @endcode
-	 */
-	template<typename T>
-	AffineImageTransform adjusted(T adjuster) const;
+    /**
+     * Returns a version of this transformation modified by a client-provided
+     * adjuster.
+     *
+     * The @p adjuster will be called like this:
+     * @code
+     * AffineImageTransform xform(*this);
+     * adjuster(xform);
+     * @endcode
+     */
+    template<typename T>
+    AffineImageTransform adjusted(T adjuster) const;
 
-	virtual AffineTransformedImage toAffine(
-		QImage const& image, QColor const& outside_color,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
+    virtual AffineTransformedImage toAffine(
+        QImage const& image, QColor const& outside_color,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
 
-	virtual AffineImageTransform toAffine() const;
+    virtual AffineImageTransform toAffine() const;
 
-	virtual QImage materialize(QImage const& image,
-		QRect const& target_rect, QColor const& outside_color,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
+    virtual QImage materialize(QImage const& image,
+                               QRect const& target_rect, QColor const& outside_color,
+                               std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
 
-	virtual std::function<QPointF(QPointF const&)> forwardMapper() const;
+    virtual std::function<QPointF(QPointF const&)> forwardMapper() const;
 
-	virtual std::function<QPointF(QPointF const&)> backwardMapper() const;
+    virtual std::function<QPointF(QPointF const&)> backwardMapper() const;
 private:
-	QSize m_origSize;
-	QPolygonF m_origCropArea;
-	QTransform m_transform;
+    QSize m_origSize;
+    QPolygonF m_origCropArea;
+    QTransform m_transform;
 };
 
 
@@ -116,9 +131,9 @@ template<typename T>
 AffineImageTransform
 AffineImageTransform::adjusted(T adjuster) const
 {
-	AffineImageTransform xform(*this);
-	adjuster(xform);
-	return xform;
+    AffineImageTransform xform(*this);
+    adjuster(xform);
+    return xform;
 }
 
 } // namespace imageproc

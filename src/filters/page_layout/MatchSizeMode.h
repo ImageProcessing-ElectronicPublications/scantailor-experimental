@@ -29,44 +29,53 @@ namespace page_layout
 class MatchSizeMode
 {
 public:
-	enum Mode {
-		/** The size of this page doesn't affect and is not affected by other pages. */
-		DISABLED,
+    enum Mode
+    {
+        /** The size of this page doesn't affect and is not affected by other pages. */
+        DISABLED,
 
-		/**
-		 * To match the size of the widest / tallest page, soft margins grow as necessary.
-		 * This page will also compete for the widest / tallest page title itself.
-		 */
-		GROW_MARGINS,
+        /**
+         * To match the size of the widest / tallest page, soft margins grow as necessary.
+         * This page will also compete for the widest / tallest page title itself.
+         */
+        GROW_MARGINS,
 
-		/**
-		 * To match the size of the widest / tallest page, this page's content as well as
-		 * hard margins will be scaled. Because the scaling coefficients in horizontal and
-		 * vertical directions are locked to each other, soft margins may need to grow
-		 * as well. This page will also compete for the widest / tallest page title itself.
-		 */
-		SCALE
-	};
-	
-	MatchSizeMode(Mode mode = DISABLED) : m_mode(mode) {}
-	
-	MatchSizeMode(QDomElement const& el);
+        /**
+         * To match the size of the widest / tallest page, this page's content as well as
+         * hard margins will be scaled. Because the scaling coefficients in horizontal and
+         * vertical directions are locked to each other, soft margins may need to grow
+         * as well. This page will also compete for the widest / tallest page title itself.
+         */
+        SCALE
+    };
 
-	Mode get() const { return m_mode; }
-	
-	void set(Mode mode) { m_mode = mode; }
-	
-	bool operator==(MatchSizeMode const& other) const {
-		return m_mode == other.m_mode;
-	}
-	
-	bool operator!=(MatchSizeMode const& other) const {
-		return !(*this == other);
-	}
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    MatchSizeMode(Mode mode = DISABLED) : m_mode(mode) {}
+
+    MatchSizeMode(QDomElement const& el);
+
+    Mode get() const
+    {
+        return m_mode;
+    }
+
+    void set(Mode mode)
+    {
+        m_mode = mode;
+    }
+
+    bool operator==(MatchSizeMode const& other) const
+    {
+        return m_mode == other.m_mode;
+    }
+
+    bool operator!=(MatchSizeMode const& other) const
+    {
+        return !(*this == other);
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	Mode m_mode;
+    Mode m_mode;
 };
 
 } // namespace page_layout

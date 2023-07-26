@@ -37,51 +37,55 @@ Settings::~Settings()
 void
 Settings::clear()
 {
-	QMutexLocker locker(&m_mutex);
-	m_pageParams.clear();
+    QMutexLocker locker(&m_mutex);
+    m_pageParams.clear();
 }
 
 void
 Settings::performRelinking(AbstractRelinker const& relinker)
 {
-	QMutexLocker locker(&m_mutex);
-	PageParams new_params;
+    QMutexLocker locker(&m_mutex);
+    PageParams new_params;
 
-	BOOST_FOREACH(PageParams::value_type const& kv, m_pageParams) {
-		RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
-		PageId new_page_id(kv.first);
-		new_page_id.imageId().setFilePath(relinker.substitutionPathFor(old_path));
-		new_params.insert(PageParams::value_type(new_page_id, kv.second));
-	}
+    BOOST_FOREACH(PageParams::value_type const& kv, m_pageParams)
+    {
+        RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
+        PageId new_page_id(kv.first);
+        new_page_id.imageId().setFilePath(relinker.substitutionPathFor(old_path));
+        new_params.insert(PageParams::value_type(new_page_id, kv.second));
+    }
 
-	m_pageParams.swap(new_params);
+    m_pageParams.swap(new_params);
 }
 
 void
 Settings::setPageParams(PageId const& page_id, Params const& params)
 {
-	QMutexLocker locker(&m_mutex);
-	Utils::mapSetValue(m_pageParams, page_id, params);
+    QMutexLocker locker(&m_mutex);
+    Utils::mapSetValue(m_pageParams, page_id, params);
 }
 
 void
 Settings::clearPageParams(PageId const& page_id)
 {
-	QMutexLocker locker(&m_mutex);
-	m_pageParams.erase(page_id);
+    QMutexLocker locker(&m_mutex);
+    m_pageParams.erase(page_id);
 }
 
 std::auto_ptr<Params>
 Settings::getPageParams(PageId const& page_id) const
 {
-	QMutexLocker locker(&m_mutex);
-	
-	PageParams::const_iterator const it(m_pageParams.find(page_id));
-	if (it != m_pageParams.end()) {
-		return std::auto_ptr<Params>(new Params(it->second));
-	} else {
-		return std::auto_ptr<Params>();
-	}
+    QMutexLocker locker(&m_mutex);
+
+    PageParams::const_iterator const it(m_pageParams.find(page_id));
+    if (it != m_pageParams.end())
+    {
+        return std::auto_ptr<Params>(new Params(it->second));
+    }
+    else
+    {
+        return std::auto_ptr<Params>();
+    }
 }
 
 } // namespace select_content

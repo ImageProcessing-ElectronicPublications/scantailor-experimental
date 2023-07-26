@@ -31,54 +31,55 @@ namespace deskew
 {
 
 PerspectiveParams::PerspectiveParams()
-:	m_mode(MODE_AUTO)
+    :	m_mode(MODE_AUTO)
 {
 }
 
 PerspectiveParams::PerspectiveParams(QDomElement const& el)
-:	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    :	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
-	m_corners[TOP_LEFT] = XmlUnmarshaller::pointF(el.namedItem("tl").toElement());
-	m_corners[TOP_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("tr").toElement());
-	m_corners[BOTTOM_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("br").toElement());
-	m_corners[BOTTOM_LEFT] = XmlUnmarshaller::pointF(el.namedItem("bl").toElement());
+    m_corners[TOP_LEFT] = XmlUnmarshaller::pointF(el.namedItem("tl").toElement());
+    m_corners[TOP_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("tr").toElement());
+    m_corners[BOTTOM_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("br").toElement());
+    m_corners[BOTTOM_LEFT] = XmlUnmarshaller::pointF(el.namedItem("bl").toElement());
 }
 
 bool
 PerspectiveParams::isValid() const
 {
-	dewarping::DistortionModel distortion_model;
-	distortion_model.setTopCurve(
-		std::vector<QPointF>{m_corners[TOP_LEFT], m_corners[TOP_RIGHT]}
-	);
-	distortion_model.setBottomCurve(
-		std::vector<QPointF>{m_corners[BOTTOM_LEFT], m_corners[BOTTOM_RIGHT]}
-	);
-	return distortion_model.isValid();
+    dewarping::DistortionModel distortion_model;
+    distortion_model.setTopCurve(
+        std::vector<QPointF> {m_corners[TOP_LEFT], m_corners[TOP_RIGHT]}
+    );
+    distortion_model.setBottomCurve(
+        std::vector<QPointF> {m_corners[BOTTOM_LEFT], m_corners[BOTTOM_RIGHT]}
+    );
+    return distortion_model.isValid();
 }
 
 void
 PerspectiveParams::invalidate()
 {
-	*this = PerspectiveParams();
+    *this = PerspectiveParams();
 }
 
 QDomElement
 PerspectiveParams::toXml(QDomDocument& doc, QString const& name) const
 {
-	if (!isValid()) {
-		return QDomElement();
-	}
+    if (!isValid())
+    {
+        return QDomElement();
+    }
 
-	XmlMarshaller marshaller(doc);
+    XmlMarshaller marshaller(doc);
 
-	QDomElement el(doc.createElement(name));
-	el.setAttribute("mode", m_mode == MODE_MANUAL ? "manual" : "auto");
-	el.appendChild(marshaller.pointF(m_corners[TOP_LEFT], "tl"));
-	el.appendChild(marshaller.pointF(m_corners[TOP_RIGHT], "tr"));
-	el.appendChild(marshaller.pointF(m_corners[BOTTOM_RIGHT], "br"));
-	el.appendChild(marshaller.pointF(m_corners[BOTTOM_LEFT], "bl"));
-	return el;
+    QDomElement el(doc.createElement(name));
+    el.setAttribute("mode", m_mode == MODE_MANUAL ? "manual" : "auto");
+    el.appendChild(marshaller.pointF(m_corners[TOP_LEFT], "tl"));
+    el.appendChild(marshaller.pointF(m_corners[TOP_RIGHT], "tr"));
+    el.appendChild(marshaller.pointF(m_corners[BOTTOM_RIGHT], "br"));
+    el.appendChild(marshaller.pointF(m_corners[BOTTOM_LEFT], "bl"));
+    return el;
 }
 
 } // namespace deskew

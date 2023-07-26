@@ -26,32 +26,32 @@
 class DebugViewFactory : public RefCountable
 {
 public:
-	/**
-	 * On destruction, and files backing up swap data will be deleted.
-	 */
-	virtual ~DebugViewFactory() {}
-	
-	/**
-	 * \brief Loads any data offloaded to disk back to memory.
-	 *
-	 * Does nothing if nothing was swapped out.
-	 */
-	virtual void swapIn() = 0;
+    /**
+     * On destruction, and files backing up swap data will be deleted.
+     */
+    virtual ~DebugViewFactory() {}
 
-	/**
-	 * \brief Offloads any swappable data to disk, freeing up memory.
-	 *
-	 * Does nothing if data was swapped out already.
-	 */
-	virtual void swapOut() = 0;
+    /**
+     * \brief Loads any data offloaded to disk back to memory.
+     *
+     * Does nothing if nothing was swapped out.
+     */
+    virtual void swapIn() = 0;
 
-	/**
-	 * \brief Constructs a new debug view instance.
-	 *
-	 * Implementations will sandwich this code between swapIn() and swapOut()
-	 * in case swap in is required. Otherwise, no swapIn() or swapOut() is called.
-	 */
-	virtual std::auto_ptr<QWidget> newInstance() = 0;
+    /**
+     * \brief Offloads any swappable data to disk, freeing up memory.
+     *
+     * Does nothing if data was swapped out already.
+     */
+    virtual void swapOut() = 0;
+
+    /**
+     * \brief Constructs a new debug view instance.
+     *
+     * Implementations will sandwich this code between swapIn() and swapOut()
+     * in case swap in is required. Otherwise, no swapIn() or swapOut() is called.
+     */
+    virtual std::auto_ptr<QWidget> newInstance() = 0;
 };
 
 #endif

@@ -32,183 +32,213 @@
 #include <QDebug>
 
 ZoneCreationInteraction::ZoneCreationInteraction(
-	ZoneInteractionContext& context, InteractionState& interaction)
-:	m_rContext(context),
-	m_dragHandler(context.imageView(), [](InteractionState const&) { return true; }),
-	m_dragWatcher(m_dragHandler),
-	m_zoomHandler(context.imageView(), [](InteractionState const&) { return true; }),
-	m_ptrSpline(new EditableSpline)
+    ZoneInteractionContext& context, InteractionState& interaction)
+    :	m_rContext(context),
+      m_dragHandler(context.imageView(), [](InteractionState const&)
 {
-	QPointF const screen_mouse_pos(
-		m_rContext.imageView().mapFromGlobal(QCursor::pos()) + QPointF(0.5, 0.5)
-	);
-	QTransform const from_screen(m_rContext.imageView().widgetToImage());
-	m_nextVertexImagePos = from_screen.map(screen_mouse_pos);
+    return true;
+}),
+m_dragWatcher(m_dragHandler),
+m_zoomHandler(context.imageView(), [](InteractionState const&)
+{
+    return true;
+}),
+m_ptrSpline(new EditableSpline)
+{
+    QPointF const screen_mouse_pos(
+        m_rContext.imageView().mapFromGlobal(QCursor::pos()) + QPointF(0.5, 0.5)
+    );
+    QTransform const from_screen(m_rContext.imageView().widgetToImage());
+    m_nextVertexImagePos = from_screen.map(screen_mouse_pos);
 
-	makeLastFollower(m_dragHandler);
-	m_dragHandler.makeFirstFollower(m_dragWatcher);
+    makeLastFollower(m_dragHandler);
+    m_dragHandler.makeFirstFollower(m_dragWatcher);
 
-	makeLastFollower(m_zoomHandler);
+    makeLastFollower(m_zoomHandler);
 
-	interaction.capture(m_interaction);
-	m_ptrSpline->appendVertex(m_nextVertexImagePos);
+    interaction.capture(m_interaction);
+    m_ptrSpline->appendVertex(m_nextVertexImagePos);
 
-	updateStatusTip();
+    updateStatusTip();
 }
 
 void
 ZoneCreationInteraction::onPaint(QPainter& painter, InteractionState const& interaction)
 {
-	painter.setWorldMatrixEnabled(false);
-	painter.setRenderHint(QPainter::Antialiasing);
+    painter.setWorldMatrixEnabled(false);
+    painter.setRenderHint(QPainter::Antialiasing);
 
-	QTransform const to_screen(m_rContext.imageView().imageToWidget());
-	QTransform const from_screen(m_rContext.imageView().widgetToImage());
+    QTransform const to_screen(m_rContext.imageView().imageToWidget());
+    QTransform const from_screen(m_rContext.imageView().widgetToImage());
 
-	m_visualizer.drawSplines(painter, to_screen, m_rContext.zones());
+    m_visualizer.drawSplines(painter, to_screen, m_rContext.zones());
 
-	QPen solid_line_pen(m_visualizer.solidColor());
-	solid_line_pen.setCosmetic(true);
-	solid_line_pen.setWidthF(1.5);
+    QPen solid_line_pen(m_visualizer.solidColor());
+    solid_line_pen.setCosmetic(true);
+    solid_line_pen.setWidthF(1.5);
 
-	QLinearGradient gradient; // From inactive to active point.
-	gradient.setColorAt(0.0, m_visualizer.solidColor());
-	gradient.setColorAt(1.0, m_visualizer.highlightDarkColor());
+    QLinearGradient gradient; // From inactive to active point.
+    gradient.setColorAt(0.0, m_visualizer.solidColor());
+    gradient.setColorAt(1.0, m_visualizer.highlightDarkColor());
 
-	QPen gradient_pen;
-	gradient_pen.setCosmetic(true);
-	gradient_pen.setWidthF(1.5);
+    QPen gradient_pen;
+    gradient_pen.setCosmetic(true);
+    gradient_pen.setWidthF(1.5);
 
-	painter.setPen(solid_line_pen);
-	painter.setBrush(Qt::NoBrush);
+    painter.setPen(solid_line_pen);
+    painter.setBrush(Qt::NoBrush);
 
-	for (EditableSpline::SegmentIterator it(*m_ptrSpline); it.hasNext(); ) {
-		SplineSegment const segment(it.next());
-		QLineF const line(to_screen.map(segment.toLine()));
+    for (EditableSpline::SegmentIterator it(*m_ptrSpline); it.hasNext(); )
+    {
+        SplineSegment const segment(it.next());
+        QLineF const line(to_screen.map(segment.toLine()));
 
-		if (segment.prev == m_ptrSpline->firstVertex() &&
-				segment.prev->point() == m_nextVertexImagePos) {
-			gradient.setStart(line.p2());
-			gradient.setFinalStop(line.p1());
-			gradient_pen.setBrush(gradient);
-			painter.setPen(gradient_pen);
-			painter.drawLine(line);
-			painter.setPen(solid_line_pen);
-		} else {
-			painter.drawLine(line);
-		}
-	}
+        if (segment.prev == m_ptrSpline->firstVertex() &&
+                segment.prev->point() == m_nextVertexImagePos)
+        {
+            gradient.setStart(line.p2());
+            gradient.setFinalStop(line.p1());
+            gradient_pen.setBrush(gradient);
+            painter.setPen(gradient_pen);
+            painter.drawLine(line);
+            painter.setPen(solid_line_pen);
+        }
+        else
+        {
+            painter.drawLine(line);
+        }
+    }
 
-	QLineF const line(
-		to_screen.map(QLineF(m_ptrSpline->lastVertex()->point(), m_nextVertexImagePos))
-	);
-	gradient.setStart(line.p1());
-	gradient.setFinalStop(line.p2());
-	gradient_pen.setBrush(gradient);
-	painter.setPen(gradient_pen);
-	painter.drawLine(line);
+    QLineF const line(
+        to_screen.map(QLineF(m_ptrSpline->lastVertex()->point(), m_nextVertexImagePos))
+    );
+    gradient.setStart(line.p1());
+    gradient.setFinalStop(line.p2());
+    gradient_pen.setBrush(gradient);
+    painter.setPen(gradient_pen);
+    painter.drawLine(line);
 
-	m_visualizer.drawVertex(
-		painter, to_screen.map(m_nextVertexImagePos), m_visualizer.highlightBrightColor()
-	);
+    m_visualizer.drawVertex(
+        painter, to_screen.map(m_nextVertexImagePos), m_visualizer.highlightBrightColor()
+    );
 }
 
 void
 ZoneCreationInteraction::onKeyPressEvent(QKeyEvent* event, InteractionState& interaction)
 {
-	if (event->key() == Qt::Key_Escape) {
-		makePeerPreceeder(*m_rContext.createDefaultInteraction());
-		m_rContext.imageView().update();
-		delete this;
-		event->accept();
-	}
+    if (event->key() == Qt::Key_Escape)
+    {
+        makePeerPreceeder(*m_rContext.createDefaultInteraction());
+        m_rContext.imageView().update();
+        delete this;
+        event->accept();
+    }
 }
 
 void
 ZoneCreationInteraction::onMouseReleaseEvent(QMouseEvent* event, InteractionState& interaction)
 {
-	if (event->button() != Qt::LeftButton) {
-		return;
-	}
+    if (event->button() != Qt::LeftButton)
+    {
+        return;
+    }
 
-	if (m_dragWatcher.haveSignificantDrag()) {
-		return;
-	}
+    if (m_dragWatcher.haveSignificantDrag())
+    {
+        return;
+    }
 
-	QTransform const to_screen(m_rContext.imageView().imageToWidget());
-	QTransform const from_screen(m_rContext.imageView().widgetToImage());
-	QPointF const screen_mouse_pos(event->pos() + QPointF(0.5, 0.5));
-	QPointF const image_mouse_pos(from_screen.map(screen_mouse_pos));
+    QTransform const to_screen(m_rContext.imageView().imageToWidget());
+    QTransform const from_screen(m_rContext.imageView().widgetToImage());
+    QPointF const screen_mouse_pos(event->pos() + QPointF(0.5, 0.5));
+    QPointF const image_mouse_pos(from_screen.map(screen_mouse_pos));
 
-	if (m_ptrSpline->hasAtLeastSegments(2) &&
-			m_nextVertexImagePos == m_ptrSpline->firstVertex()->point()) {
-		// Finishing the spline.  Bridging the first and the last points
-		// will create another segment.
-		m_ptrSpline->setBridged(true);
-		m_rContext.zones().addZone(m_ptrSpline);
-		m_rContext.zones().commit();
+    if (m_ptrSpline->hasAtLeastSegments(2) &&
+            m_nextVertexImagePos == m_ptrSpline->firstVertex()->point())
+    {
+        // Finishing the spline.  Bridging the first and the last points
+        // will create another segment.
+        m_ptrSpline->setBridged(true);
+        m_rContext.zones().addZone(m_ptrSpline);
+        m_rContext.zones().commit();
 
-		makePeerPreceeder(*m_rContext.createDefaultInteraction());
-		m_rContext.imageView().update();
-		delete this;
-	} else if (m_nextVertexImagePos == m_ptrSpline->lastVertex()->point()) {
-		// Removing the last vertex.
-		m_ptrSpline->lastVertex()->remove();
-		if (!m_ptrSpline->firstVertex()) {
-			// If it was the only vertex, cancelling spline creation.
-			makePeerPreceeder(*m_rContext.createDefaultInteraction());
-			m_rContext.imageView().update();
-			delete this;
-		}
-	} else {
-		// Adding a new vertex, provided we are not to close to the previous one.
-		Proximity const prox(screen_mouse_pos, m_ptrSpline->lastVertex()->point());
-		if (prox > interaction.proximityThreshold()) {
-			m_ptrSpline->appendVertex(image_mouse_pos);
-			updateStatusTip();
-		}
-	}
+        makePeerPreceeder(*m_rContext.createDefaultInteraction());
+        m_rContext.imageView().update();
+        delete this;
+    }
+    else if (m_nextVertexImagePos == m_ptrSpline->lastVertex()->point())
+    {
+        // Removing the last vertex.
+        m_ptrSpline->lastVertex()->remove();
+        if (!m_ptrSpline->firstVertex())
+        {
+            // If it was the only vertex, cancelling spline creation.
+            makePeerPreceeder(*m_rContext.createDefaultInteraction());
+            m_rContext.imageView().update();
+            delete this;
+        }
+    }
+    else
+    {
+        // Adding a new vertex, provided we are not to close to the previous one.
+        Proximity const prox(screen_mouse_pos, m_ptrSpline->lastVertex()->point());
+        if (prox > interaction.proximityThreshold())
+        {
+            m_ptrSpline->appendVertex(image_mouse_pos);
+            updateStatusTip();
+        }
+    }
 
-	event->accept();
+    event->accept();
 }
 
 void
 ZoneCreationInteraction::onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction)
 {
-	QPointF const screen_mouse_pos(event->pos() + QPointF(0.5, 0.5));
-	QTransform const to_screen(m_rContext.imageView().imageToWidget());
-	QTransform const from_screen(m_rContext.imageView().widgetToImage());
+    QPointF const screen_mouse_pos(event->pos() + QPointF(0.5, 0.5));
+    QTransform const to_screen(m_rContext.imageView().imageToWidget());
+    QTransform const from_screen(m_rContext.imageView().widgetToImage());
 
-	m_nextVertexImagePos = from_screen.map(screen_mouse_pos);
+    m_nextVertexImagePos = from_screen.map(screen_mouse_pos);
 
-	QPointF const last(to_screen.map(m_ptrSpline->lastVertex()->point()));
-	if (Proximity(last, screen_mouse_pos) <= interaction.proximityThreshold()) {
-		m_nextVertexImagePos = m_ptrSpline->lastVertex()->point();
-	} else if (m_ptrSpline->hasAtLeastSegments(2)) {
-		QPointF const first(to_screen.map(m_ptrSpline->firstVertex()->point()));
-		if (Proximity(first, screen_mouse_pos) <= interaction.proximityThreshold()) {
-			m_nextVertexImagePos = m_ptrSpline->firstVertex()->point();
-			updateStatusTip();
-		}
-	}
+    QPointF const last(to_screen.map(m_ptrSpline->lastVertex()->point()));
+    if (Proximity(last, screen_mouse_pos) <= interaction.proximityThreshold())
+    {
+        m_nextVertexImagePos = m_ptrSpline->lastVertex()->point();
+    }
+    else if (m_ptrSpline->hasAtLeastSegments(2))
+    {
+        QPointF const first(to_screen.map(m_ptrSpline->firstVertex()->point()));
+        if (Proximity(first, screen_mouse_pos) <= interaction.proximityThreshold())
+        {
+            m_nextVertexImagePos = m_ptrSpline->firstVertex()->point();
+            updateStatusTip();
+        }
+    }
 
-	m_rContext.imageView().update();
+    m_rContext.imageView().update();
 }
 
 void
 ZoneCreationInteraction::updateStatusTip()
 {
-	QString tip;
+    QString tip;
 
-	if (m_ptrSpline->hasAtLeastSegments(2)) {
-		if (m_nextVertexImagePos == m_ptrSpline->firstVertex()->point()) {
-			tip = tr("Click to finish this zone.  ESC to cancel.");
-		} else {
-			tip = tr("Connect first and last points to finish this zone.  ESC to cancel.");
-		}
-	} else {
-		tip = tr("Zones need to have at least 3 points.  ESC to cancel.");
-	}
+    if (m_ptrSpline->hasAtLeastSegments(2))
+    {
+        if (m_nextVertexImagePos == m_ptrSpline->firstVertex()->point())
+        {
+            tip = tr("Click to finish this zone.  ESC to cancel.");
+        }
+        else
+        {
+            tip = tr("Connect first and last points to finish this zone.  ESC to cancel.");
+        }
+    }
+    else
+    {
+        tip = tr("Zones need to have at least 3 points.  ESC to cancel.");
+    }
 
-	m_interaction.setInteractionStatusTip(tip);
+    m_interaction.setInteractionStatusTip(tip);
 }

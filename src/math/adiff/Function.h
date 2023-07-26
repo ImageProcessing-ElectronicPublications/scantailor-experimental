@@ -37,58 +37,58 @@ template<int ORD> class Function;
 
 template<> class MATH_EXPORT Function<2>
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/** The value of the function. */
-	double value;
+    /** The value of the function. */
+    double value;
 
-	/**
-	 * First directional derivatives in the direction
-	 * of u = i + j for every non-zero Hessian element at i, j.
-	 */
-	Eigen::VectorXd firstDerivs;
+    /**
+     * First directional derivatives in the direction
+     * of u = i + j for every non-zero Hessian element at i, j.
+     */
+    Eigen::VectorXd firstDerivs;
 
-	/**
-	 * Second directional derivatives in the direction
-	 * of u = i + j for every non-zero Hessian element at i, j.
-	 */
-	Eigen::VectorXd secondDerivs;
+    /**
+     * Second directional derivatives in the direction
+     * of u = i + j for every non-zero Hessian element at i, j.
+     */
+    Eigen::VectorXd secondDerivs;
 
-	/**
-	 * Constructs the "f(x1, x2, ...) = 0" function.
-	 */
-	explicit Function(size_t num_non_zero_vars);
+    /**
+     * Constructs the "f(x1, x2, ...) = 0" function.
+     */
+    explicit Function(size_t num_non_zero_vars);
 
-	/**
-	 * Constructs the "f(x1, x2, ...) = 0" function.
-	 */
-	explicit Function(SparseMap<2> const& sparse_map);
+    /**
+     * Constructs the "f(x1, x2, ...) = 0" function.
+     */
+    explicit Function(SparseMap<2> const& sparse_map);
 
-	/**
-	 * Constructs a function representing an argument.
-	 *
-	 * \param arg_idx Argument number.
-	 * \param val Argument value.
-	 * \param sparse_map Tells which derivatives to compute.
-	 */
-	Function(size_t arg_idx, double val, SparseMap<2> const& sparse_map);
+    /**
+     * Constructs a function representing an argument.
+     *
+     * \param arg_idx Argument number.
+     * \param val Argument value.
+     * \param sparse_map Tells which derivatives to compute.
+     */
+    Function(size_t arg_idx, double val, SparseMap<2> const& sparse_map);
 
-	Eigen::VectorXd gradient(SparseMap<2> const& sparse_map) const;
+    Eigen::VectorXd gradient(SparseMap<2> const& sparse_map) const;
 
-	Eigen::MatrixXd hessian(SparseMap<2> const& sparse_map) const;
+    Eigen::MatrixXd hessian(SparseMap<2> const& sparse_map) const;
 
-	void swap(Function& other);
+    void swap(Function& other);
 
-	Function& operator+=(Function const& other);
+    Function& operator+=(Function const& other);
 
-	Function& operator-=(Function const& other);
+    Function& operator-=(Function const& other);
 
-	Function& operator*=(double scalar);
+    Function& operator*=(double scalar);
 };
 
 inline void swap(Function<2>& f1, Function<2>& f2)
 {
-	f1.swap(f2);
+    f1.swap(f2);
 }
 
 MATH_EXPORT Function<2> operator+(Function<2> const& f1, Function<2> const& f2);

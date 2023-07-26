@@ -32,52 +32,80 @@
 class FOUNDATION_EXPORT RelativeMargins
 {
 public:
-	RelativeMargins() : m_top(), m_bottom(), m_left(), m_right() {}
-	
-	RelativeMargins(double left, double top, double right, double bottom)
-	: m_top(top), m_bottom(bottom), m_left(left), m_right(right) {}
-	
-	QRectF extendContentRect(QRectF const& rect) const {
-		double const scale = rect.width();
-		return rect.adjusted(-m_left * scale, -m_top * scale, m_right * scale, m_bottom * scale);
-	}
+    RelativeMargins() : m_top(), m_bottom(), m_left(), m_right() {}
 
-	QSizeF extendContentSize(QSizeF const& size) const {
-		double const scale = size.width();
-		return QSizeF(
-			size.width() + (m_left + m_right) * scale,
-			size.height() + (m_top + m_bottom) * scale
-		);
-	}
+    RelativeMargins(double left, double top, double right, double bottom)
+        : m_top(top), m_bottom(bottom), m_left(left), m_right(right) {}
 
-	double top() const { return m_top; }
-	
-	void setTop(double val) { m_top = val; }
-	
-	double bottom() const { return m_bottom; }
-	
-	void setBottom(double val) { m_bottom = val; }
-	
-	double left() const { return m_left; }
-	
-	void setLeft(double val) { m_left = val; }
-	
-	double right() const { return m_right; }
-	
-	void setRight(double val) { m_right = val; }
+    QRectF extendContentRect(QRectF const& rect) const
+    {
+        double const scale = rect.width();
+        return rect.adjusted(-m_left * scale, -m_top * scale, m_right * scale, m_bottom * scale);
+    }
 
-	bool horizontalMarginsApproxEqual() const {
-		return std::lround(std::abs(m_right - m_left) * 100.0) == 0;
-	}
+    QSizeF extendContentSize(QSizeF const& size) const
+    {
+        double const scale = size.width();
+        return QSizeF(
+                   size.width() + (m_left + m_right) * scale,
+                   size.height() + (m_top + m_bottom) * scale
+               );
+    }
 
-	bool verticalMarginsApproxEqual() const {
-		return std::lround(std::abs(m_top - m_bottom) * 100.0) == 0;
-	}
+    double top() const
+    {
+        return m_top;
+    }
+
+    void setTop(double val)
+    {
+        m_top = val;
+    }
+
+    double bottom() const
+    {
+        return m_bottom;
+    }
+
+    void setBottom(double val)
+    {
+        m_bottom = val;
+    }
+
+    double left() const
+    {
+        return m_left;
+    }
+
+    void setLeft(double val)
+    {
+        m_left = val;
+    }
+
+    double right() const
+    {
+        return m_right;
+    }
+
+    void setRight(double val)
+    {
+        m_right = val;
+    }
+
+    bool horizontalMarginsApproxEqual() const
+    {
+        return std::lround(std::abs(m_right - m_left) * 100.0) == 0;
+    }
+
+    bool verticalMarginsApproxEqual() const
+    {
+        return std::lround(std::abs(m_top - m_bottom) * 100.0) == 0;
+    }
 private:
-	double m_top;
-	double m_bottom;
-	double m_left;
-	double m_right;
+    double m_top;
+    double m_bottom;
+    double m_left;
+    double m_right;
 };
 
 #endif

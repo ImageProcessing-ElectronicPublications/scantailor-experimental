@@ -26,29 +26,29 @@ namespace select_content
 {
 
 Params::Params(
-	ContentBox const& content_box, QSizeF const& content_size_px,
-	Dependencies const& deps, AutoManualMode const mode)
-:	m_contentBox(content_box),
-	m_contentSizePx(content_size_px),
-	m_deps(deps),
-	m_mode(mode)
+    ContentBox const& content_box, QSizeF const& content_size_px,
+    Dependencies const& deps, AutoManualMode const mode)
+    :	m_contentBox(content_box),
+      m_contentSizePx(content_size_px),
+      m_deps(deps),
+      m_mode(mode)
 {
 }
 
 Params::Params(Dependencies const& deps)
-:	m_deps(deps)
+    :	m_deps(deps)
 {
 }
 
 Params::Params(QDomElement const& filter_el)
-:	m_contentBox(filter_el.namedItem("content-box").toElement())
-,	m_contentSizePx(
-		XmlUnmarshaller::sizeF(
-			filter_el.namedItem("content-size-px").toElement()
-		)
-	)
-,	m_deps(filter_el.namedItem("dependencies").toElement())
-,	m_mode(filter_el.attribute("mode") == "manual" ? MODE_MANUAL : MODE_AUTO)
+    :	m_contentBox(filter_el.namedItem("content-box").toElement())
+    ,	m_contentSizePx(
+          XmlUnmarshaller::sizeF(
+              filter_el.namedItem("content-size-px").toElement()
+          )
+      )
+    ,	m_deps(filter_el.namedItem("dependencies").toElement())
+    ,	m_mode(filter_el.attribute("mode") == "manual" ? MODE_MANUAL : MODE_AUTO)
 {
 }
 
@@ -59,14 +59,14 @@ Params::~Params()
 QDomElement
 Params::toXml(QDomDocument& doc, QString const& name) const
 {
-	XmlMarshaller marshaller(doc);
-	
-	QDomElement el(doc.createElement(name));
-	el.setAttribute("mode", m_mode == MODE_AUTO ? "auto" : "manual");
-	el.appendChild(m_contentBox.toXml(doc, "content-box"));
-	el.appendChild(marshaller.sizeF(m_contentSizePx, "content-size-px"));
-	el.appendChild(m_deps.toXml(doc, "dependencies"));
-	return el;
+    XmlMarshaller marshaller(doc);
+
+    QDomElement el(doc.createElement(name));
+    el.setAttribute("mode", m_mode == MODE_AUTO ? "auto" : "manual");
+    el.appendChild(m_contentBox.toXml(doc, "content-box"));
+    el.appendChild(marshaller.sizeF(m_contentSizePx, "content-size-px"));
+    el.appendChild(m_deps.toXml(doc, "dependencies"));
+    return el;
 }
 
 } // namespace content_rect

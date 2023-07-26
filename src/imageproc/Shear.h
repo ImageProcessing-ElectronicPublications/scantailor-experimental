@@ -42,8 +42,8 @@ class BinaryImage;
  * \note The source and destination images must have the same size.
  */
 IMAGEPROC_EXPORT void hShearFromTo(
-	BinaryImage const& src, BinaryImage& dst, double shear,
-	double y_origin, BWColor background_color);
+    BinaryImage const& src, BinaryImage& dst, double shear,
+    double y_origin, BWColor background_color);
 
 /**
  * \brief Vertical shear.
@@ -59,8 +59,8 @@ IMAGEPROC_EXPORT void hShearFromTo(
  * \note The source and destination images must have the same size.
  */
 IMAGEPROC_EXPORT void vShearFromTo(
-	BinaryImage const& src, BinaryImage& dst, double shear,
-	double x_origin, BWColor background_color);
+    BinaryImage const& src, BinaryImage& dst, double shear,
+    double x_origin, BWColor background_color);
 
 /**
  * \brief Horizontal shear returing a new image.
@@ -68,8 +68,8 @@ IMAGEPROC_EXPORT void vShearFromTo(
  * Same as hShearFromTo(), but creates and returns the destination image.
  */
 IMAGEPROC_EXPORT BinaryImage hShear(
-	BinaryImage const& src, double shear,
-	double y_origin, BWColor background_color);
+    BinaryImage const& src, double shear,
+    double y_origin, BWColor background_color);
 
 /**
  * \brief Vertical shear returning a new image.
@@ -77,8 +77,8 @@ IMAGEPROC_EXPORT BinaryImage hShear(
  * Same as vShearFromTo(), but creates and returns the destination image.
  */
 IMAGEPROC_EXPORT BinaryImage vShear(
-	BinaryImage const& src, double shear,
-	double x_origin, BWColor background_color);
+    BinaryImage const& src, double shear,
+    double x_origin, BWColor background_color);
 
 /**
  * \brief In-place horizontal shear.
@@ -86,8 +86,8 @@ IMAGEPROC_EXPORT BinaryImage vShear(
  * Same as hShearFromTo() with src and dst being the same image.
  */
 IMAGEPROC_EXPORT void hShearInPlace(
-	BinaryImage& image, double shear,
-	double y_origin, BWColor background_color);
+    BinaryImage& image, double shear,
+    double y_origin, BWColor background_color);
 
 /**
  * \brief In-place vertical shear.
@@ -95,8 +95,8 @@ IMAGEPROC_EXPORT void hShearInPlace(
  * Same as vShearFromTo() with src and dst being the same image.
  */
 IMAGEPROC_EXPORT void vShearInPlace(
-	BinaryImage& image, double shear,
-	double x_origin, BWColor background_color);
+    BinaryImage& image, double shear,
+    double x_origin, BWColor background_color);
 
 } // namespace imageproc
 

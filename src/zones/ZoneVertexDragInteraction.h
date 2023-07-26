@@ -30,26 +30,26 @@ class ZoneInteractionContext;
 
 class ZoneVertexDragInteraction : public InteractionHandler
 {
-	Q_DECLARE_TR_FUNCTIONS(ZoneVertexDragInteraction)
+    Q_DECLARE_TR_FUNCTIONS(ZoneVertexDragInteraction)
 public:
-	ZoneVertexDragInteraction(
-		ZoneInteractionContext& context, InteractionState& interaction,
-		EditableSpline::Ptr const& spline, SplineVertex::Ptr const& vertex);
+    ZoneVertexDragInteraction(
+        ZoneInteractionContext& context, InteractionState& interaction,
+        EditableSpline::Ptr const& spline, SplineVertex::Ptr const& vertex);
 protected:
-	virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+    virtual void onPaint(QPainter& painter, InteractionState const& interaction);
 
-	virtual void onMouseReleaseEvent(QMouseEvent* event, InteractionState& interaction);
+    virtual void onMouseReleaseEvent(QMouseEvent* event, InteractionState& interaction);
 
-	virtual void onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction);
+    virtual void onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction);
 private:
-	void checkProximity(InteractionState const& interaction);
+    void checkProximity(InteractionState const& interaction);
 
-	ZoneInteractionContext& m_rContext;
-	EditableSpline::Ptr m_ptrSpline;
-	SplineVertex::Ptr m_ptrVertex;
-	InteractionState::Captor m_interaction;
-	BasicSplineVisualizer m_visualizer;
-	QPointF m_dragOffset;
+    ZoneInteractionContext& m_rContext;
+    EditableSpline::Ptr m_ptrSpline;
+    SplineVertex::Ptr m_ptrVertex;
+    InteractionState::Captor m_interaction;
+    BasicSplineVisualizer m_visualizer;
+    QPointF m_dragOffset;
 };
 
 #endif

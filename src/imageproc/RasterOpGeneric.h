@@ -106,9 +106,15 @@ public:
     explicit GridLineAccessor(GridAccessor<T> const& accessor)
         : m_pLine(accessor.data), m_stride(accessor.stride) {}
 
-    inline T& operator[](ptrdiff_t x) const { return m_pLine[x]; }
+    inline T& operator[](ptrdiff_t x) const
+    {
+        return m_pLine[x];
+    }
 
-    void nextLine() { m_pLine += m_stride; }
+    void nextLine()
+    {
+        m_pLine += m_stride;
+    }
 private:
     T* m_pLine;
     ptrdiff_t m_stride;
@@ -122,7 +128,7 @@ GridLineAccessor<T> createLineAccessor(GridAccessor<T> const& accessor)
 
 template<typename Obj>
 auto createLineAccessor(Obj& object) ->
-    GridLineAccessor<typename std::remove_reference<decltype(*object.accessor().data)>::type>
+GridLineAccessor<typename std::remove_reference<decltype(*object.accessor().data)>::type>
 {
     using T = typename std::remove_reference<decltype(*object.accessor().data)>::type;
     return GridLineAccessor<T>(object.accessor());
@@ -142,7 +148,7 @@ std::tuple<int, int> extractDimensions(T& object)
 
 template<typename... Images>
 auto createLineAccessors(Images&&... images) ->
-    decltype(std::make_tuple(createLineAccessor(images)...))
+decltype(std::make_tuple(createLineAccessor(images)...))
 {
     return std::make_tuple(createLineAccessor(images)...);
 }
@@ -156,7 +162,8 @@ void validateDimensions(
     std::tuple<int, int> const& reference_dims,
     FirstImage const& first_image, Images const&... other_images)
 {
-    if (reference_dims != extractDimensions(first_image)) {
+    if (reference_dims != extractDimensions(first_image))
+    {
         throw std::invalid_argument("rasterOpGeneric: inconsistent image dimensions");
     }
 
@@ -168,7 +175,8 @@ std::tuple<int, int> getAndValidateDimensions(
     FirstImage const& first_image, Images const&... other_images)
 {
     std::tuple<int, int> const dims = extractDimensions(first_image);
-    if (std::get<0>(dims) < 0 || std::get<1>(dims) < 0) {
+    if (std::get<0>(dims) < 0 || std::get<1>(dims) < 0)
+    {
         throw std::invalid_argument("rasterOpGeneric: invalid image dimensions");
     }
 
@@ -222,8 +230,10 @@ void rasterOpGeneric(Operation&& op, Images&&... images)
     auto line_accessors_tuple = createLineAccessors(images...);
     typename IndexSequenceGenerator<sizeof...(Images)>::type seq;
 
-    for (ptrdiff_t y = 0; y < height; ++y) {
-        for (ptrdiff_t x = 0; x < width; ++x) {
+    for (ptrdiff_t y = 0; y < height; ++y)
+    {
+        for (ptrdiff_t x = 0; x < width; ++x)
+        {
             performOperation(op, line_accessors_tuple, x, seq);
         }
         moveToNextLine(line_accessors_tuple, seq);
@@ -242,8 +252,10 @@ void rasterOpGenericXY(Operation&& op, Images&&... images)
     auto line_accessors_tuple = createLineAccessors(images...);
     typename IndexSequenceGenerator<sizeof...(Images)>::type seq;
 
-    for (ptrdiff_t y = 0; y < height; ++y) {
-        for (ptrdiff_t x = 0; x < width; ++x) {
+    for (ptrdiff_t y = 0; y < height; ++y)
+    {
+        for (ptrdiff_t x = 0; x < width; ++x)
+        {
             performOperationXY(op, line_accessors_tuple, x, y, seq);
         }
         moveToNextLine(line_accessors_tuple, seq);

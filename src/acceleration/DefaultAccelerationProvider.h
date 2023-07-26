@@ -33,40 +33,40 @@ class AccelerationPlugin;
  */
 class ACCELERATION_EXPORT DefaultAccelerationProvider : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 * @brief Initializes the acceleration engine, loading plugins if necessary.
-	 */
-	DefaultAccelerationProvider(QObject* parent = nullptr);
+    /**
+     * @brief Initializes the acceleration engine, loading plugins if necessary.
+     */
+    DefaultAccelerationProvider(QObject* parent = nullptr);
 
-	/**
-	 * @brief Re-checks configuration and loads plug-ins if necessary.
-	 *
-	 * This method should be called after changing the value of "settings/enable_opencl"
-	 * key in QSettings. This method is called from this class' constructor.
-	 */
-	void processUpdatedConfiguration();
+    /**
+     * @brief Re-checks configuration and loads plug-ins if necessary.
+     *
+     * This method should be called after changing the value of "settings/enable_opencl"
+     * key in QSettings. This method is called from this class' constructor.
+     */
+    void processUpdatedConfiguration();
 
-	/**
-	 * @brief Calls AccelerationPlugin::releaseResources() on all loaded plugins
-	 *        this class is aware about.
-	 *
-	 * This works even if a certain plugin was loaded not by this class.
-	 * If resources are not released explicitly, they will be released
-	 * when unloading plugins, which happens after main() returns.
-	 * Unfortunately, at least some OpenCL implementations don't like
-	 * being accessed after main() returns.
-	 */
-	void releaseResources();
+    /**
+     * @brief Calls AccelerationPlugin::releaseResources() on all loaded plugins
+     *        this class is aware about.
+     *
+     * This works even if a certain plugin was loaded not by this class.
+     * If resources are not released explicitly, they will be released
+     * when unloading plugins, which happens after main() returns.
+     * Unfortunately, at least some OpenCL implementations don't like
+     * being accessed after main() returns.
+     */
+    void releaseResources();
 
-	/**
-	 * @brief Delegates to a plugin, if one is loaded or returns a non-accelerated version.
-	 */
-	std::shared_ptr<AcceleratableOperations> getOperations();
+    /**
+     * @brief Delegates to a plugin, if one is loaded or returns a non-accelerated version.
+     */
+    std::shared_ptr<AcceleratableOperations> getOperations();
 private:
-	AccelerationPlugin* m_pPlugin;
-	std::shared_ptr<AcceleratableOperations> m_ptrNonAcceleratedOperations;
+    AccelerationPlugin* m_pPlugin;
+    std::shared_ptr<AcceleratableOperations> m_ptrNonAcceleratedOperations;
 };
 
 #endif

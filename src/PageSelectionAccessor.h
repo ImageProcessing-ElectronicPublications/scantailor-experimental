@@ -30,18 +30,18 @@ class PageSequence;
 
 class PageSelectionAccessor
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	explicit PageSelectionAccessor(
-		IntrusivePtr<PageSelectionProvider const> const& provider);
-	
-	PageSequence allPages() const;
+    explicit PageSelectionAccessor(
+        IntrusivePtr<PageSelectionProvider const> const& provider);
 
-	std::set<PageId> selectedPages() const;
-	
-	std::vector<PageRange> selectedRanges() const;
+    PageSequence allPages() const;
+
+    std::set<PageId> selectedPages() const;
+
+    std::vector<PageRange> selectedRanges() const;
 private:
-	IntrusivePtr<PageSelectionProvider const> m_ptrProvider;
+    IntrusivePtr<PageSelectionProvider const> m_ptrProvider;
 };
 
 #endif

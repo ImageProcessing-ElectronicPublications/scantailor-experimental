@@ -25,65 +25,75 @@
 void
 RecentProjects::read()
 {
-	QSettings settings;
-	std::list<QString> new_list;
-	
-	int const size = settings.beginReadArray("project/recent");
-	for (int i = 0; i < size; ++i) {
-		settings.setArrayIndex(i);
-		QString const path(settings.value("path").toString());
-		new_list.push_back(path);
-	}
-	settings.endArray();
-	
-	m_projectFiles.swap(new_list);
+    QSettings settings;
+    std::list<QString> new_list;
+
+    int const size = settings.beginReadArray("project/recent");
+    for (int i = 0; i < size; ++i)
+    {
+        settings.setArrayIndex(i);
+        QString const path(settings.value("path").toString());
+        new_list.push_back(path);
+    }
+    settings.endArray();
+
+    m_projectFiles.swap(new_list);
 }
 
 void
 RecentProjects::write(int const max_items) const
 {
-	QSettings settings;
-	settings.beginWriteArray("project/recent");
-	int idx = 0;
-	BOOST_FOREACH(QString const& path, m_projectFiles) {
-		if (idx >= max_items) {
-			break;
-		}
-		settings.setArrayIndex(idx);
-		settings.setValue("path", path);
-		++idx;
-	}
-	settings.endArray();
+    QSettings settings;
+    settings.beginWriteArray("project/recent");
+    int idx = 0;
+    BOOST_FOREACH(QString const& path, m_projectFiles)
+    {
+        if (idx >= max_items)
+        {
+            break;
+        }
+        settings.setArrayIndex(idx);
+        settings.setValue("path", path);
+        ++idx;
+    }
+    settings.endArray();
 }
 
 bool
 RecentProjects::validate()
 {
-	bool all_ok = true;
-	
-	std::list<QString>::iterator it(m_projectFiles.begin());
-	std::list<QString>::iterator const end(m_projectFiles.end());
-	while (it != end) {
-		if (QFile::exists(*it)) {
-			++it;
-		} else {
-			m_projectFiles.erase(it++);
-			all_ok = false;
-		}
-	}
-	
-	return all_ok;
+    bool all_ok = true;
+
+    std::list<QString>::iterator it(m_projectFiles.begin());
+    std::list<QString>::iterator const end(m_projectFiles.end());
+    while (it != end)
+    {
+        if (QFile::exists(*it))
+        {
+            ++it;
+        }
+        else
+        {
+            m_projectFiles.erase(it++);
+            all_ok = false;
+        }
+    }
+
+    return all_ok;
 }
 
 void
 RecentProjects::setMostRecent(QString const& file_path)
 {
-	std::list<QString>::iterator const begin(m_projectFiles.begin());
-	std::list<QString>::iterator const end(m_projectFiles.end());
-	std::list<QString>::iterator it(std::find(begin, end, file_path));
-	if (it != end) {
-		m_projectFiles.splice(begin, m_projectFiles, it);
-	} else {
-		m_projectFiles.push_front(file_path);
-	}
+    std::list<QString>::iterator const begin(m_projectFiles.begin());
+    std::list<QString>::iterator const end(m_projectFiles.end());
+    std::list<QString>::iterator it(std::find(begin, end, file_path));
+    if (it != end)
+    {
+        m_projectFiles.splice(begin, m_projectFiles, it);
+    }
+    else
+    {
+        m_projectFiles.push_front(file_path);
+    }
 }

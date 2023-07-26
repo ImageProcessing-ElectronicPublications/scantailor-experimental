@@ -24,57 +24,59 @@ AutoRemovingFile::AutoRemovingFile()
 }
 
 AutoRemovingFile::AutoRemovingFile(QString const& file_path)
-:	m_file(file_path)
+    :	m_file(file_path)
 {
 }
 
 AutoRemovingFile::AutoRemovingFile(AutoRemovingFile& other)
-:	m_file(other.release())
+    :	m_file(other.release())
 {
 }
 
 AutoRemovingFile::AutoRemovingFile(CopyHelper other)
-:	m_file(other.obj->release())
+    :	m_file(other.obj->release())
 {
 }
 
 AutoRemovingFile::~AutoRemovingFile()
 {
-	if (!m_file.isEmpty()) {
-		QFile::remove(m_file);
-	}
+    if (!m_file.isEmpty())
+    {
+        QFile::remove(m_file);
+    }
 }
 
 AutoRemovingFile&
 AutoRemovingFile::operator=(AutoRemovingFile& other)
 {
-	m_file = other.release();
-	return *this;
+    m_file = other.release();
+    return *this;
 }
 
 AutoRemovingFile&
 AutoRemovingFile::operator=(CopyHelper other)
 {
-	m_file = other.obj->release();
-	return *this;
+    m_file = other.obj->release();
+    return *this;
 }
 
 void
 AutoRemovingFile::reset(QString const& file)
 {
-	QString const old_file(file);
+    QString const old_file(file);
 
-	m_file = file;
+    m_file = file;
 
-	if (!old_file.isEmpty()) {
-		QFile::remove(old_file);
-	}
+    if (!old_file.isEmpty())
+    {
+        QFile::remove(old_file);
+    }
 }
 
 QString
 AutoRemovingFile::release()
 {
-	QString saved(m_file);
-	m_file = QString();
-	return saved;
+    QString saved(m_file);
+    m_file = QString();
+    return saved;
 }

@@ -22,13 +22,18 @@
 void
 PerformanceTimer::print(char const* prefix)
 {
-	timer::time_point const now = timer::now();
-	uint64_t const usec = std::chrono::duration_cast<std::chrono::microseconds>(now - m_start).count();
-	if (usec < 10000) {
-		qDebug() << prefix << usec << "usec";
-	} else if (usec < 10000000) {
-		qDebug() << prefix << (usec / 1000) << "msec";
-	} else {
-		qDebug() << prefix << (usec / 1000000) << "sec";
-	}
+    timer::time_point const now = timer::now();
+    uint64_t const usec = std::chrono::duration_cast<std::chrono::microseconds>(now - m_start).count();
+    if (usec < 10000)
+    {
+        qDebug() << prefix << usec << "usec";
+    }
+    else if (usec < 10000000)
+    {
+        qDebug() << prefix << (usec / 1000) << "msec";
+    }
+    else
+    {
+        qDebug() << prefix << (usec / 1000000) << "sec";
+    }
 }

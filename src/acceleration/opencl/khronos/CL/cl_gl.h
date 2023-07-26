@@ -37,7 +37,7 @@
 #include <OpenGL/CGLDevice.h>
 #else
 #include <CL/cl.h>
-#endif	
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -90,7 +90,7 @@ extern CL_API_ENTRY cl_int CL_API_CALL
 clGetGLObjectInfo(cl_mem                /* memobj */,
                   cl_gl_object_type *   /* gl_object_type */,
                   cl_GLuint *              /* gl_object_name */) CL_API_SUFFIX__VERSION_1_0;
-                  
+
 extern CL_API_ENTRY cl_int CL_API_CALL
 clGetGLTextureInfo(cl_mem               /* memobj */,
                    cl_gl_texture_info   /* param_name */,

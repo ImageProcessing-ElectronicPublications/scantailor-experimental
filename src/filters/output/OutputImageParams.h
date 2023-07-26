@@ -38,49 +38,52 @@ namespace output
 class OutputImageParams
 {
 public:
-	OutputImageParams(QString const& transform_fingerprint,
-		QRect const& output_image_rect, QRect const& content_rect,
-		ColorParams const& color_params, DespeckleLevel despeckle_level);
-	
-	explicit OutputImageParams(QDomElement const& el);
+    OutputImageParams(QString const& transform_fingerprint,
+                      QRect const& output_image_rect, QRect const& content_rect,
+                      ColorParams const& color_params, DespeckleLevel despeckle_level);
 
-	DespeckleLevel despeckleLevel() const { return m_despeckleLevel; }
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
-	
-	/**
-	 * \brief Returns true if two sets of parameters are close enough
-	 *        to avoid re-generating the output image.
-	 */
-	bool matches(OutputImageParams const& other) const;
+    explicit OutputImageParams(QDomElement const& el);
+
+    DespeckleLevel despeckleLevel() const
+    {
+        return m_despeckleLevel;
+    }
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    /**
+     * \brief Returns true if two sets of parameters are close enough
+     *        to avoid re-generating the output image.
+     */
+    bool matches(OutputImageParams const& other) const;
 private:
-	static bool colorParamsMatch(
-		ColorParams const& cp1, DespeckleLevel dl1,
-		ColorParams const& cp2, DespeckleLevel dl2);
-	
-	/**
-	 * Identifies the original -> output image transformation.
-	 * @see AbstractImageTransform::fingerprint()
-	 */
-	QString m_transformFingerprint;
+    static bool colorParamsMatch(
+        ColorParams const& cp1, DespeckleLevel dl1,
+        ColorParams const& cp2, DespeckleLevel dl2);
 
-	/**
-	 * The rectangle in transformed space corresponding to the output image.
-	 * @see OutputGenerator::outputImageRect()
-	 */
-	QRect m_outputImageRect;
-	
-	/**
-	 * Content rectangle in output image coordinates.
-	 * @see OutputGenerator::contentRect()
-	 */
-	QRect m_contentRect;
-	
-	/** Non-geometric parameters used to generate the output image. */
-	ColorParams m_colorParams;
+    /**
+     * Identifies the original -> output image transformation.
+     * @see AbstractImageTransform::fingerprint()
+     */
+    QString m_transformFingerprint;
 
-	/** Despeckle level of the output image. */
-	DespeckleLevel m_despeckleLevel;
+    /**
+     * The rectangle in transformed space corresponding to the output image.
+     * @see OutputGenerator::outputImageRect()
+     */
+    QRect m_outputImageRect;
+
+    /**
+     * Content rectangle in output image coordinates.
+     * @see OutputGenerator::contentRect()
+     */
+    QRect m_contentRect;
+
+    /** Non-geometric parameters used to generate the output image. */
+    ColorParams m_colorParams;
+
+    /** Despeckle level of the output image. */
+    DespeckleLevel m_despeckleLevel;
 };
 
 } // namespace output

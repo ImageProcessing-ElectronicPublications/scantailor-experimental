@@ -23,23 +23,30 @@
 
 class ImageMetadata
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	ImageMetadata() {}
-	
-	ImageMetadata(QSize size) : m_size(size) {}
-	
-	QSize const& size() const { return m_size; }
-	
-	void setSize(QSize const& size) { m_size = size; }
-	
-	bool operator==(ImageMetadata const& other) const;
-	
-	bool operator!=(ImageMetadata const& other) const {
-		return !(*this == other);
-	}
+    ImageMetadata() {}
+
+    ImageMetadata(QSize size) : m_size(size) {}
+
+    QSize const& size() const
+    {
+        return m_size;
+    }
+
+    void setSize(QSize const& size)
+    {
+        m_size = size;
+    }
+
+    bool operator==(ImageMetadata const& other) const;
+
+    bool operator!=(ImageMetadata const& other) const
+    {
+        return !(*this == other);
+    }
 private:
-	QSize m_size;
+    QSize m_size;
 };
 
 #endif

@@ -27,44 +27,44 @@ namespace page_layout
 {
 
 Params::Params(
-	RelativeMargins const& hard_margins,
-	QSizeF const& content_size,
-	MatchSizeMode const& match_size_mode,
-	Alignment const& alignment)
-:	m_hardMargins(hard_margins),
-	m_contentSize(content_size),
-	m_matchSizeMode(match_size_mode),
-	m_alignment(alignment)
+    RelativeMargins const& hard_margins,
+    QSizeF const& content_size,
+    MatchSizeMode const& match_size_mode,
+    Alignment const& alignment)
+    :	m_hardMargins(hard_margins),
+      m_contentSize(content_size),
+      m_matchSizeMode(match_size_mode),
+      m_alignment(alignment)
 {
 }
 
 Params::Params(QDomElement const& el)
-:	m_hardMargins(
-		XmlUnmarshaller::relativeMargins(
-			el.namedItem("hardMargins").toElement()
-		)
-	),
-	m_contentSize(
-		XmlUnmarshaller::sizeF(
-			el.namedItem("contentSize").toElement()
-		)
-	),
-	m_matchSizeMode(el.namedItem("matchSizeMode").toElement()),
-	m_alignment(el.namedItem("alignment").toElement())
+    :	m_hardMargins(
+          XmlUnmarshaller::relativeMargins(
+              el.namedItem("hardMargins").toElement()
+          )
+      ),
+      m_contentSize(
+          XmlUnmarshaller::sizeF(
+              el.namedItem("contentSize").toElement()
+          )
+      ),
+      m_matchSizeMode(el.namedItem("matchSizeMode").toElement()),
+      m_alignment(el.namedItem("alignment").toElement())
 {
 }
 
 QDomElement
 Params::toXml(QDomDocument& doc, QString const& name) const
 {
-	XmlMarshaller marshaller(doc);
-	
-	QDomElement el(doc.createElement(name));
-	el.appendChild(marshaller.relativeMargins(m_hardMargins, "hardMargins"));
-	el.appendChild(marshaller.sizeF(m_contentSize, "contentSize"));
-	el.appendChild(m_matchSizeMode.toXml(doc, "matchSizeMode"));
-	el.appendChild(m_alignment.toXml(doc, "alignment"));
-	return el;
+    XmlMarshaller marshaller(doc);
+
+    QDomElement el(doc.createElement(name));
+    el.appendChild(marshaller.relativeMargins(m_hardMargins, "hardMargins"));
+    el.appendChild(marshaller.sizeF(m_contentSize, "contentSize"));
+    el.appendChild(m_matchSizeMode.toXml(doc, "matchSizeMode"));
+    el.appendChild(m_alignment.toXml(doc, "alignment"));
+    return el;
 }
 
 } // namespace page_layout

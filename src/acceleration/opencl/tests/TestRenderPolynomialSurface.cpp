@@ -41,9 +41,10 @@ namespace tests
 class RenderPolynomialSurfaceFixture : protected DeviceListFixture, protected ProgramBuilderFixture
 {
 public:
-	RenderPolynomialSurfaceFixture() {
-		addSource("render_polynomial_surface.cl");
-	}
+    RenderPolynomialSurfaceFixture()
+    {
+        addSource("render_polynomial_surface.cl");
+    }
 };
 
 BOOST_FIXTURE_TEST_SUITE(RenderPolynomialSurfaceTestSuite, RenderPolynomialSurfaceFixture);
@@ -52,74 +53,80 @@ BOOST_FIXTURE_TEST_SUITE(RenderPolynomialSurfaceTestSuite, RenderPolynomialSurfa
 
 BOOST_AUTO_TEST_CASE(test)
 {
-	// Prepare an image to be approximated by a polynomial surface.
-	GrayImage input(QSize(201, 201));
-	QPoint const center = input.rect().center();
-	rasterOpGenericXY(
-		[center](uint8_t& pixel, int x, int y) {
-			QPoint const to_center = center - QPoint(x, y);
-			double const proximity = QPoint::dotProduct(to_center, to_center);
-			pixel = qBound(0, qRound(std::exp(-proximity / (50.0*50.0)) * 100.0), 255);
-		},
-		input
-	);
+    // Prepare an image to be approximated by a polynomial surface.
+    GrayImage input(QSize(201, 201));
+    QPoint const center = input.rect().center();
+    rasterOpGenericXY(
+        [center](uint8_t& pixel, int x, int y)
+    {
+        QPoint const to_center = center - QPoint(x, y);
+        double const proximity = QPoint::dotProduct(to_center, to_center);
+        pixel = qBound(0, qRound(std::exp(-proximity / (50.0*50.0)) * 100.0), 255);
+    },
+    input
+    );
 
-	// Approximate the image with a polynomial surface.
-	PolynomialSurface const ps(5, 5, input);
-
-#if LOG_PERFORMANCE
-	PerformanceTimer ptimer2;
-#endif
-
-	GrayImage const control(ps.render(QSize(1001, 999)));
+    // Approximate the image with a polynomial surface.
+    PolynomialSurface const ps(5, 5, input);
 
 #if LOG_PERFORMANCE
-	for (int i = 0; i < 99; ++i) {
-		ps.render(control.size());
-	}
-
-	ptimer2.print("[ps-render x100] Non-accelerated version:");
+    PerformanceTimer ptimer2;
 #endif
 
-	for (cl::Device const& device : m_devices) {
-		cl::Context context(device);
-		cl::CommandQueue command_queue(context, device);
-		cl::Program program(buildProgram(context));
+    GrayImage const control(ps.render(QSize(1001, 999)));
 
 #if LOG_PERFORMANCE
-		PerformanceTimer ptimer;
+    for (int i = 0; i < 99; ++i)
+    {
+        ps.render(control.size());
+    }
+
+    ptimer2.print("[ps-render x100] Non-accelerated version:");
 #endif
 
-		GrayImage const output = renderPolynomialSurface(
-			command_queue, program, control.width(), control.height(), ps.coeffs()
-		);
+    for (cl::Device const& device : m_devices)
+    {
+        cl::Context context(device);
+        cl::CommandQueue command_queue(context, device);
+        cl::Program program(buildProgram(context));
 
 #if LOG_PERFORMANCE
-		for (int i = 0; i < 99; ++i) {
-			renderPolynomialSurface(
-				command_queue, program, control.width(), control.height(), ps.coeffs()
-			);
-		}
-		ptimer.print(("[ps-render x100] "+device.getInfo<CL_DEVICE_NAME>() + ": ").c_str());
+        PerformanceTimer ptimer;
 #endif
 
-		BOOST_REQUIRE_EQUAL(output.width(), control.width());
-		BOOST_REQUIRE_EQUAL(output.height(), control.height());
+        GrayImage const output = renderPolynomialSurface(
+                                     command_queue, program, control.width(), control.height(), ps.coeffs()
+                                 );
 
-		int max_err = 0;
-		rasterOpGeneric(
-			[&max_err](int output, int control) {
-				int const err = std::abs(output - control);
-				if (err > max_err) {
-					max_err = err;
-				}
-			},
-			output, control
-		);
+#if LOG_PERFORMANCE
+        for (int i = 0; i < 99; ++i)
+        {
+            renderPolynomialSurface(
+                command_queue, program, control.width(), control.height(), ps.coeffs()
+            );
+        }
+        ptimer.print(("[ps-render x100] "+device.getInfo<CL_DEVICE_NAME>() + ": ").c_str());
+#endif
 
-		BOOST_CHECK_LE(max_err, 1);
+        BOOST_REQUIRE_EQUAL(output.width(), control.width());
+        BOOST_REQUIRE_EQUAL(output.height(), control.height());
 
-	} // for (device)
+        int max_err = 0;
+        rasterOpGeneric(
+            [&max_err](int output, int control)
+        {
+            int const err = std::abs(output - control);
+            if (err > max_err)
+            {
+                max_err = err;
+            }
+        },
+        output, control
+        );
+
+        BOOST_CHECK_LE(max_err, 1);
+
+    } // for (device)
 }
 
 BOOST_AUTO_TEST_SUITE_END();

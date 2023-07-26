@@ -27,66 +27,75 @@
 class ThumbnailLoadResult
 {
 public:
-	enum Status {
-		/**
-		 * \brief Load request has been queued.
-		 *
-		 * This status will never be returned through an asynchronous
-		 * completion handler.
-		 */
-		QUEUED,
+    enum Status
+    {
+        /**
+         * \brief Load request has been queued.
+         *
+         * This status will never be returned through an asynchronous
+         * completion handler.
+         */
+        QUEUED,
 
-		/**
-		 * \brief Thumbnail loaded successfully.
-		 */
-		LOADED,
-		
-		/**
-		 * \brief Thumbnail failed to load.
-		 */
-		LOAD_FAILED,
-		
-		/**
-		 * \brief Request has expired.
-		 *
-		 * Consider the following situation: we scroll our thumbnail
-		 * list from the beginning all the way to the end.  This will
-		 * result in every thumbnail being requested.  If we just
-		 * load them in request order, that would be quite slow and
-		 * inefficient.  It would be nice if we could cancel the load
-		 * requests for items that went out of view.  Unfortunately,
-		 * QGraphicsView doesn't provide "went out of view"
-		 * notifications.  Instead, we load thumbnails starting from
-		 * most recently requested, and expire requests after a certain
-		 * number of newer requests are processed.  If the client is
-		 * still interested in the thumbnail, it may request it again.
-		 */
-		REQUEST_EXPIRED
-	};
-	
-	ThumbnailLoadResult(Status status) : m_status(status) {
-		assert(status != LOADED);
-	}
+        /**
+         * \brief Thumbnail loaded successfully.
+         */
+        LOADED,
 
-	ThumbnailLoadResult(Status status, QPixmap const& pixmap,
-		boost::optional<imageproc::AffineImageTransform> const& pixmap_transform)
-	: m_pixmap(pixmap), m_pixmapTransform(pixmap_transform), m_status(status) {}
-	
-	Status status() const { return m_status; }
-	
-	QPixmap const& pixmap() const { return m_pixmap; }
+        /**
+         * \brief Thumbnail failed to load.
+         */
+        LOAD_FAILED,
 
-	/**
-	 * @see ThumbnailPixmapCache::Item::pixmapTransform
-	 * @note Guaranteed to be set if status() is LOADED.
-	 */
-	boost::optional<imageproc::AffineImageTransform> const& pixmapTransform() const {
-		return m_pixmapTransform;
-	}
+        /**
+         * \brief Request has expired.
+         *
+         * Consider the following situation: we scroll our thumbnail
+         * list from the beginning all the way to the end.  This will
+         * result in every thumbnail being requested.  If we just
+         * load them in request order, that would be quite slow and
+         * inefficient.  It would be nice if we could cancel the load
+         * requests for items that went out of view.  Unfortunately,
+         * QGraphicsView doesn't provide "went out of view"
+         * notifications.  Instead, we load thumbnails starting from
+         * most recently requested, and expire requests after a certain
+         * number of newer requests are processed.  If the client is
+         * still interested in the thumbnail, it may request it again.
+         */
+        REQUEST_EXPIRED
+    };
+
+    ThumbnailLoadResult(Status status) : m_status(status)
+    {
+        assert(status != LOADED);
+    }
+
+    ThumbnailLoadResult(Status status, QPixmap const& pixmap,
+                        boost::optional<imageproc::AffineImageTransform> const& pixmap_transform)
+        : m_pixmap(pixmap), m_pixmapTransform(pixmap_transform), m_status(status) {}
+
+    Status status() const
+    {
+        return m_status;
+    }
+
+    QPixmap const& pixmap() const
+    {
+        return m_pixmap;
+    }
+
+    /**
+     * @see ThumbnailPixmapCache::Item::pixmapTransform
+     * @note Guaranteed to be set if status() is LOADED.
+     */
+    boost::optional<imageproc::AffineImageTransform> const& pixmapTransform() const
+    {
+        return m_pixmapTransform;
+    }
 private:
-	QPixmap m_pixmap;
-	boost::optional<imageproc::AffineImageTransform> m_pixmapTransform;
-	Status m_status;
+    QPixmap m_pixmap;
+    boost::optional<imageproc::AffineImageTransform> m_pixmapTransform;
+    Status m_status;
 };
 
 #endif

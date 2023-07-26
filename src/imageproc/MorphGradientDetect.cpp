@@ -28,26 +28,28 @@ namespace imageproc
 
 GrayImage morphGradientDetectDarkSide(GrayImage const& image, QSize const& area)
 {
-	GrayImage lighter(erodeGray(image, area, 0x00));
-	rasterOpGeneric(
-		[](uint8_t& lighter, uint8_t orig) {
-			lighter -= orig;
-		},
-		lighter, image
-	);
-	return lighter;
+    GrayImage lighter(erodeGray(image, area, 0x00));
+    rasterOpGeneric(
+        [](uint8_t& lighter, uint8_t orig)
+    {
+        lighter -= orig;
+    },
+    lighter, image
+    );
+    return lighter;
 }
 
 GrayImage morphGradientDetectLightSide(GrayImage const& image, QSize const& area)
 {
-	GrayImage darker(dilateGray(image, area, 0xff));
-	rasterOpGeneric(
-		[](uint8_t& darker, uint8_t orig) {
-			darker = orig - darker;
-		},
-		darker, image
-	);
-	return darker;
+    GrayImage darker(dilateGray(image, area, 0xff));
+    rasterOpGeneric(
+        [](uint8_t& darker, uint8_t orig)
+    {
+        darker = orig - darker;
+    },
+    darker, image
+    );
+    return darker;
 }
 
 } // namespace imageproc

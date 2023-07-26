@@ -35,33 +35,33 @@ class QImage;
 
 namespace fix_orientation
 {
-	class Task;
+class Task;
 }
 
 class LoadFileTask : public BackgroundTask
 {
-	DECLARE_NON_COPYABLE(LoadFileTask)
+    DECLARE_NON_COPYABLE(LoadFileTask)
 public:
-	LoadFileTask(Type type, PageInfo const& page,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		IntrusivePtr<ProjectPages> const& pages,
-		IntrusivePtr<fix_orientation::Task> const& next_task);
-	
-	virtual ~LoadFileTask();
-	
-	virtual FilterResultPtr operator()();
+    LoadFileTask(Type type, PageInfo const& page,
+                 std::shared_ptr<AcceleratableOperations> const& accel_ops,
+                 IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+                 IntrusivePtr<ProjectPages> const& pages,
+                 IntrusivePtr<fix_orientation::Task> const& next_task);
+
+    virtual ~LoadFileTask();
+
+    virtual FilterResultPtr operator()();
 private:
-	class ErrorResult;
-	
-	void updateImageSizeIfChanged(QImage const& image);
-	
-	std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-	IntrusivePtr<ThumbnailPixmapCache> m_ptrThumbnailCache;
-	PageId m_pageId;
-	ImageMetadata m_imageMetadata;
-	IntrusivePtr<ProjectPages> const m_ptrPages;
-	IntrusivePtr<fix_orientation::Task> const m_ptrNextTask;
+    class ErrorResult;
+
+    void updateImageSizeIfChanged(QImage const& image);
+
+    std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
+    IntrusivePtr<ThumbnailPixmapCache> m_ptrThumbnailCache;
+    PageId m_pageId;
+    ImageMetadata m_imageMetadata;
+    IntrusivePtr<ProjectPages> const m_ptrPages;
+    IntrusivePtr<fix_orientation::Task> const m_ptrNextTask;
 };
 
 #endif

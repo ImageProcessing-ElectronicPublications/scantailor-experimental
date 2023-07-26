@@ -25,26 +25,26 @@
 
 class TabbedDebugImages : public QTabWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	TabbedDebugImages(QWidget* parent = 0);
+    TabbedDebugImages(QWidget* parent = 0);
 private slots:
-	void currentTabChanged(int idx);
+    void currentTabChanged(int idx);
 private:
-	typedef boost::intrusive::list<
-		DebugImageView, boost::intrusive::constant_time_size<false>
-	> DebugViewList;
+    typedef boost::intrusive::list<
+    DebugImageView, boost::intrusive::constant_time_size<false>
+    > DebugViewList;
 
-	enum { MAX_LIVE_VIEWS = 3 };
+    enum { MAX_LIVE_VIEWS = 3 };
 
-	void removeExcessLiveViews();
+    void removeExcessLiveViews();
 
-	/**
-	 * We don't want to keep all the debug images in memory.  We normally keep
-	 * only a few of them.  This list holds references to them in the order
-	 * they become live.
-	 */
-	DebugViewList m_liveViews;
+    /**
+     * We don't want to keep all the debug images in memory.  We normally keep
+     * only a few of them.  This list holds references to them in the order
+     * they become live.
+     */
+    DebugViewList m_liveViews;
 };
 
 #endif

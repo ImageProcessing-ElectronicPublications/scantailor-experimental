@@ -33,66 +33,74 @@ namespace page_layout
 {
 
 PageLayout::PageLayout(
-	QRectF const& unscaled_content_rect, QSizeF const& aggregate_hard_size,
-	MatchSizeMode const& match_size_mode, Alignment const& alignment,
-	RelativeMargins const& margins)
+    QRectF const& unscaled_content_rect, QSizeF const& aggregate_hard_size,
+    MatchSizeMode const& match_size_mode, Alignment const& alignment,
+    RelativeMargins const& margins)
 {
-	m_innerRect = unscaled_content_rect;
-	m_scaleFactor = 1.0;
+    m_innerRect = unscaled_content_rect;
+    m_scaleFactor = 1.0;
 
-	// An empty unscaled_content_rect is a special case to indicate
-	// a missing content box. In this case, we want the geometry
-	// we would get with zero hard margins and MatchSizeMode::GROW_MARGINS.
-	bool const have_content_box = !unscaled_content_rect.isEmpty();
+    // An empty unscaled_content_rect is a special case to indicate
+    // a missing content box. In this case, we want the geometry
+    // we would get with zero hard margins and MatchSizeMode::GROW_MARGINS.
+    bool const have_content_box = !unscaled_content_rect.isEmpty();
 
-	if (have_content_box && match_size_mode.get() == MatchSizeMode::SCALE) {
-		// aggregate_size = content_size * scale + margins * width * scale
-		// Solving for scale:
-		// scale = aggregate_size / (content_size + margins * width)
-		qreal const x_scale = aggregate_hard_size.width() /
-			(m_innerRect.width() + (margins.left() + margins.right()) * m_innerRect.width());
-		qreal const y_scale = aggregate_hard_size.height() /
-			(m_innerRect.height() + (margins.top() + margins.bottom()) * m_innerRect.width());
+    if (have_content_box && match_size_mode.get() == MatchSizeMode::SCALE)
+    {
+        // aggregate_size = content_size * scale + margins * width * scale
+        // Solving for scale:
+        // scale = aggregate_size / (content_size + margins * width)
+        qreal const x_scale = aggregate_hard_size.width() /
+                              (m_innerRect.width() + (margins.left() + margins.right()) * m_innerRect.width());
+        qreal const y_scale = aggregate_hard_size.height() /
+                              (m_innerRect.height() + (margins.top() + margins.bottom()) * m_innerRect.width());
 
-		if (x_scale > 1.0 && y_scale > 1.0) {
-			m_scaleFactor = std::min(x_scale, y_scale);
-		} else if (x_scale < 1.0 && y_scale < 1.0) {
-			m_scaleFactor = std::max(x_scale, y_scale);
-		}
+        if (x_scale > 1.0 && y_scale > 1.0)
+        {
+            m_scaleFactor = std::min(x_scale, y_scale);
+        }
+        else if (x_scale < 1.0 && y_scale < 1.0)
+        {
+            m_scaleFactor = std::max(x_scale, y_scale);
+        }
 
-		// The rectangle needs to be both shifted and scaled,
-		// as that's what AbstractImageTransform::scale() does,
-		// which we call in absorbScalingIntoTransform().
-		m_innerRect = QRectF(
-			m_innerRect.topLeft() * m_scaleFactor,
-			m_innerRect.bottomRight() * m_scaleFactor
-		);
-	}
+        // The rectangle needs to be both shifted and scaled,
+        // as that's what AbstractImageTransform::scale() does,
+        // which we call in absorbScalingIntoTransform().
+        m_innerRect = QRectF(
+                          m_innerRect.topLeft() * m_scaleFactor,
+                          m_innerRect.bottomRight() * m_scaleFactor
+                      );
+    }
 
-	if (have_content_box) {
-		m_middleRect = margins.extendContentRect(m_innerRect);
-	} else {
-		m_middleRect = m_innerRect;
-	}
+    if (have_content_box)
+    {
+        m_middleRect = margins.extendContentRect(m_innerRect);
+    }
+    else
+    {
+        m_middleRect = m_innerRect;
+    }
 
-	QMarginsF const soft_margins(
-		Utils::calcSoftMarginsPx(
-			m_middleRect.size(), aggregate_hard_size, match_size_mode, alignment
-		)
-	);
+    QMarginsF const soft_margins(
+        Utils::calcSoftMarginsPx(
+            m_middleRect.size(), aggregate_hard_size, match_size_mode, alignment
+        )
+    );
 
-	m_outerRect = m_middleRect.adjusted(
-		-soft_margins.left(), -soft_margins.top(),
-		soft_margins.right(), soft_margins.bottom()
-	);
+    m_outerRect = m_middleRect.adjusted(
+                      -soft_margins.left(), -soft_margins.top(),
+                      soft_margins.right(), soft_margins.bottom()
+                  );
 }
 
 void
 PageLayout::absorbScalingIntoTransform(AbstractImageTransform& transform) const
 {
-	if (m_scaleFactor != 1.0) {
-		transform.scale(m_scaleFactor, m_scaleFactor);
-	}
+    if (m_scaleFactor != 1.0)
+    {
+        transform.scale(m_scaleFactor, m_scaleFactor);
+    }
 }
 
 } // namespace page_layout

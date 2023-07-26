@@ -55,246 +55,264 @@ namespace imageproc
 class IMAGEPROC_EXPORT BinaryImage
 {
 public:
-	/**
-	 * \brief Creates a null image.
-	 */
-	BinaryImage();
-	
-	/**
-	 * \brief Creates a new image.  Image data will be uninitialized.
-	 *
-	 * To initialize image data, use fill().
-	 */
-	BinaryImage(int width, int height);
-	
-	/**
-	 * \brief Creates a new image.  Image data will be uninitialized.
-	 *
-	 * To initialize image data, use fill().
-	 */
-	BinaryImage(QSize size);
-	
-	/**
-	 * \brief Creates a new image filled with specified color.
-	 */
-	BinaryImage(int width, int height, BWColor color);
-	
-	/**
-	 * \brief Creates a new image filled with specified color.
-	 */
-	BinaryImage(QSize size, BWColor color);
-	
-	/**
-	 * \brief Create a copy of another image.  Copy-on-write is used.
-	 */
-	BinaryImage(BinaryImage const& other);
-	
-	/**
-	 * \brief Create a new image by copying the contents of a QImage.
-	 *
-	 * Colors in a QImage are converted to gray first, and then
-	 * compared against the provided threshold.
-	 */
-	explicit BinaryImage(
-		QImage const& image, BinaryThreshold threshold = BinaryThreshold(128));
-	
-	/**
-	 * \brief Create a new image by copying a part of a QImage.
-	 *
-	 * \p rect Must be within image.rect().  If \p rect is empty,
-	 * a null BinaryImage is constructed.
-	 *
-	 * Colors in a QImage are converted to gray first, and then
-	 * compared against the provided threshold.
-	 */
-	explicit BinaryImage(
-		QImage const& image, QRect const& rect,
-		BinaryThreshold threshold = BinaryThreshold(128));
-	
-	~BinaryImage();
-	
-	/**
-	 * \brief Replaces the current image with a copy of another one.
-	 *
-	 * Copy-on-write is used.  This means that several images will share
-	 * their data, until one of them accesses it in a non-const way,
-	 * which is when a private copy of data is created for that image.
-	 */
-	BinaryImage& operator=(BinaryImage const& other);
-	
-	/**
-	 * \brief Returns true if the image is null.
-	 *
-	 * Null images have zero width, height and wordsPerLine.
-	 */
-	bool isNull() const { return !m_pData; }
-	
-	/**
-	 * \brief Swaps two images.
-	 *
-	 * This operations doesn't copy data, it just swaps pointers to it.
-	 */
-	void swap(BinaryImage& other);
-	
-	/**
-	 * \brief Release the image data and return it as a new image.
-	 *
-	 * This object becomes null and its data is returned as a new image.
-	 */
-	BinaryImage release();
-	
-	/**
-	 * \brief Invert black and white colors.
-	 */
-	void invert();
-	
-	/**
-	 * \brief Creates an inverted version of this image.
-	 */
-	BinaryImage inverted() const;
-	
-	/**
-	 * \brief Fills the whole image with either white or black color.
-	 */
-	void fill(BWColor color);
-	
-	/**
-	 * \brief Fills a portion of the image with either white or black color.
-	 *
-	 * If the bounding rectangle exceedes the image area, it's automatically truncated.
-	 */
-	void fill(QRect const& rect, BWColor color);
-	
-	/**
-	 * \brief Fills a portion of the image with either white or black color.
-	 *
-	 * If the bounding rectangle exceedes the image area, it's automatically truncated.
-	 */
-	void fillExcept(QRect const& rect, BWColor color);
-	
-	/**
-	 * \brief Fills the area inside outer_rect but not inside inner_rect.
-	 *
-	 * If inner or outer rectangles exceed the image area, or if inner rectangle
-	 * exceedes the outer rectangle area, they will be automatically truncated.
-	 */
-	void fillFrame(QRect const& outer_rect, QRect const& inner_rect, BWColor color);
-	
-	int countBlackPixels() const;
-	
-	int countWhitePixels() const;
-	
-	/**
-	 * \brief Return the number of black pixels in a specified area.
-	 *
-	 * The specified rectangle is allowed to extend beyond the image area.
-	 * In this case, pixels that are outside of the image won't be counted.
-	 */
-	int countBlackPixels(QRect const& rect) const;
-	
-	/**
-	 * \brief Return the number of white pixels in a specified area.
-	 *
-	 * The specified rectangle is allowed to extend beyond the image area.
-	 * In this case, pixels that are outside of the image won't be counted.
-	 */
-	int countWhitePixels(QRect const& rect) const;
-	
-	/**
-	 * \brief Calculates the bounding box of either black or white content.
-	 */
-	QRect contentBoundingBox(BWColor content_color = BLACK) const;
-	
-	int width() const { return m_width; }
-	
-	int height() const { return m_height; }
-	
-	QRect rect() const { return QRect(0, 0, m_width, m_height); }
-	
-	QSize size() const { return QSize(m_width, m_height); }
-	
-	/**
-	 * \brief Returns the number of 32bit words per line.
-	 *
-	 * This value is usually (width + 31) / 32, but it can also
-	 * be bigger than that.
-	 */
-	int wordsPerLine() const { return m_wpl; }
-	
-	/**
-	 * \brief Returns a pointer to non-const image data.
-	 * \return Image data, or 0 in case of a null image.
-	 *
-	 * This may trigger copy-on-write.  The pointer returned is only
-	 * valid until you create a copy of this image.  After that, both
-	 * images will share the same data, and you will need to call
-	 * data() again if you want to continue writing to this image.
-	 */
-	uint32_t* data();
-	
-	/**
-	 * \brief Returns a pointer to const image data.
-	 * \return Image data, or 0 in case of a null image.
-	 *
-	 * The pointer returned is only valid until call a non-const
-	 * version of data(), because that may trigger copy-on-write.
-	 */
-	uint32_t const* data() const;
-	
-	/**
-	 * \brief Convert to a QImage with Format_Mono.
-	 */
-	QImage toQImage() const;
+    /**
+     * \brief Creates a null image.
+     */
+    BinaryImage();
 
-	/**
-	 * \brief Convert to an ARGB32_Premultiplied image, where white pixels become transparent.
-	 *
-	 * Opaque (black) pixels take the specified color.  Colors with alpha channel are supported.
-	 */
-	QImage toAlphaMask(QColor const& color) const;
+    /**
+     * \brief Creates a new image.  Image data will be uninitialized.
+     *
+     * To initialize image data, use fill().
+     */
+    BinaryImage(int width, int height);
+
+    /**
+     * \brief Creates a new image.  Image data will be uninitialized.
+     *
+     * To initialize image data, use fill().
+     */
+    BinaryImage(QSize size);
+
+    /**
+     * \brief Creates a new image filled with specified color.
+     */
+    BinaryImage(int width, int height, BWColor color);
+
+    /**
+     * \brief Creates a new image filled with specified color.
+     */
+    BinaryImage(QSize size, BWColor color);
+
+    /**
+     * \brief Create a copy of another image.  Copy-on-write is used.
+     */
+    BinaryImage(BinaryImage const& other);
+
+    /**
+     * \brief Create a new image by copying the contents of a QImage.
+     *
+     * Colors in a QImage are converted to gray first, and then
+     * compared against the provided threshold.
+     */
+    explicit BinaryImage(
+        QImage const& image, BinaryThreshold threshold = BinaryThreshold(128));
+
+    /**
+     * \brief Create a new image by copying a part of a QImage.
+     *
+     * \p rect Must be within image.rect().  If \p rect is empty,
+     * a null BinaryImage is constructed.
+     *
+     * Colors in a QImage are converted to gray first, and then
+     * compared against the provided threshold.
+     */
+    explicit BinaryImage(
+        QImage const& image, QRect const& rect,
+        BinaryThreshold threshold = BinaryThreshold(128));
+
+    ~BinaryImage();
+
+    /**
+     * \brief Replaces the current image with a copy of another one.
+     *
+     * Copy-on-write is used.  This means that several images will share
+     * their data, until one of them accesses it in a non-const way,
+     * which is when a private copy of data is created for that image.
+     */
+    BinaryImage& operator=(BinaryImage const& other);
+
+    /**
+     * \brief Returns true if the image is null.
+     *
+     * Null images have zero width, height and wordsPerLine.
+     */
+    bool isNull() const
+    {
+        return !m_pData;
+    }
+
+    /**
+     * \brief Swaps two images.
+     *
+     * This operations doesn't copy data, it just swaps pointers to it.
+     */
+    void swap(BinaryImage& other);
+
+    /**
+     * \brief Release the image data and return it as a new image.
+     *
+     * This object becomes null and its data is returned as a new image.
+     */
+    BinaryImage release();
+
+    /**
+     * \brief Invert black and white colors.
+     */
+    void invert();
+
+    /**
+     * \brief Creates an inverted version of this image.
+     */
+    BinaryImage inverted() const;
+
+    /**
+     * \brief Fills the whole image with either white or black color.
+     */
+    void fill(BWColor color);
+
+    /**
+     * \brief Fills a portion of the image with either white or black color.
+     *
+     * If the bounding rectangle exceedes the image area, it's automatically truncated.
+     */
+    void fill(QRect const& rect, BWColor color);
+
+    /**
+     * \brief Fills a portion of the image with either white or black color.
+     *
+     * If the bounding rectangle exceedes the image area, it's automatically truncated.
+     */
+    void fillExcept(QRect const& rect, BWColor color);
+
+    /**
+     * \brief Fills the area inside outer_rect but not inside inner_rect.
+     *
+     * If inner or outer rectangles exceed the image area, or if inner rectangle
+     * exceedes the outer rectangle area, they will be automatically truncated.
+     */
+    void fillFrame(QRect const& outer_rect, QRect const& inner_rect, BWColor color);
+
+    int countBlackPixels() const;
+
+    int countWhitePixels() const;
+
+    /**
+     * \brief Return the number of black pixels in a specified area.
+     *
+     * The specified rectangle is allowed to extend beyond the image area.
+     * In this case, pixels that are outside of the image won't be counted.
+     */
+    int countBlackPixels(QRect const& rect) const;
+
+    /**
+     * \brief Return the number of white pixels in a specified area.
+     *
+     * The specified rectangle is allowed to extend beyond the image area.
+     * In this case, pixels that are outside of the image won't be counted.
+     */
+    int countWhitePixels(QRect const& rect) const;
+
+    /**
+     * \brief Calculates the bounding box of either black or white content.
+     */
+    QRect contentBoundingBox(BWColor content_color = BLACK) const;
+
+    int width() const
+    {
+        return m_width;
+    }
+
+    int height() const
+    {
+        return m_height;
+    }
+
+    QRect rect() const
+    {
+        return QRect(0, 0, m_width, m_height);
+    }
+
+    QSize size() const
+    {
+        return QSize(m_width, m_height);
+    }
+
+    /**
+     * \brief Returns the number of 32bit words per line.
+     *
+     * This value is usually (width + 31) / 32, but it can also
+     * be bigger than that.
+     */
+    int wordsPerLine() const
+    {
+        return m_wpl;
+    }
+
+    /**
+     * \brief Returns a pointer to non-const image data.
+     * \return Image data, or 0 in case of a null image.
+     *
+     * This may trigger copy-on-write.  The pointer returned is only
+     * valid until you create a copy of this image.  After that, both
+     * images will share the same data, and you will need to call
+     * data() again if you want to continue writing to this image.
+     */
+    uint32_t* data();
+
+    /**
+     * \brief Returns a pointer to const image data.
+     * \return Image data, or 0 in case of a null image.
+     *
+     * The pointer returned is only valid until call a non-const
+     * version of data(), because that may trigger copy-on-write.
+     */
+    uint32_t const* data() const;
+
+    /**
+     * \brief Convert to a QImage with Format_Mono.
+     */
+    QImage toQImage() const;
+
+    /**
+     * \brief Convert to an ARGB32_Premultiplied image, where white pixels become transparent.
+     *
+     * Opaque (black) pixels take the specified color.  Colors with alpha channel are supported.
+     */
+    QImage toAlphaMask(QColor const& color) const;
 private:
-	class SharedData;
-	
-	BinaryImage(int width, int height, SharedData* data);
-	
-	void copyIfShared();
-	
-	void fillRectImpl(uint32_t* data, QRect const& rect, BWColor color);
-	
-	static BinaryImage fromMono(QImage const& image);
-	
-	static BinaryImage fromMono(QImage const& image, QRect const& rect);
-	
-	static BinaryImage fromMonoLSB(QImage const& image);
-	
-	static BinaryImage fromMonoLSB(QImage const& image, QRect const& rect);
-	
-	static BinaryImage fromIndexed8(
-		QImage const& image, QRect const& rect, int threshold);
-	
-	static BinaryImage fromRgb32(
-		QImage const& image, QRect const& rect, int threshold);
-	
-	static BinaryImage fromArgb32Premultiplied(
-		QImage const& image, QRect const& rect, int threshold);
-	
-	static BinaryImage fromRgb16(
-		QImage const& image, QRect const& rect, int threshold);
-	
-	static bool isLineMonotone(
-		uint32_t const* line, int last_word_idx,
-		uint32_t last_word_mask, uint32_t modifier);
-	
-	static int leftmostBitOffset(
-		uint32_t const* line, int offset_limit, uint32_t modifier);
-	
-	static int rightmostBitOffset(
-		uint32_t const* line, int offset_limit, uint32_t modifier);
-	
-	SharedData* m_pData;
-	int m_width;
-	int m_height;
-	int m_wpl; // words per line
+    class SharedData;
+
+    BinaryImage(int width, int height, SharedData* data);
+
+    void copyIfShared();
+
+    void fillRectImpl(uint32_t* data, QRect const& rect, BWColor color);
+
+    static BinaryImage fromMono(QImage const& image);
+
+    static BinaryImage fromMono(QImage const& image, QRect const& rect);
+
+    static BinaryImage fromMonoLSB(QImage const& image);
+
+    static BinaryImage fromMonoLSB(QImage const& image, QRect const& rect);
+
+    static BinaryImage fromIndexed8(
+        QImage const& image, QRect const& rect, int threshold);
+
+    static BinaryImage fromRgb32(
+        QImage const& image, QRect const& rect, int threshold);
+
+    static BinaryImage fromArgb32Premultiplied(
+        QImage const& image, QRect const& rect, int threshold);
+
+    static BinaryImage fromRgb16(
+        QImage const& image, QRect const& rect, int threshold);
+
+    static bool isLineMonotone(
+        uint32_t const* line, int last_word_idx,
+        uint32_t last_word_mask, uint32_t modifier);
+
+    static int leftmostBitOffset(
+        uint32_t const* line, int offset_limit, uint32_t modifier);
+
+    static int rightmostBitOffset(
+        uint32_t const* line, int offset_limit, uint32_t modifier);
+
+    SharedData* m_pData;
+    int m_width;
+    int m_height;
+    int m_wpl; // words per line
 };
 
 
@@ -302,17 +320,21 @@ private:
 class IMAGEPROC_EXPORT ConstBinaryImageLineAccessor
 {
 public:
-	explicit ConstBinaryImageLineAccessor(BinaryImage const& image)
-		: m_pLine(image.data()), m_stride(image.wordsPerLine()) {}
+    explicit ConstBinaryImageLineAccessor(BinaryImage const& image)
+        : m_pLine(image.data()), m_stride(image.wordsPerLine()) {}
 
-	uint32_t operator[](ptrdiff_t x) const {
-		return (m_pLine[x >> 5] >> (31 - (x & 31))) & uint32_t(1);
-	}
+    uint32_t operator[](ptrdiff_t x) const
+    {
+        return (m_pLine[x >> 5] >> (31 - (x & 31))) & uint32_t(1);
+    }
 
-	void nextLine() { m_pLine += m_stride; }
+    void nextLine()
+    {
+        m_pLine += m_stride;
+    }
 private:
-	uint32_t const* m_pLine;
-	ptrdiff_t m_stride;
+    uint32_t const* m_pLine;
+    ptrdiff_t m_stride;
 };
 
 
@@ -320,46 +342,50 @@ private:
 class IMAGEPROC_EXPORT MutableBinaryImageLineAccessor
 {
 public:
-	explicit MutableBinaryImageLineAccessor(BinaryImage& image)
-		: m_pLine(image.data()), m_stride(image.wordsPerLine()) {}
+    explicit MutableBinaryImageLineAccessor(BinaryImage& image)
+        : m_pLine(image.data()), m_stride(image.wordsPerLine()) {}
 
-	BWPixelProxy operator[](ptrdiff_t x) const {
-		return BWPixelProxy(m_pLine[x >> 5], x & 31);
-	}
+    BWPixelProxy operator[](ptrdiff_t x) const
+    {
+        return BWPixelProxy(m_pLine[x >> 5], x & 31);
+    }
 
-	void nextLine() { m_pLine += m_stride; }
+    void nextLine()
+    {
+        m_pLine += m_stride;
+    }
 private:
-	uint32_t* m_pLine;
-	ptrdiff_t m_stride;
+    uint32_t* m_pLine;
+    ptrdiff_t m_stride;
 };
 
 inline ConstBinaryImageLineAccessor createLineAccessor(BinaryImage const& image)
 {
-	return ConstBinaryImageLineAccessor(image);
+    return ConstBinaryImageLineAccessor(image);
 }
 
 inline MutableBinaryImageLineAccessor createLineAccessor(BinaryImage& image)
 {
-	return MutableBinaryImageLineAccessor(image);
+    return MutableBinaryImageLineAccessor(image);
 }
 
 
 inline std::tuple<int, int> extractDimensions(BinaryImage const& image)
 {
-	return std::make_tuple(image.width(), image.height());
+    return std::make_tuple(image.width(), image.height());
 }
 
 inline void swap(BinaryImage& o1, BinaryImage& o2)
 {
-	o1.swap(o2);
+    o1.swap(o2);
 }
 
 inline BinaryImage
 BinaryImage::release()
 {
-	BinaryImage new_img;
-	new_img.swap(*this);
-	return new_img;
+    BinaryImage new_img;
+    new_img.swap(*this);
+    return new_img;
 }
 
 /**
@@ -372,7 +398,7 @@ IMAGEPROC_EXPORT bool operator==(BinaryImage const& lhs, BinaryImage const& rhs)
  */
 inline bool operator!=(BinaryImage const& lhs, BinaryImage const& rhs)
 {
-	return !(lhs == rhs);
+    return !(lhs == rhs);
 }
 
 } // namespace imageproc

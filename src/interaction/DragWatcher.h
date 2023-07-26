@@ -36,21 +36,21 @@ class QMouseEvent;
 class DragWatcher : public InteractionHandler
 {
 public:
-	DragWatcher(DragHandler& drag_handler);
+    DragWatcher(DragHandler& drag_handler);
 
-	bool haveSignificantDrag() const;
+    bool haveSignificantDrag() const;
 protected:
-	virtual void onMousePressEvent(QMouseEvent* event, InteractionState& interaction);
+    virtual void onMousePressEvent(QMouseEvent* event, InteractionState& interaction);
 
-	virtual void onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction);
+    virtual void onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction);
 private:
-	void updateState(QPoint mouse_pos);
+    void updateState(QPoint mouse_pos);
 
-	DragHandler& m_rDragHandler;
-	QDateTime m_dragStartTime;
-	QPoint m_dragStartPos;
-	int m_dragMaxSqDist;
-	bool m_dragInProgress;
+    DragHandler& m_rDragHandler;
+    QDateTime m_dragStartTime;
+    QPoint m_dragStartPos;
+    int m_dragMaxSqDist;
+    bool m_dragInProgress;
 };
 
 #endif

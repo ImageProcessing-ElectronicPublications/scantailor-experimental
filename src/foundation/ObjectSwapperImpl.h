@@ -33,11 +33,11 @@ template<typename Obj>
 class ObjectSwapperImpl
 {
 public:
-	ObjectSwapperImpl(QString const& swap_dir);
+    ObjectSwapperImpl(QString const& swap_dir);
 
-	boost::shared_ptr<Obj> swapIn();
+    boost::shared_ptr<Obj> swapIn();
 
-	void swapOut(boost::shared_ptr<Obj> const& obj);
+    void swapOut(boost::shared_ptr<Obj> const& obj);
 };
 
 #endif

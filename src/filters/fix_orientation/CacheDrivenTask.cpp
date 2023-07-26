@@ -33,10 +33,10 @@ namespace fix_orientation
 {
 
 CacheDrivenTask::CacheDrivenTask(
-	IntrusivePtr<Settings> const& settings,
-	IntrusivePtr<page_split::CacheDrivenTask> const& next_task)
-:	m_ptrNextTask(next_task),
-	m_ptrSettings(settings)
+    IntrusivePtr<Settings> const& settings,
+    IntrusivePtr<page_split::CacheDrivenTask> const& next_task)
+    :	m_ptrNextTask(next_task),
+      m_ptrSettings(settings)
 {
 }
 
@@ -46,37 +46,40 @@ CacheDrivenTask::~CacheDrivenTask()
 
 void
 CacheDrivenTask::process(
-	PageInfo const& page_info, AffineImageTransform const& image_transform,
-	AbstractFilterDataCollector* collector)
-{	
-	OrthogonalRotation const rotation(m_ptrSettings->getRotationFor(page_info.imageId()));
+    PageInfo const& page_info, AffineImageTransform const& image_transform,
+    AbstractFilterDataCollector* collector)
+{
+    OrthogonalRotation const rotation(m_ptrSettings->getRotationFor(page_info.imageId()));
 
-	if (PageOrientationCollector* col = dynamic_cast<PageOrientationCollector*>(collector)) {
-		col->process(rotation);
-	}
+    if (PageOrientationCollector* col = dynamic_cast<PageOrientationCollector*>(collector))
+    {
+        col->process(rotation);
+    }
 
-	AffineImageTransform rotated_transform(image_transform);
-	rotated_transform.rotate(rotation.toDegrees());
+    AffineImageTransform rotated_transform(image_transform);
+    rotated_transform.rotate(rotation.toDegrees());
 
-	if (m_ptrNextTask) {
-		m_ptrNextTask->process(
-			page_info, rotation, std::move(rotated_transform), collector
-		);
-		return;
-	}
-	
-	if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector)) {
-		thumb_col->processThumbnail(
-			std::auto_ptr<QGraphicsItem>(
-				new ThumbnailBase(
-					thumb_col->thumbnailCache(),
-					thumb_col->maxLogicalThumbSize(),
-					page_info.id(),
-					std::move(rotated_transform)
-				)
-			)
-		);
-	}
+    if (m_ptrNextTask)
+    {
+        m_ptrNextTask->process(
+            page_info, rotation, std::move(rotated_transform), collector
+        );
+        return;
+    }
+
+    if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
+    {
+        thumb_col->processThumbnail(
+            std::auto_ptr<QGraphicsItem>(
+                new ThumbnailBase(
+                    thumb_col->thumbnailCache(),
+                    thumb_col->maxLogicalThumbSize(),
+                    page_info.id(),
+                    std::move(rotated_transform)
+                )
+            )
+        );
+    }
 }
 
 } // namespace fix_orientation

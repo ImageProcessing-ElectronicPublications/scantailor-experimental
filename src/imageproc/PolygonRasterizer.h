@@ -35,27 +35,27 @@ class GrayImage;
 class IMAGEPROC_EXPORT PolygonRasterizer
 {
 public:
-	static void fill(
-		BinaryImage& image, BWColor color,
-		QPolygonF const& poly, Qt::FillRule fill_rule);
-	
-	static void fillExcept(
-		BinaryImage& image, BWColor color,
-		QPolygonF const& poly, Qt::FillRule fill_rule);
-	
-	static void fill(
-		GrayImage& image, unsigned char color,
-		QPolygonF const& poly, Qt::FillRule fill_rule);
-	
-	static void fillExcept(
-		GrayImage& image, unsigned char color,
-		QPolygonF const& poly, Qt::FillRule fill_rule);
+    static void fill(
+        BinaryImage& image, BWColor color,
+        QPolygonF const& poly, Qt::FillRule fill_rule);
+
+    static void fillExcept(
+        BinaryImage& image, BWColor color,
+        QPolygonF const& poly, Qt::FillRule fill_rule);
+
+    static void fill(
+        GrayImage& image, unsigned char color,
+        QPolygonF const& poly, Qt::FillRule fill_rule);
+
+    static void fillExcept(
+        GrayImage& image, unsigned char color,
+        QPolygonF const& poly, Qt::FillRule fill_rule);
 private:
-	class Edge;
-	class EdgeComponent;
-	class EdgeOrderY;
-	class EdgeOrderX;
-	class Rasterizer;
+    class Edge;
+    class EdgeComponent;
+    class EdgeOrderY;
+    class EdgeOrderX;
+    class Rasterizer;
 };
 
 } // namespace imageproc

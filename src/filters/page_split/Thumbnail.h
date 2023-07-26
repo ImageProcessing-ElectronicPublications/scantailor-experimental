@@ -33,7 +33,7 @@ class PageId;
 
 namespace imageproc
 {
-	class AffineTransformedImage;
+class AffineTransformedImage;
 }
 
 namespace page_split
@@ -42,24 +42,24 @@ namespace page_split
 class Thumbnail : public ThumbnailBase
 {
 public:
-	Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		QSizeF const& max_display_size, PageId const& page_id,
-		PageLayout const& layout,
-		imageproc::AffineImageTransform const& full_size_image_transform,
-		bool left_half_removed, bool right_half_removed);
-	
-	virtual void paintOverImage(
-		QPainter& painter, QTransform const& transformed_to_display,
-		QTransform const& thumb_to_display);
-private:
-	QPointF subPageCenter(
-		QPolygonF const& left_page, QPolygonF const& right_page,
-		QTransform const& virtual_to_display, int subpage_idx);
+    Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+              QSizeF const& max_display_size, PageId const& page_id,
+              PageLayout const& layout,
+              imageproc::AffineImageTransform const& full_size_image_transform,
+              bool left_half_removed, bool right_half_removed);
 
-	PageLayout m_layout;
-	QPixmap m_trashPixmap;
-	bool m_leftHalfRemoved;
-	bool m_rightHalfRemoved;
+    virtual void paintOverImage(
+        QPainter& painter, QTransform const& transformed_to_display,
+        QTransform const& thumb_to_display);
+private:
+    QPointF subPageCenter(
+        QPolygonF const& left_page, QPolygonF const& right_page,
+        QTransform const& virtual_to_display, int subpage_idx);
+
+    PageLayout m_layout;
+    QPixmap m_trashPixmap;
+    bool m_leftHalfRemoved;
+    bool m_rightHalfRemoved;
 };
 
 } // namespace page_split

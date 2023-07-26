@@ -25,19 +25,19 @@ namespace imageproc
 {
 
 AffineTransformedImage::AffineTransformedImage(QImage const& image)
-:	m_origImage(image)
-,	m_xform(image.size())
+    :	m_origImage(image)
+    ,	m_xform(image.size())
 {
-	assert(!m_origImage.isNull());
+    assert(!m_origImage.isNull());
 }
 
 AffineTransformedImage::AffineTransformedImage(
-	QImage const& image, AffineImageTransform const& xform)
-:	m_origImage(image)
-,	m_xform(xform)
+    QImage const& image, AffineImageTransform const& xform)
+    :	m_origImage(image)
+    ,	m_xform(xform)
 {
-	assert(!m_origImage.isNull());
-	assert(m_xform.origSize() == m_origImage.size());
+    assert(!m_origImage.isNull());
+    assert(m_xform.origSize() == m_origImage.size());
 }
 
 } // namespace imageproc

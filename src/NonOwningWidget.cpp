@@ -20,15 +20,17 @@
 #include <boost/foreach.hpp>
 
 NonOwningWidget::NonOwningWidget(QWidget* parent)
-:	QWidget(parent)
+    :	QWidget(parent)
 {
 }
 
 NonOwningWidget::~NonOwningWidget()
 {
-	BOOST_FOREACH(QObject* child, children()) {
-		if (QWidget* widget = dynamic_cast<QWidget*>(child)) {
-			widget->setParent(0);
-		}
-	}
+    BOOST_FOREACH(QObject* child, children())
+    {
+        if (QWidget* widget = dynamic_cast<QWidget*>(child))
+        {
+            widget->setParent(0);
+        }
+    }
 }

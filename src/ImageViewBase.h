@@ -62,392 +62,434 @@ class AcceleratableOperations;
  */
 class ImageViewBase : public QAbstractScrollArea
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	enum FocalPointMode { CENTER_IF_FITS, DONT_CENTER };
+    enum FocalPointMode { CENTER_IF_FITS, DONT_CENTER };
 
-	/**
-	 * \brief ImageViewBase constructor.
-	 *
-	 * \param accel_ops OpenCL-acceleratable operations.
-	 * \param image The image to display.
-	 * \param downscaled_version The downscaled version of \p image.
-	 *        If it's null, it will be created automatically.
-	 *        The exact scale doesn't matter.
-	 *        The whole idea of having a downscaled version is
-	 *        to speed up real-time rendering of high-resolution
-	 *        images.  Note that the delayed high quality transform
-	 *        operates on the original image, not the downscaled one.
-	 * \param presentation Specifies transformation from image
-	 *        pixel coordinates to virtual image coordinates, along
-	 *        with some other properties.
-	 * \param margins Reserve extra space near the widget borders.
-	 *        The units are widget pixels.  This reserved area may
-	 *        be used for custom drawing or custom controls.
-	 */
-	ImageViewBase(
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		QImage const& image, ImagePixmapUnion const& downscaled_version,
-		ImagePresentation const& presentation,
-		QMarginsF const& margins = QMarginsF());
-	
-	virtual ~ImageViewBase();
+    /**
+     * \brief ImageViewBase constructor.
+     *
+     * \param accel_ops OpenCL-acceleratable operations.
+     * \param image The image to display.
+     * \param downscaled_version The downscaled version of \p image.
+     *        If it's null, it will be created automatically.
+     *        The exact scale doesn't matter.
+     *        The whole idea of having a downscaled version is
+     *        to speed up real-time rendering of high-resolution
+     *        images.  Note that the delayed high quality transform
+     *        operates on the original image, not the downscaled one.
+     * \param presentation Specifies transformation from image
+     *        pixel coordinates to virtual image coordinates, along
+     *        with some other properties.
+     * \param margins Reserve extra space near the widget borders.
+     *        The units are widget pixels.  This reserved area may
+     *        be used for custom drawing or custom controls.
+     */
+    ImageViewBase(
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        QImage const& image, ImagePixmapUnion const& downscaled_version,
+        ImagePresentation const& presentation,
+        QMarginsF const& margins = QMarginsF());
 
-	/**
-	 * The idea behind this accessor is being able to share a single
-	 * downscaled pixmap between multiple image views.
-	 */
-	QPixmap const& downscaledPixmap() const { return m_pixmap; }
-	
-	/**
-	 * \brief Enable or disable the high-quality transform.
-	 */
-	void hqTransformSetEnabled(bool enabled);
-	
-	/**
-	 * \brief A stand-alone function to create a downscaled image
-	 *        to be passed to the constructor.
-	 *
-	 * The point of using this function instead of letting
-	 * the constructor do the job is that this function may
-	 * be called from a background thread, while the constructor
-	 * can't.
-	 *
-	 * \param image The input image, not null, and with DPI set correctly.
-	 * \param accel_ops OpenCL-acceleratable operations.
-	 * \return The image downscaled by an unspecified degree.
-	 */
-	static QImage createDownscaledImage(
-		QImage const& image, std::shared_ptr<AcceleratableOperations> const& accel_ops);
+    virtual ~ImageViewBase();
 
-	InteractionHandler& rootInteractionHandler() { return m_rootInteractionHandler; }
+    /**
+     * The idea behind this accessor is being able to share a single
+     * downscaled pixmap between multiple image views.
+     */
+    QPixmap const& downscaledPixmap() const
+    {
+        return m_pixmap;
+    }
 
-	InteractionState& interactionState() { return m_interactionState; }
+    /**
+     * \brief Enable or disable the high-quality transform.
+     */
+    void hqTransformSetEnabled(bool enabled);
 
-	InteractionState const& interactionState() const { return m_interactionState; }
+    /**
+     * \brief A stand-alone function to create a downscaled image
+     *        to be passed to the constructor.
+     *
+     * The point of using this function instead of letting
+     * the constructor do the job is that this function may
+     * be called from a background thread, while the constructor
+     * can't.
+     *
+     * \param image The input image, not null, and with DPI set correctly.
+     * \param accel_ops OpenCL-acceleratable operations.
+     * \return The image downscaled by an unspecified degree.
+     */
+    static QImage createDownscaledImage(
+        QImage const& image, std::shared_ptr<AcceleratableOperations> const& accel_ops);
 
-	QTransform const& imageToVirtual() const { return m_imageToVirtual; }
+    InteractionHandler& rootInteractionHandler()
+    {
+        return m_rootInteractionHandler;
+    }
 
-	QTransform const& virtualToImage() const { return m_virtualToImage; }
+    InteractionState& interactionState()
+    {
+        return m_interactionState;
+    }
 
-	QTransform const& virtualToWidget() const { return m_virtualToWidget; }
+    InteractionState const& interactionState() const
+    {
+        return m_interactionState;
+    }
 
-	QTransform const& widgetToVirtual() const { return m_widgetToVirtual; }
+    QTransform const& imageToVirtual() const
+    {
+        return m_imageToVirtual;
+    }
 
-	QTransform imageToWidget() const { return m_imageToVirtual * m_virtualToWidget; }
+    QTransform const& virtualToImage() const
+    {
+        return m_virtualToImage;
+    }
 
-	QTransform widgetToImage() const { return m_widgetToVirtual * m_virtualToImage; }
+    QTransform const& virtualToWidget() const
+    {
+        return m_virtualToWidget;
+    }
 
-	void update() { viewport()->update(); }
+    QTransform const& widgetToVirtual() const
+    {
+        return m_widgetToVirtual;
+    }
 
-	QRectF const& virtualDisplayRect() const { return m_virtualDisplayArea; }
+    QTransform imageToWidget() const
+    {
+        return m_imageToVirtual * m_virtualToWidget;
+    }
 
-	/**
-	 * Get the bounding box of the image as it appears on the screen,
-	 * in widget coordinates.
-	 */
-	QRectF getOccupiedWidgetRect() const;
+    QTransform widgetToImage() const
+    {
+        return m_widgetToVirtual * m_virtualToImage;
+    }
 
-	/**
-	 * \brief A better version of setStatusTip().
-	 *
-	 * Unlike setStatusTip(), this method will display the tooltip
-	 * immediately, not when the mouse enters the widget next time.
-	 */
-	void ensureStatusTip(QString const& status_tip);
+    void update()
+    {
+        viewport()->update();
+    }
 
-	/**
-	 * \brief Get the focal point in widget coordinates.
-	 *
-	 * The typical usage pattern for this function is:
-	 * \code
-	 * QPointF fp(obj.getWidgetFocalPoint());
-	 * obj.setWidgetFocalPoint(fp + delta);
-	 * \endcode
-	 * As a result, the image will be moved by delta widget pixels.
-	 */
-	QPointF getWidgetFocalPoint() const { return m_widgetFocalPoint; }
+    QRectF const& virtualDisplayRect() const
+    {
+        return m_virtualDisplayArea;
+    }
 
-	/**
-	 * \brief Set the focal point in widget coordinates.
-	 *
-	 * This one may be used for unrestricted dragging (with Shift button).
-	 *
-	 * \see getWidgetFocalPoint()
-	 */
-	void setWidgetFocalPoint(QPointF const& widget_fp);
+    /**
+     * Get the bounding box of the image as it appears on the screen,
+     * in widget coordinates.
+     */
+    QRectF getOccupiedWidgetRect() const;
 
-	/**
-	 * \brief Set the focal point in widget coordinates, after adjustring
-	 *        it to avoid wasting of widget space.
-	 *
-	 * This one may be used for resticted dragging (the default one in ST).
-	 *
-	 * \see getWidgetFocalPoint()
-	 * \see setWidgetFocalPoint()
-	 */
-	void adjustAndSetWidgetFocalPoint(QPointF const& widget_fp);
+    /**
+     * \brief A better version of setStatusTip().
+     *
+     * Unlike setStatusTip(), this method will display the tooltip
+     * immediately, not when the mouse enters the widget next time.
+     */
+    void ensureStatusTip(QString const& status_tip);
 
-	/**
-	 * \brief Sets the widget focal point and recalculates the pixmap focal
-	 *        focal point so that the image is not moved on screen.
-	 */
-	void setWidgetFocalPointWithoutMoving(QPointF new_widget_fp);
+    /**
+     * \brief Get the focal point in widget coordinates.
+     *
+     * The typical usage pattern for this function is:
+     * \code
+     * QPointF fp(obj.getWidgetFocalPoint());
+     * obj.setWidgetFocalPoint(fp + delta);
+     * \endcode
+     * As a result, the image will be moved by delta widget pixels.
+     */
+    QPointF getWidgetFocalPoint() const
+    {
+        return m_widgetFocalPoint;
+    }
 
-	/**
-	 * \brief Updates image-to-virtual and recalculates
-	 *        virtual-to-widget transformations.
-	 */
-	void updateTransform(ImagePresentation const& presentation);
+    /**
+     * \brief Set the focal point in widget coordinates.
+     *
+     * This one may be used for unrestricted dragging (with Shift button).
+     *
+     * \see getWidgetFocalPoint()
+     */
+    void setWidgetFocalPoint(QPointF const& widget_fp);
 
-	/**
-	 * \brief Same as updateTransform(), but adjusts the focal point
-	 *        to improve screen space usage.
-	 */
-	void updateTransformAndFixFocalPoint(
-		ImagePresentation const& presentation, FocalPointMode mode);
+    /**
+     * \brief Set the focal point in widget coordinates, after adjustring
+     *        it to avoid wasting of widget space.
+     *
+     * This one may be used for resticted dragging (the default one in ST).
+     *
+     * \see getWidgetFocalPoint()
+     * \see setWidgetFocalPoint()
+     */
+    void adjustAndSetWidgetFocalPoint(QPointF const& widget_fp);
 
-	/**
-	 * \brief Same as updateTransform(), but preserves the visual image scale.
-	 */
-	void updateTransformPreservingScale(ImagePresentation const& presentation);
+    /**
+     * \brief Sets the widget focal point and recalculates the pixmap focal
+     *        focal point so that the image is not moved on screen.
+     */
+    void setWidgetFocalPointWithoutMoving(QPointF new_widget_fp);
 
-	/**
-	 * \brief Sets the zoom level.
-	 *
-	 * Zoom level 1.0 means such a zoom that makes the image fit the widget.
-	 * Zooming will take into account the current widget and pixmap focal
-	 * points.  To zoom to a specific point, for example the mouse position,
-	 * call setWidgetFocalPointWithoutMoving() first.
-	 */
-	void setZoomLevel(double zoom);
+    /**
+     * \brief Updates image-to-virtual and recalculates
+     *        virtual-to-widget transformations.
+     */
+    void updateTransform(ImagePresentation const& presentation);
 
-	/**
-	 * \brief Returns the current zoom level.
-	 * \see setZoomLevel()
-	 */
-	double zoomLevel() const { return m_zoom; }
+    /**
+     * \brief Same as updateTransform(), but adjusts the focal point
+     *        to improve screen space usage.
+     */
+    void updateTransformAndFixFocalPoint(
+        ImagePresentation const& presentation, FocalPointMode mode);
 
-	/**
-	 * The image is considered ideally positioned when as little as possible
-	 * screen space is wasted.
-	 *
-	 * \param pixel_length The euclidean distance in widget pixels to move the image.
-	 *        Will be clipped if it's more than required to reach the ideal position.
-	 */
-	void moveTowardsIdealPosition(double pixel_length);
+    /**
+     * \brief Same as updateTransform(), but preserves the visual image scale.
+     */
+    void updateTransformPreservingScale(ImagePresentation const& presentation);
 
-	static BackgroundExecutor& backgroundExecutor();
+    /**
+     * \brief Sets the zoom level.
+     *
+     * Zoom level 1.0 means such a zoom that makes the image fit the widget.
+     * Zooming will take into account the current widget and pixmap focal
+     * points.  To zoom to a specific point, for example the mouse position,
+     * call setWidgetFocalPointWithoutMoving() first.
+     */
+    void setZoomLevel(double zoom);
+
+    /**
+     * \brief Returns the current zoom level.
+     * \see setZoomLevel()
+     */
+    double zoomLevel() const
+    {
+        return m_zoom;
+    }
+
+    /**
+     * The image is considered ideally positioned when as little as possible
+     * screen space is wasted.
+     *
+     * \param pixel_length The euclidean distance in widget pixels to move the image.
+     *        Will be clipped if it's more than required to reach the ideal position.
+     */
+    void moveTowardsIdealPosition(double pixel_length);
+
+    static BackgroundExecutor& backgroundExecutor();
 protected:
-	virtual void paintEvent(QPaintEvent* event);
+    virtual void paintEvent(QPaintEvent* event);
 
-	virtual void keyPressEvent(QKeyEvent* event);
+    virtual void keyPressEvent(QKeyEvent* event);
 
-	virtual void keyReleaseEvent(QKeyEvent* event);
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
-	virtual void mousePressEvent(QMouseEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
 
-	virtual void mouseReleaseEvent(QMouseEvent* event);
+    virtual void mouseReleaseEvent(QMouseEvent* event);
 
-	virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mouseMoveEvent(QMouseEvent* event);
 
-	virtual void wheelEvent(QWheelEvent* event);
+    virtual void wheelEvent(QWheelEvent* event);
 
-	virtual void contextMenuEvent(QContextMenuEvent* event);
+    virtual void contextMenuEvent(QContextMenuEvent* event);
 
-	virtual void resizeEvent(QResizeEvent* event);
+    virtual void resizeEvent(QResizeEvent* event);
 
-	virtual void enterEvent(QEvent* event);
-	
-	/**
-	 * Returns the maximum viewport size (as if scrollbars are hidden)
-	 * reduced by margins.
-	 */
-	QRectF maxViewportRect() const;
+    virtual void enterEvent(QEvent* event);
+
+    /**
+     * Returns the maximum viewport size (as if scrollbars are hidden)
+     * reduced by margins.
+     */
+    QRectF maxViewportRect() const;
 private slots:
-	void initiateBuildingHqVersion();
+    void initiateBuildingHqVersion();
 
-	void updateScrollBars();
+    void updateScrollBars();
 
-	void reactToScrollBars();
+    void reactToScrollBars();
 private:
-	class HqTransformTask;
-	class TempFocalPointAdjuster;
-	class TransformChangeWatcher;
+    class HqTransformTask;
+    class TempFocalPointAdjuster;
+    class TransformChangeWatcher;
 
-	QRectF dynamicViewportRect() const;
+    QRectF dynamicViewportRect() const;
 
-	void transformChanged();
+    void transformChanged();
 
-	void updateWidgetTransform();
-	
-	void updateWidgetTransformAndFixFocalPoint(FocalPointMode mode);
-	
-	QPointF getIdealWidgetFocalPoint(FocalPointMode mode) const;
-	
-	void setNewWidgetFP(QPointF widget_fp, bool update = false);
-	
-	void adjustAndSetNewWidgetFP(QPointF proposed_widget_fp, bool update = false);
-	
-	QPointF centeredWidgetFocalPoint() const;
-	
-	bool validateHqPixmap() const;
+    void updateWidgetTransform();
 
-	void scheduleHqVersionRebuild();
+    void updateWidgetTransformAndFixFocalPoint(FocalPointMode mode);
 
-	void hqVersionBuilt(QImage const& image);
+    QPointF getIdealWidgetFocalPoint(FocalPointMode mode) const;
 
-	void updateStatusTipAndCursor();
+    void setNewWidgetFP(QPointF widget_fp, bool update = false);
 
-	void updateStatusTip();
+    void adjustAndSetNewWidgetFP(QPointF proposed_widget_fp, bool update = false);
 
-	void updateCursor();
+    QPointF centeredWidgetFocalPoint() const;
 
-	void maybeQueueRedraw();
-	
-	std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
+    bool validateHqPixmap() const;
 
-	InteractionHandler m_rootInteractionHandler;
+    void scheduleHqVersionRebuild();
 
-	InteractionState m_interactionState;
+    void hqVersionBuilt(QImage const& image);
 
-	/**
-	 * The client-side image.  Used to build a high-quality version
-	 * for delayed rendering.
-	 */
-	QImage m_image;
-	
-	/**
-	 * This timer is used for delaying the construction of
-	 * a high quality image version.
-	 */
-	QTimer m_timer;
-	
-	/**
-	 * The image handle.  Note that the actual data of a QPixmap lives
-	 * in another process on most platforms.
-	 */
-	QPixmap m_pixmap;
-	
-	/**
-	 * The high quality, pre-transformed version of m_pixmap.
-	 */
-	QPixmap m_hqPixmap;
-	
-	/**
-	 * The position, in widget coordinates, where m_hqPixmap is to be drawn.
-	 */
-	QPoint m_hqPixmapPos;
-	
-	/**
-	 * The transformation used to build m_hqPixmap.
-	 * It's used to detect if m_hqPixmap needs to be rebuild.
-	 */
-	QTransform m_hqXform;
+    void updateStatusTipAndCursor();
 
-	/**
-	 * Used to check if we need to extend the delay before building m_hqPixmap.
-	 */
-	QTransform m_potentialHqXform;
-	
-	/**
-	 * The ID (QImage::cacheKey()) of the image that was used
-	 * to build m_hqPixmap.  It's used to detect if m_hqPixmap
-	 * needs to be rebuilt.
-	 */
-	qint64 m_hqSourceId;
-	
-	/**
-	 * The pending (if any) high quality transformation task.
-	 */
-	IntrusivePtr<HqTransformTask> m_ptrHqTransformTask;
+    void updateStatusTip();
 
-	/**
-	 * Transformation from m_pixmap coordinates to m_image coordinates.
-	 */
-	QTransform m_pixmapToImage;
-	
-	/**
-	 * The area of the virtual image to be displayed.
-	 * Everything outside of it will be cropped.
-	 */
-	QPolygonF m_virtualImageCropArea;
+    void updateCursor();
 
-	/**
-	 * The area in virtual image coordinates to be displayed.
-	 * The idea is that it can be larger than m_virtualImageCropArea
-	 * to reserve space for custom drawing or controls.
-	 */
-	QRectF m_virtualDisplayArea;
+    void maybeQueueRedraw();
 
-	/**
-	 * A transformation from original to virtual image coordinates.
-	 */
-	QTransform m_imageToVirtual;
-	
-	/**
-	 * A transformation from virtual to original image coordinates.
-	 */
-	QTransform m_virtualToImage;
+    std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
 
-	/**
-	 * Transformation from virtual image coordinates to widget coordinates.
-	 */
-	QTransform m_virtualToWidget;
-	
-	/**
-	 * Transformation from widget coordinates to virtual image coordinates.
-	 */
-	QTransform m_widgetToVirtual;
+    InteractionHandler m_rootInteractionHandler;
 
-	/**
-	 * Transforms scroll bar values to corresponding positions of the display
-	 * area (its central point) in widget coordinates.
-	 */
-	QTransform m_scrollTransform;
-	
-	/**
-	 * An arbitrary point in widget coordinates that corresponds
-	 * to m_pixmapFocalPoint in m_pixmap coordinates.
-	 * Moving m_widgetFocalPoint followed by updateWidgetTransform()
-	 * will cause the image to move on screen.
-	 */
-	QPointF m_widgetFocalPoint;
-	
-	/**
-	 * An arbitrary point in m_pixmap coordinates that corresponds
-	 * to m_widgetFocalPoint in widget coordinates.
-	 * Unlike m_widgetFocalPoint, this one is not supposed to be
-	 * moved independently.  It's supposed to moved together with
-	 * m_widgetFocalPoint for zooming into a specific position.
-	 */
-	QPointF m_pixmapFocalPoint;
+    InteractionState m_interactionState;
 
-	/**
-	 * Used to distinguish between resizes induced by scrollbars (dis)appearing
-	 * and other factors.
-	 */
-	QSize m_lastMaximumViewportSize;
-	
-	/**
-	 * The number of pixels to be left blank at each side of the widget.
-	 */
-	QMarginsF m_margins;
-	
-	/**
-	 * The zoom factor.  A value of 1.0 corresponds to fit-to-widget zoom.
-	 */
-	double m_zoom;
-	
-	int m_transformChangeWatchersActive;
+    /**
+     * The client-side image.  Used to build a high-quality version
+     * for delayed rendering.
+     */
+    QImage m_image;
 
-	int m_ignoreScrollEvents;
+    /**
+     * This timer is used for delaying the construction of
+     * a high quality image version.
+     */
+    QTimer m_timer;
 
-	int m_ignoreResizeEvents;
+    /**
+     * The image handle.  Note that the actual data of a QPixmap lives
+     * in another process on most platforms.
+     */
+    QPixmap m_pixmap;
 
-	int m_blockScrollBarUpdate;
-	
-	bool m_hqTransformEnabled;
+    /**
+     * The high quality, pre-transformed version of m_pixmap.
+     */
+    QPixmap m_hqPixmap;
+
+    /**
+     * The position, in widget coordinates, where m_hqPixmap is to be drawn.
+     */
+    QPoint m_hqPixmapPos;
+
+    /**
+     * The transformation used to build m_hqPixmap.
+     * It's used to detect if m_hqPixmap needs to be rebuild.
+     */
+    QTransform m_hqXform;
+
+    /**
+     * Used to check if we need to extend the delay before building m_hqPixmap.
+     */
+    QTransform m_potentialHqXform;
+
+    /**
+     * The ID (QImage::cacheKey()) of the image that was used
+     * to build m_hqPixmap.  It's used to detect if m_hqPixmap
+     * needs to be rebuilt.
+     */
+    qint64 m_hqSourceId;
+
+    /**
+     * The pending (if any) high quality transformation task.
+     */
+    IntrusivePtr<HqTransformTask> m_ptrHqTransformTask;
+
+    /**
+     * Transformation from m_pixmap coordinates to m_image coordinates.
+     */
+    QTransform m_pixmapToImage;
+
+    /**
+     * The area of the virtual image to be displayed.
+     * Everything outside of it will be cropped.
+     */
+    QPolygonF m_virtualImageCropArea;
+
+    /**
+     * The area in virtual image coordinates to be displayed.
+     * The idea is that it can be larger than m_virtualImageCropArea
+     * to reserve space for custom drawing or controls.
+     */
+    QRectF m_virtualDisplayArea;
+
+    /**
+     * A transformation from original to virtual image coordinates.
+     */
+    QTransform m_imageToVirtual;
+
+    /**
+     * A transformation from virtual to original image coordinates.
+     */
+    QTransform m_virtualToImage;
+
+    /**
+     * Transformation from virtual image coordinates to widget coordinates.
+     */
+    QTransform m_virtualToWidget;
+
+    /**
+     * Transformation from widget coordinates to virtual image coordinates.
+     */
+    QTransform m_widgetToVirtual;
+
+    /**
+     * Transforms scroll bar values to corresponding positions of the display
+     * area (its central point) in widget coordinates.
+     */
+    QTransform m_scrollTransform;
+
+    /**
+     * An arbitrary point in widget coordinates that corresponds
+     * to m_pixmapFocalPoint in m_pixmap coordinates.
+     * Moving m_widgetFocalPoint followed by updateWidgetTransform()
+     * will cause the image to move on screen.
+     */
+    QPointF m_widgetFocalPoint;
+
+    /**
+     * An arbitrary point in m_pixmap coordinates that corresponds
+     * to m_widgetFocalPoint in widget coordinates.
+     * Unlike m_widgetFocalPoint, this one is not supposed to be
+     * moved independently.  It's supposed to moved together with
+     * m_widgetFocalPoint for zooming into a specific position.
+     */
+    QPointF m_pixmapFocalPoint;
+
+    /**
+     * Used to distinguish between resizes induced by scrollbars (dis)appearing
+     * and other factors.
+     */
+    QSize m_lastMaximumViewportSize;
+
+    /**
+     * The number of pixels to be left blank at each side of the widget.
+     */
+    QMarginsF m_margins;
+
+    /**
+     * The zoom factor.  A value of 1.0 corresponds to fit-to-widget zoom.
+     */
+    double m_zoom;
+
+    int m_transformChangeWatchersActive;
+
+    int m_ignoreScrollEvents;
+
+    int m_ignoreResizeEvents;
+
+    int m_blockScrollBarUpdate;
+
+    bool m_hqTransformEnabled;
 };
 
 #endif

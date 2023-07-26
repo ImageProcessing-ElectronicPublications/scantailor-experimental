@@ -37,24 +37,27 @@ namespace imageproc
 template<typename T, typename Op>
 void traverseBorders(GridAccessor<T> const grid, Op operation)
 {
-	// Top line.
-	T* line = grid.data;
-	for (int x = 0; x < grid.width; ++x) {
-		operation(line[x]);
-	}
+    // Top line.
+    T* line = grid.data;
+    for (int x = 0; x < grid.width; ++x)
+    {
+        operation(line[x]);
+    }
 
-	// Middle lines.
-	for (int y = 1; y < grid.height - 1; ++y) {
-		line += grid.stride;
-		operation(line[0]);
-		operation(line[grid.width - 1]);
-	}
+    // Middle lines.
+    for (int y = 1; y < grid.height - 1; ++y)
+    {
+        line += grid.stride;
+        operation(line[0]);
+        operation(line[grid.width - 1]);
+    }
 
-	// Last line.
-	line += grid.stride;
-	for (int x = 0; x < grid.width; ++x) {
-		operation(line[x]);
-	}
+    // Last line.
+    line += grid.stride;
+    for (int x = 0; x < grid.width; ++x)
+    {
+        operation(line[x]);
+    }
 }
 
 } // namespace imageproc

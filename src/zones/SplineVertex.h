@@ -26,120 +26,126 @@
 class SplineVertex
 {
 public:
-	enum Loop { LOOP, NO_LOOP, LOOP_IF_BRIDGED };
+    enum Loop { LOOP, NO_LOOP, LOOP_IF_BRIDGED };
 
-	typedef IntrusivePtr<SplineVertex> Ptr;
+    typedef IntrusivePtr<SplineVertex> Ptr;
 
-	SplineVertex(SplineVertex* prev, SplineVertex* next);
+    SplineVertex(SplineVertex* prev, SplineVertex* next);
 
-	virtual ~SplineVertex() {}
+    virtual ~SplineVertex() {}
 
-	/**
-	 * We don't want reference counting for sentinel vertices,
-	 * but we can't make ref() and unref() abstract here, because
-	 * in case of sentinel vertices these function may actually
-	 * be called from this class constructor.
-	 */
-	virtual void ref() const {}
+    /**
+     * We don't want reference counting for sentinel vertices,
+     * but we can't make ref() and unref() abstract here, because
+     * in case of sentinel vertices these function may actually
+     * be called from this class constructor.
+     */
+    virtual void ref() const {}
 
-	/**
-	 * \see ref()
-	 */
-	virtual void unref() const {}
+    /**
+     * \see ref()
+     */
+    virtual void unref() const {}
 
-	/**
-	 * \return Smart pointer to this vertex, unless it's a sentiel vertex,
-	 *         in which case the previous non-sentinel vertex is returned.
-	 *         If there are no non-sentinel vertices, a null smart pointer
-	 *         is returned.
-	 */
-	virtual SplineVertex::Ptr thisOrPrevReal(Loop loop) = 0;
+    /**
+     * \return Smart pointer to this vertex, unless it's a sentiel vertex,
+     *         in which case the previous non-sentinel vertex is returned.
+     *         If there are no non-sentinel vertices, a null smart pointer
+     *         is returned.
+     */
+    virtual SplineVertex::Ptr thisOrPrevReal(Loop loop) = 0;
 
-	/**
-	 * \return Smart pointer to this vertex, unless it's a sentiel vertex,
-	 *         in which case the next non-sentinel vertex is returned.
-	 *         If there are no non-sentinel vertices, a null smart pointer
-	 *         is returned.
-	 */
-	virtual SplineVertex::Ptr thisOrNextReal(Loop loop) = 0;
+    /**
+     * \return Smart pointer to this vertex, unless it's a sentiel vertex,
+     *         in which case the next non-sentinel vertex is returned.
+     *         If there are no non-sentinel vertices, a null smart pointer
+     *         is returned.
+     */
+    virtual SplineVertex::Ptr thisOrNextReal(Loop loop) = 0;
 
-	virtual QPointF const point() const = 0;
+    virtual QPointF const point() const = 0;
 
-	virtual void setPoint(QPointF const& pt) = 0;
+    virtual void setPoint(QPointF const& pt) = 0;
 
-	virtual void remove();
+    virtual void remove();
 
-	bool hasAtLeastSiblings(int num);
+    bool hasAtLeastSiblings(int num);
 
-	SplineVertex::Ptr prev(Loop loop);
+    SplineVertex::Ptr prev(Loop loop);
 
-	SplineVertex::Ptr next(Loop loop);
+    SplineVertex::Ptr next(Loop loop);
 
-	SplineVertex::Ptr insertBefore(QPointF const& pt);
+    SplineVertex::Ptr insertBefore(QPointF const& pt);
 
-	SplineVertex::Ptr insertAfter(QPointF const& pt);
+    SplineVertex::Ptr insertAfter(QPointF const& pt);
 protected:
-	/**
-	 * The reason m_pPrev is an ordinary pointer rather than a smart pointer
-	 * is that we don't want pairs of vertices holding smart pointers to each
-	 * other.  Note that we don't have a loop of smart pointers, because
-	 * sentinel vertices aren't reference counted.
-	 */
-	SplineVertex* m_pPrev;
-	SplineVertex::Ptr m_ptrNext;
+    /**
+     * The reason m_pPrev is an ordinary pointer rather than a smart pointer
+     * is that we don't want pairs of vertices holding smart pointers to each
+     * other.  Note that we don't have a loop of smart pointers, because
+     * sentinel vertices aren't reference counted.
+     */
+    SplineVertex* m_pPrev;
+    SplineVertex::Ptr m_ptrNext;
 };
 
 
 class SentinelSplineVertex : public SplineVertex
 {
-	DECLARE_NON_COPYABLE(SentinelSplineVertex)
+    DECLARE_NON_COPYABLE(SentinelSplineVertex)
 public:
-	SentinelSplineVertex();
+    SentinelSplineVertex();
 
-	virtual ~SentinelSplineVertex();
+    virtual ~SentinelSplineVertex();
 
-	virtual SplineVertex::Ptr thisOrPrevReal(Loop loop);
+    virtual SplineVertex::Ptr thisOrPrevReal(Loop loop);
 
-	virtual SplineVertex::Ptr thisOrNextReal(Loop loop);
+    virtual SplineVertex::Ptr thisOrNextReal(Loop loop);
 
-	virtual QPointF const point() const;
+    virtual QPointF const point() const;
 
-	virtual void setPoint(QPointF const& pt);
+    virtual void setPoint(QPointF const& pt);
 
-	virtual void remove();
+    virtual void remove();
 
-	SplineVertex::Ptr firstVertex() const;
+    SplineVertex::Ptr firstVertex() const;
 
-	SplineVertex::Ptr lastVertex() const;
+    SplineVertex::Ptr lastVertex() const;
 
-	bool bridged() const { return m_bridged; }
+    bool bridged() const
+    {
+        return m_bridged;
+    }
 
-	void setBridged(bool bridged) { m_bridged = bridged; }
+    void setBridged(bool bridged)
+    {
+        m_bridged = bridged;
+    }
 private:
-	bool m_bridged;
+    bool m_bridged;
 };
 
 
 class RealSplineVertex : public SplineVertex
 {
-	DECLARE_NON_COPYABLE(RealSplineVertex)
+    DECLARE_NON_COPYABLE(RealSplineVertex)
 public:
-	RealSplineVertex(QPointF const& pt, SplineVertex* prev, SplineVertex* next);
+    RealSplineVertex(QPointF const& pt, SplineVertex* prev, SplineVertex* next);
 
-	virtual void ref() const;
+    virtual void ref() const;
 
-	virtual void unref() const;
+    virtual void unref() const;
 
-	virtual SplineVertex::Ptr thisOrPrevReal(Loop loop);
+    virtual SplineVertex::Ptr thisOrPrevReal(Loop loop);
 
-	virtual SplineVertex::Ptr thisOrNextReal(Loop loop);
+    virtual SplineVertex::Ptr thisOrNextReal(Loop loop);
 
-	virtual QPointF const point() const;
+    virtual QPointF const point() const;
 
-	virtual void setPoint(QPointF const& pt);
+    virtual void setPoint(QPointF const& pt);
 private:
-	QPointF m_point;
-	mutable int m_refCounter;
+    QPointF m_point;
+    mutable int m_refCounter;
 };
 
 #endif

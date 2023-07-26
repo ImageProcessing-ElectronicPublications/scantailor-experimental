@@ -40,30 +40,32 @@
  *        is given by (window_last_offset - window_first_offset + 1).
  */
 kernel void sav_gol_filter_1d(
-	read_only image2d_t src, write_only image2d_t dst,
-	float2 const coord_normalizer, float2 const coord_delta,
-	constant float const* coeffs, int window_first_offset, int window_last_offset)
+    read_only image2d_t src, write_only image2d_t dst,
+    float2 const coord_normalizer, float2 const coord_delta,
+    constant float const* coeffs, int window_first_offset, int window_last_offset)
 {
-	int const width = get_image_width(src);
-	int const height = get_image_height(src);
-	int const dst_x = get_global_id(0);
-	int const dst_y = get_global_id(1);
-	bool out_of_bounds = (dst_x >= width) | (dst_y >= height);
-	if (out_of_bounds) {
-		return;
-	}
+    int const width = get_image_width(src);
+    int const height = get_image_height(src);
+    int const dst_x = get_global_id(0);
+    int const dst_y = get_global_id(1);
+    bool out_of_bounds = (dst_x >= width) | (dst_y >= height);
+    if (out_of_bounds)
+    {
+        return;
+    }
 
-	int2 const dst_coord = (int2)(dst_x, dst_y);
-	sampler_t const sampler = CLK_NORMALIZED_COORDS_TRUE|CLK_ADDRESS_MIRRORED_REPEAT|CLK_FILTER_NEAREST;
+    int2 const dst_coord = (int2)(dst_x, dst_y);
+    sampler_t const sampler = CLK_NORMALIZED_COORDS_TRUE|CLK_ADDRESS_MIRRORED_REPEAT|CLK_FILTER_NEAREST;
 
-	float2 const base_src_coord = convert_float2(dst_coord) * coord_normalizer;
-	float accum = 0.f;
-	for (int delta = window_first_offset; delta <= window_last_offset; ++delta) {
-		float2 const src_coord = base_src_coord + (float)delta * coord_delta;
-		float4 const pixel = read_imagef(src, sampler, src_coord);
-		float const coeff = coeffs[delta - window_first_offset];
-		accum += pixel.x * coeff;
-	}
+    float2 const base_src_coord = convert_float2(dst_coord) * coord_normalizer;
+    float accum = 0.f;
+    for (int delta = window_first_offset; delta <= window_last_offset; ++delta)
+    {
+        float2 const src_coord = base_src_coord + (float)delta * coord_delta;
+        float4 const pixel = read_imagef(src, sampler, src_coord);
+        float const coeff = coeffs[delta - window_first_offset];
+        accum += pixel.x * coeff;
+    }
 
-	write_imagef(dst, dst_coord, (float4)(accum, accum, accum, 1.0f));
+    write_imagef(dst, dst_coord, (float4)(accum, accum, accum, 1.0f));
 }

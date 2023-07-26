@@ -29,11 +29,11 @@ namespace output
 class PictureZoneComparator
 {
 public:
-	static bool equal(ZoneSet const& lhs, ZoneSet const& rhs);
+    static bool equal(ZoneSet const& lhs, ZoneSet const& rhs);
 
-	static bool equal(Zone const& lhs, Zone const& rhs);
+    static bool equal(Zone const& lhs, Zone const& rhs);
 
-	static bool equal(PropertySet const& lhs, PropertySet const& rhs);
+    static bool equal(PropertySet const& lhs, PropertySet const& rhs);
 };
 
 } // namespace output

@@ -25,32 +25,37 @@
 
 ZoneSet::ZoneSet(QDomElement const& el, PropertyFactory const& prop_factory)
 {
-	QString const zone_str("zone");
+    QString const zone_str("zone");
 
-	QDomNode node(el.firstChild());
-	for (; !node.isNull(); node = node.nextSibling()) {
-		if (!node.isElement()) {
-			continue;
-		}
-		if (node.nodeName() != zone_str) {
-			continue;
-		}
+    QDomNode node(el.firstChild());
+    for (; !node.isNull(); node = node.nextSibling())
+    {
+        if (!node.isElement())
+        {
+            continue;
+        }
+        if (node.nodeName() != zone_str)
+        {
+            continue;
+        }
 
-		Zone const zone(node.toElement(), prop_factory);
-		if (zone.isValid()) {
-			m_zones.push_back(zone);
-		}
-	}
+        Zone const zone(node.toElement(), prop_factory);
+        if (zone.isValid())
+        {
+            m_zones.push_back(zone);
+        }
+    }
 }
 
 QDomElement
 ZoneSet::toXml(QDomDocument& doc, QString const& name) const
 {
-	QString const zone_str("zone");
+    QString const zone_str("zone");
 
-	QDomElement el(doc.createElement(name));
-	BOOST_FOREACH(Zone const& zone, m_zones) {
-		el.appendChild(zone.toXml(doc, zone_str));
-	}
-	return el;
+    QDomElement el(doc.createElement(name));
+    BOOST_FOREACH(Zone const& zone, m_zones)
+    {
+        el.appendChild(zone.toXml(doc, zone_str));
+    }
+    return el;
 }

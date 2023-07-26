@@ -35,57 +35,57 @@ namespace dewarping
 
 class DEWARPING_EXPORT TextLineRefiner
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	enum OnConvergence { ON_CONVERGENCE_STOP, ON_CONVERGENCE_GO_FINER };
+    enum OnConvergence { ON_CONVERGENCE_STOP, ON_CONVERGENCE_GO_FINER };
 
-	TextLineRefiner(std::list<std::vector<QPointF> > const& polylines,
-		Vec2f const& unit_down_vec);
+    TextLineRefiner(std::list<std::vector<QPointF> > const& polylines,
+                    Vec2f const& unit_down_vec);
 
-	void refine(
-		std::function<float(QPointF const&)> const& top_attraction_force,
-		std::function<float(QPointF const&)> const& bottom_attraction_force,
-		int iterations, OnConvergence on_convergence);
+    void refine(
+        std::function<float(QPointF const&)> const& top_attraction_force,
+        std::function<float(QPointF const&)> const& bottom_attraction_force,
+        int iterations, OnConvergence on_convergence);
 
-	std::list<std::vector<QPointF>> refinedPolylines() const;
+    std::list<std::vector<QPointF>> refinedPolylines() const;
 
-	QImage visualize(QImage const& background) const;
+    QImage visualize(QImage const& background) const;
 private:
-	class SnakeLength;
-	struct FrenetFrame;
-	class Optimizer;
+    class SnakeLength;
+    struct FrenetFrame;
+    class Optimizer;
 
-	struct SnakeNode
-	{
-		Vec2f center;
-		float ribHalfLength;
-	};
+    struct SnakeNode
+    {
+        Vec2f center;
+        float ribHalfLength;
+    };
 
-	struct Snake
-	{
-		std::vector<SnakeNode> nodes;
-	};
+    struct Snake
+    {
+        std::vector<SnakeNode> nodes;
+    };
 
-	struct Step
-	{
-		SnakeNode node;
-		uint32_t prevStepIdx;
-		float pathCost;
-	};
+    struct Step
+    {
+        SnakeNode node;
+        uint32_t prevStepIdx;
+        float pathCost;
+    };
 
-	static Snake makeSnake(std::vector<QPointF> const& polyline);
+    static Snake makeSnake(std::vector<QPointF> const& polyline);
 
-	static void calcFrenetFrames(
-		std::vector<FrenetFrame>& frenet_frames, Snake const& snake,
-		SnakeLength const& snake_length, Vec2f const& unit_down_vec);
+    static void calcFrenetFrames(
+        std::vector<FrenetFrame>& frenet_frames, Snake const& snake,
+        SnakeLength const& snake_length, Vec2f const& unit_down_vec);
 
-	void evolveSnake(Snake& snake,
-		std::function<float(QPointF const&)> const& top_attraction_force,
-		std::function<float(QPointF const&)> const& bottom_attraction_force,
-		int iterations, OnConvergence on_convergence);
-	
-	Vec2f m_unitDownVec;
-	std::vector<Snake> m_snakes;
+    void evolveSnake(Snake& snake,
+                     std::function<float(QPointF const&)> const& top_attraction_force,
+                     std::function<float(QPointF const&)> const& bottom_attraction_force,
+                     int iterations, OnConvergence on_convergence);
+
+    Vec2f m_unitDownVec;
+    std::vector<Snake> m_snakes;
 };
 
 } // namespace dewarping

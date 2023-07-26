@@ -51,21 +51,21 @@ bool isDodgyDevice(cl::Device const& device);
  * Pre-existng events in @p completion_set are removed.
  */
 void indicateCompletion(
-	std::vector<cl::Event>* completion_set, cl::Event const& single_event);
+    std::vector<cl::Event>* completion_set, cl::Event const& single_event);
 
 /**
  * This overload copies @p event_set into @p completion_set, if @p completion set is not null.
  * Pre-existng events in @p completion_set are removed.
  */
 void indicateCompletion(
-	std::vector<cl::Event>* completion_set, std::vector<cl::Event> const& event_set);
+    std::vector<cl::Event>* completion_set, std::vector<cl::Event> const& event_set);
 
 /**
  * This overload moves @p event_set into @p completion_set, if @p completion set is not null.
  * Pre-existng events in @p completion_set are removed.
  */
 void indicateCompletion(
-	std::vector<cl::Event>* completion_set, std::vector<cl::Event>&& event_set);
+    std::vector<cl::Event>* completion_set, std::vector<cl::Event>&& event_set);
 
 /**
  * This overload is useful for no-op returns. In such a case, a function passes its
@@ -74,7 +74,7 @@ void indicateCompletion(
  * events in @p completion_set are removed, no matter if @p event_set is provided or not.
  */
 void indicateCompletion(
-	std::vector<cl::Event>* completion_set, std::vector<cl::Event> const* event_set);
+    std::vector<cl::Event>* completion_set, std::vector<cl::Event> const* event_set);
 
 /**
  * If @p value is a multiple of @p factor, @p value is returned.

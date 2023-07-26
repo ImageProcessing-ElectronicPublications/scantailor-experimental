@@ -32,10 +32,10 @@ namespace page_split
 {
 
 CacheDrivenTask::CacheDrivenTask(
-	IntrusivePtr<Settings> const& settings,
-	IntrusivePtr<deskew::CacheDrivenTask> const& next_task)
-:	m_ptrNextTask(next_task),
-	m_ptrSettings(settings)
+    IntrusivePtr<Settings> const& settings,
+    IntrusivePtr<deskew::CacheDrivenTask> const& next_task)
+    :	m_ptrNextTask(next_task),
+      m_ptrSettings(settings)
 {
 }
 
@@ -45,68 +45,73 @@ CacheDrivenTask::~CacheDrivenTask()
 
 void
 CacheDrivenTask::process(PageInfo const& page_info,
-	OrthogonalRotation const& pre_rotation,
-	AffineImageTransform const& image_transform,
-	AbstractFilterDataCollector* collector)
+                         OrthogonalRotation const& pre_rotation,
+                         AffineImageTransform const& image_transform,
+                         AbstractFilterDataCollector* collector)
 {
-	Settings::Record const record(
-		m_ptrSettings->getPageRecord(page_info.imageId())
-	);
-	
-	Dependencies const deps(
-		page_info.metadata().size(), pre_rotation,
-		record.combinedLayoutType()
-	);
-	
-	Params const* params = record.params();
-	
-	if (!params || !deps.compatibleWith(*params)) {
-		if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector)) {
-			thumb_col->processThumbnail(
-				std::auto_ptr<QGraphicsItem>(
-					new IncompleteThumbnail(
-						thumb_col->thumbnailCache(),
-						thumb_col->maxLogicalThumbSize(),
-						page_info.id(), image_transform
-					)
-				)
-			);
-		}
-		
-		return;
-	}
-	
-	PageLayout layout(params->pageLayout());
-	if (layout.uncutOutline().isEmpty()) {
-		// Backwards compatibility with versions < 0.9.9
-		layout.setUncutOutline(
-			QRectF(QPointF(0, 0), pre_rotation.rotate(page_info.metadata().size()))
-		);
-	}
+    Settings::Record const record(
+        m_ptrSettings->getPageRecord(page_info.imageId())
+    );
 
-	if (m_ptrNextTask) {
-		AffineImageTransform new_transform(image_transform);
-		new_transform.setOrigCropArea(
-			image_transform.transform().inverted().map(
-				layout.pageOutline(page_info.id().subPage())
-			)
-		);
-		m_ptrNextTask->process(page_info, pre_rotation, new_transform, collector);
-		return;
-	}
-	
-	if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector)) {
-		thumb_col->processThumbnail(
-			std::auto_ptr<QGraphicsItem>(
-				new Thumbnail(
-					thumb_col->thumbnailCache(),
-					thumb_col->maxLogicalThumbSize(),
-					page_info.id(), layout, image_transform,
-					page_info.leftHalfRemoved(), page_info.rightHalfRemoved()
-				)
-			)
-		);
-	}
+    Dependencies const deps(
+        page_info.metadata().size(), pre_rotation,
+        record.combinedLayoutType()
+    );
+
+    Params const* params = record.params();
+
+    if (!params || !deps.compatibleWith(*params))
+    {
+        if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
+        {
+            thumb_col->processThumbnail(
+                std::auto_ptr<QGraphicsItem>(
+                    new IncompleteThumbnail(
+                        thumb_col->thumbnailCache(),
+                        thumb_col->maxLogicalThumbSize(),
+                        page_info.id(), image_transform
+                    )
+                )
+            );
+        }
+
+        return;
+    }
+
+    PageLayout layout(params->pageLayout());
+    if (layout.uncutOutline().isEmpty())
+    {
+        // Backwards compatibility with versions < 0.9.9
+        layout.setUncutOutline(
+            QRectF(QPointF(0, 0), pre_rotation.rotate(page_info.metadata().size()))
+        );
+    }
+
+    if (m_ptrNextTask)
+    {
+        AffineImageTransform new_transform(image_transform);
+        new_transform.setOrigCropArea(
+            image_transform.transform().inverted().map(
+                layout.pageOutline(page_info.id().subPage())
+            )
+        );
+        m_ptrNextTask->process(page_info, pre_rotation, new_transform, collector);
+        return;
+    }
+
+    if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
+    {
+        thumb_col->processThumbnail(
+            std::auto_ptr<QGraphicsItem>(
+                new Thumbnail(
+                    thumb_col->thumbnailCache(),
+                    thumb_col->maxLogicalThumbSize(),
+                    page_info.id(), layout, image_transform,
+                    page_info.leftHalfRemoved(), page_info.rightHalfRemoved()
+                )
+            )
+        );
+    }
 }
 
 } // namespace page_split

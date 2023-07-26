@@ -24,24 +24,24 @@
 
 class SystemLoadWidget : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	SystemLoadWidget(QWidget* parent = 0);
+    SystemLoadWidget(QWidget* parent = 0);
 private slots:
-	void sliderPressed();
+    void sliderPressed();
 
-	void sliderMoved(int threads);
+    void sliderMoved(int threads);
 
-	void valueChanged(int threads);
+    void valueChanged(int threads);
 
-	void decreaseLoad();
+    void decreaseLoad();
 
-	void increaseLoad();
+    void increaseLoad();
 private:
-	void showHideToolTip(int threads);
+    void showHideToolTip(int threads);
 
-	Ui::SystemLoadWidget ui;
-	int m_maxThreads;
+    Ui::SystemLoadWidget ui;
+    int m_maxThreads;
 };
 
 #endif

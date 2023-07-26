@@ -33,20 +33,23 @@ class QString;
 class SerializableSpline
 {
 public:
-	SerializableSpline(EditableSpline const& spline);
+    SerializableSpline(EditableSpline const& spline);
 
-	explicit SerializableSpline(QDomElement const& el);
+    explicit SerializableSpline(QDomElement const& el);
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-	SerializableSpline transformed(QTransform const& xform) const;
+    SerializableSpline transformed(QTransform const& xform) const;
 
-	SerializableSpline transformed(
-		boost::function<QPointF(QPointF const&)> const& xform) const;
+    SerializableSpline transformed(
+        boost::function<QPointF(QPointF const&)> const& xform) const;
 
-	QPolygonF toPolygon() const { return QPolygonF(m_points); }
+    QPolygonF toPolygon() const
+    {
+        return QPolygonF(m_points);
+    }
 private:
-	QVector<QPointF> m_points;
+    QVector<QPointF> m_points;
 };
 
 #endif

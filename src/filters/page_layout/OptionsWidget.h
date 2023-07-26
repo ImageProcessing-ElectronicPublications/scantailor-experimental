@@ -41,91 +41,106 @@ namespace page_layout
 class Settings;
 
 class OptionsWidget :
-	public FilterOptionsWidget,
-	public Ui::PageLayoutOptionsWidget
+    public FilterOptionsWidget,
+    public Ui::PageLayoutOptionsWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	OptionsWidget(
-		IntrusivePtr<Settings> const& settings,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~OptionsWidget();
-	
-	void preUpdateUI(PageId const& page_id, RelativeMargins const& margins,
-		MatchSizeMode const& match_size_mode, Alignment const& alignment);
-	
-	void postUpdateUI(bool have_content_box);
-	
-	bool leftRightLinked() const { return m_leftRightLinked; }
-	
-	bool topBottomLinked() const { return m_topBottomLinked; }
-	
-	RelativeMargins const& margins() const { return m_margins; }
+    OptionsWidget(
+        IntrusivePtr<Settings> const& settings,
+        PageSelectionAccessor const& page_selection_accessor);
 
-	MatchSizeMode const& matchSizeMode() const { return m_matchSizeMode; }
-	
-	Alignment const& alignment() const { return m_alignment; }
+    virtual ~OptionsWidget();
+
+    void preUpdateUI(PageId const& page_id, RelativeMargins const& margins,
+                     MatchSizeMode const& match_size_mode, Alignment const& alignment);
+
+    void postUpdateUI(bool have_content_box);
+
+    bool leftRightLinked() const
+    {
+        return m_leftRightLinked;
+    }
+
+    bool topBottomLinked() const
+    {
+        return m_topBottomLinked;
+    }
+
+    RelativeMargins const& margins() const
+    {
+        return m_margins;
+    }
+
+    MatchSizeMode const& matchSizeMode() const
+    {
+        return m_matchSizeMode;
+    }
+
+    Alignment const& alignment() const
+    {
+        return m_alignment;
+    }
 signals:
-	void leftRightLinkToggled(bool linked);
-	
-	void topBottomLinkToggled(bool linked);
-	
-	void matchSizeModeChanged(MatchSizeMode const& match_size_mode);
+    void leftRightLinkToggled(bool linked);
 
-	void alignmentChanged(Alignment const& alignment);
-	
-	void marginsSetLocally(RelativeMargins const& margins);
-	
-	void aggregateHardSizeChanged();
+    void topBottomLinkToggled(bool linked);
+
+    void matchSizeModeChanged(MatchSizeMode const& match_size_mode);
+
+    void alignmentChanged(Alignment const& alignment);
+
+    void marginsSetLocally(RelativeMargins const& margins);
+
+    void aggregateHardSizeChanged();
 public slots:
-	void marginsSetExternally(RelativeMargins const& margins);
+    void marginsSetExternally(RelativeMargins const& margins);
 private slots:
-	void horMarginsChanged(double val);
-	
-	void vertMarginsChanged(double val);
-	
-	void topBottomLinkClicked();
-	
-	void leftRightLinkClicked();
-	
-	void matchSizeDisabledToggled(bool selected);
+    void horMarginsChanged(double val);
 
-	void matchSizeMarginsToggled(bool selected);
+    void vertMarginsChanged(double val);
 
-	void matchSizeScaleToggled(bool selected);
-	
-	void alignmentButtonClicked();
-	
-	void showApplyMarginsDialog();
-	
-	void showApplyAlignmentDialog();
-	
-	void applyMargins(std::set<PageId> const& pages);
-	
-	void applyAlignment(std::set<PageId> const& pages);
+    void topBottomLinkClicked();
+
+    void leftRightLinkClicked();
+
+    void matchSizeDisabledToggled(bool selected);
+
+    void matchSizeMarginsToggled(bool selected);
+
+    void matchSizeScaleToggled(bool selected);
+
+    void alignmentButtonClicked();
+
+    void showApplyMarginsDialog();
+
+    void showApplyAlignmentDialog();
+
+    void applyMargins(std::set<PageId> const& pages);
+
+    void applyAlignment(std::set<PageId> const& pages);
 private:
-	typedef std::map<QToolButton*, Alignment> AlignmentByButton;
-	
-	void updateMarginsDisplay();
-	
-	void updateLinkDisplay(QToolButton* button, bool linked);
-	
-	void enableDisableAlignmentButtons();
-	
-	IntrusivePtr<Settings> m_ptrSettings;
-	PageSelectionAccessor m_pageSelectionAccessor;
-	QIcon m_chainIcon;
-	QIcon m_brokenChainIcon;
-	AlignmentByButton m_alignmentByButton;
-	PageId m_pageId;
-	RelativeMargins m_margins;
-	MatchSizeMode m_matchSizeMode;
-	Alignment m_alignment;
-	int m_ignoreMarginChanges;
-	int m_ignoreMatchSizeModeChanges;
-	bool m_leftRightLinked;
-	bool m_topBottomLinked;
+    typedef std::map<QToolButton*, Alignment> AlignmentByButton;
+
+    void updateMarginsDisplay();
+
+    void updateLinkDisplay(QToolButton* button, bool linked);
+
+    void enableDisableAlignmentButtons();
+
+    IntrusivePtr<Settings> m_ptrSettings;
+    PageSelectionAccessor m_pageSelectionAccessor;
+    QIcon m_chainIcon;
+    QIcon m_brokenChainIcon;
+    AlignmentByButton m_alignmentByButton;
+    PageId m_pageId;
+    RelativeMargins m_margins;
+    MatchSizeMode m_matchSizeMode;
+    Alignment m_alignment;
+    int m_ignoreMarginChanges;
+    int m_ignoreMatchSizeModeChanges;
+    bool m_leftRightLinked;
+    bool m_topBottomLinked;
 };
 
 } // namespace page_layout

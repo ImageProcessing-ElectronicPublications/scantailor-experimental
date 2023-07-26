@@ -22,103 +22,107 @@
 #include <Qt>
 
 ObjectDragHandler::ObjectDragHandler(DraggableObject* obj)
-:	m_pObj(obj)
+    :	m_pObj(obj)
 {
-	setProximityCursor(Qt::OpenHandCursor);
-	setInteractionCursor(Qt::ClosedHandCursor);
+    setProximityCursor(Qt::OpenHandCursor);
+    setInteractionCursor(Qt::ClosedHandCursor);
 }
 
 void
 ObjectDragHandler::setProximityCursor(QCursor const& cursor)
 {
-	m_interaction.setProximityCursor(cursor);
+    m_interaction.setProximityCursor(cursor);
 }
 
 void
 ObjectDragHandler::setInteractionCursor(QCursor const& cursor)
 {
-	m_interaction.setInteractionCursor(cursor);
+    m_interaction.setInteractionCursor(cursor);
 }
 
 void
 ObjectDragHandler::setProximityStatusTip(QString const& tip)
 {
-	m_interaction.setProximityStatusTip(tip);
+    m_interaction.setProximityStatusTip(tip);
 }
 
 void
 ObjectDragHandler::setInteractionStatusTip(QString const& tip)
 {
-	m_interaction.setInteractionStatusTip(tip);
+    m_interaction.setInteractionStatusTip(tip);
 }
 
 bool
 ObjectDragHandler::interactionInProgress(
-	InteractionState const& interaction) const
+    InteractionState const& interaction) const
 {
-	return interaction.capturedBy(m_interaction);
+    return interaction.capturedBy(m_interaction);
 }
 
 bool
 ObjectDragHandler::proximityLeader(InteractionState const& interaction) const
 {
-	return interaction.proximityLeader(m_interaction);
+    return interaction.proximityLeader(m_interaction);
 }
 
 void
 ObjectDragHandler::forceEnterDragState(
-	InteractionState& interaction, QPoint widget_mouse_pos)
+    InteractionState& interaction, QPoint widget_mouse_pos)
 {
-	interaction.capture(m_interaction);
-	m_pObj->dragInitiated(QPointF(0.5, 0.5) + widget_mouse_pos);
+    interaction.capture(m_interaction);
+    m_pObj->dragInitiated(QPointF(0.5, 0.5) + widget_mouse_pos);
 }
 
 void
 ObjectDragHandler::onPaint(
-	QPainter& painter, InteractionState const& interaction)
+    QPainter& painter, InteractionState const& interaction)
 {
-	m_pObj->paint(painter, interaction);
+    m_pObj->paint(painter, interaction);
 }
 
 void
 ObjectDragHandler::onProximityUpdate(
-	QPointF const& screen_mouse_pos, InteractionState& interaction)
+    QPointF const& screen_mouse_pos, InteractionState& interaction)
 {
-	interaction.updateProximity(
-		m_interaction, m_pObj->proximity(screen_mouse_pos),
-		m_pObj->proximityPriority(), m_pObj->proximityThreshold(interaction)
-	);
+    interaction.updateProximity(
+        m_interaction, m_pObj->proximity(screen_mouse_pos),
+        m_pObj->proximityPriority(), m_pObj->proximityThreshold(interaction)
+    );
 }
 
 void
 ObjectDragHandler::onMousePressEvent(
-	QMouseEvent* event, InteractionState& interaction)
+    QMouseEvent* event, InteractionState& interaction)
 {
-	if (interaction.captured() || event->button() != Qt::LeftButton) {
-		return;
-	}
+    if (interaction.captured() || event->button() != Qt::LeftButton)
+    {
+        return;
+    }
 
-	if (interaction.proximityLeader(m_interaction)) {
-		interaction.capture(m_interaction);
-		m_pObj->dragInitiated(QPointF(0.5, 0.5) + event->pos());
-	}
+    if (interaction.proximityLeader(m_interaction))
+    {
+        interaction.capture(m_interaction);
+        m_pObj->dragInitiated(QPointF(0.5, 0.5) + event->pos());
+    }
 }
 
 void
 ObjectDragHandler::onMouseReleaseEvent(
-	QMouseEvent* event, InteractionState& interaction)
+    QMouseEvent* event, InteractionState& interaction)
 {
-	if (event->button() == Qt::LeftButton && interaction.capturedBy(m_interaction)) {
-		m_interaction.release();
-		m_pObj->dragFinished(QPointF(0.5, 0.5) + event->pos());
-	}
+    if (event->button() == Qt::LeftButton && interaction.capturedBy(m_interaction))
+    {
+        m_interaction.release();
+        m_pObj->dragFinished(QPointF(0.5, 0.5) + event->pos());
+    }
 }
 
 void
 ObjectDragHandler::onMouseMoveEvent(
-	QMouseEvent* event, InteractionState& interaction)
+    QMouseEvent* event, InteractionState& interaction)
 {
-	if (interaction.capturedBy(m_interaction)) {
-		m_pObj->dragContinuation(QPointF(0.5, 0.5) + event->pos());
-	}
+    if (interaction.capturedBy(m_interaction))
+    {
+        m_pObj->dragContinuation(QPointF(0.5, 0.5) + event->pos());
+    }
 }

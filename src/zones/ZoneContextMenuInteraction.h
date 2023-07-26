@@ -42,99 +42,102 @@ class QMenu;
 
 class ZoneContextMenuInteraction : public QObject, public InteractionHandler
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	struct StandardMenuItems
-	{
-		ZoneContextMenuItem propertiesItem;
-		ZoneContextMenuItem deleteItem;
+    struct StandardMenuItems
+    {
+        ZoneContextMenuItem propertiesItem;
+        ZoneContextMenuItem deleteItem;
 
-		StandardMenuItems(
-			ZoneContextMenuItem const& properties_item,
-			ZoneContextMenuItem const& delete_item);
-	};
+        StandardMenuItems(
+            ZoneContextMenuItem const& properties_item,
+            ZoneContextMenuItem const& delete_item);
+    };
 
-	typedef boost::function<
-		std::vector<ZoneContextMenuItem>(
-			EditableZoneSet::Zone const&, StandardMenuItems const&
-		)
-	> MenuCustomizer;
+    typedef boost::function<
+    std::vector<ZoneContextMenuItem>(
+        EditableZoneSet::Zone const&, StandardMenuItems const&
+    )
+    > MenuCustomizer;
 
-	/**
-	 * \note This factory method will return null if there are no zones
-	 *       under the mouse pointer.
-	 */
-	static ZoneContextMenuInteraction* create(
-		ZoneInteractionContext& context, InteractionState& interaction);
+    /**
+     * \note This factory method will return null if there are no zones
+     *       under the mouse pointer.
+     */
+    static ZoneContextMenuInteraction* create(
+        ZoneInteractionContext& context, InteractionState& interaction);
 
-	/**
-	 * Same as above, plus a menu customization callback.
-	 */
-	static ZoneContextMenuInteraction* create(
-		ZoneInteractionContext& context, InteractionState& interaction,
-		MenuCustomizer const& menu_customizer);
+    /**
+     * Same as above, plus a menu customization callback.
+     */
+    static ZoneContextMenuInteraction* create(
+        ZoneInteractionContext& context, InteractionState& interaction,
+        MenuCustomizer const& menu_customizer);
 
-	virtual ~ZoneContextMenuInteraction();
+    virtual ~ZoneContextMenuInteraction();
 protected:
-	class Zone : public EditableZoneSet::Zone
-	{
-	public:
-		QColor color;
+    class Zone : public EditableZoneSet::Zone
+    {
+    public:
+        QColor color;
 
-		Zone(EditableZoneSet::Zone const& zone) : EditableZoneSet::Zone(zone) {}
-	};
+        Zone(EditableZoneSet::Zone const& zone) : EditableZoneSet::Zone(zone) {}
+    };
 
-	static std::vector<Zone> zonesUnderMouse(ZoneInteractionContext& context);
+    static std::vector<Zone> zonesUnderMouse(ZoneInteractionContext& context);
 
-	ZoneContextMenuInteraction(
-		ZoneInteractionContext& context, InteractionState& interaction,
-		MenuCustomizer const& menu_customizer, std::vector<Zone>& selectable_zones);
+    ZoneContextMenuInteraction(
+        ZoneInteractionContext& context, InteractionState& interaction,
+        MenuCustomizer const& menu_customizer, std::vector<Zone>& selectable_zones);
 
-	ZoneInteractionContext& context() { return m_rContext; }
+    ZoneInteractionContext& context()
+    {
+        return m_rContext;
+    }
 private slots:
-	void menuAboutToHide();
+    void menuAboutToHide();
 
-	void highlightItem(int zone_idx);
+    void highlightItem(int zone_idx);
 private:
-	class OrderByArea;
+    class OrderByArea;
 
-	class Visualizer : public BasicSplineVisualizer
-	{
-	public:
-		void switchToFillMode(QColor const& color);
+    class Visualizer : public BasicSplineVisualizer
+    {
+    public:
+        void switchToFillMode(QColor const& color);
 
-		void switchToStrokeMode();
+        void switchToStrokeMode();
 
-		virtual void prepareForSpline(QPainter& painter, EditableSpline::Ptr const& spline);
-	private:
-		QColor m_color;
-	};
+        virtual void prepareForSpline(QPainter& painter, EditableSpline::Ptr const& spline);
+    private:
+        QColor m_color;
+    };
 
-	static std::vector<ZoneContextMenuItem> defaultMenuCustomizer(
-		EditableZoneSet::Zone const& zone, StandardMenuItems const& std_items);
+    static std::vector<ZoneContextMenuItem> defaultMenuCustomizer(
+        EditableZoneSet::Zone const& zone, StandardMenuItems const& std_items);
 
-	virtual void onPaint(QPainter& painter, InteractionState const& interaction);
+    virtual void onPaint(QPainter& painter, InteractionState const& interaction);
 
-	void menuItemTriggered(InteractionState& interaction,
-		ZoneContextMenuItem::Callback const& callback);
+    void menuItemTriggered(InteractionState& interaction,
+                           ZoneContextMenuItem::Callback const& callback);
 
-	InteractionHandler* deleteRequest(EditableZoneSet::Zone const& zone);
+    InteractionHandler* deleteRequest(EditableZoneSet::Zone const& zone);
 
-	InteractionHandler* propertiesRequest(EditableZoneSet::Zone const& zone);
+    InteractionHandler* propertiesRequest(EditableZoneSet::Zone const& zone);
 
-	ZoneContextMenuItem propertiesMenuItemFor(EditableZoneSet::Zone const& zone);
+    ZoneContextMenuItem propertiesMenuItemFor(EditableZoneSet::Zone const& zone);
 
-	ZoneContextMenuItem deleteMenuItemFor(EditableZoneSet::Zone const& zone);
+    ZoneContextMenuItem deleteMenuItemFor(EditableZoneSet::Zone const& zone);
 
-	ZoneInteractionContext& m_rContext;
-	std::vector<Zone> m_selectableZones;
-	InteractionState::Captor m_interaction;
-	Visualizer m_visualizer;
-	std::auto_ptr<QMenu> m_ptrMenu;
-	int m_highlightedZoneIdx;
-	bool m_menuItemTriggered;
+    ZoneInteractionContext& m_rContext;
+    std::vector<Zone> m_selectableZones;
+    InteractionState::Captor m_interaction;
+    Visualizer m_visualizer;
+    std::auto_ptr<QMenu> m_ptrMenu;
+    int m_highlightedZoneIdx;
+    bool m_menuItemTriggered;
 #ifdef Q_OS_MAC
-	int m_extraDelaysDone;
+    int m_extraDelaysDone;
 #endif
 };
 

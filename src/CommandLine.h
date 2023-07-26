@@ -42,119 +42,242 @@
  */
 class CommandLine
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	enum Orientation {TOP, LEFT, RIGHT, UPSIDEDOWN};
+    enum Orientation {TOP, LEFT, RIGHT, UPSIDEDOWN};
 
-	static CommandLine const& get() { return m_globalInstance; }
-	static void set(CommandLine const& cl);
+    static CommandLine const& get()
+    {
+        return m_globalInstance;
+    }
+    static void set(CommandLine const& cl);
 
-	CommandLine(QStringList const& argv, bool g=true) : m_gui(g), m_global(false) { CommandLine::parseCli(argv); }
+    CommandLine(QStringList const& argv, bool g=true) : m_gui(g), m_global(false)
+    {
+        CommandLine::parseCli(argv);
+    }
 
-	bool isGui() const { return m_gui; }
-	bool isVerbose() const { return contains("verbose"); }
+    bool isGui() const
+    {
+        return m_gui;
+    }
+    bool isVerbose() const
+    {
+        return contains("verbose");
+    }
 
-	std::vector<ImageFileInfo> const& images() const { return m_images; }
-	QString const& outputDirectory() const { return m_outputDirectory; }
-	QString const& projectFile() const { return m_projectFile; }
-	QString const& outputProjectFile() const { return m_outputProjectFile; }
+    std::vector<ImageFileInfo> const& images() const
+    {
+        return m_images;
+    }
+    QString const& outputDirectory() const
+    {
+        return m_outputDirectory;
+    }
+    QString const& projectFile() const
+    {
+        return m_projectFile;
+    }
+    QString const& outputProjectFile() const
+    {
+        return m_outputProjectFile;
+    }
 
-	bool hasMargins() const;
-	bool hasAlignment() const;
-	bool hasOutputDpi() const;
+    bool hasMargins() const;
+    bool hasAlignment() const;
+    bool hasOutputDpi() const;
 
-	bool hasHelp() const { return contains("help"); }
-	bool hasOutputProject() const { return contains("output-project"); }
-	bool hasLayout() const { return contains("layout"); }
-	bool hasLayoutDirection() const { return contains("layout-direction"); }
-	bool hasStartFilterIdx() const { return contains("start-filter"); }
-	bool hasEndFilterIdx() const { return contains("end-filter"); }
-	bool hasOrientation() const { return contains("orientation"); }
-	bool hasDeskewAngle() const { return contains("rotate"); }
-	bool hasDeskew() const { return contains("deskew"); }
-	bool hasContentRect() const { return contains("content-box"); }
-	bool hasColorMode() const { return contains("color-mode"); }
-	bool hasWhiteMargins() const { return contains("white-margins"); }
-	bool hasNormalizeIllumination() const { return contains("normalize-illumination"); }
-	bool hasThreshold() const { return contains("threshold"); }
-	bool hasDespeckle() const { return contains("despeckle"); }
-	bool hasDewarping() const { return contains("dewarping"); }
-	bool hasDepthPerception() const { return contains("dewarping"); }
+    bool hasHelp() const
+    {
+        return contains("help");
+    }
+    bool hasOutputProject() const
+    {
+        return contains("output-project");
+    }
+    bool hasLayout() const
+    {
+        return contains("layout");
+    }
+    bool hasLayoutDirection() const
+    {
+        return contains("layout-direction");
+    }
+    bool hasStartFilterIdx() const
+    {
+        return contains("start-filter");
+    }
+    bool hasEndFilterIdx() const
+    {
+        return contains("end-filter");
+    }
+    bool hasOrientation() const
+    {
+        return contains("orientation");
+    }
+    bool hasDeskewAngle() const
+    {
+        return contains("rotate");
+    }
+    bool hasDeskew() const
+    {
+        return contains("deskew");
+    }
+    bool hasContentRect() const
+    {
+        return contains("content-box");
+    }
+    bool hasColorMode() const
+    {
+        return contains("color-mode");
+    }
+    bool hasWhiteMargins() const
+    {
+        return contains("white-margins");
+    }
+    bool hasNormalizeIllumination() const
+    {
+        return contains("normalize-illumination");
+    }
+    bool hasThreshold() const
+    {
+        return contains("threshold");
+    }
+    bool hasDespeckle() const
+    {
+        return contains("despeckle");
+    }
+    bool hasDewarping() const
+    {
+        return contains("dewarping");
+    }
+    bool hasDepthPerception() const
+    {
+        return contains("dewarping");
+    }
 
-	page_split::LayoutType getLayout() const { return m_layoutType; }
-	Qt::LayoutDirection getLayoutDirection() const { return m_layoutDirection; }
-	output::ColorParams::ColorMode getColorMode() const { return m_colorMode; }
-	RelativeMargins getMargins() const { return m_margins; }
-	page_layout::Alignment getAlignment() const { return m_alignment; }
-	Despeckle::Level getContentDetection() const { return m_contentDetection; }
-	QRectF getContentRect() const { return m_contentRect; }
-	Orientation getOrientation() const { return m_orientation; }
-	int getThreshold() const { return m_threshold; }
-	double getDeskewAngle() const { return m_deskewAngle; }
-	int getStartFilterIdx() const { return m_startFilterIdx; }
-	int getEndFilterIdx() const { return m_endFilterIdx; }
-	//output::DewarpingMode getDewarpingMode() const { return m_dewarpingMode; }
-	//output::DespeckleLevel getDespeckleLevel() const { return m_despeckleLevel; }
-	//output::DepthPerception getDepthPerception() const { return m_depthPerception; }
+    page_split::LayoutType getLayout() const
+    {
+        return m_layoutType;
+    }
+    Qt::LayoutDirection getLayoutDirection() const
+    {
+        return m_layoutDirection;
+    }
+    output::ColorParams::ColorMode getColorMode() const
+    {
+        return m_colorMode;
+    }
+    RelativeMargins getMargins() const
+    {
+        return m_margins;
+    }
+    page_layout::Alignment getAlignment() const
+    {
+        return m_alignment;
+    }
+    Despeckle::Level getContentDetection() const
+    {
+        return m_contentDetection;
+    }
+    QRectF getContentRect() const
+    {
+        return m_contentRect;
+    }
+    Orientation getOrientation() const
+    {
+        return m_orientation;
+    }
+    int getThreshold() const
+    {
+        return m_threshold;
+    }
+    double getDeskewAngle() const
+    {
+        return m_deskewAngle;
+    }
+    int getStartFilterIdx() const
+    {
+        return m_startFilterIdx;
+    }
+    int getEndFilterIdx() const
+    {
+        return m_endFilterIdx;
+    }
+    //output::DewarpingMode getDewarpingMode() const { return m_dewarpingMode; }
+    //output::DespeckleLevel getDespeckleLevel() const { return m_despeckleLevel; }
+    //output::DepthPerception getDepthPerception() const { return m_depthPerception; }
 
-	bool help() { return m_options.contains("help"); }
-	void printHelp();
+    bool help()
+    {
+        return m_options.contains("help");
+    }
+    void printHelp();
 
 private:
-	CommandLine() : m_gui(true), m_global(false) {}
+    CommandLine() : m_gui(true), m_global(false) {}
 
-	static CommandLine m_globalInstance;
+    static CommandLine m_globalInstance;
 
-	bool m_gui;
-	bool m_global;
+    bool m_gui;
+    bool m_global;
 
-	bool isGlobal() { return m_global; }
-	void setGlobal() { m_global = true; }
+    bool isGlobal()
+    {
+        return m_global;
+    }
+    void setGlobal()
+    {
+        m_global = true;
+    }
 
-	bool contains(QString const& key) const { return m_options.contains(key); }
+    bool contains(QString const& key) const
+    {
+        return m_options.contains(key);
+    }
 
-	QMap<QString, QString> m_options;
-	QString m_projectFile;
-	QString m_outputProjectFile;
-	std::vector<QFileInfo> m_files;
-	std::vector<ImageFileInfo> m_images;
-	QString m_outputDirectory;
+    QMap<QString, QString> m_options;
+    QString m_projectFile;
+    QString m_outputProjectFile;
+    std::vector<QFileInfo> m_files;
+    std::vector<ImageFileInfo> m_images;
+    QString m_outputDirectory;
 
-	page_split::LayoutType m_layoutType;
-	Qt::LayoutDirection m_layoutDirection;
-	output::ColorParams::ColorMode m_colorMode;
-	RelativeMargins m_margins;
-	page_layout::Alignment m_alignment;
-	Despeckle::Level m_contentDetection;
-	QRectF m_contentRect;
-	Orientation m_orientation;
-	int m_threshold;
-	double m_deskewAngle;
-	int m_startFilterIdx;
-	int m_endFilterIdx;
-	//output::DewarpingMode m_dewarpingMode;
-	//output::DespeckleLevel m_despeckleLevel;
-	//output::DepthPerception m_depthPerception;
+    page_split::LayoutType m_layoutType;
+    Qt::LayoutDirection m_layoutDirection;
+    output::ColorParams::ColorMode m_colorMode;
+    RelativeMargins m_margins;
+    page_layout::Alignment m_alignment;
+    Despeckle::Level m_contentDetection;
+    QRectF m_contentRect;
+    Orientation m_orientation;
+    int m_threshold;
+    double m_deskewAngle;
+    int m_startFilterIdx;
+    int m_endFilterIdx;
+    //output::DewarpingMode m_dewarpingMode;
+    //output::DespeckleLevel m_despeckleLevel;
+    //output::DepthPerception m_depthPerception;
 
-	void parseCli(QStringList const& argv);
-	void addImage(QString const& path);
-	void setup();
-	page_split::LayoutType fetchLayoutType();
-	output::ColorParams::ColorMode fetchColorMode();
-	Qt::LayoutDirection fetchLayoutDirection();
-	RelativeMargins fetchMargins();
-	page_layout::Alignment fetchAlignment();
-	Despeckle::Level fetchContentDetection();
-	QRectF fetchContentRect();
-	Orientation fetchOrientation();
-	QString fetchOutputProjectFile();
-	int fetchThreshold();
-	double fetchDeskewAngle();
-	int fetchStartFilterIdx();
-	int fetchEndFilterIdx();
-	//output::DewarpingMode fetchDewarpingMode();
-	//output::DespeckleLevel fetchDespeckleLevel();
-	//output::DepthPerception fetchDepthPerception();
+    void parseCli(QStringList const& argv);
+    void addImage(QString const& path);
+    void setup();
+    page_split::LayoutType fetchLayoutType();
+    output::ColorParams::ColorMode fetchColorMode();
+    Qt::LayoutDirection fetchLayoutDirection();
+    RelativeMargins fetchMargins();
+    page_layout::Alignment fetchAlignment();
+    Despeckle::Level fetchContentDetection();
+    QRectF fetchContentRect();
+    Orientation fetchOrientation();
+    QString fetchOutputProjectFile();
+    int fetchThreshold();
+    double fetchDeskewAngle();
+    int fetchStartFilterIdx();
+    int fetchEndFilterIdx();
+    //output::DewarpingMode fetchDewarpingMode();
+    //output::DespeckleLevel fetchDespeckleLevel();
+    //output::DepthPerception fetchDepthPerception();
 };
 
 #endif

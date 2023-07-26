@@ -30,36 +30,51 @@ class QString;
  */
 class PageId
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	enum SubPage { SINGLE_PAGE, LEFT_PAGE, RIGHT_PAGE };
-	
-	PageId();
-	
-	/**
-	 * \note The default parameter for subpage is not arbitrary.  It has to
-	 *       preceed other values in terms of operator<().  That's necessary
-	 *       to be able to use lower_bound() to find the first page with
-	 *       a matching image id.
-	 */
-	explicit PageId(ImageId const& image_id, SubPage subpage = SINGLE_PAGE);
-	
-	bool isNull() const { return m_imageId.isNull(); }
-	
-	ImageId& imageId() { return m_imageId; }
+    enum SubPage { SINGLE_PAGE, LEFT_PAGE, RIGHT_PAGE };
 
-	ImageId const& imageId() const { return m_imageId; }
-	
-	SubPage subPage() const { return m_subPage; }
-	
-	QString subPageAsString() const { return subPageToString(m_subPage); }
-	
-	static QString subPageToString(SubPage sub_page);
-	
-	static SubPage subPageFromString(QString const& string, bool* ok = 0);
+    PageId();
+
+    /**
+     * \note The default parameter for subpage is not arbitrary.  It has to
+     *       preceed other values in terms of operator<().  That's necessary
+     *       to be able to use lower_bound() to find the first page with
+     *       a matching image id.
+     */
+    explicit PageId(ImageId const& image_id, SubPage subpage = SINGLE_PAGE);
+
+    bool isNull() const
+    {
+        return m_imageId.isNull();
+    }
+
+    ImageId& imageId()
+    {
+        return m_imageId;
+    }
+
+    ImageId const& imageId() const
+    {
+        return m_imageId;
+    }
+
+    SubPage subPage() const
+    {
+        return m_subPage;
+    }
+
+    QString subPageAsString() const
+    {
+        return subPageToString(m_subPage);
+    }
+
+    static QString subPageToString(SubPage sub_page);
+
+    static SubPage subPageFromString(QString const& string, bool* ok = 0);
 private:
-	ImageId m_imageId;
-	SubPage m_subPage;
+    ImageId m_imageId;
+    SubPage m_subPage;
 };
 
 bool operator==(PageId const& lhs, PageId const& rhs);

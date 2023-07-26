@@ -43,7 +43,7 @@ class BinaryImage;
  *         possibly with width and height swapped.
  */
 IMAGEPROC_EXPORT BinaryImage orthogonalRotation(
-	BinaryImage const& src, QRect const& src_rect, int degrees);
+    BinaryImage const& src, QRect const& src_rect, int degrees);
 
 /**
  * \brief Rotation by 90, 180 or 270 degrees.

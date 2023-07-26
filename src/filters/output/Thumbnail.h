@@ -28,7 +28,7 @@ class QSizeF;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 namespace output
@@ -37,9 +37,9 @@ namespace output
 class Thumbnail : public ThumbnailBase
 {
 public:
-	Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-		QSizeF const& max_size, PageId const& page_id,
-		imageproc::AbstractImageTransform const& full_size_image_transform);
+    Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
+              QSizeF const& max_size, PageId const& page_id,
+              imageproc::AbstractImageTransform const& full_size_image_transform);
 };
 
 } // namespace output

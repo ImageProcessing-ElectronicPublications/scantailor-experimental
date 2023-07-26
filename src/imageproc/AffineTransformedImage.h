@@ -30,44 +30,50 @@ namespace imageproc
 
 class IMAGEPROC_EXPORT AffineTransformedImage
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/**
-	 * @param image Image to apply a transformation on. Can't be a null QImage.
-	 *
-	 * This version sets up an identity transformation with image.rect()
-	 * being the crop area.
-	 */
-	explicit AffineTransformedImage(QImage const& image);
+    /**
+     * @param image Image to apply a transformation on. Can't be a null QImage.
+     *
+     * This version sets up an identity transformation with image.rect()
+     * being the crop area.
+     */
+    explicit AffineTransformedImage(QImage const& image);
 
-	/**
-	 * @param image Image to apply a transformation on. Can't be a null QImage.
-	 * @param xform Transformation to be applied to \p image.
-	 *
-	 * @note image.size() must be equal to xform.origSize()
-	 */
-	AffineTransformedImage(QImage const& image, AffineImageTransform const& xform);
+    /**
+     * @param image Image to apply a transformation on. Can't be a null QImage.
+     * @param xform Transformation to be applied to \p image.
+     *
+     * @note image.size() must be equal to xform.origSize()
+     */
+    AffineTransformedImage(QImage const& image, AffineImageTransform const& xform);
 
-	QImage const& origImage() const { return m_origImage; }
+    QImage const& origImage() const
+    {
+        return m_origImage;
+    }
 
-	AffineImageTransform const& xform() const { return m_xform; }
+    AffineImageTransform const& xform() const
+    {
+        return m_xform;
+    }
 
-	/**
-	 * Returns the same image with a transformation modified by a client-provided
-	 * adjuster.
-	 *
-	 * The @p adjuster will be called like this:
-	 * @code
-	 * AffineImageTransform xform = ...;
-	 * adjuster(xform);
-	 * // <use the modified xform>
-	 * @endcode
-	 */
-	template<typename T>
-	AffineTransformedImage withAdjustedTransform(T adjuster) const;
+    /**
+     * Returns the same image with a transformation modified by a client-provided
+     * adjuster.
+     *
+     * The @p adjuster will be called like this:
+     * @code
+     * AffineImageTransform xform = ...;
+     * adjuster(xform);
+     * // <use the modified xform>
+     * @endcode
+     */
+    template<typename T>
+    AffineTransformedImage withAdjustedTransform(T adjuster) const;
 private:
-	QImage m_origImage;
-	AffineImageTransform m_xform;
+    QImage m_origImage;
+    AffineImageTransform m_xform;
 };
 
 
@@ -75,7 +81,7 @@ template<typename T>
 AffineTransformedImage
 AffineTransformedImage::withAdjustedTransform(T adjuster) const
 {
-	return AffineTransformedImage(m_origImage, m_xform.adjusted(adjuster));
+    return AffineTransformedImage(m_origImage, m_xform.adjusted(adjuster));
 }
 
 } // namespace imageproc

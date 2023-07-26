@@ -34,21 +34,21 @@ namespace output
 
 class ApplyColorsDialog : public QDialog, private Ui::OutputApplyColorsDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ApplyColorsDialog(QWidget* parent, PageId const& page_id,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~ApplyColorsDialog();
+    ApplyColorsDialog(QWidget* parent, PageId const& page_id,
+                      PageSelectionAccessor const& page_selection_accessor);
+
+    virtual ~ApplyColorsDialog();
 signals:
-	void accepted(std::set<PageId> const& pages);
+    void accepted(std::set<PageId> const& pages);
 private slots:
-	void onSubmit();
+    void onSubmit();
 private:
-	PageSequence m_pages;
-	std::set<PageId> m_selectedPages;
-	PageId m_curPage;
-	QButtonGroup* m_pScopeGroup;
+    PageSequence m_pages;
+    std::set<PageId> m_selectedPages;
+    PageId m_curPage;
+    QButtonGroup* m_pScopeGroup;
 };
 
 } // namespace output

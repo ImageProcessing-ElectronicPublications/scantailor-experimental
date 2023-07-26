@@ -26,18 +26,18 @@ class AbstractFilterDataCollector;
 
 namespace imageproc
 {
-	class AffineImageTransform;
+class AffineImageTransform;
 }
 
 class CompositeCacheDrivenTask : public RefCountable
 {
 public:
-	virtual ~CompositeCacheDrivenTask() {}
-	
-	virtual void process(
-		PageInfo const& page_info,
-		imageproc::AffineImageTransform const& image_transform,
-		AbstractFilterDataCollector* collector) = 0;
+    virtual ~CompositeCacheDrivenTask() {}
+
+    virtual void process(
+        PageInfo const& page_info,
+        imageproc::AffineImageTransform const& image_transform,
+        AbstractFilterDataCollector* collector) = 0;
 };
 
 #endif

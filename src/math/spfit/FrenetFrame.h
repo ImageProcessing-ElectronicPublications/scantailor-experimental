@@ -30,33 +30,42 @@ namespace spfit
  */
 class MATH_EXPORT FrenetFrame
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	enum YAxisDirection { Y_POINTS_UP, Y_POINTS_DOWN };
+    enum YAxisDirection { Y_POINTS_UP, Y_POINTS_DOWN };
 
-	/**
-	 * \brief Builds a Frenet frame from an origin and a (non-unit) tangent vector.
-	 *
-	 * The direction of the normal vector is choosen according to \p ydir,
-	 * considering the tangent vector to be pointing to the right.  The normal direction
-	 * does matter, as we want the unit normal vector divided by signed curvature give
-	 * us the center of the curvature.  For that to be the case, normal vector's direction
-	 * relative to the unit vector's direction must be the same as the Y axis direction
-	 * relative to the X axis direction in the coordinate system from which we derive
-	 * the curvature.  For 2D computer graphics, the right direction is Y_POINTS_DOWN.
-	 */
-	FrenetFrame(Eigen::Vector2d const& origin,
-		Eigen::Vector2d const& tangent_vector, YAxisDirection ydir = Y_POINTS_DOWN);
+    /**
+     * \brief Builds a Frenet frame from an origin and a (non-unit) tangent vector.
+     *
+     * The direction of the normal vector is choosen according to \p ydir,
+     * considering the tangent vector to be pointing to the right.  The normal direction
+     * does matter, as we want the unit normal vector divided by signed curvature give
+     * us the center of the curvature.  For that to be the case, normal vector's direction
+     * relative to the unit vector's direction must be the same as the Y axis direction
+     * relative to the X axis direction in the coordinate system from which we derive
+     * the curvature.  For 2D computer graphics, the right direction is Y_POINTS_DOWN.
+     */
+    FrenetFrame(Eigen::Vector2d const& origin,
+                Eigen::Vector2d const& tangent_vector, YAxisDirection ydir = Y_POINTS_DOWN);
 
-	Eigen::Vector2d const& origin() const { return m_origin; }
+    Eigen::Vector2d const& origin() const
+    {
+        return m_origin;
+    }
 
-	Eigen::Vector2d const& unitTangent() const { return m_unitTangent; }
+    Eigen::Vector2d const& unitTangent() const
+    {
+        return m_unitTangent;
+    }
 
-	Eigen::Vector2d const& unitNormal() const { return m_unitNormal; }
+    Eigen::Vector2d const& unitNormal() const
+    {
+        return m_unitNormal;
+    }
 private:
-	Eigen::Vector2d m_origin;
-	Eigen::Vector2d m_unitTangent;
-	Eigen::Vector2d m_unitNormal;
+    Eigen::Vector2d m_origin;
+    Eigen::Vector2d m_unitTangent;
+    Eigen::Vector2d m_unitNormal;
 };
 
 } // namespace spfit

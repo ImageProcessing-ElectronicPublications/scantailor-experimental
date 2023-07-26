@@ -26,12 +26,12 @@
 
 inline Eigen::Vector2i toVec(QPoint const& pt)
 {
-	return Eigen::Vector2i(pt.x(), pt.y());
+    return Eigen::Vector2i(pt.x(), pt.y());
 }
 
 inline Eigen::Vector2d toVec(QPointF const& pt)
 {
-	return Eigen::Vector2d(pt.x(), pt.y());
+    return Eigen::Vector2d(pt.x(), pt.y());
 }
 
 #endif

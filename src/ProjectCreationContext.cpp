@@ -25,54 +25,56 @@
 #include <assert.h>
 
 ProjectCreationContext::ProjectCreationContext(QWidget* parent)
-:	m_layoutDirection(Qt::LeftToRight),
-	m_pParent(parent)
+    :	m_layoutDirection(Qt::LeftToRight),
+      m_pParent(parent)
 {
-	showProjectFilesDialog();
+    showProjectFilesDialog();
 }
 
 ProjectCreationContext::~ProjectCreationContext()
 {
-	// Deleting a null pointer is OK.
-	delete m_ptrProjectFilesDialog;
+    // Deleting a null pointer is OK.
+    delete m_ptrProjectFilesDialog;
 }
 
 void
 ProjectCreationContext::projectFilesSubmitted()
 {
-	m_files = m_ptrProjectFilesDialog->inProjectFiles();
-	m_outDir = m_ptrProjectFilesDialog->outputDirectory();
-	m_layoutDirection = Qt::LeftToRight;
-	if (m_ptrProjectFilesDialog->isRtlLayout()) {
-		m_layoutDirection = Qt::RightToLeft;
-	}
+    m_files = m_ptrProjectFilesDialog->inProjectFiles();
+    m_outDir = m_ptrProjectFilesDialog->outputDirectory();
+    m_layoutDirection = Qt::LeftToRight;
+    if (m_ptrProjectFilesDialog->isRtlLayout())
+    {
+        m_layoutDirection = Qt::RightToLeft;
+    }
 
-	emit done(this);
+    emit done(this);
 }
 
 void
 ProjectCreationContext::projectFilesDialogDestroyed()
 {
-	deleteLater();
+    deleteLater();
 }
 
 void
 ProjectCreationContext::showProjectFilesDialog()
 {
-	assert(!m_ptrProjectFilesDialog);
-	m_ptrProjectFilesDialog = new ProjectFilesDialog(m_pParent);
-	m_ptrProjectFilesDialog->setAttribute(Qt::WA_DeleteOnClose);
-	m_ptrProjectFilesDialog->setAttribute(Qt::WA_QuitOnClose, false);
-	if (m_pParent) {
-		m_ptrProjectFilesDialog->setWindowModality(Qt::WindowModal);
-	}
-	connect(
-		m_ptrProjectFilesDialog, SIGNAL(accepted()),
-		this, SLOT(projectFilesSubmitted())
-	);
-	connect(
-		m_ptrProjectFilesDialog, SIGNAL(destroyed(QObject*)),
-		this, SLOT(projectFilesDialogDestroyed())
-	);
-	m_ptrProjectFilesDialog->show();
+    assert(!m_ptrProjectFilesDialog);
+    m_ptrProjectFilesDialog = new ProjectFilesDialog(m_pParent);
+    m_ptrProjectFilesDialog->setAttribute(Qt::WA_DeleteOnClose);
+    m_ptrProjectFilesDialog->setAttribute(Qt::WA_QuitOnClose, false);
+    if (m_pParent)
+    {
+        m_ptrProjectFilesDialog->setWindowModality(Qt::WindowModal);
+    }
+    connect(
+        m_ptrProjectFilesDialog, SIGNAL(accepted()),
+        this, SLOT(projectFilesSubmitted())
+    );
+    connect(
+        m_ptrProjectFilesDialog, SIGNAL(destroyed(QObject*)),
+        this, SLOT(projectFilesDialogDestroyed())
+    );
+    m_ptrProjectFilesDialog->show();
 }

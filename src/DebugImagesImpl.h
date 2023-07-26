@@ -37,7 +37,7 @@ class QWidget;
 
 namespace imageproc
 {
-	class BinaryImage;
+class BinaryImage;
 }
 
 /**
@@ -46,57 +46,60 @@ namespace imageproc
 class DebugImagesImpl : public DebugImages
 {
 public:
-	explicit DebugImagesImpl(
-		QString const& swap_dir = Utils::swappingDir(), bool ensure_exists = true);
+    explicit DebugImagesImpl(
+        QString const& swap_dir = Utils::swappingDir(), bool ensure_exists = true);
 
-	virtual QString swappingDir() const;
+    virtual QString swappingDir() const;
 
-	virtual void add(QImage const& image, QString const& label);
-	
-	virtual void add(imageproc::BinaryImage const& image, QString const& label);
+    virtual void add(QImage const& image, QString const& label);
 
-	virtual void addVectorFieldView(
-		QImage const& image, Grid<Vec2f> const& vector_field, QString const& label);
+    virtual void add(imageproc::BinaryImage const& image, QString const& label);
 
-	/**
-	 * \brief The most general add() function.
-	 *
-	 * Usage example:
-	 * \code
-	 * QImage image = ...;
-	 * Grid<Vec2f> vector_field = ...; 
-	 * ObjectSwapperFactory factory(swap_dir);
-	 * ObjectSwapper<QImage> image_swapper(factory(image));
-	 * ObjectSwapper<Grid<Vec2f> > vector_field_swapper(factory(vector_field));
-	 * DebugImages* dbg = ...;
-	 * dbg->add(
-	 *     "label", [=]() {
-	 *         return new CustomImageView(
-	 *             image_swapper.constObject(), vector_field_swapper.constObject());
-	 *         );
-	 *     },
-	 *     [=]() mutable { image_swapper.swapIn(); vector_field_swapper.swapIn(); },
-	 *     [=]() mutable { image_swapper.swapOut(); vector_field_swapper.swapOut(); }
-	 * );
-	 * \endcode
-	 */
-	virtual void add(QString const& label,
-		boost::function<QWidget*()> const& image_view_factory,
-		boost::function<void()> const& swap_in_action,
-		boost::function<void()> const& swap_out_action, bool swap_out_now = true);
-	
-	bool empty() const { return m_sequence.empty(); }
+    virtual void addVectorFieldView(
+        QImage const& image, Grid<Vec2f> const& vector_field, QString const& label);
 
-	/**
-	 * \brief Removes and returns the front DebugViewFactory.
-	 *
-	 * \param[out] label The label will be written here.
-	 * \return A smart pointer to a DebugViewFactory instance, or null if nothing to retrieve.
-	 */
-	IntrusivePtr<DebugViewFactory> retrieveNext(QString* label);
+    /**
+     * \brief The most general add() function.
+     *
+     * Usage example:
+     * \code
+     * QImage image = ...;
+     * Grid<Vec2f> vector_field = ...;
+     * ObjectSwapperFactory factory(swap_dir);
+     * ObjectSwapper<QImage> image_swapper(factory(image));
+     * ObjectSwapper<Grid<Vec2f> > vector_field_swapper(factory(vector_field));
+     * DebugImages* dbg = ...;
+     * dbg->add(
+     *     "label", [=]() {
+     *         return new CustomImageView(
+     *             image_swapper.constObject(), vector_field_swapper.constObject());
+     *         );
+     *     },
+     *     [=]() mutable { image_swapper.swapIn(); vector_field_swapper.swapIn(); },
+     *     [=]() mutable { image_swapper.swapOut(); vector_field_swapper.swapOut(); }
+     * );
+     * \endcode
+     */
+    virtual void add(QString const& label,
+                     boost::function<QWidget*()> const& image_view_factory,
+                     boost::function<void()> const& swap_in_action,
+                     boost::function<void()> const& swap_out_action, bool swap_out_now = true);
+
+    bool empty() const
+    {
+        return m_sequence.empty();
+    }
+
+    /**
+     * \brief Removes and returns the front DebugViewFactory.
+     *
+     * \param[out] label The label will be written here.
+     * \return A smart pointer to a DebugViewFactory instance, or null if nothing to retrieve.
+     */
+    IntrusivePtr<DebugViewFactory> retrieveNext(QString* label);
 private:
-	QString m_swapDir;
-	std::deque<std::pair<IntrusivePtr<DebugViewFactory>, QString> > m_sequence;
+    QString m_swapDir;
+    std::deque<std::pair<IntrusivePtr<DebugViewFactory>, QString> > m_sequence;
 };
 
 #endif

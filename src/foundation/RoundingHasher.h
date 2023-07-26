@@ -43,53 +43,53 @@ class QPolygonF;
  */
 class FOUNDATION_EXPORT RoundingHasher
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	RoundingHasher(QCryptographicHash::Algorithm algo);
+    RoundingHasher(QCryptographicHash::Algorithm algo);
 
-	RoundingHasher& operator<<(char const* str);
+    RoundingHasher& operator<<(char const* str);
 
-	RoundingHasher& operator<<(QByteArray const& data);
+    RoundingHasher& operator<<(QByteArray const& data);
 
-	RoundingHasher& operator<<(int val);
+    RoundingHasher& operator<<(int val);
 
-	RoundingHasher& operator<<(unsigned val);
+    RoundingHasher& operator<<(unsigned val);
 
-	RoundingHasher& operator<<(long val);
+    RoundingHasher& operator<<(long val);
 
-	RoundingHasher& operator<<(unsigned long val);
+    RoundingHasher& operator<<(unsigned long val);
 
-	RoundingHasher& operator<<(long long val);
+    RoundingHasher& operator<<(long long val);
 
-	RoundingHasher& operator<<(unsigned long long val);
+    RoundingHasher& operator<<(unsigned long long val);
 
-	RoundingHasher& operator<<(float val);
+    RoundingHasher& operator<<(float val);
 
-	RoundingHasher& operator<<(double val);
+    RoundingHasher& operator<<(double val);
 
-	RoundingHasher& operator<<(QPoint const& pt);
+    RoundingHasher& operator<<(QPoint const& pt);
 
-	RoundingHasher& operator<<(QPointF const& pt);
+    RoundingHasher& operator<<(QPointF const& pt);
 
-	RoundingHasher& operator<<(QLine const& line);
+    RoundingHasher& operator<<(QLine const& line);
 
-	RoundingHasher& operator<<(QLineF const& line);
+    RoundingHasher& operator<<(QLineF const& line);
 
-	RoundingHasher& operator<<(QSize const& size);
+    RoundingHasher& operator<<(QSize const& size);
 
-	RoundingHasher& operator<<(QSizeF const& size);
+    RoundingHasher& operator<<(QSizeF const& size);
 
-	RoundingHasher& operator<<(QRect const& rect);
+    RoundingHasher& operator<<(QRect const& rect);
 
-	RoundingHasher& operator<<(QRectF const& rect);
+    RoundingHasher& operator<<(QRectF const& rect);
 
-	RoundingHasher& operator<<(QPolygon const& poly);
+    RoundingHasher& operator<<(QPolygon const& poly);
 
-	RoundingHasher& operator<<(QPolygonF const& poly);
+    RoundingHasher& operator<<(QPolygonF const& poly);
 
-	QByteArray result() const;
+    QByteArray result() const;
 private:
-	QCryptographicHash m_hash;
+    QCryptographicHash m_hash;
 };
 
 #endif

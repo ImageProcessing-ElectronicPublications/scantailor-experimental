@@ -40,10 +40,10 @@ namespace opencl
  * @return The copy.
  */
 OpenCLGrid<float> copy(
-	cl::CommandQueue const& command_queue, cl::Program const& program,
-	OpenCLGrid<float> const& src, int dst_padding,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+    cl::CommandQueue const& command_queue, cl::Program const& program,
+    OpenCLGrid<float> const& src, int dst_padding,
+    std::vector<cl::Event> const* dependencies = nullptr,
+    std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

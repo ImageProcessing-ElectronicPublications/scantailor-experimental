@@ -36,21 +36,21 @@ namespace select_content
 class Dependencies
 {
 public:
-	// Member-wise copying is OK.
-	
-	Dependencies();
-	
-	Dependencies(QString const& transform_fingerprint);
-	
-	Dependencies(QDomElement const& deps_el);
-	
-	~Dependencies();
-	
-	bool matches(Dependencies const& other) const;
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    // Member-wise copying is OK.
+
+    Dependencies();
+
+    Dependencies(QString const& transform_fingerprint);
+
+    Dependencies(QDomElement const& deps_el);
+
+    ~Dependencies();
+
+    bool matches(Dependencies const& other) const;
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-	QString m_transformFingerprint;
+    QString m_transformFingerprint;
 };
 
 } // namespace select_content

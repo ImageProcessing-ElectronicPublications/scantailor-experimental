@@ -28,7 +28,7 @@ class QRectF;
 
 namespace imageproc
 {
-	class AbstractImageTransform;
+class AbstractImageTransform;
 }
 
 /**
@@ -39,44 +39,56 @@ namespace imageproc
  */
 class ContentBox
 {
-	// Member-wise copying is OK.
+    // Member-wise copying is OK.
 public:
-	/** Constructs an invalid ContentBox. */
-	ContentBox();
+    /** Constructs an invalid ContentBox. */
+    ContentBox();
 
-	/**
-	 * @param transform Pre-transformation of the original image.
-	 * @param transformed_rect Content box in transformed space.
-	 */
-	ContentBox(imageproc::AbstractImageTransform const& transform,
-		QRectF const& transformed_rect);
-	
-	ContentBox(QDomElement const& el);
-	
-	~ContentBox();
+    /**
+     * @param transform Pre-transformation of the original image.
+     * @param transformed_rect Content box in transformed space.
+     */
+    ContentBox(imageproc::AbstractImageTransform const& transform,
+               QRectF const& transformed_rect);
 
-	bool isValid() const;
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
+    ContentBox(QDomElement const& el);
 
-	QPointF const& topEdgeMidPoint() const { return m_topEdgeMidPoint; }
+    ~ContentBox();
 
-	QPointF const& bottomEdgeMidPoint() const { return m_bottomEdgeMidPoint; }
+    bool isValid() const;
 
-	QPointF const& leftEdgeMidPoint() const { return m_leftEdgeMidPoint; }
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-	QPointF const& rightEdgeMidPoint() const { return m_rightEdgeMidPoint; }
+    QPointF const& topEdgeMidPoint() const
+    {
+        return m_topEdgeMidPoint;
+    }
 
-	/**
-	 * @brief Convert the internal representation to a rectangle
-	 *        in transformed space.
-	 */
-	QRectF toTransformedRect(imageproc::AbstractImageTransform const& transform) const;
+    QPointF const& bottomEdgeMidPoint() const
+    {
+        return m_bottomEdgeMidPoint;
+    }
+
+    QPointF const& leftEdgeMidPoint() const
+    {
+        return m_leftEdgeMidPoint;
+    }
+
+    QPointF const& rightEdgeMidPoint() const
+    {
+        return m_rightEdgeMidPoint;
+    }
+
+    /**
+     * @brief Convert the internal representation to a rectangle
+     *        in transformed space.
+     */
+    QRectF toTransformedRect(imageproc::AbstractImageTransform const& transform) const;
 private:
-	QPointF m_topEdgeMidPoint;
-	QPointF m_bottomEdgeMidPoint;
-	QPointF m_leftEdgeMidPoint;
-	QPointF m_rightEdgeMidPoint;
+    QPointF m_topEdgeMidPoint;
+    QPointF m_bottomEdgeMidPoint;
+    QPointF m_leftEdgeMidPoint;
+    QPointF m_rightEdgeMidPoint;
 };
 
 #endif

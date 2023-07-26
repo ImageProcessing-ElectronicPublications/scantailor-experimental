@@ -36,44 +36,48 @@ template<typename T>
 class CachingFactory
 {
 private:
-	struct SharedState
-	{
-		std::mutex mutex;
-		std::function<T()> factory;
-		boost::optional<T> cached;
+    struct SharedState
+    {
+        std::mutex mutex;
+        std::function<T()> factory;
+        boost::optional<T> cached;
 
-		template<typename F>
-		SharedState(F&& factory) : factory(std::forward<F>(factory)) {}
-	};
+        template<typename F>
+        SharedState(F&& factory) : factory(std::forward<F>(factory)) {}
+    };
 public:
-	template<typename F>
-	explicit CachingFactory(F&& factory)
-	: m_ptrState(std::make_shared<SharedState>(std::forward<F>(factory))) {}
+    template<typename F>
+    explicit CachingFactory(F&& factory)
+        : m_ptrState(std::make_shared<SharedState>(std::forward<F>(factory))) {}
 
-	T operator()() const {
-		SharedState& s = *m_ptrState;
-		std::lock_guard<std::mutex> const lock(s.mutex);
+    T operator()() const
+    {
+        SharedState& s = *m_ptrState;
+        std::lock_guard<std::mutex> const lock(s.mutex);
 
-		if (!s.cached) {
-			s.cached = s.factory();
-		}
+        if (!s.cached)
+        {
+            s.cached = s.factory();
+        }
 
-		return *s.cached;
-	}
+        return *s.cached;
+    }
 
-	bool isCached() const {
-		SharedState& s = *m_ptrState;
-		std::lock_guard<std::mutex> const lock(s.mutex);
-		return s.cached.is_initialized();
-	}
+    bool isCached() const
+    {
+        SharedState& s = *m_ptrState;
+        std::lock_guard<std::mutex> const lock(s.mutex);
+        return s.cached.is_initialized();
+    }
 
-	void clearCache() {
-		SharedState& s = *m_ptrState;
-		std::lock_guard<std::mutex> const lock(s.mutex);
-		s.cached.reset();
-	}
+    void clearCache()
+    {
+        SharedState& s = *m_ptrState;
+        std::lock_guard<std::mutex> const lock(s.mutex);
+        s.cached.reset();
+    }
 private:
-	std::shared_ptr<SharedState> m_ptrState;
+    std::shared_ptr<SharedState> m_ptrState;
 };
 
 
@@ -83,7 +87,7 @@ private:
 template<typename T, typename F>
 CachingFactory<T> cachingFactory(F&& factory)
 {
-	return CachingFactory<T>(std::forward<F>(factory));
+    return CachingFactory<T>(std::forward<F>(factory));
 }
 
 #endif

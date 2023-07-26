@@ -30,13 +30,13 @@ namespace opencl
 
 /** @see AcceleratableOperations::textFilterBank() */
 std::pair<OpenCLGrid<float>, OpenCLGrid<uint8_t>> textFilterBank(
-	cl::CommandQueue const& command_queue,
-	cl::Program const& program,
-	OpenCLGrid<float> const& src_grid,
-	std::vector<Vec2f> const& directions,
-	std::vector<Vec2f> const& sigmas, float shoulder_length,
-	std::vector<cl::Event> const* dependencies = nullptr,
-	std::vector<cl::Event>* completion_set = nullptr);
+            cl::CommandQueue const& command_queue,
+            cl::Program const& program,
+            OpenCLGrid<float> const& src_grid,
+            std::vector<Vec2f> const& directions,
+            std::vector<Vec2f> const& sigmas, float shoulder_length,
+            std::vector<cl::Event> const* dependencies = nullptr,
+            std::vector<cl::Event>* completion_set = nullptr);
 
 } // namespace opencl
 

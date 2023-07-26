@@ -27,14 +27,14 @@ namespace deskew
 {
 
 DewarpingParams::DewarpingParams()
-:	m_mode(MODE_AUTO)
+    :	m_mode(MODE_AUTO)
 {
 }
-	
+
 DewarpingParams::DewarpingParams(QDomElement const& el)
-:	m_distortionModel(el.namedItem("distortion-model").toElement())
-,	m_depthPerception(el.attribute("depthPerception"))
-,	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    :	m_distortionModel(el.namedItem("distortion-model").toElement())
+    ,	m_depthPerception(el.attribute("depthPerception"))
+    ,	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
 }
 
@@ -45,27 +45,28 @@ DewarpingParams::~DewarpingParams()
 bool
 DewarpingParams::isValid() const
 {
-	return m_distortionModel.isValid();
+    return m_distortionModel.isValid();
 }
 
 void
 DewarpingParams::invalidate()
 {
-	*this = DewarpingParams();
+    *this = DewarpingParams();
 }
 
 QDomElement
 DewarpingParams::toXml(QDomDocument& doc, QString const& name) const
 {
-	if (!isValid()) {
-		return QDomElement();
-	}
+    if (!isValid())
+    {
+        return QDomElement();
+    }
 
-	QDomElement el(doc.createElement(name));
-	el.appendChild(m_distortionModel.toXml(doc, "distortion-model"));
-	el.setAttribute("depthPerception", m_depthPerception.toString());
-	el.setAttribute("mode", m_mode == MODE_MANUAL ? "manual" : "auto");
-	return el;
+    QDomElement el(doc.createElement(name));
+    el.appendChild(m_distortionModel.toXml(doc, "distortion-model"));
+    el.setAttribute("depthPerception", m_depthPerception.toString());
+    el.setAttribute("mode", m_mode == MODE_MANUAL ? "manual" : "auto");
+    return el;
 }
 
 } // namespace deskew

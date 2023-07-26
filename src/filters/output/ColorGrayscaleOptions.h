@@ -29,27 +29,39 @@ namespace output
 class ColorGrayscaleOptions
 {
 public:
-	ColorGrayscaleOptions()
-	: m_whiteMargins(false), m_normalizeIllumination(false) {}
-	
-	ColorGrayscaleOptions(QDomElement const& el);
-	
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
-	
-	bool whiteMargins() const { return m_whiteMargins; }
-	
-	void setWhiteMargins(bool val) { m_whiteMargins = val; }
-	
-	bool normalizeIllumination() const { return m_normalizeIllumination; }
-	
-	void setNormalizeIllumination(bool val) { m_normalizeIllumination = val; }
-	
-	bool operator==(ColorGrayscaleOptions const& other) const;
-	
-	bool operator!=(ColorGrayscaleOptions const& other) const;
+    ColorGrayscaleOptions()
+        : m_whiteMargins(false), m_normalizeIllumination(false) {}
+
+    ColorGrayscaleOptions(QDomElement const& el);
+
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    bool whiteMargins() const
+    {
+        return m_whiteMargins;
+    }
+
+    void setWhiteMargins(bool val)
+    {
+        m_whiteMargins = val;
+    }
+
+    bool normalizeIllumination() const
+    {
+        return m_normalizeIllumination;
+    }
+
+    void setNormalizeIllumination(bool val)
+    {
+        m_normalizeIllumination = val;
+    }
+
+    bool operator==(ColorGrayscaleOptions const& other) const;
+
+    bool operator!=(ColorGrayscaleOptions const& other) const;
 private:
-	bool m_whiteMargins;
-	bool m_normalizeIllumination;
+    bool m_whiteMargins;
+    bool m_normalizeIllumination;
 };
 
 } // namespace output

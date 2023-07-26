@@ -25,13 +25,13 @@
 class FOUNDATION_EXPORT PerformanceTimer
 {
 private:
-	using timer = std::chrono::high_resolution_clock;
+    using timer = std::chrono::high_resolution_clock;
 public:
-	PerformanceTimer() : m_start(timer::now()) {}
-	
-	void print(char const* prefix = "");
+    PerformanceTimer() : m_start(timer::now()) {}
+
+    void print(char const* prefix = "");
 private:
-	timer::time_point const m_start;
+    timer::time_point const m_start;
 };
 
 #endif

@@ -30,96 +30,111 @@ namespace
 
 class PngHandle
 {
-	DECLARE_NON_COPYABLE(PngHandle)
+    DECLARE_NON_COPYABLE(PngHandle)
 public:
-	PngHandle();
-	
-	~PngHandle();
-	
-	png_structp handle() const { return m_pPng; }
-	
-	png_infop info() const { return m_pInfo; }
+    PngHandle();
+
+    ~PngHandle();
+
+    png_structp handle() const
+    {
+        return m_pPng;
+    }
+
+    png_infop info() const
+    {
+        return m_pInfo;
+    }
 private:
-	png_structp m_pPng;
-	png_infop m_pInfo;
+    png_structp m_pPng;
+    png_infop m_pInfo;
 };
 
 PngHandle::PngHandle()
 {
-	m_pPng = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	if (!m_pPng) {
-		throw std::bad_alloc();
-	}
-	m_pInfo = png_create_info_struct(m_pPng);
-	if (!m_pInfo) {
-		throw std::bad_alloc();
-	}
+    m_pPng = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+    if (!m_pPng)
+    {
+        throw std::bad_alloc();
+    }
+    m_pInfo = png_create_info_struct(m_pPng);
+    if (!m_pInfo)
+    {
+        throw std::bad_alloc();
+    }
 }
 
 PngHandle::~PngHandle()
 {
-	png_destroy_read_struct(&m_pPng, &m_pInfo, 0);
+    png_destroy_read_struct(&m_pPng, &m_pInfo, 0);
 }
 
 } // anonymous namespace
 
 static void readFn(png_structp png_ptr, png_bytep data, png_size_t length)
 {
-	QIODevice* io_device = (QIODevice*)png_get_io_ptr(png_ptr);
-	while (length > 0) {
-		qint64 const read = io_device->read((char*)data, length);
-		if (read <= 0) {
-			png_error(png_ptr, "Read Error");
-			return;
-		}
-		length -= read;
-	}
+    QIODevice* io_device = (QIODevice*)png_get_io_ptr(png_ptr);
+    while (length > 0)
+    {
+        qint64 const read = io_device->read((char*)data, length);
+        if (read <= 0)
+        {
+            png_error(png_ptr, "Read Error");
+            return;
+        }
+        length -= read;
+    }
 }
 
 void
 PngMetadataLoader::registerMyself()
 {
-	static bool registered = false;
-	if (!registered) {
-		ImageMetadataLoader::registerLoader(
-			IntrusivePtr<ImageMetadataLoader>(new PngMetadataLoader)
-		);
-		registered = true;
-	}
+    static bool registered = false;
+    if (!registered)
+    {
+        ImageMetadataLoader::registerLoader(
+            IntrusivePtr<ImageMetadataLoader>(new PngMetadataLoader)
+        );
+        registered = true;
+    }
 }
 
 ImageMetadataLoader::Status
 PngMetadataLoader::loadMetadata(
-	QIODevice& io_device,
-	VirtualFunction1<void, ImageMetadata const&>& out)
+    QIODevice& io_device,
+    VirtualFunction1<void, ImageMetadata const&>& out)
 {
-	if (!io_device.isReadable()) {
-		return GENERIC_ERROR;
-	}
+    if (!io_device.isReadable())
+    {
+        return GENERIC_ERROR;
+    }
 
-	png_byte signature[8];
-	if (io_device.peek((char*)signature, 8) != 8) {
-		return FORMAT_NOT_RECOGNIZED;
-	}
-	
-	if (png_sig_cmp(signature, 0, sizeof(signature)) != 0) {
-		return FORMAT_NOT_RECOGNIZED;
-	}
-	
-	PngHandle png;
-	
-	if (setjmp(png_jmpbuf(png.handle()))) {
-		return GENERIC_ERROR;
-	}
-	
-	png_set_read_fn(png.handle(), &io_device, &readFn);
-	png_read_info(png.handle(), png.info());
-	
-	QSize size;
-	size.setWidth(png_get_image_width(png.handle(), png.info()));
-	size.setHeight(png_get_image_height(png.handle(), png.info()));
-	
-	out(ImageMetadata(size));
-	return LOADED;
+    png_byte signature[8];
+    if (io_device.peek((char*)signature, 8) != 8)
+    {
+        return FORMAT_NOT_RECOGNIZED;
+    }
+
+    if (png_sig_cmp(signature, 0, sizeof(signature)) != 0)
+    {
+        return FORMAT_NOT_RECOGNIZED;
+    }
+
+    PngHandle png;
+
+    if (setjmp(png_jmpbuf(png.handle())))
+    {
+        return GENERIC_ERROR;
+    }
+
+    png_set_read_fn(png.handle(), &io_device, &readFn);
+    png_read_info(png.handle(), png.info());
+
+    QSize size;
+    size.setWidth(png_get_image_width(png.handle(), png.info()));
+    size.setHeight(png_get_image_height(png.handle(), png.info()));
+
+    out(ImageMetadata(size));
+    return LOADED;
 }
 

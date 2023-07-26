@@ -20,10 +20,10 @@
 #include <boost/foreach.hpp>
 
 ProcessingTaskQueue::Entry::Entry(
-	PageInfo const& page_info, BackgroundTaskPtr const& tsk)
-:	pageInfo(page_info),
-	task(tsk),
-	takenForProcessing(false)
+    PageInfo const& page_info, BackgroundTaskPtr const& tsk)
+    :	pageInfo(page_info),
+      task(tsk),
+      takenForProcessing(false)
 {
 }
 
@@ -33,126 +33,148 @@ ProcessingTaskQueue::ProcessingTaskQueue()
 
 void
 ProcessingTaskQueue::addProcessingTask(
-	PageInfo const& page_info, BackgroundTaskPtr const& task)
+    PageInfo const& page_info, BackgroundTaskPtr const& task)
 {
-	m_queue.push_back(Entry(page_info, task));
-	m_pageLastAdded = page_info;
+    m_queue.push_back(Entry(page_info, task));
+    m_pageLastAdded = page_info;
 }
 
 BackgroundTaskPtr
 ProcessingTaskQueue::takeForProcessing()
 {
-	BOOST_FOREACH(Entry& ent, m_queue) {
-		if (!ent.takenForProcessing) {
-			ent.takenForProcessing = true;
-			
-			if (m_selectedPage.isNull()) {
-				m_selectedPage = ent.pageInfo;
-			}
+    BOOST_FOREACH(Entry& ent, m_queue)
+    {
+        if (!ent.takenForProcessing)
+        {
+            ent.takenForProcessing = true;
 
-			return ent.task;
-		}
-	}
+            if (m_selectedPage.isNull())
+            {
+                m_selectedPage = ent.pageInfo;
+            }
 
-	return BackgroundTaskPtr();
+            return ent.task;
+        }
+    }
+
+    return BackgroundTaskPtr();
 }
 
 void
 ProcessingTaskQueue::processingFinished(BackgroundTaskPtr const& task)
 {
-	std::list<Entry>::iterator it(m_queue.begin());
-	std::list<Entry>::iterator const end(m_queue.end());
+    std::list<Entry>::iterator it(m_queue.begin());
+    std::list<Entry>::iterator const end(m_queue.end());
 
-	for (;; ++it) {
-		if (it == end) {
-			// Task not found.
-			return;
-		}
+    for (;; ++it)
+    {
+        if (it == end)
+        {
+            // Task not found.
+            return;
+        }
 
-		if (!it->takenForProcessing) {
-			// There is no point in looking further.
-			return;
-		}
+        if (!it->takenForProcessing)
+        {
+            // There is no point in looking further.
+            return;
+        }
 
-		if (it->task == task) {
-			break;
-		}
-	}
+        if (it->task == task)
+        {
+            break;
+        }
+    }
 
-	// If we reached this point, it means we've found our entry and
-	// have <it> pointing to it.
+    // If we reached this point, it means we've found our entry and
+    // have <it> pointing to it.
 
-	bool const removing_selected_page = (m_selectedPage.id() == it->pageInfo.id());
-	m_queue.erase(it);
+    bool const removing_selected_page = (m_selectedPage.id() == it->pageInfo.id());
+    m_queue.erase(it);
 
-	if (removing_selected_page) {
-		if (!m_queue.empty()) {
-			m_selectedPage = m_queue.front().pageInfo;
-		} else if (!m_pageToSelectWhenDone.isNull()) {
-			m_selectedPage = m_pageToSelectWhenDone;
-		} else {
-			m_selectedPage = m_pageLastAdded;
-		}
-	}
+    if (removing_selected_page)
+    {
+        if (!m_queue.empty())
+        {
+            m_selectedPage = m_queue.front().pageInfo;
+        }
+        else if (!m_pageToSelectWhenDone.isNull())
+        {
+            m_selectedPage = m_pageToSelectWhenDone;
+        }
+        else
+        {
+            m_selectedPage = m_pageLastAdded;
+        }
+    }
 }
 
 PageInfo
 ProcessingTaskQueue::selectedPage() const
 {
-	return m_selectedPage;
+    return m_selectedPage;
 }
 
 void
 ProcessingTaskQueue::selectPageWhenDone(PageInfo const& page)
 {
-	m_pageToSelectWhenDone = page;
+    m_pageToSelectWhenDone = page;
 }
 
 bool
 ProcessingTaskQueue::allProcessed() const
 {
-	return m_queue.empty();
+    return m_queue.empty();
 }
 
 void
 ProcessingTaskQueue::cancelAndRemove(std::set<PageId> const& pages)
 {
-	std::list<Entry>::iterator it(m_queue.begin());
-	std::list<Entry>::iterator const end(m_queue.end());
-	while (it != end) {
-		if (pages.find(it->pageInfo.id()) == pages.end()) {
-			++it;
-		} else {
-			if (it->takenForProcessing) {
-				it->task->cancel();
-			}
+    std::list<Entry>::iterator it(m_queue.begin());
+    std::list<Entry>::iterator const end(m_queue.end());
+    while (it != end)
+    {
+        if (pages.find(it->pageInfo.id()) == pages.end())
+        {
+            ++it;
+        }
+        else
+        {
+            if (it->takenForProcessing)
+            {
+                it->task->cancel();
+            }
 
-			if (m_selectedPage.id() == it->pageInfo.id()) {
-				m_selectedPage = PageInfo();
-			}
+            if (m_selectedPage.id() == it->pageInfo.id())
+            {
+                m_selectedPage = PageInfo();
+            }
 
-			if (m_pageLastAdded.id() == it->pageInfo.id()) {
-				m_pageLastAdded = PageInfo();
-			}
+            if (m_pageLastAdded.id() == it->pageInfo.id())
+            {
+                m_pageLastAdded = PageInfo();
+            }
 
-			// We don't clear m_pageToSelectWhenDone as it's set explicitly by client code.
+            // We don't clear m_pageToSelectWhenDone as it's set explicitly by client code.
 
-			m_queue.erase(it++);
-		}
-	}
+            m_queue.erase(it++);
+        }
+    }
 }
 
 void
 ProcessingTaskQueue::cancelAndClear()
 {
-	while (!m_queue.empty()) {
-		Entry& ent = m_queue.front();
-		if (ent.takenForProcessing) {
-			ent.task->cancel();
-		}
-		m_queue.pop_front();
-	}
+    while (!m_queue.empty())
+    {
+        Entry& ent = m_queue.front();
+        if (ent.takenForProcessing)
+        {
+            ent.task->cancel();
+        }
+        m_queue.pop_front();
+    }
 
-	m_pageLastAdded = PageInfo();
-	m_selectedPage = m_pageToSelectWhenDone;
+    m_pageLastAdded = PageInfo();
+    m_selectedPage = m_pageToSelectWhenDone;
 }

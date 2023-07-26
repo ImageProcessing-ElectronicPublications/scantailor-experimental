@@ -24,29 +24,35 @@ namespace deskew
 
 DewarpingMode::DewarpingMode(QString const& str)
 {
-	if (str == "auto") {
-		m_mode = AUTO;
-	} else if (str == "manual") {
-		m_mode = MANUAL;
-	} else {
-		m_mode = OFF;
-	}
+    if (str == "auto")
+    {
+        m_mode = AUTO;
+    }
+    else if (str == "manual")
+    {
+        m_mode = MANUAL;
+    }
+    else
+    {
+        m_mode = OFF;
+    }
 }
-	
+
 QString
 DewarpingMode::toString() const
 {
-	switch (m_mode) {
-		case OFF:
-			return "off";
-		case AUTO:
-			return "auto";
-		case MANUAL:
-			return "manual";
-	}
+    switch (m_mode)
+    {
+    case OFF:
+        return "off";
+    case AUTO:
+        return "auto";
+    case MANUAL:
+        return "manual";
+    }
 
-	assert(!"Unreachable");
-	return QString();
+    assert(!"Unreachable");
+    return QString();
 }
 
 } // namespace output

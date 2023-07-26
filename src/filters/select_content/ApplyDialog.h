@@ -38,22 +38,22 @@ class Scope;
 
 class ApplyDialog : public QDialog, private Ui::SelectContentApplyDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	ApplyDialog(QWidget* parent, PageId const& cur_page,
-		PageSelectionAccessor const& page_selection_accessor);
-	
-	virtual ~ApplyDialog();
+    ApplyDialog(QWidget* parent, PageId const& cur_page,
+                PageSelectionAccessor const& page_selection_accessor);
+
+    virtual ~ApplyDialog();
 signals:
-	void applySelection(std::set<PageId> const& pages);
+    void applySelection(std::set<PageId> const& pages);
 private slots:
-	void onSubmit();
+    void onSubmit();
 private:
-	PageSequence m_pages;
-	std::set<PageId> m_selectedPages;
-	std::vector<PageRange> m_selectedRanges;
-	PageId m_curPage;
-	QButtonGroup* m_pBtnGroup;
+    PageSequence m_pages;
+    std::set<PageId> m_selectedPages;
+    std::vector<PageRange> m_selectedRanges;
+    PageId m_curPage;
+    QButtonGroup* m_pBtnGroup;
 };
 
 } // namespace select_content

@@ -31,8 +31,8 @@ class DebugImages;
 
 namespace imageproc
 {
-	class GrayImage;
-	class AffineTransformedImage;
+class GrayImage;
+class AffineTransformedImage;
 }
 
 namespace page_split
@@ -41,54 +41,66 @@ namespace page_split
 class VertLineFinder
 {
 public:
-	static std::vector<QLineF> findLines(
-		imageproc::AffineTransformedImage const& image,
-		std::shared_ptr<AcceleratableOperations> const& accel_ops,
-		int max_lines, DebugImages* dbg = nullptr);
+    static std::vector<QLineF> findLines(
+        imageproc::AffineTransformedImage const& image,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        int max_lines, DebugImages* dbg = nullptr);
 private:
-	class QualityLine
-	{
-	public:
-		QualityLine(
-			QPointF const& top, QPointF const& bottom,
-			unsigned quality);
-		
-		QPointF const& left() const { return m_left; }
-		
-		QPointF const& right() const { return m_right; }
-		
-		unsigned quality() const { return m_quality; }
-		
-		QLineF toQLine() const;
-	private:
-		QPointF m_left;
-		QPointF m_right;
-		unsigned m_quality;
-	};
-	
-	class LineGroup
-	{
-	public:
-		LineGroup(QualityLine const& line);
-		
-		bool belongsHere(QualityLine const& line) const;
-		
-		void add(QualityLine const& line);
-		
-		void merge(LineGroup const& other);
-		
-		QualityLine const& leader() const { return m_leader; }
-	private:
-		QualityLine m_leader;
-		double m_left;
-		double m_right;
-	};
-	
-	static imageproc::GrayImage removeDarkVertBorders(imageproc::GrayImage const& src);
-	
-	static void selectVertBorders(imageproc::GrayImage& image);
-	
-	static void buildWeightTable(unsigned weight_table[]);
+    class QualityLine
+    {
+    public:
+        QualityLine(
+            QPointF const& top, QPointF const& bottom,
+            unsigned quality);
+
+        QPointF const& left() const
+        {
+            return m_left;
+        }
+
+        QPointF const& right() const
+        {
+            return m_right;
+        }
+
+        unsigned quality() const
+        {
+            return m_quality;
+        }
+
+        QLineF toQLine() const;
+    private:
+        QPointF m_left;
+        QPointF m_right;
+        unsigned m_quality;
+    };
+
+    class LineGroup
+    {
+    public:
+        LineGroup(QualityLine const& line);
+
+        bool belongsHere(QualityLine const& line) const;
+
+        void add(QualityLine const& line);
+
+        void merge(LineGroup const& other);
+
+        QualityLine const& leader() const
+        {
+            return m_leader;
+        }
+    private:
+        QualityLine m_leader;
+        double m_left;
+        double m_right;
+    };
+
+    static imageproc::GrayImage removeDarkVertBorders(imageproc::GrayImage const& src);
+
+    static void selectVertBorders(imageproc::GrayImage& image);
+
+    static void buildWeightTable(unsigned weight_table[]);
 };
 
 } // namespace page_split

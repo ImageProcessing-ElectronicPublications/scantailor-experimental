@@ -28,54 +28,54 @@
 
 class ProcessingTaskQueue
 {
-	DECLARE_NON_COPYABLE(ProcessingTaskQueue)
+    DECLARE_NON_COPYABLE(ProcessingTaskQueue)
 public:
-	ProcessingTaskQueue();
+    ProcessingTaskQueue();
 
-	void addProcessingTask(PageInfo const& page_info, BackgroundTaskPtr const& task);
+    void addProcessingTask(PageInfo const& page_info, BackgroundTaskPtr const& task);
 
-	/**
-	 * The first task among those that haven't been already taken for processing
-	 * is marked as taken and returned.  A null task will be returned if there
-	 * are no such tasks.
-	 */
-	BackgroundTaskPtr takeForProcessing();
+    /**
+     * The first task among those that haven't been already taken for processing
+     * is marked as taken and returned.  A null task will be returned if there
+     * are no such tasks.
+     */
+    BackgroundTaskPtr takeForProcessing();
 
-	void processingFinished(BackgroundTaskPtr const& task);
+    void processingFinished(BackgroundTaskPtr const& task);
 
-	/**
-	 * \brief Returns the page to be visually selected.
-	 *
-	 * To be called after takeForProcessing() / processingFinished().
-	 * It may return a null PageInfo, meaning not to change whatever
-	 * selection we currently have.
-	 */
-	PageInfo selectedPage() const;
+    /**
+     * \brief Returns the page to be visually selected.
+     *
+     * To be called after takeForProcessing() / processingFinished().
+     * It may return a null PageInfo, meaning not to change whatever
+     * selection we currently have.
+     */
+    PageInfo selectedPage() const;
 
-	/**
-	 * Make selectedPage() return a specific page after all pages have been processed.
-	 */
-	void selectPageWhenDone(PageInfo const& page);
+    /**
+     * Make selectedPage() return a specific page after all pages have been processed.
+     */
+    void selectPageWhenDone(PageInfo const& page);
 
-	bool allProcessed() const;
+    bool allProcessed() const;
 
-	void cancelAndRemove(std::set<PageId> const& pages);
+    void cancelAndRemove(std::set<PageId> const& pages);
 
-	void cancelAndClear();
+    void cancelAndClear();
 private:
-	struct Entry
-	{
-		PageInfo pageInfo;
-		BackgroundTaskPtr task;
-		bool takenForProcessing;
+    struct Entry
+    {
+        PageInfo pageInfo;
+        BackgroundTaskPtr task;
+        bool takenForProcessing;
 
-		Entry(PageInfo const& page_info, BackgroundTaskPtr const& task);
-	};
+        Entry(PageInfo const& page_info, BackgroundTaskPtr const& task);
+    };
 
-	std::list<Entry> m_queue;
-	PageInfo m_selectedPage;
-	PageInfo m_pageLastAdded;
-	PageInfo m_pageToSelectWhenDone;
+    std::list<Entry> m_queue;
+    PageInfo m_selectedPage;
+    PageInfo m_pageLastAdded;
+    PageInfo m_pageToSelectWhenDone;
 };
 
 #endif

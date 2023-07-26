@@ -30,43 +30,46 @@ class QString;
 class OrthogonalRotation
 {
 public:
-	OrthogonalRotation() : m_degrees(0) {}
+    OrthogonalRotation() : m_degrees(0) {}
 
-	OrthogonalRotation(QDomElement const& el);
+    OrthogonalRotation(QDomElement const& el);
 
-	QDomElement toXml(QDomDocument& doc, QString const& name) const;
-	
-	int toDegrees() const { return m_degrees; }
+    QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-	void nextClockwiseDirection();
-	
-	void prevClockwiseDirection();
-	
-	QSize rotate(QSize const& dimensions) const;
-	
-	QSize unrotate(QSize const& dimensions) const;
-	
-	QSizeF rotate(QSizeF const& dimensions) const;
-	
-	QSizeF unrotate(QSizeF const& dimensions) const;
-	
-	QPointF rotate(QPointF const& point, double xmax, double ymax) const;
-	
-	QPointF unrotate(QPointF const& point, double xmax, double ymax) const;
-	
-	QTransform transform(QSizeF const& dimensions) const;
+    int toDegrees() const
+    {
+        return m_degrees;
+    }
+
+    void nextClockwiseDirection();
+
+    void prevClockwiseDirection();
+
+    QSize rotate(QSize const& dimensions) const;
+
+    QSize unrotate(QSize const& dimensions) const;
+
+    QSizeF rotate(QSizeF const& dimensions) const;
+
+    QSizeF unrotate(QSizeF const& dimensions) const;
+
+    QPointF rotate(QPointF const& point, double xmax, double ymax) const;
+
+    QPointF unrotate(QPointF const& point, double xmax, double ymax) const;
+
+    QTransform transform(QSizeF const& dimensions) const;
 private:
-	int m_degrees;
+    int m_degrees;
 };
 
 inline bool operator==(OrthogonalRotation const& lhs, OrthogonalRotation const& rhs)
 {
-	return lhs.toDegrees() == rhs.toDegrees();
+    return lhs.toDegrees() == rhs.toDegrees();
 }
 
 inline bool operator!=(OrthogonalRotation const& lhs, OrthogonalRotation const& rhs)
 {
-	return lhs.toDegrees() != rhs.toDegrees();
+    return lhs.toDegrees() != rhs.toDegrees();
 }
 
 #endif

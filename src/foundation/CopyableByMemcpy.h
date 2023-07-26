@@ -26,7 +26,7 @@
 template<typename T>
 struct CopyableByMemcpy
 {
-	static bool const value = std::is_arithmetic<T>::value;
+    static bool const value = std::is_arithmetic<T>::value;
 };
 
 #endif
