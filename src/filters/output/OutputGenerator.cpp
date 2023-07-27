@@ -927,9 +927,64 @@ OutputGenerator::adjustThreshold(BinaryThreshold threshold) const
 BinaryImage
 OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
 {
-    GrayscaleHistogram hist(image, mask);
-    BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
-    BinaryImage binarized(image, adjustThreshold(bw_thresh));
+    if ((image.format() == QImage::Format_Mono) || (image.format() == QImage::Format_MonoLSB))
+    {
+        return BinaryImage(image);
+    }
+
+    BlackWhiteOptions const& blackWhiteOptions = m_colorParams.blackWhiteOptions();
+    ThresholdFilter const thresholdMethod = blackWhiteOptions.thresholdMethod();
+
+    int const thresholdDelta = blackWhiteOptions.thresholdAdjustment();
+    QSize const windowsSize = QSize(blackWhiteOptions.thresholdWindowSize(), blackWhiteOptions.thresholdWindowSize());
+    double const thresholdCoef = blackWhiteOptions.thresholdCoef();
+
+    BinaryImage binarized;
+    switch (thresholdMethod)
+    {
+    case OTSU:
+    {
+        GrayscaleHistogram hist(image, mask);
+        BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
+
+        binarized = BinaryImage(image, adjustThreshold(bw_thresh));
+        break;
+    }
+    case SAUVOLA:
+    {
+        binarized = binarizeSauvola(image, windowsSize, thresholdCoef, thresholdDelta);
+        break;
+    }
+    case WOLF:
+    {
+        binarized = binarizeWolf(image, windowsSize, 1, 254, thresholdCoef, thresholdDelta);
+        break;
+    }
+    case BRADLEY:
+    {
+        binarized = binarizeBradley(image, windowsSize, thresholdCoef, thresholdDelta);
+        break;
+    }
+    case EDGEPLUS:
+    {
+        binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, 0.0, thresholdDelta);
+        break;
+    }
+    case BLURDIV:
+    {
+        binarized = binarizeEdgeDiv(image, windowsSize, 0.0, thresholdCoef, thresholdDelta);
+        break;
+    }
+    case EDGEDIV:
+    {
+        binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, thresholdCoef, thresholdDelta);
+        break;
+    }
+    }
+
+    // GrayscaleHistogram hist(image, mask);
+    // BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
+    // BinaryImage binarized(image, adjustThreshold(bw_thresh));
 
     // Fill masked out areas with white.
     rasterOp<RopAnd<RopSrc, RopDst> >(binarized, mask);

@@ -35,7 +35,8 @@ class GrayImage;
  *
  * \see Help -> About -> References -> [7]
  */
-IMAGEPROC_EXPORT BinaryImage binarizeOtsu(QImage const& src);
+IMAGEPROC_EXPORT BinaryImage binarizeOtsu(
+    QImage const& src, int delta = 0);
 
 /**
  * \brief Image binarization using Mokji's global thresholding method.
@@ -56,7 +57,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeMokji(
   *
   * \see Help -> About -> References -> [9]
   */
-IMAGEPROC_EXPORT BinaryImage binarizeNiblack(GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
+    GrayImage const& src, QSize window_size);
 
 /**
  * \brief Image binarization using Gatos' local thresholding method.
@@ -74,7 +76,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatos(
  *
  * \see Help -> About -> References -> [11]
  */
-IMAGEPROC_EXPORT BinaryImage binarizeSauvola(QImage const& src, QSize window_size);
+IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
+    QImage const& src, QSize window_size,
+    double k = 0.34, int delta = 0);
 
 /**
  * \brief Image binarization using Wolf's local thresholding method.
@@ -88,7 +92,27 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(QImage const& src, QSize window_siz
  */
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
     QImage const& src, QSize window_size,
-    unsigned char lower_bound = 1, unsigned char upper_bound = 254);
+    unsigned char lower_bound = 1, unsigned char upper_bound = 254,
+    double k = 0.30, int delta = 0);
+
+/**
+ * \brief Image binarization using Bradley's adaptive thresholding method.
+ *
+ * Derek Bradley, Gerhard Roth. 2005. "Adaptive Thresholding Using the Integral Image".
+ * http://www.scs.carleton.ca/~roth/iit-publications-iti/docs/gerh-50002.pdf
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeBradley(
+    QImage const& src, QSize window_size,
+    double k = 0.75, int delta = 0);
+
+/**
+ * \brief Image binarization using EdgeDiv (EdgePlus & BlurDiv) local/global thresholding method.
+ *
+ * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
+    QImage const& src, QSize window_size,
+    double kep = 0.5, double kdb = 0.5, int delta = 0);
 
 } // namespace imageproc
 

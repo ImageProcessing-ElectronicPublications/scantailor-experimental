@@ -75,6 +75,12 @@ private slots:
 
     void setNeutralThreshold();
 
+    void thresholdMethodChanged(int idx);
+
+    void thresholdWindowSizeChanged(int value);
+
+    void thresholdCoefChanged(double value);
+
     void bwThresholdChanged();
 
     void applyDespeckleButtonClicked();

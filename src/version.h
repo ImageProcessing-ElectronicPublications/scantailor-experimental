@@ -20,6 +20,6 @@
 #define SCANTAILOR_VERSION_H_
 
 #define VERSION "experimental"
-#define VERSION_QUAD "0.2017.04.10" // Must be "x.x.x.x" or an empty string.
+#define VERSION_QUAD "0.2023.07.27" // Must be "x.x.x.x" or an empty string.
 
 #endif
