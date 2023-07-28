@@ -107,6 +107,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(colorModeChanged(int))
     );
     connect(
+        normalizeCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(normalizeCoefChanged(double))
+    );
+    connect(
         whiteMarginsCB, SIGNAL(clicked(bool)),
         this, SLOT(whiteMarginsToggled(bool))
     );
@@ -237,6 +241,17 @@ OptionsWidget::thresholdMethodChanged(int idx)
     blackWhiteOptions.setThresholdMethod(method);
     m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::normalizeCoefChanged(double value)
+{
+    BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
+    blackWhiteOptions.setNormalizeCoef(value);
+    m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
 
@@ -337,8 +352,7 @@ OptionsWidget::thresholdWindowSizeChanged(int value)
     blackWhiteOptions.setThresholdWindowSize(value);
     m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    if (blackWhiteOptions.thresholdMethod() != OTSU)
-        emit reloadRequested();
+    emit reloadRequested();
 }
 
 void
@@ -531,6 +545,7 @@ OptionsWidget::updateColorsDisplay()
         thresholdSlider->setValue(blackWhiteOptions.thresholdAdjustment());
         thresholdWindowSize->setValue(blackWhiteOptions.thresholdWindowSize());
         thresholdCoef->setValue(blackWhiteOptions.thresholdCoef());
+        normalizeCoef->setValue(blackWhiteOptions.normalizeCoef());
         if (blackWhiteOptions.thresholdMethod() == OTSU)
         {
             thresholdWindowSize->setEnabled( false );

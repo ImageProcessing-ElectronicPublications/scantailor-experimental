@@ -389,9 +389,12 @@ OutputGenerator::process(
             )
         );
 
+        BlackWhiteOptions const& blackWhiteOptions = m_colorParams.blackWhiteOptions();
+        double norm_coef = blackWhiteOptions.normalizeCoef();
+
         maybe_normalized = normalizeIlluminationGray(
                                status, accel_ops, GrayImage(transformed_image),
-                               transformed_for_bg_estimation,
+                               transformed_for_bg_estimation, norm_coef,
                                downscaled_region_of_intereset, dbg
                            );
     }
@@ -634,7 +637,7 @@ OutputGenerator::normalizeIlluminationGray(
     TaskStatus const& status,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     GrayImage const& input_for_normalisation,
-    GrayImage const& input_for_estimation,
+    GrayImage const& input_for_estimation, double norm_coef,
     boost::optional<QPolygonF> const& estimation_region_of_intereset,
     DebugImages* const dbg)
 {
@@ -656,6 +659,28 @@ OutputGenerator::normalizeIlluminationGray(
 
     status.throwIfCancelled();
 
+    int const norm_coef_pr = 256 * norm_coef;
+    int const w = bg_img.width();
+    int const h = bg_img.height();
+    uint8_t* grayLine = bg_img.data();
+    int const grayBpl = bg_img.stride();
+
+    for (int y = 0; y < h; ++y)
+    {
+        for (int x = 0; x < w; ++x)
+        {
+            int pixel = grayLine[x];
+            pixel++;
+            pixel *= norm_coef_pr;
+            pixel += ((256 - norm_coef_pr) << 8);
+            pixel += 128;
+            pixel >>= 8;
+            pixel--;
+            grayLine[x] = (uint8_t) pixel;
+        }
+        grayLine += grayBpl;
+    }
+
     // Divide input_for_normalisation by bg_img. Save result in bg_img.
     rasterOpGeneric(
         [](uint8_t orig, uint8_t& bg)
@@ -664,7 +689,7 @@ OutputGenerator::normalizeIlluminationGray(
         int const i_bg = static_cast<int>(bg);
         if (i_bg > i_orig)
         {
-            bg = static_cast<uint8_t>((i_orig * 255 + (i_bg >> 1)) / i_bg);
+            bg = static_cast<uint8_t>((i_orig * 256 + (i_bg >> 1)) / (i_bg + 1));
         }
         else
         {

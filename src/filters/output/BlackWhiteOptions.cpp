@@ -28,7 +28,8 @@ BlackWhiteOptions::BlackWhiteOptions()
     :   m_thresholdMethod(OTSU),
         m_thresholdAdjustment(0),
         m_thresholdWindowSize(200),
-        m_thresholdCoef(0.3)
+        m_thresholdCoef(0.3),
+        m_normalizeCoef(0.5)
 {
 }
 
@@ -36,7 +37,8 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     :   m_thresholdMethod(parseThresholdMethod(el.attribute("thresholdMethod"))),
         m_thresholdAdjustment(el.attribute("thresholdAdj").toInt()),
         m_thresholdWindowSize(el.attribute("thresholdWinSize").toInt()),
-        m_thresholdCoef(el.attribute("thresholdCoef").toDouble())
+        m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
+        m_normalizeCoef(el.attribute("normalizeCoef").toDouble())
 {
     if (m_thresholdWindowSize == 0)
     {
@@ -56,6 +58,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("thresholdAdj", m_thresholdAdjustment);
     el.setAttribute("thresholdWinSize", m_thresholdWindowSize);
     el.setAttribute("thresholdCoef", m_thresholdCoef);
+    el.setAttribute("normalizeCoef", m_normalizeCoef);
     return el;
 }
 
@@ -75,6 +78,10 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_thresholdCoef != other.m_thresholdCoef)
+    {
+        return false;
+    }
+    if (m_normalizeCoef != other.m_normalizeCoef)
     {
         return false;
     }

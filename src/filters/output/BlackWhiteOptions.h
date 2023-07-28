@@ -37,6 +37,16 @@ public:
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
+    double normalizeCoef() const
+    {
+        return m_normalizeCoef;
+    }
+
+    void setNormalizeCoef(double val)
+    {
+        m_normalizeCoef = val;
+    }
+
     ThresholdFilter thresholdMethod() const
     {
         return m_thresholdMethod;
@@ -85,6 +95,7 @@ private:
     int m_thresholdAdjustment;
     int m_thresholdWindowSize;
     double m_thresholdCoef;
+    double m_normalizeCoef;
 
     static ThresholdFilter parseThresholdMethod(QString const& str);
 

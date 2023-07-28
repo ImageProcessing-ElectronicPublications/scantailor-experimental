@@ -68,6 +68,7 @@ public:
     {
         m_bwOptions = opt;
     }
+
 private:
     static ColorMode parseColorMode(QString const& str);
 
