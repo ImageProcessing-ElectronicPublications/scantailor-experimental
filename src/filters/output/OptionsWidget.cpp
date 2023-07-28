@@ -49,12 +49,12 @@ OptionsWidget::OptionsWidget(
     IntrusivePtr<Settings> const& settings,
     PageSelectionAccessor const& page_selection_accessor)
     :   m_ptrSettings(settings),
-      m_pageSelectionAccessor(page_selection_accessor),
-      m_despeckleLevel(DESPECKLE_NORMAL),
-      m_lastTab(TAB_OUTPUT),
-      m_ignoreThresholdChanges(0),
-      m_ignoreDespeckleLevelChanges(0),
-      m_ignoreScaleChanges(0)
+        m_pageSelectionAccessor(page_selection_accessor),
+        m_despeckleLevel(DESPECKLE_NORMAL),
+        m_lastTab(TAB_OUTPUT),
+        m_ignoreThresholdChanges(0),
+        m_ignoreDespeckleLevelChanges(0),
+        m_ignoreScaleChanges(0)
 {
     setupUi(this);
 
@@ -331,17 +331,19 @@ OptionsWidget::bwThresholdChanged()
 }
 
 void
-OptionsWidget::thresholdWindowSizeChanged(int value) {
+OptionsWidget::thresholdWindowSizeChanged(int value)
+{
     BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
     blackWhiteOptions.setThresholdWindowSize(value);
     m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     if (blackWhiteOptions.thresholdMethod() != OTSU)
-    emit reloadRequested();
+        emit reloadRequested();
 }
 
 void
-OptionsWidget::thresholdCoefChanged(double value) {
+OptionsWidget::thresholdCoefChanged(double value)
+{
     BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
     blackWhiteOptions.setThresholdCoef(value);
     m_colorParams.setBlackWhiteOptions(blackWhiteOptions);

@@ -214,11 +214,11 @@ OutputGenerator::OutputGenerator(
     QRectF const& content_rect, QRectF const& outer_rect,
     ColorParams const& color_params,
     DespeckleLevel const despeckle_level)
-    :	m_ptrImageTransform(image_transform)
-    ,	m_colorParams(color_params)
-    ,	m_outRect(outer_rect.toRect())
-    ,	m_contentRect(content_rect.toRect())
-    ,	m_despeckleLevel(despeckle_level)
+    :   m_ptrImageTransform(image_transform)
+    ,   m_colorParams(color_params)
+    ,   m_outRect(outer_rect.toRect())
+    ,   m_contentRect(content_rect.toRect())
+    ,   m_despeckleLevel(despeckle_level)
 {
     // An empty outer_rect may be a result of all pages having no content box.
     if (m_outRect.width() <= 0)
@@ -927,64 +927,62 @@ OutputGenerator::adjustThreshold(BinaryThreshold threshold) const
 BinaryImage
 OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
 {
+    BinaryImage binarized;
     if ((image.format() == QImage::Format_Mono) || (image.format() == QImage::Format_MonoLSB))
     {
-        return BinaryImage(image);
+        binarized = BinaryImage(image);
     }
+    else
+    {
+        BlackWhiteOptions const& blackWhiteOptions = m_colorParams.blackWhiteOptions();
+        ThresholdFilter const thresholdMethod = blackWhiteOptions.thresholdMethod();
 
-    BlackWhiteOptions const& blackWhiteOptions = m_colorParams.blackWhiteOptions();
-    ThresholdFilter const thresholdMethod = blackWhiteOptions.thresholdMethod();
+        int const thresholdDelta = blackWhiteOptions.thresholdAdjustment();
+        QSize const windowsSize = QSize(blackWhiteOptions.thresholdWindowSize(), blackWhiteOptions.thresholdWindowSize());
+        double const thresholdCoef = blackWhiteOptions.thresholdCoef();
 
-    int const thresholdDelta = blackWhiteOptions.thresholdAdjustment();
-    QSize const windowsSize = QSize(blackWhiteOptions.thresholdWindowSize(), blackWhiteOptions.thresholdWindowSize());
-    double const thresholdCoef = blackWhiteOptions.thresholdCoef();
+        switch (thresholdMethod)
+        {
+        case OTSU:
+        {
+            GrayscaleHistogram hist(image, mask);
+            BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
 
-    BinaryImage binarized;
-    switch (thresholdMethod)
-    {
-    case OTSU:
-    {
-        GrayscaleHistogram hist(image, mask);
-        BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
-
-        binarized = BinaryImage(image, adjustThreshold(bw_thresh));
-        break;
+            binarized = BinaryImage(image, adjustThreshold(bw_thresh));
+            break;
+        }
+        case SAUVOLA:
+        {
+            binarized = binarizeSauvola(image, windowsSize, thresholdCoef, thresholdDelta);
+            break;
+        }
+        case WOLF:
+        {
+            binarized = binarizeWolf(image, windowsSize, 1, 254, thresholdCoef, thresholdDelta);
+            break;
+        }
+        case BRADLEY:
+        {
+            binarized = binarizeBradley(image, windowsSize, thresholdCoef, thresholdDelta);
+            break;
+        }
+        case EDGEPLUS:
+        {
+            binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, 0.0, thresholdDelta);
+            break;
+        }
+        case BLURDIV:
+        {
+            binarized = binarizeEdgeDiv(image, windowsSize, 0.0, thresholdCoef, thresholdDelta);
+            break;
+        }
+        case EDGEDIV:
+        {
+            binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, thresholdCoef, thresholdDelta);
+            break;
+        }
+        }
     }
-    case SAUVOLA:
-    {
-        binarized = binarizeSauvola(image, windowsSize, thresholdCoef, thresholdDelta);
-        break;
-    }
-    case WOLF:
-    {
-        binarized = binarizeWolf(image, windowsSize, 1, 254, thresholdCoef, thresholdDelta);
-        break;
-    }
-    case BRADLEY:
-    {
-        binarized = binarizeBradley(image, windowsSize, thresholdCoef, thresholdDelta);
-        break;
-    }
-    case EDGEPLUS:
-    {
-        binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, 0.0, thresholdDelta);
-        break;
-    }
-    case BLURDIV:
-    {
-        binarized = binarizeEdgeDiv(image, windowsSize, 0.0, thresholdCoef, thresholdDelta);
-        break;
-    }
-    case EDGEDIV:
-    {
-        binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, thresholdCoef, thresholdDelta);
-        break;
-    }
-    }
-
-    // GrayscaleHistogram hist(image, mask);
-    // BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
-    // BinaryImage binarized(image, adjustThreshold(bw_thresh));
 
     // Fill masked out areas with white.
     rasterOp<RopAnd<RopSrc, RopDst> >(binarized, mask);

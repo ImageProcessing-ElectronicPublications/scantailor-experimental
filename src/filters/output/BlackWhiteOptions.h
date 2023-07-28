@@ -72,7 +72,7 @@ public:
         m_thresholdWindowSize = val;
     }
 
-    void setThresholdCoef(float val)
+    void setThresholdCoef(double val)
     {
         m_thresholdCoef = val;
     }
