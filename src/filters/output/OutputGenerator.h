@@ -145,8 +145,11 @@ private:
         TaskStatus const& status, imageproc::GrayImage const& gray_source,
         DebugImages* dbg) const;
 
+    void BinaryImageXOR(
+        imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, imageproc::BWColor const color) const;
+
     void modifyBinarizationMask(
-        imageproc::BinaryImage& bw_mask, ZoneSet const& zones,
+        imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, ZoneSet const& zones,
         std::function<QPointF(QPointF const&)> const& orig_to_output) const;
 
     imageproc::BinaryThreshold adjustThreshold(

@@ -416,28 +416,29 @@ OutputGenerator::process(
 
     status.throwIfCancelled();
 
-    if (render_params.binaryOutput() || m_outRect.isEmpty())
+    BinaryImage bw_mask;
+    BinaryImage bw_content(m_outRect.size().expandedTo(QSize(1, 1)), WHITE);
+    if (render_params.binaryOutput() || render_params.mixedOutput() || m_outRect.isEmpty())
     {
-        BinaryImage dst(m_outRect.size().expandedTo(QSize(1, 1)), WHITE);
-
         if (!m_contentRect.isEmpty())
         {
-            BinaryImage binarization_mask(dst.size(), BLACK);
+            BinaryImage binarization_mask(bw_content.size(), BLACK);
             binarization_mask.fillExcept(m_contentRect, WHITE);
 
-            dst = binarize(maybe_smoothed, binarization_mask);
+            bw_content = binarize(maybe_smoothed, binarization_mask);
+            maybe_smoothed = QImage();   // Save memory.
             binarization_mask.release(); // Save memory.
             if (dbg)
             {
-                dbg->add(dst, "binarized_and_cropped");
+                dbg->add(bw_content, "binarized_and_cropped");
             }
 
             status.throwIfCancelled();
 
-            morphologicalSmoothInPlace(dst, accel_ops);
+            morphologicalSmoothInPlace(bw_content, accel_ops);
             if (dbg)
             {
-                dbg->add(dst, "edges_smoothed");
+                dbg->add(bw_content, "edges_smoothed");
             }
 
             status.throwIfCancelled();
@@ -452,58 +453,58 @@ OutputGenerator::process(
             // is not accurate. Fortunately, that reconstruction is for
             // visualization purposes only and that's the best we can do
             // without caching the full-size input-to-despeckling images.
-            maybeDespeckleInPlace(
-                dst, m_despeckleLevel, out_speckles_image, status, dbg
-            );
+            maybeDespeckleInPlace(bw_content, m_despeckleLevel, out_speckles_image, status, dbg);
         }
 
-        applyFillZonesInPlace(dst, fill_zones);
-        return dst.toQImage();
-    }
-
-    BinaryImage bw_mask;
-    if (render_params.mixedOutput())
-    {
-        // This block should go before the block with
-        // adjustBrightnessGrayscale(), which may convert
-        // maybe_normalized from grayscale to color mode.
-
-        bw_mask = estimateBinarizationMask(status, GrayImage(maybe_normalized), dbg);
-        if (dbg)
+        if (render_params.binaryOutput() || m_outRect.isEmpty())
         {
-            dbg->add(bw_mask, "bw_mask");
+            applyFillZonesInPlace(bw_content, fill_zones);
+            return bw_content.toQImage();
         }
 
-        if (out_auto_picture_mask)
+        if (render_params.mixedOutput())
         {
-            if (out_auto_picture_mask->size() != m_outRect.size())
+            // This block should go before the block with
+            // adjustBrightnessGrayscale(), which may convert
+            // maybe_normalized from grayscale to color mode.
+
+            bw_mask = estimateBinarizationMask(status, GrayImage(maybe_normalized), dbg);
+            if (dbg)
             {
-                BinaryImage(m_outRect.size()).swap(*out_auto_picture_mask);
+                dbg->add(bw_mask, "bw_mask");
             }
-            out_auto_picture_mask->fill(BLACK);
 
-            if (!m_contentRect.isEmpty())
+            if (out_auto_picture_mask)
             {
-                rasterOp<RopSrc>(
-                    *out_auto_picture_mask, m_contentRect,
-                    bw_mask, m_contentRect.topLeft()
-                );
+                if (out_auto_picture_mask->size() != m_outRect.size())
+                {
+                    BinaryImage(m_outRect.size()).swap(*out_auto_picture_mask);
+                }
+                out_auto_picture_mask->fill(BLACK);
+
+                if (!m_contentRect.isEmpty())
+                {
+                    rasterOp<RopSrc>(
+                        *out_auto_picture_mask, m_contentRect,
+                        bw_mask, m_contentRect.topLeft()
+                    );
+                }
             }
-        }
 
-        status.throwIfCancelled();
+            status.throwIfCancelled();
+            std::function<QPointF(QPointF const&)> forward_mapper(m_ptrImageTransform->forwardMapper());
+            QPointF const origin(m_outRect.topLeft());
+            auto orig_to_output = [forward_mapper, origin](QPointF const& pt)
+            {
+                return forward_mapper(pt) - origin;
+            };
 
-        std::function<QPointF(QPointF const&)> forward_mapper(m_ptrImageTransform->forwardMapper());
-        QPointF const origin(m_outRect.topLeft());
-        auto orig_to_output = [forward_mapper, origin](QPointF const& pt)
-        {
-            return forward_mapper(pt) - origin;
-        };
+            modifyBinarizationMask(bw_mask, bw_content, picture_zones, orig_to_output);
 
-        modifyBinarizationMask(bw_mask, picture_zones, orig_to_output);
-        if (dbg)
-        {
-            dbg->add(bw_mask, "bw_mask with zones");
+            if (dbg)
+            {
+                dbg->add(bw_mask, "bw_mask with zones");
+            }
         }
     }
 
@@ -530,43 +531,9 @@ OutputGenerator::process(
     }
     else
     {
-        BinaryImage binarization_mask(bw_mask);
-        binarization_mask.fillExcept(m_contentRect, WHITE);
-        PolygonRasterizer::fillExcept(
-            binarization_mask, WHITE, transformed_crop_area, Qt::WindingFill
-        );
-
-        BinaryImage bw_content(binarize(maybe_smoothed, binarization_mask));
-        maybe_smoothed = QImage();   //
-        binarization_mask.release(); // Save memory.
-        if (dbg)
-        {
-            dbg->add(bw_content, "binarized_and_cropped");
-        }
-
-        status.throwIfCancelled();
-
-        morphologicalSmoothInPlace(bw_content, accel_ops);
-        if (dbg)
-        {
-            dbg->add(bw_content, "edges_smoothed");
-        }
-
-        status.throwIfCancelled();
-
         // We don't want speckles in non-B/W areas, as they would
         // then get visualized on the Despeckling tab.
         rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
-
-        status.throwIfCancelled();
-
-        // It's important to keep despeckling the very last operation
-        // affecting the binary part of the output. That's because
-        // we will be reconstructing the input to this despeckling
-        // operation from the final output file.
-        maybeDespeckleInPlace(
-            bw_content, m_despeckleLevel, out_speckles_image, status, dbg
-        );
 
         status.throwIfCancelled();
 
@@ -586,6 +553,7 @@ OutputGenerator::process(
             );
         }
     }
+    bw_content.release(); // Save memory.
 
     status.throwIfCancelled();
 
@@ -740,41 +708,120 @@ OutputGenerator::estimateBinarizationMask(
 }
 
 void
+OutputGenerator::BinaryImageXOR(
+    imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, imageproc::BWColor const color) const
+{
+    uint32_t* bw_mask_line = bw_mask.data();
+    int const bw_mask_stride = bw_mask.wordsPerLine();
+    uint32_t const* bw_content_line = bw_content.data();
+    int const bw_content_stride = bw_content.wordsPerLine();
+    int const width = bw_mask.width();
+    int const height = bw_mask.height();
+    uint32_t const msb = uint32_t(1) << 31;
+
+    if (color == imageproc::BWColor(BLACK))
+    {
+        for (int y = 0; y < height; ++y)
+        {
+            for (int x = 0; x < width; ++x)
+            {
+                if ((bw_mask_line[x >> 5] & (msb >> (x & 31))) != (bw_content_line[x >> 5] & (msb >> (x & 31))))
+                {
+                    bw_mask_line[x >> 5] |= (msb >> (x & 31));
+                }
+                else
+                {
+                    bw_mask_line[x >> 5] &= ~(msb >> (x & 31));
+                }
+            }
+            bw_mask_line += bw_mask_stride;
+            bw_content_line += bw_content_stride;
+        }
+    }
+    else
+    {
+        for (int y = 0; y < height; ++y)
+        {
+            for (int x = 0; x < width; ++x)
+            {
+                if ((bw_mask_line[x >> 5] & (msb >> (x & 31))) != (bw_content_line[x >> 5] & (msb >> (x & 31))))
+                {
+                    bw_mask_line[x >> 5] &= ~(msb >> (x & 31));
+                }
+                else
+                {
+                    bw_mask_line[x >> 5] |= (msb >> (x & 31));
+                }
+            }
+            bw_mask_line += bw_mask_stride;
+            bw_content_line += bw_content_stride;
+        }
+    }
+}
+
+void
 OutputGenerator::modifyBinarizationMask(
-    imageproc::BinaryImage& bw_mask, ZoneSet const& zones,
+    imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, ZoneSet const& zones,
     std::function<QPointF(QPointF const&)> const& orig_to_output) const
 {
     typedef PictureLayerProperty PLP;
+    imageproc::BinaryImage bw_content_bg(bw_content);
 
-    // Pass 1: ERASER1
+    // Pass 1: ZONEERASER1
     for (Zone const& zone : zones)
     {
-        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ERASER1)
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEERASER1)
         {
             QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
             PolygonRasterizer::fill(bw_mask, BLACK, poly, Qt::WindingFill);
         }
     }
 
-    // Pass 2: PAINTER2
+    // Pass 2: ZONEFG
+    BinaryImageXOR(bw_mask, bw_content, WHITE);
     for (Zone const& zone : zones)
     {
-        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::PAINTER2)
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEFG)
+        {
+            QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
+            PolygonRasterizer::fill(bw_mask, WHITE, poly, Qt::WindingFill);
+            PolygonRasterizer::fill(bw_content_bg, WHITE, poly, Qt::WindingFill);
+        }
+    }
+    BinaryImageXOR(bw_mask, bw_content, WHITE);
+
+    // Pass 3: ZONEBG
+    BinaryImageXOR(bw_mask, bw_content_bg, BLACK);
+    for (Zone const& zone : zones)
+    {
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEBG)
+        {
+            QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
+            PolygonRasterizer::fill(bw_mask, WHITE, poly, Qt::WindingFill);
+        }
+    }
+    BinaryImageXOR(bw_mask, bw_content_bg, BLACK);
+
+    // Pass 4: ZONEPAINTER2
+    for (Zone const& zone : zones)
+    {
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEPAINTER2)
         {
             QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
             PolygonRasterizer::fill(bw_mask, WHITE, poly, Qt::WindingFill);
         }
     }
 
-    // Pass 1: ERASER3
+    // Pass 5: ZONEERASER3
     for (Zone const& zone : zones)
     {
-        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ERASER3)
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEERASER3)
         {
             QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
             PolygonRasterizer::fill(bw_mask, BLACK, poly, Qt::WindingFill);
         }
     }
+    BinaryImageXOR(bw_content, bw_mask, WHITE);
 }
 
 QImage
