@@ -389,8 +389,8 @@ OutputGenerator::process(
             )
         );
 
-        BlackWhiteOptions const& blackWhiteOptions = m_colorParams.blackWhiteOptions();
-        double norm_coef = blackWhiteOptions.normalizeCoef();
+        BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
+        double norm_coef = black_white_options.normalizeCoef();
 
         maybe_normalized = normalizeIlluminationGray(
                                status, accel_ops, GrayImage(transformed_image),
@@ -662,23 +662,23 @@ OutputGenerator::normalizeIlluminationGray(
     int const norm_coef_pr = 256 * norm_coef;
     int const w = bg_img.width();
     int const h = bg_img.height();
-    uint8_t* grayLine = bg_img.data();
-    int const grayBpl = bg_img.stride();
+    uint8_t* gray_line = bg_img.data();
+    int const gray_bpl = bg_img.stride();
 
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
         {
-            int pixel = grayLine[x];
+            int pixel = gray_line[x];
             pixel++;
             pixel *= norm_coef_pr;
             pixel += ((256 - norm_coef_pr) << 8);
             pixel += 128;
             pixel >>= 8;
             pixel--;
-            grayLine[x] = (uint8_t) pixel;
+            gray_line[x] = (uint8_t) pixel;
         }
-        grayLine += grayBpl;
+        gray_line += gray_bpl;
     }
 
     // Divide input_for_normalisation by bg_img. Save result in bg_img.
@@ -1006,14 +1006,14 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
     }
     else
     {
-        BlackWhiteOptions const& blackWhiteOptions = m_colorParams.blackWhiteOptions();
-        ThresholdFilter const thresholdMethod = blackWhiteOptions.thresholdMethod();
+        BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
+        ThresholdFilter const threshold_method = black_white_options.thresholdMethod();
 
-        int const thresholdDelta = blackWhiteOptions.thresholdAdjustment();
-        QSize const windowsSize = QSize(blackWhiteOptions.thresholdWindowSize(), blackWhiteOptions.thresholdWindowSize());
-        double const thresholdCoef = blackWhiteOptions.thresholdCoef();
+        int const threshold_delta = black_white_options.thresholdAdjustment();
+        QSize const window_size = QSize(black_white_options.thresholdWindowSize(), black_white_options.thresholdWindowSize());
+        double const threshold_coef = black_white_options.thresholdCoef();
 
-        switch (thresholdMethod)
+        switch (threshold_method)
         {
         case OTSU:
         {
@@ -1025,32 +1025,32 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         }
         case SAUVOLA:
         {
-            binarized = binarizeSauvola(image, windowsSize, thresholdCoef, thresholdDelta);
+            binarized = binarizeSauvola(image, window_size, threshold_coef, threshold_delta);
             break;
         }
         case WOLF:
         {
-            binarized = binarizeWolf(image, windowsSize, 1, 254, thresholdCoef, thresholdDelta);
+            binarized = binarizeWolf(image, window_size, 1, 254, threshold_coef, threshold_delta);
             break;
         }
         case BRADLEY:
         {
-            binarized = binarizeBradley(image, windowsSize, thresholdCoef, thresholdDelta);
+            binarized = binarizeBradley(image, window_size, threshold_coef, threshold_delta);
             break;
         }
         case EDGEPLUS:
         {
-            binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, 0.0, thresholdDelta);
+            binarized = binarizeEdgeDiv(image, window_size, threshold_coef, 0.0, threshold_delta);
             break;
         }
         case BLURDIV:
         {
-            binarized = binarizeEdgeDiv(image, windowsSize, 0.0, thresholdCoef, thresholdDelta);
+            binarized = binarizeEdgeDiv(image, window_size, 0.0, threshold_coef, threshold_delta);
             break;
         }
         case EDGEDIV:
         {
-            binarized = binarizeEdgeDiv(image, windowsSize, thresholdCoef, thresholdCoef, thresholdDelta);
+            binarized = binarizeEdgeDiv(image, window_size, threshold_coef, threshold_coef, threshold_delta);
             break;
         }
         }

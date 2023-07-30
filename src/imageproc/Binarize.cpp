@@ -228,7 +228,7 @@ BinaryImage binarizeGatos(
                     continue;
                 }
 
-                static const uint32_t msb = uint32_t(1) << 31;
+                static uint32_t const msb = uint32_t(1) << 31;
                 if (niblack_line[x >> 5] & (msb >> (x & 31)))
                 {
                     // Foreground pixel. Interpolate from background pixels in window.
@@ -345,10 +345,9 @@ BinaryImage binarizeSauvola(
             double const variance = sqmean - mean * mean;
             double const deviation = sqrt(fabs(variance));
 
-            double const k = 0.34;
             double const threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
 
-            uint32_t const msb = uint32_t(1) << 31;
+            static uint32_t const msb = uint32_t(1) << 31;
             uint32_t const mask = msb >> (x & 31);
             if (int(gray_line[x]) < (threshold + delta))
             {
@@ -463,7 +462,7 @@ BinaryImage binarizeWolf(
             double const a = 1.0 - deviation / max_deviation;
             double const threshold = mean - k * a * (mean - min_gray_level);
 
-            uint32_t const msb = uint32_t(1) << 31;
+            static uint32_t const msb = uint32_t(1) << 31;
             uint32_t const mask = msb >> (x & 31);
             if (gray_line[x] < lower_bound ||
                     (gray_line[x] <= upper_bound &&
@@ -503,51 +502,51 @@ BinaryImage binarizeBradley(
     int const w = gray.width();
     int const h = gray.height();
 
-    IntegralImage<uint32_t> integralImage(w, h);
+    IntegralImage<uint32_t> integral_image(w, h);
 
-    uint8_t* grayLine = gray.bits();
-    int const grayBpl = gray.bytesPerLine();
+    uint8_t* gray_line = gray.bits();
+    int const gray_bpl = gray.bytesPerLine();
 
     for (int y = 0; y < h; ++y)
     {
-        integralImage.beginRow();
+        integral_image.beginRow();
         for (int x = 0; x < w; ++x)
         {
-            uint32_t const pixel = grayLine[x];
-            integralImage.push(pixel);
+            uint32_t const pixel = gray_line[x];
+            integral_image.push(pixel);
         }
-        grayLine += grayBpl;
+        gray_line += gray_bpl;
     }
 
-    int const windowLowerHalf = window_size.height() >> 1;
-    int const windowUpperHalf = window_size.height() - windowLowerHalf;
-    int const windowLeftHalf = window_size.width() >> 1;
-    int const windowRightHalf = window_size.width() - windowLeftHalf;
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
 
     BinaryImage bwImg(w, h);
     uint32_t* bwLine = bwImg.data();
     int const bwWpl = bwImg.wordsPerLine();
 
-    grayLine = gray.bits();
+    gray_line = gray.bits();
     for (int y = 0; y < h; ++y)
     {
-        int const top = std::max(0, y - windowLowerHalf);
-        int const bottom = std::min(h, y + windowUpperHalf);  // exclusive
+        int const top = std::max(0, y - window_lower_half);
+        int const bottom = std::min(h, y + window_upper_half);  // exclusive
         for (int x = 0; x < w; ++x)
         {
-            int const left = std::max(0, x - windowLeftHalf);
-            int const right = std::min(w, x + windowRightHalf);  // exclusive
+            int const left = std::max(0, x - window_left_half);
+            int const right = std::min(w, x + window_right_half);  // exclusive
             int const area = (bottom - top) * (right - left);
             assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
             QRect const rect(left, top, right - left, bottom - top);
-            double const windowSum = integralImage.sum(rect);
+            double const window_sum = integral_image.sum(rect);
 
-            double const rArea = 1.0 / area;
-            double const mean = windowSum * rArea;
+            double const r_area = 1.0 / area;
+            double const mean = window_sum * r_area;
             double const threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
-            uint32_t const msb = uint32_t(1) << 31;
+            static uint32_t const msb = uint32_t(1) << 31;
             uint32_t const mask = msb >> (x & 31);
-            if (int(grayLine[x]) < (threshold + delta))
+            if (int(gray_line[x]) < (threshold + delta))
             {
                 // black
                 bwLine[x >> 5] |= mask;
@@ -558,7 +557,7 @@ BinaryImage binarizeBradley(
                 bwLine[x >> 5] &= ~mask;
             }
         }
-        grayLine += grayBpl;
+        gray_line += gray_bpl;
         bwLine += bwWpl;
     }
     return bwImg;
@@ -582,44 +581,44 @@ BinaryImage binarizeEdgeDiv(
     int const w = gray.width();
     int const h = gray.height();
 
-    IntegralImage<uint32_t> integralImage(w, h);
+    IntegralImage<uint32_t> integral_image(w, h);
 
-    uint8_t* grayLine = gray.bits();
-    int const grayBpl = gray.bytesPerLine();
+    uint8_t* gray_line = gray.bits();
+    int const gray_bpl = gray.bytesPerLine();
 
     for (int y = 0; y < h; ++y)
     {
-        integralImage.beginRow();
+        integral_image.beginRow();
         for (int x = 0; x < w; ++x)
         {
-            uint32_t const pixel = grayLine[x];
-            integralImage.push(pixel);
+            uint32_t const pixel = gray_line[x];
+            integral_image.push(pixel);
         }
-        grayLine += grayBpl;
+        gray_line += gray_bpl;
     }
 
-    int const windowLowerHalf = window_size.height() >> 1;
-    int const windowUpperHalf = window_size.height() - windowLowerHalf;
-    int const windowLeftHalf = window_size.width() >> 1;
-    int const windowRightHalf = window_size.width() - windowLeftHalf;
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
 
-    grayLine = gray.bits();
+    gray_line = gray.bits();
     for (int y = 0; y < h; ++y)
     {
-        int const top = std::max(0, y - windowLowerHalf);
-        int const bottom = std::min(h, y + windowUpperHalf);  // exclusive
+        int const top = std::max(0, y - window_lower_half);
+        int const bottom = std::min(h, y + window_upper_half);  // exclusive
         for (int x = 0; x < w; ++x)
         {
-            int const left = std::max(0, x - windowLeftHalf);
-            int const right = std::min(w, x + windowRightHalf);  // exclusive
+            int const left = std::max(0, x - window_left_half);
+            int const right = std::min(w, x + window_right_half);  // exclusive
             int const area = (bottom - top) * (right - left);
             assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
             QRect const rect(left, top, right - left, bottom - top);
-            double const windowSum = integralImage.sum(rect);
+            double const window_sum = integral_image.sum(rect);
 
-            double const rArea = 1.0 / area;
-            double const mean = windowSum * rArea;
-            double const origin = grayLine[x];
+            double const r_area = 1.0 / area;
+            double const mean = window_sum * r_area;
+            double const origin = gray_line[x];
             double retval = origin;
             if (kep > 0.0)
             {
@@ -643,9 +642,9 @@ BinaryImage binarizeEdgeDiv(
             }
             // trim value {0..255}
             retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
-            grayLine[x] = (int) retval;
+            gray_line[x] = (int) retval;
         }
-        grayLine += grayBpl;
+        gray_line += gray_bpl;
     }
     return binarizeOtsu(gray, delta);
 }  // binarizeBlurDiv

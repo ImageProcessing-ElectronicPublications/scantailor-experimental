@@ -237,9 +237,9 @@ void
 OptionsWidget::thresholdMethodChanged(int idx)
 {
     ThresholdFilter const method = (ThresholdFilter) thresholdMethodSelector->itemData(idx).toInt();
-    BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
-    blackWhiteOptions.setThresholdMethod(method);
-    m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setThresholdMethod(method);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     updateColorsDisplay();
     emit reloadRequested();
@@ -248,9 +248,9 @@ OptionsWidget::thresholdMethodChanged(int idx)
 void
 OptionsWidget::normalizeCoefChanged(double value)
 {
-    BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
-    blackWhiteOptions.setNormalizeCoef(value);
-    m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setNormalizeCoef(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
@@ -348,9 +348,9 @@ OptionsWidget::bwThresholdChanged()
 void
 OptionsWidget::thresholdWindowSizeChanged(int value)
 {
-    BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
-    blackWhiteOptions.setThresholdWindowSize(value);
-    m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setThresholdWindowSize(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
@@ -358,9 +358,9 @@ OptionsWidget::thresholdWindowSizeChanged(int value)
 void
 OptionsWidget::thresholdCoefChanged(double value)
 {
-    BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
-    blackWhiteOptions.setThresholdCoef(value);
-    m_colorParams.setBlackWhiteOptions(blackWhiteOptions);
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setThresholdCoef(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
@@ -540,13 +540,13 @@ OptionsWidget::updateColorsDisplay()
 
     if (bw_options_visible)
     {
-        BlackWhiteOptions blackWhiteOptions(m_colorParams.blackWhiteOptions());
-        thresholdMethodSelector->setCurrentIndex((int) blackWhiteOptions.thresholdMethod());
-        thresholdSlider->setValue(blackWhiteOptions.thresholdAdjustment());
-        thresholdWindowSize->setValue(blackWhiteOptions.thresholdWindowSize());
-        thresholdCoef->setValue(blackWhiteOptions.thresholdCoef());
-        normalizeCoef->setValue(blackWhiteOptions.normalizeCoef());
-        if (blackWhiteOptions.thresholdMethod() == OTSU)
+        BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+        thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
+        thresholdSlider->setValue(black_white_options.thresholdAdjustment());
+        thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
+        thresholdCoef->setValue(black_white_options.thresholdCoef());
+        normalizeCoef->setValue(black_white_options.normalizeCoef());
+        if (black_white_options.thresholdMethod() == OTSU)
         {
             thresholdWindowSize->setEnabled( false );
             thresholdCoef->setEnabled( false );
