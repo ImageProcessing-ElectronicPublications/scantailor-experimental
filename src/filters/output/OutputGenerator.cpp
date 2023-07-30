@@ -358,13 +358,13 @@ OutputGenerator::process(
 #endif
     );
 
-    QImage maybe_normalized;
+    imageCurveValue(transformed_image, m_colorParams.colorGrayscaleOptions().curveCoef());
 
-    if (!render_params.normalizeIllumination())
-    {
-        maybe_normalized = transformed_image;
-    }
-    else
+    QImage maybe_normalized;
+    ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
+    double norm_coef = color_options.normalizeCoef();
+
+    if (norm_coef > 0.0)
     {
         // For background estimation we need a downscaled image of about 200x300 pixels.
         // We can't just downscale transformed_image, as this background estimation we
@@ -389,14 +389,15 @@ OutputGenerator::process(
             )
         );
 
-        BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
-        double norm_coef = black_white_options.normalizeCoef();
-
         maybe_normalized = normalizeIlluminationGray(
                                status, accel_ops, GrayImage(transformed_image),
                                transformed_for_bg_estimation, norm_coef,
                                downscaled_region_of_intereset, dbg
                            );
+    }
+    else
+    {
+        maybe_normalized = transformed_image;
     }
 
     status.throwIfCancelled();
@@ -511,7 +512,7 @@ OutputGenerator::process(
         }
     }
 
-    if (render_params.normalizeIllumination() && !orig_image.allGray())
+    if ((norm_coef > 0.0) && !orig_image.allGray())
     {
         assert(maybe_normalized.format() == QImage::Format_Indexed8);
 
@@ -856,6 +857,44 @@ OutputGenerator::convertToRGBorRGBA(QImage const& src)
                                ? QImage::Format_ARGB32 : QImage::Format_RGB32;
 
     return src.convertToFormat(fmt);
+}
+
+void
+OutputGenerator::imageCurveValue(QImage& image, double const fsigm)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if (fsigm > 0.0)
+    {
+        int isigm = (int) (fsigm * 256 + 0.5);
+        unsigned int const w = image.width();
+        unsigned int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        uint8_t pix_replace[256];
+
+        int thres = BinaryThreshold::otsuThreshold(image);
+        for (int j = 0; j < 256; j++)
+        {
+            int val = 256 * j / 255;
+            int sigm2 = val;
+            int delta = (val - thres) * (val - thres);
+            delta = (val < thres) ? -(delta  / thres) : (delta / (256 - thres));
+            sigm2 += isigm * (val - thres - delta) / 256;
+            sigm2 *= 255;
+            sigm2 /= 256;
+            pix_replace[j] = (uint8_t) sigm2;
+        }
+
+        for (size_t i = 0; i < (h * image_bpl); i++)
+        {
+            int val = image_line[i];
+            image_line[i] = pix_replace[val];
+        }
+    }
 }
 
 GrayImage

@@ -25,32 +25,29 @@ namespace output
 {
 
 RenderParams::RenderParams(ColorParams const& cp)
-    :	m_mask(0)
+    :   m_mask(0)
 {
     switch (cp.colorMode())
     {
     case ColorParams::BLACK_AND_WHITE:
-        m_mask |= WHITE_MARGINS|NORMALIZE_ILLUMINATION
-                  |NEED_BINARIZATION;
+        m_mask |= (WHITE_MARGINS | NORMALIZE_ILLUMINATION
+                   | NEED_BINARIZATION);
         break;
     case ColorParams::COLOR_GRAYSCALE:
     {
         ColorGrayscaleOptions const opt(
             cp.colorGrayscaleOptions()
         );
+        m_mask |= NORMALIZE_ILLUMINATION;
         if (opt.whiteMargins())
         {
             m_mask |= WHITE_MARGINS;
-            if (opt.normalizeIllumination())
-            {
-                m_mask |= NORMALIZE_ILLUMINATION;
-            }
         }
         break;
     }
     case ColorParams::MIXED:
-        m_mask |= WHITE_MARGINS|NORMALIZE_ILLUMINATION
-                  |NEED_BINARIZATION|MIXED_OUTPUT;
+        m_mask |= (WHITE_MARGINS | NORMALIZE_ILLUMINATION
+                   | NEED_BINARIZATION | MIXED_OUTPUT);
         break;
     }
 }

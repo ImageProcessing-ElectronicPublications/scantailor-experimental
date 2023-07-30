@@ -33,24 +33,24 @@ OutputImageParams::OutputImageParams(
     QString const& transform_fingerprint,
     QRect const& output_image_rect, QRect const& content_rect,
     ColorParams const& color_params, DespeckleLevel despeckle_level)
-    :	m_transformFingerprint(transform_fingerprint),
-      m_outputImageRect(output_image_rect),
-      m_contentRect(content_rect),
-      m_colorParams(color_params),
-      m_despeckleLevel(despeckle_level)
+    :   m_transformFingerprint(transform_fingerprint),
+        m_outputImageRect(output_image_rect),
+        m_contentRect(content_rect),
+        m_colorParams(color_params),
+        m_despeckleLevel(despeckle_level)
 {
 }
 
 OutputImageParams::OutputImageParams(QDomElement const& el)
-    :	m_transformFingerprint(
-          el.namedItem(
-              QStringLiteral("transform-fingerprint")
-          ).toElement().text().trimmed().toLatin1()
-      )
-    ,	m_outputImageRect(XmlUnmarshaller::rect(el.namedItem("output-image-rect").toElement())),
-      m_contentRect(XmlUnmarshaller::rect(el.namedItem("content-rect").toElement())),
-      m_colorParams(el.namedItem("color-params").toElement()),
-      m_despeckleLevel(despeckleLevelFromString(el.attribute("despeckleLevel")))
+    :   m_transformFingerprint(
+            el.namedItem(
+                QStringLiteral("transform-fingerprint")
+            ).toElement().text().trimmed().toLatin1()
+        )
+    ,   m_outputImageRect(XmlUnmarshaller::rect(el.namedItem("output-image-rect").toElement())),
+        m_contentRect(XmlUnmarshaller::rect(el.namedItem("content-rect").toElement())),
+        m_colorParams(el.namedItem("color-params").toElement()),
+        m_despeckleLevel(despeckleLevelFromString(el.attribute("despeckleLevel")))
 {
 }
 
@@ -106,17 +106,9 @@ OutputImageParams::colorParamsMatch(
         return false;
     }
 
-    switch (cp1.colorMode())
+    if (cp1.colorGrayscaleOptions() != cp2.colorGrayscaleOptions())
     {
-    case ColorParams::COLOR_GRAYSCALE:
-    case ColorParams::MIXED:
-        if (cp1.colorGrayscaleOptions() != cp2.colorGrayscaleOptions())
-        {
-            return false;
-        }
-        break;
-    default:
-        ;
+        return false;
     }
 
     switch (cp1.colorMode())

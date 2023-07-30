@@ -30,11 +30,33 @@ class ColorGrayscaleOptions
 {
 public:
     ColorGrayscaleOptions()
-        : m_whiteMargins(false), m_normalizeIllumination(false) {}
+        : m_whiteMargins(false),
+          m_curveCoef(0.5),
+          m_normalizeCoef(0.5) {}
 
     ColorGrayscaleOptions(QDomElement const& el);
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    double curveCoef() const
+    {
+        return m_curveCoef;
+    }
+
+    void setCurveCoef(double val)
+    {
+        m_curveCoef = val;
+    }
+
+    double normalizeCoef() const
+    {
+        return m_normalizeCoef;
+    }
+
+    void setNormalizeCoef(double val)
+    {
+        m_normalizeCoef = val;
+    }
 
     bool whiteMargins() const
     {
@@ -46,22 +68,13 @@ public:
         m_whiteMargins = val;
     }
 
-    bool normalizeIllumination() const
-    {
-        return m_normalizeIllumination;
-    }
-
-    void setNormalizeIllumination(bool val)
-    {
-        m_normalizeIllumination = val;
-    }
-
     bool operator==(ColorGrayscaleOptions const& other) const;
 
     bool operator!=(ColorGrayscaleOptions const& other) const;
 private:
     bool m_whiteMargins;
-    bool m_normalizeIllumination;
+    double m_curveCoef;
+    double m_normalizeCoef;
 };
 
 } // namespace output

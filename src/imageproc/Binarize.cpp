@@ -56,7 +56,7 @@ BinaryImage binarizeMokji(
 }
 
 BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
-    double const k, int const delta)
+                            double const k, int const delta)
 {
     if (window_size.isEmpty())
     {

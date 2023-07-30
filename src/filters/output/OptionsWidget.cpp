@@ -109,16 +109,16 @@ OptionsWidget::OptionsWidget(
         this, SLOT(colorModeChanged(int))
     );
     connect(
+        curveCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(curveCoefChanged(double))
+    );
+    connect(
         normalizeCoef, SIGNAL(valueChanged(double)),
         this, SLOT(normalizeCoefChanged(double))
     );
     connect(
         whiteMarginsCB, SIGNAL(clicked(bool)),
         this, SLOT(whiteMarginsToggled(bool))
-    );
-    connect(
-        equalizeIlluminationCB, SIGNAL(clicked(bool)),
-        this, SLOT(equalizeIlluminationToggled(bool))
     );
     connect(
         thresholdMethodSelector, SIGNAL(currentIndexChanged(int)),
@@ -248,11 +248,21 @@ OptionsWidget::thresholdMethodChanged(int idx)
 }
 
 void
+OptionsWidget::curveCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setCurveCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::normalizeCoefChanged(double value)
 {
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setNormalizeCoef(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setNormalizeCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
@@ -260,28 +270,11 @@ OptionsWidget::normalizeCoefChanged(double value)
 void
 OptionsWidget::whiteMarginsToggled(bool const checked)
 {
-    ColorGrayscaleOptions opt(m_colorParams.colorGrayscaleOptions());
-    opt.setWhiteMargins(checked);
-    if (!checked)
-    {
-        opt.setNormalizeIllumination(false);
-        equalizeIlluminationCB->setChecked(false);
-    }
-    m_colorParams.setColorGrayscaleOptions(opt);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    equalizeIlluminationCB->setEnabled(checked);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::equalizeIlluminationToggled(bool const checked)
-{
-    ColorGrayscaleOptions opt(m_colorParams.colorGrayscaleOptions());
-    opt.setNormalizeIllumination(checked);
-    m_colorParams.setColorGrayscaleOptions(opt);
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setWhiteMargins(checked);
+    m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
-    emit invalidateThumbnail(m_pageId);
 }
 
 void
@@ -527,19 +520,16 @@ OptionsWidget::updateColorsDisplay()
     }
 
     colorGrayscaleOptions->setVisible(color_grayscale_options_visible);
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    curveCoef->setValue(color_options.curveCoef());
+    normalizeCoef->setValue(color_options.normalizeCoef());
     if (color_grayscale_options_visible)
     {
-        ColorGrayscaleOptions const opt(
-            m_colorParams.colorGrayscaleOptions()
-        );
-        whiteMarginsCB->setChecked(opt.whiteMargins());
-        equalizeIlluminationCB->setChecked(opt.normalizeIllumination());
-        equalizeIlluminationCB->setEnabled(opt.whiteMargins());
+        whiteMarginsCB->setChecked(color_options.whiteMargins());
     }
 
     bwOptions->setVisible(bw_options_visible);
     despecklePanel->setVisible(bw_options_visible);
-
     if (bw_options_visible)
     {
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
@@ -547,7 +537,6 @@ OptionsWidget::updateColorsDisplay()
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
         thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
         thresholdCoef->setValue(black_white_options.thresholdCoef());
-        normalizeCoef->setValue(black_white_options.normalizeCoef());
         if (black_white_options.thresholdMethod() == OTSU)
         {
             thresholdWindowSize->setEnabled( false );
