@@ -1017,10 +1017,17 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         {
         case OTSU:
         {
-            GrayscaleHistogram hist(image, mask);
-            BinaryThreshold const bw_thresh(BinaryThreshold::otsuThreshold(hist));
-
-            binarized = BinaryImage(image, adjustThreshold(bw_thresh));
+            binarized = binarizeOtsu(image, threshold_delta);
+            break;
+        }
+        case NIBLACK:
+        {
+            binarized = binarizeNiblack(GrayImage(image), window_size, threshold_coef, threshold_delta);
+            break;
+        }
+        case GATOS:
+        {
+            binarized = binarizeGatos(GrayImage(image), window_size, 3.0, threshold_coef, threshold_delta);
             break;
         }
         case SAUVOLA:

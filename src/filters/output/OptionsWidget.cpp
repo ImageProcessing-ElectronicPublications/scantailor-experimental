@@ -63,6 +63,8 @@ OptionsWidget::OptionsWidget(
     colorModeSelector->addItem(tr("Mixed"), ColorParams::MIXED);
 
     thresholdMethodSelector->addItem(tr("Otsu"), OTSU);
+    thresholdMethodSelector->addItem(tr("Niblack"), NIBLACK);
+    thresholdMethodSelector->addItem(tr("Gatos"), GATOS);
     thresholdMethodSelector->addItem(tr("Sauvola"), SAUVOLA);
     thresholdMethodSelector->addItem(tr("Wolf"), WOLF);
     thresholdMethodSelector->addItem(tr("Bradley"), BRADLEY);

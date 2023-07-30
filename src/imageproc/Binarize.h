@@ -58,7 +58,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeMokji(
   * \see Help -> About -> References -> [9]
   */
 IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
-    GrayImage const& src, QSize window_size);
+    GrayImage const& src, QSize window_size,
+    double k = 0.20, int delta = 0);
 
 /**
  * \brief Image binarization using Gatos' local thresholding method.
@@ -69,7 +70,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
  * \see Help -> About -> References -> [10]
  */
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
-    GrayImage const& src, QSize window_size, double noise_sigma);
+    GrayImage const& src, QSize window_size,
+    double noise_sigma = 3.0, double k = 0.2, int deltak = 0);
 
 /**
  * \brief Image binarization using Sauvola's local thresholding method.

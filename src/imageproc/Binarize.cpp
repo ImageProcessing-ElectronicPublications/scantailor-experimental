@@ -55,7 +55,8 @@ BinaryImage binarizeMokji(
     return BinaryImage(src, threshold);
 }
 
-BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size)
+BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
+    double const k, int const delta)
 {
     if (window_size.isEmpty())
     {
@@ -69,12 +70,11 @@ BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size)
 
     int const w = src.width();
     int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
-
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
 
     for (int y = 0; y < h; ++y)
     {
@@ -122,12 +122,11 @@ BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size)
             double const variance = sqmean - mean * mean;
             double const stddev = sqrt(fabs(variance));
 
-            double const k = -0.2;
-            double const threshold = mean + k * stddev;
+            double const threshold = mean - k * stddev;
 
             static uint32_t const msb = uint32_t(1) << 31;
             uint32_t const mask = msb >> (x & 31);
-            if (int(src_line[x]) < threshold)
+            if (int(src_line[x]) < (threshold + delta))
             {
                 // black
                 bw_line[x >> 5] |= mask;
@@ -146,7 +145,8 @@ BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size)
 }
 
 BinaryImage binarizeGatos(
-    GrayImage const& src, QSize const window_size, double const noise_sigma)
+    GrayImage const& src, QSize const window_size,
+    double const noise_sigma, double const k, int const deltak)
 {
     if (window_size.isEmpty())
     {
@@ -162,7 +162,7 @@ BinaryImage binarizeGatos(
     int const h = src.height();
 
     GrayImage wiener(wienerFilter(src, QSize(5, 5), noise_sigma));
-    BinaryImage niblack(binarizeNiblack(wiener, window_size));
+    BinaryImage niblack(binarizeNiblack(wiener, window_size, k, deltak));
     IntegralImage<uint32_t> niblack_bg_ii(w, h);
     IntegralImage<uint32_t> wiener_bg_ii(w, h);
 
@@ -289,15 +289,14 @@ BinaryImage binarizeSauvola(
         return BinaryImage();
     }
 
-    QImage const gray(toGrayscale(src));
+    GrayImage gray = GrayImage(src);
     int const w = gray.width();
     int const h = gray.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_bpl = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
-
-    uint8_t const* gray_line = gray.bits();
-    int const gray_bpl = gray.bytesPerLine();
 
     for (int y = 0; y < h; ++y)
     {
@@ -321,7 +320,7 @@ BinaryImage binarizeSauvola(
     uint32_t* bw_line = bw_img.data();
     int const bw_wpl = bw_img.wordsPerLine();
 
-    gray_line = gray.bits();
+    gray_line = gray.data();
     for (int y = 0; y < h; ++y)
     {
         int const top = std::max(0, y - window_lower_half);
@@ -382,15 +381,14 @@ BinaryImage binarizeWolf(
         return BinaryImage();
     }
 
-    QImage const gray(toGrayscale(src));
+    GrayImage gray = GrayImage(src);
     int const w = gray.width();
     int const h = gray.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_bpl = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
-
-    uint8_t const* gray_line = gray.bits();
-    int const gray_bpl = gray.bytesPerLine();
 
     uint32_t min_gray_level = 255;
 
@@ -452,7 +450,7 @@ BinaryImage binarizeWolf(
     uint32_t* bw_line = bw_img.data();
     int const bw_wpl = bw_img.wordsPerLine();
 
-    gray_line = gray.bits();
+    gray_line = gray.data();
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
@@ -490,7 +488,7 @@ BinaryImage binarizeBradley(
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeBradley: invalid windowSize");
+        throw std::invalid_argument("binarizeBradley: invalid window_size");
     }
 
     if (src.isNull())
@@ -498,14 +496,13 @@ BinaryImage binarizeBradley(
         return BinaryImage();
     }
 
-    QImage gray(toGrayscale(src));
+    GrayImage gray = GrayImage(src);
     int const w = gray.width();
     int const h = gray.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_bpl = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
-
-    uint8_t* gray_line = gray.bits();
-    int const gray_bpl = gray.bytesPerLine();
 
     for (int y = 0; y < h; ++y)
     {
@@ -527,7 +524,7 @@ BinaryImage binarizeBradley(
     uint32_t* bwLine = bwImg.data();
     int const bwWpl = bwImg.wordsPerLine();
 
-    gray_line = gray.bits();
+    gray_line = gray.data();
     for (int y = 0; y < h; ++y)
     {
         int const top = std::max(0, y - window_lower_half);
@@ -569,7 +566,7 @@ BinaryImage binarizeEdgeDiv(
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeBlurDiv: invalid windowSize");
+        throw std::invalid_argument("binarizeBlurDiv: invalid window_size");
     }
 
     if (src.isNull())
@@ -577,14 +574,13 @@ BinaryImage binarizeEdgeDiv(
         return BinaryImage();
     }
 
-    QImage gray(toGrayscale(src));
+    GrayImage gray = GrayImage(src);
     int const w = gray.width();
     int const h = gray.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_bpl = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
-
-    uint8_t* gray_line = gray.bits();
-    int const gray_bpl = gray.bytesPerLine();
 
     for (int y = 0; y < h; ++y)
     {
@@ -602,7 +598,7 @@ BinaryImage binarizeEdgeDiv(
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
 
-    gray_line = gray.bits();
+    gray_line = gray.data();
     for (int y = 0; y < h; ++y)
     {
         int const top = std::max(0, y - window_lower_half);
@@ -646,6 +642,7 @@ BinaryImage binarizeEdgeDiv(
         }
         gray_line += gray_bpl;
     }
-    return binarizeOtsu(gray, delta);
-}  // binarizeBlurDiv
+    return binarizeOtsu(gray.toQImage(), delta);
+}  // binarizeEdgeDiv
+
 } // namespace imageproc
