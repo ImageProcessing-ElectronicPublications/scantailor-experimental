@@ -54,12 +54,8 @@ void screenFilterInPlace(
     {
         throw std::invalid_argument("wienerFilter: empty window_size");
     }
-    if (coef < 0.0)
-    {
-        throw std::invalid_argument("wienerFilter: negative noise_sigma");
-    }
 
-    if (coef > 0.0)
+    if (coef != 0.0)
     {
         int const w = image.width();
         int const h = image.height();

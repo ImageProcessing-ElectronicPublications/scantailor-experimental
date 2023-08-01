@@ -871,7 +871,7 @@ OutputGenerator::imageCurveValue(QImage& image, double const fsigm)
         return;
     }
 
-    if (fsigm > 0.0)
+    if (fsigm != 0.0)
     {
         int isigm = (int) (fsigm * 256 + 0.5);
         unsigned int const w = image.width();

@@ -31,7 +31,7 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
        m_whiteMargins(el.attribute("whiteMargins") == "1")
 {
-    if (m_screenCoef < 0.0 || m_screenCoef > 1.0)
+    if (m_screenCoef < -1.0 || m_screenCoef > 1.0)
     {
         m_screenCoef = 0.0;
     }
@@ -39,7 +39,7 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_screenWindowSize = 10;
     }
-    if (m_curveCoef < 0.0 || m_curveCoef > 1.0)
+    if (m_curveCoef < -1.0 || m_curveCoef > 1.0)
     {
         m_curveCoef = 0.0;
     }
