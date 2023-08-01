@@ -25,10 +25,20 @@ namespace output
 {
 
 ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
-    :  m_curveCoef(el.attribute("curveCoef").toDouble()),
+    :  m_screenCoef(el.attribute("screenCoef").toDouble()),
+       m_screenWindowSize(el.attribute("screenWinSize").toInt()),
+       m_curveCoef(el.attribute("curveCoef").toDouble()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
        m_whiteMargins(el.attribute("whiteMargins") == "1")
 {
+    if (m_screenCoef < 0.0 || m_screenCoef > 1.0)
+    {
+        m_screenCoef = 0.0;
+    }
+    if (m_screenWindowSize < 3)
+    {
+        m_screenWindowSize = 10;
+    }
     if (m_curveCoef < 0.0 || m_curveCoef > 1.0)
     {
         m_curveCoef = 0.0;
@@ -43,6 +53,8 @@ QDomElement
 ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
+    el.setAttribute("screenCoef", m_screenCoef);
+    el.setAttribute("screenWinSize", m_screenWindowSize);
     el.setAttribute("curveCoef", m_curveCoef);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
     el.setAttribute("whiteMargins", m_whiteMargins ? "1" : "0");
@@ -52,6 +64,14 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 bool
 ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
 {
+    if (m_screenCoef != other.m_screenCoef)
+    {
+        return false;
+    }
+    if (m_screenWindowSize != other.m_screenWindowSize)
+    {
+        return false;
+    }
     if (m_curveCoef != other.m_curveCoef)
     {
         return false;

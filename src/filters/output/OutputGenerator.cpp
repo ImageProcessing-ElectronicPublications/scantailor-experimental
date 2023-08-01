@@ -48,6 +48,7 @@
 #include "imageproc/DrawOver.h"
 #include "imageproc/AdjustBrightness.h"
 #include "imageproc/PolygonRasterizer.h"
+#include "imageproc/ScreenFilter.h"
 #include "config.h"
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -358,11 +359,13 @@ OutputGenerator::process(
 #endif
     );
 
-    imageCurveValue(transformed_image, m_colorParams.colorGrayscaleOptions().curveCoef());
-
     QImage maybe_normalized;
     ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
     double norm_coef = color_options.normalizeCoef();
+
+    screenFilterInPlace(transformed_image, QSize(color_options.screenWindowSize(), color_options.screenWindowSize()), color_options.screenCoef());
+
+    imageCurveValue(transformed_image, color_options.curveCoef());
 
     if (norm_coef > 0.0)
     {
@@ -527,6 +530,7 @@ OutputGenerator::process(
             dbg->add(maybe_normalized, "norm_illum_color");
         }
     }
+    transformed_image = QImage(); // save memory
 
     if (!render_params.mixedOutput())
     {

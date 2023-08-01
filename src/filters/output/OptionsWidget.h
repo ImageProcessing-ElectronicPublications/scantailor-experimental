@@ -65,6 +65,10 @@ private slots:
 
     void colorModeChanged(int idx);
 
+    void screenCoefChanged(double value);
+
+    void screenWindowSizeChanged(int value);
+
     void curveCoefChanged(double value);
 
     void normalizeCoefChanged(double value);

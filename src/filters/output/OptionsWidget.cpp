@@ -109,6 +109,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(colorModeChanged(int))
     );
     connect(
+        screenCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(screenCoefChanged(double))
+    );
+    connect(
+        screenWindowSize, SIGNAL(valueChanged(int)),
+        this, SLOT(screenWindowSizeChanged(int))
+    );
+    connect(
         curveCoef, SIGNAL(valueChanged(double)),
         this, SLOT(curveCoefChanged(double))
     );
@@ -226,6 +234,21 @@ OptionsWidget::tabChanged(ImageViewTab const tab)
 }
 
 void
+OptionsWidget::scaleChanged(double const scale)
+{
+    if (m_ignoreScaleChanges)
+    {
+        return;
+    }
+
+    m_ptrSettings->setScalingFactor(scale);
+    updateScaleDisplay();
+
+    emit invalidateAllThumbnails();
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::colorModeChanged(int const idx)
 {
     int const mode = colorModeSelector->itemData(idx).toInt();
@@ -244,6 +267,26 @@ OptionsWidget::thresholdMethodChanged(int idx)
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::screenCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setScreenCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::screenWindowSizeChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setScreenWindowSize(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
 
@@ -415,21 +458,6 @@ OptionsWidget::despeckleLevelSelected(DespeckleLevel const level)
 }
 
 void
-OptionsWidget::scaleChanged(double const scale)
-{
-    if (m_ignoreScaleChanges)
-    {
-        return;
-    }
-
-    m_ptrSettings->setScalingFactor(scale);
-    updateScaleDisplay();
-
-    emit invalidateAllThumbnails();
-    emit reloadRequested();
-}
-
-void
 OptionsWidget::applyDespeckleButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -521,6 +549,8 @@ OptionsWidget::updateColorsDisplay()
 
     colorGrayscaleOptions->setVisible(color_grayscale_options_visible);
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    screenCoef->setValue(color_options.screenCoef());
+    screenWindowSize->setValue(color_options.screenWindowSize());
     curveCoef->setValue(color_options.curveCoef());
     normalizeCoef->setValue(color_options.normalizeCoef());
     if (color_grayscale_options_visible)

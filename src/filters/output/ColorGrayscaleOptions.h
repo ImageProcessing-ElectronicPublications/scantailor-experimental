@@ -31,12 +31,34 @@ class ColorGrayscaleOptions
 public:
     ColorGrayscaleOptions()
         : m_whiteMargins(false),
+          m_screenCoef(0.0),
+          m_screenWindowSize(10),
           m_curveCoef(0.5),
           m_normalizeCoef(0.5) {}
 
     ColorGrayscaleOptions(QDomElement const& el);
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    double screenCoef() const
+    {
+        return m_screenCoef;
+    }
+
+    void setScreenCoef(double val)
+    {
+        m_screenCoef = val;
+    }
+
+    int screenWindowSize() const
+    {
+        return m_screenWindowSize;
+    }
+
+    void setScreenWindowSize(int val)
+    {
+        m_screenWindowSize = val;
+    }
 
     double curveCoef() const
     {
@@ -73,6 +95,8 @@ public:
     bool operator!=(ColorGrayscaleOptions const& other) const;
 private:
     bool m_whiteMargins;
+    double m_screenCoef;
+    int m_screenWindowSize;
     double m_curveCoef;
     double m_normalizeCoef;
 };
