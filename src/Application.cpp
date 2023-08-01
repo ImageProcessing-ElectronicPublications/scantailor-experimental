@@ -21,7 +21,7 @@
 #include <new>
 
 Application::Application(int& argc, char** argv)
-    :	QApplication(argc, argv)
+    :  QApplication(argc, argv)
 {
 }
 

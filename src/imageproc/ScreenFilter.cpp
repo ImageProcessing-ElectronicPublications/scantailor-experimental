@@ -106,7 +106,23 @@ void screenFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     double const origin = image_line[indx];
-                    double retval = origin * mean / 255.0 + meano;
+                    double retval = origin;
+                    // Overlay {origin, meano}
+                    if (origin > 127.5)
+                    {
+                        retval = 255.0 - retval;
+                        retval *= mean;
+                    }
+                    else
+                    {
+                        retval *= meano;
+                    }
+                    retval += retval;
+                    retval /= 255.0;
+                    if (origin > 127.5)
+                    {
+                        retval = 255.0 - retval;
+                    }
                     retval = coef * retval + (1.0 - coef) * origin;
                     retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
                     image_line[indx] = (uint8_t) retval;
