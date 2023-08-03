@@ -81,6 +81,9 @@ private:
     InteractionState::Captor m_interaction;
     EditableSpline::Ptr m_ptrSpline;
     QPointF m_nextVertexImagePos;
+    QPointF m_nextVertexImagePos_mid1;
+    QPointF m_nextVertexImagePos_mid2;
+    bool m_rectangularZoneType;
 };
 
 #endif
