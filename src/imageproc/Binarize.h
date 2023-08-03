@@ -53,6 +53,14 @@ IMAGEPROC_EXPORT BinaryImage binarizeMokji(
     unsigned min_edge_magnitude = 20);
 
 /**
+ * \brief Image binarization using BiModal (analog Otsu's) global thresholding method.
+ *
+ * \see Help -> About -> References -> [7]
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
+    GrayImage const& src, int delta = 0);
+
+/**
   * \brief Image binarization using Niblack's local thresholding method.
   *
   * \see Help -> About -> References -> [9]
@@ -79,7 +87,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatos(
  * \see Help -> About -> References -> [11]
  */
 IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
-    QImage const& src, QSize window_size,
+    GrayImage const& src, QSize window_size,
     double k = 0.34, int delta = 0);
 
 /**
@@ -93,7 +101,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
  * \param upper_bound The maximum possible gray level that can be made black.
  */
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
-    QImage const& src, QSize window_size,
+    GrayImage const& src, QSize window_size,
     unsigned char lower_bound = 1, unsigned char upper_bound = 254,
     double k = 0.30, int delta = 0);
 
@@ -104,7 +112,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
  * http://www.scs.carleton.ca/~roth/iit-publications-iti/docs/gerh-50002.pdf
  */
 IMAGEPROC_EXPORT BinaryImage binarizeBradley(
-    QImage const& src, QSize window_size,
+    GrayImage const& src, QSize window_size,
     double k = 0.75, int delta = 0);
 
 /**
@@ -113,7 +121,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
  */
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
-    QImage const& src, QSize window_size,
+    GrayImage const& src, QSize window_size,
     double kep = 0.5, double kdb = 0.5, int delta = 0);
 
 } // namespace imageproc

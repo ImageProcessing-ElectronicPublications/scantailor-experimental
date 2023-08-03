@@ -79,13 +79,13 @@ void screenFilterInPlace(
             }
             gray_line += gray_bpl;
         }
+        gray = GrayImage(); // save memory
 
         int const window_lower_half = window_size.height() >> 1;
         int const window_upper_half = window_size.height() - window_lower_half;
         int const window_left_half = window_size.width() >> 1;
         int const window_right_half = window_size.width() - window_left_half;
 
-        gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
             int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
@@ -128,7 +128,6 @@ void screenFilterInPlace(
                     image_line[indx] = (uint8_t) retval;
                 }
             }
-            gray_line += gray_bpl;
             image_line += image_bpl;
         }
     }

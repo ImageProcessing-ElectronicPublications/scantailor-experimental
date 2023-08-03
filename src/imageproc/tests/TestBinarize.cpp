@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_SUITE(BinarizeTestSuite);
 BOOST_AUTO_TEST_CASE(test)
 {
     QImage img("test.png");
-    binarizeWolf(img).toQImage().save("out.png");
+    binarizeWolf(GrayImage(img)).toQImage().save("out.png");
 }
 #endif
 BOOST_AUTO_TEST_SUITE_END();

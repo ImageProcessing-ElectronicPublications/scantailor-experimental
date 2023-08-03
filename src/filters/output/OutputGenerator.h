@@ -19,11 +19,11 @@
 #ifndef OUTPUT_OUTPUTGENERATOR_H_
 #define OUTPUT_OUTPUTGENERATOR_H_
 
-#include "ColorParams.h"
-#include "DespeckleLevel.h"
-#include "CachingFactory.h"
-#include "Grid.h"
-#include "imageproc/AbstractImageTransform.h"
+#include <functional>
+#include <memory>
+#include <vector>
+#include <utility>
+#include <stdint.h>
 #include <boost/optional.hpp>
 #include <QSize>
 #include <QRect>
@@ -32,11 +32,12 @@
 #include <QPointF>
 #include <QLineF>
 #include <QPolygonF>
-#include <functional>
-#include <memory>
-#include <vector>
-#include <utility>
-#include <stdint.h>
+#include "ColorParams.h"
+#include "DespeckleLevel.h"
+#include "CachingFactory.h"
+#include "Grid.h"
+#include "imageproc/AbstractImageTransform.h"
+#include "imageproc/GrayImage.h"
 
 class TaskStatus;
 class DebugImages;

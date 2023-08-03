@@ -149,7 +149,7 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     downscaled_transform.translateSoThatPointBecomes(downscaled_rect.topLeft(), QPointF(0, 0));
 
-    BinaryImage bw150(binarizeWolf(gray150, QSize(51, 51), 50));
+    BinaryImage bw150(binarizeWolf(GrayImage(gray150), QSize(51, 51), 50));
     if (dbg)
     {
         dbg->add(bw150, "bw150");

@@ -16,6 +16,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
+#include <memory>
+#include <new>
+#include <algorithm>
+#include <assert.h>
+#include <string.h>
+#include <stdint.h>
+#include <boost/foreach.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <QImage>
+#include <QSize>
+#include <QPoint>
+#include <QRect>
+#include <QRectF>
+#include <QPointF>
+#include <QPolygonF>
+#include <QPainter>
+#include <QColor>
+#include <QPen>
+#include <QBrush>
+#include <QtGlobal>
+#include <QDebug>
+#include <Qt>
 #include "OutputGenerator.h"
 #include "TaskStatus.h"
 #include "Utils.h"
@@ -50,30 +74,6 @@
 #include "imageproc/PolygonRasterizer.h"
 #include "imageproc/ScreenFilter.h"
 #include "config.h"
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <QImage>
-#include <QSize>
-#include <QPoint>
-#include <QRect>
-#include <QRectF>
-#include <QPointF>
-#include <QPolygonF>
-#include <QPainter>
-#include <QColor>
-#include <QPen>
-#include <QBrush>
-#include <QtGlobal>
-#include <QDebug>
-#include <Qt>
-#include <vector>
-#include <memory>
-#include <new>
-#include <algorithm>
-#include <assert.h>
-#include <string.h>
-#include <stdint.h>
 
 using namespace imageproc;
 using namespace dewarping;
@@ -1056,51 +1056,54 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         QSize const window_size = QSize(black_white_options.thresholdWindowSize(), black_white_options.thresholdWindowSize());
         double const threshold_coef = black_white_options.thresholdCoef();
 
+        GrayImage gray = GrayImage(image);
+
         switch (threshold_method)
         {
         case OTSU:
         {
-            binarized = binarizeOtsu(image, threshold_delta);
+            // binarized = binarizeOtsu(image, threshold_delta);
+            binarized = binarizeBiModal(gray, threshold_delta);
             break;
         }
         case NIBLACK:
         {
-            binarized = binarizeNiblack(GrayImage(image), window_size, threshold_coef, threshold_delta);
+            binarized = binarizeNiblack(gray, window_size, threshold_coef, threshold_delta);
             break;
         }
         case GATOS:
         {
-            binarized = binarizeGatos(GrayImage(image), window_size, 3.0, threshold_coef, threshold_delta);
+            binarized = binarizeGatos(gray, window_size, 3.0, threshold_coef, threshold_delta);
             break;
         }
         case SAUVOLA:
         {
-            binarized = binarizeSauvola(image, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeSauvola(gray, window_size, threshold_coef, threshold_delta);
             break;
         }
         case WOLF:
         {
-            binarized = binarizeWolf(image, window_size, 1, 254, threshold_coef, threshold_delta);
+            binarized = binarizeWolf(gray, window_size, 1, 254, threshold_coef, threshold_delta);
             break;
         }
         case BRADLEY:
         {
-            binarized = binarizeBradley(image, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeBradley(gray, window_size, threshold_coef, threshold_delta);
             break;
         }
         case EDGEPLUS:
         {
-            binarized = binarizeEdgeDiv(image, window_size, threshold_coef, 0.0, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, 0.0, threshold_delta);
             break;
         }
         case BLURDIV:
         {
-            binarized = binarizeEdgeDiv(image, window_size, 0.0, threshold_coef, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, window_size, 0.0, threshold_coef, threshold_delta);
             break;
         }
         case EDGEDIV:
         {
-            binarized = binarizeEdgeDiv(image, window_size, threshold_coef, threshold_coef, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, threshold_coef, threshold_delta);
             break;
         }
         }
