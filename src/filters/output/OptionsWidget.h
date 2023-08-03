@@ -83,6 +83,8 @@ private slots:
 
     void thresholdMethodChanged(int idx);
 
+    void dimmingColoredCoefChanged(double value);
+
     void thresholdWindowSizeChanged(int value);
 
     void thresholdCoefChanged(double value);

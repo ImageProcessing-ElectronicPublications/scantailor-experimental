@@ -42,7 +42,7 @@ SET(
     SavGolKernel.cpp SavGolKernel.h
     SavGolFilter.cpp SavGolFilter.h
     WienerFilter.cpp WienerFilter.h
-    ScreenFilter.cpp ScreenFilter.h
+    ColorFilter.cpp ColorFilter.h
     DrawOver.cpp DrawOver.h
     AdjustBrightness.cpp AdjustBrightness.h
     SEDM.cpp SEDM.h

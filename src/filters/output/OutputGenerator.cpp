@@ -72,7 +72,7 @@
 #include "imageproc/DrawOver.h"
 #include "imageproc/AdjustBrightness.h"
 #include "imageproc/PolygonRasterizer.h"
-#include "imageproc/ScreenFilter.h"
+#include "imageproc/ColorFilter.h"
 #include "config.h"
 
 using namespace imageproc;
@@ -361,11 +361,18 @@ OutputGenerator::process(
 
     QImage maybe_normalized;
     ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
+    BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
     double norm_coef = color_options.normalizeCoef();
 
     screenFilterInPlace(transformed_image, QSize(color_options.screenWindowSize(), color_options.screenWindowSize()), color_options.screenCoef());
 
-    imageCurveValue(transformed_image, color_options.curveCoef());
+    colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
+
+    GrayImage coloredSignificance(transformed_image);
+    if (render_params.needBinarization())
+    {
+        coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
+    }
 
     if (norm_coef > 0.0)
     {
@@ -392,6 +399,7 @@ OutputGenerator::process(
             )
         );
 
+//        imageGraySaveColors(image, gray, 1.0);
         maybe_normalized = normalizeIlluminationGray(
                                status, accel_ops, GrayImage(transformed_image),
                                transformed_for_bg_estimation, norm_coef,
@@ -415,11 +423,13 @@ OutputGenerator::process(
     else
     {
         maybe_smoothed = smoothToGrayscale(maybe_normalized, accel_ops);
+        coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
         if (dbg)
         {
             dbg->add(maybe_smoothed, "smoothed");
         }
     }
+    coloredSignificance = GrayImage(); // save memory
 
     status.throwIfCancelled();
 
@@ -861,44 +871,6 @@ OutputGenerator::convertToRGBorRGBA(QImage const& src)
                                ? QImage::Format_ARGB32 : QImage::Format_RGB32;
 
     return src.convertToFormat(fmt);
-}
-
-void
-OutputGenerator::imageCurveValue(QImage& image, double const fsigm)
-{
-    if (image.isNull())
-    {
-        return;
-    }
-
-    if (fsigm != 0.0)
-    {
-        int isigm = (int) (fsigm * 256 + 0.5);
-        unsigned int const w = image.width();
-        unsigned int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        uint8_t pix_replace[256];
-
-        int thres = BinaryThreshold::otsuThreshold(image);
-        for (int j = 0; j < 256; j++)
-        {
-            int val = 256 * j / 255;
-            int sigm2 = val;
-            int delta = (val - thres) * (val - thres);
-            delta = (val < thres) ? -(delta  / thres) : (delta / (256 - thres));
-            sigm2 += isigm * (val - thres - delta) / 256;
-            sigm2 *= 255;
-            sigm2 /= 256;
-            pix_replace[j] = (uint8_t) sigm2;
-        }
-
-        for (size_t i = 0; i < (h * image_bpl); i++)
-        {
-            int val = image_line[i];
-            image_line[i] = pix_replace[val];
-        }
-    }
 }
 
 GrayImage

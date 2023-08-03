@@ -44,17 +44,14 @@ public:
     {
         return m_screenCoef;
     }
-
     void setScreenCoef(double val)
     {
         m_screenCoef = val;
     }
-
     int screenWindowSize() const
     {
         return m_screenWindowSize;
     }
-
     void setScreenWindowSize(int val)
     {
         m_screenWindowSize = val;
@@ -64,7 +61,6 @@ public:
     {
         return m_curveCoef;
     }
-
     void setCurveCoef(double val)
     {
         m_curveCoef = val;
@@ -74,7 +70,6 @@ public:
     {
         return m_normalizeCoef;
     }
-
     void setNormalizeCoef(double val)
     {
         m_normalizeCoef = val;
@@ -84,7 +79,6 @@ public:
     {
         return m_whiteMargins;
     }
-
     void setWhiteMargins(bool val)
     {
         m_whiteMargins = val;

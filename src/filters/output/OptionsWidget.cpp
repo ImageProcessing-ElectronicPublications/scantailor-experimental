@@ -121,6 +121,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(curveCoefChanged(double))
     );
     connect(
+        dimmingColoredCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(dimmingColoredCoefChanged(double))
+    );
+    connect(
         normalizeCoef, SIGNAL(valueChanged(double)),
         this, SLOT(normalizeCoefChanged(double))
     );
@@ -384,6 +388,16 @@ OptionsWidget::bwThresholdChanged()
 }
 
 void
+OptionsWidget::dimmingColoredCoefChanged(double value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setDimmingColoredCoef(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::thresholdWindowSizeChanged(int value)
 {
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
@@ -564,6 +578,7 @@ OptionsWidget::updateColorsDisplay()
     {
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
         thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
+        dimmingColoredCoef->setValue(black_white_options.dimmingColoredCoef());
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
         thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
         thresholdCoef->setValue(black_white_options.thresholdCoef());

@@ -26,6 +26,7 @@ namespace output
 
 BlackWhiteOptions::BlackWhiteOptions()
     :   m_thresholdMethod(OTSU),
+        m_dimmingColoredCoef(0.0),
         m_thresholdAdjustment(0),
         m_thresholdWindowSize(200),
         m_thresholdCoef(0.3)
@@ -34,10 +35,15 @@ BlackWhiteOptions::BlackWhiteOptions()
 
 BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     :   m_thresholdMethod(parseThresholdMethod(el.attribute("thresholdMethod"))),
+        m_dimmingColoredCoef(el.attribute("dimmingColoredCoef").toDouble()),
         m_thresholdAdjustment(el.attribute("thresholdAdj").toInt()),
         m_thresholdWindowSize(el.attribute("thresholdWinSize").toInt()),
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble())
 {
+    if (m_dimmingColoredCoef < 0.0 || m_dimmingColoredCoef > 2.0)
+    {
+        m_dimmingColoredCoef = 0.0;
+    }
     if (m_thresholdWindowSize == 0)
     {
         m_thresholdWindowSize = 200;
@@ -53,6 +59,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
     el.setAttribute("thresholdMethod", formatThresholdMethod(m_thresholdMethod));
+    el.setAttribute("dimmingColoredCoef", m_dimmingColoredCoef);
     el.setAttribute("thresholdAdj", m_thresholdAdjustment);
     el.setAttribute("thresholdWinSize", m_thresholdWindowSize);
     el.setAttribute("thresholdCoef", m_thresholdCoef);
@@ -63,6 +70,10 @@ bool
 BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
 {
     if (m_thresholdMethod != other.m_thresholdMethod)
+    {
+        return false;
+    }
+    if (m_dimmingColoredCoef != other.m_dimmingColoredCoef)
     {
         return false;
     }

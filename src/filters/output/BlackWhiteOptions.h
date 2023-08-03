@@ -41,37 +41,42 @@ public:
     {
         return m_thresholdMethod;
     }
+    void setThresholdMethod(ThresholdFilter val)
+    {
+        m_thresholdMethod = val;
+    }
+
+    double dimmingColoredCoef() const
+    {
+        return m_dimmingColoredCoef;
+    }
+    void setDimmingColoredCoef(double val)
+    {
+        m_dimmingColoredCoef = val;
+    }
 
     int thresholdAdjustment() const
     {
         return m_thresholdAdjustment;
+    }
+    void setThresholdAdjustment(int val)
+    {
+        m_thresholdAdjustment = val;
     }
 
     int thresholdWindowSize() const
     {
         return m_thresholdWindowSize;
     }
-
-    double thresholdCoef() const
-    {
-        return m_thresholdCoef;
-    }
-
-    void setThresholdMethod(ThresholdFilter val)
-    {
-        m_thresholdMethod = val;
-    }
-
-    void setThresholdAdjustment(int val)
-    {
-        m_thresholdAdjustment = val;
-    }
-
     void setThresholdWindowSize(int val)
     {
         m_thresholdWindowSize = val;
     }
 
+    double thresholdCoef() const
+    {
+        return m_thresholdCoef;
+    }
     void setThresholdCoef(double val)
     {
         m_thresholdCoef = val;
@@ -82,6 +87,7 @@ public:
     bool operator!=(BlackWhiteOptions const& other) const;
 private:
     ThresholdFilter m_thresholdMethod;
+    double m_dimmingColoredCoef;
     int m_thresholdAdjustment;
     int m_thresholdWindowSize;
     double m_thresholdCoef;

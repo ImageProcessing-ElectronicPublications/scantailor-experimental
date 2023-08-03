@@ -130,8 +130,6 @@ public:
 private:
     static QImage convertToRGBorRGBA(QImage const& src);
 
-    static void imageCurveValue(QImage& src, double fsigm = 0.0);
-
     static imageproc::GrayImage normalizeIlluminationGray(
         TaskStatus const& status,
         std::shared_ptr<AcceleratableOperations> const& accel_ops,

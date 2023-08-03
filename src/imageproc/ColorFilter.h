@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGEPROC_SCREEN_FILTER_H_
-#define IMAGEPROC_SCREEN_FILTER_H_
+#ifndef IMAGEPROC_COLOR_FILTER_H_
+#define IMAGEPROC_COLOR_FILTER_H_
 
 #include "imageproc_config.h"
 #include <QSize>
@@ -46,6 +46,24 @@ IMAGEPROC_EXPORT QImage screenFilter(
  */
 IMAGEPROC_EXPORT void screenFilterInPlace(
     QImage& image, QSize const& window_size, double coef = 0.0);
+
+IMAGEPROC_EXPORT QImage coloredDimmingFilterFilter(
+    QImage& image, double coef = 0.5);
+
+IMAGEPROC_EXPORT void colorCurveFilterInPlace(
+    QImage& image, double coef = 0.5);
+
+IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
+    QImage const& image, double coef = 0.0);
+
+IMAGEPROC_EXPORT void coloredSignificanceFilterInPlace(
+    QImage const& image, GrayImage& gray, double coef = 0.0);
+
+IMAGEPROC_EXPORT QImage coloredDimmingFilterFilter(
+    QImage& image, GrayImage& gray);
+
+IMAGEPROC_EXPORT void coloredDimmingFilterInPlace(
+    QImage& image, GrayImage& gray);
 
 } // namespace imageproc
 
