@@ -331,10 +331,10 @@
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="dimmingColoredCoef">
              <property name="toolTip">
-              <string>Value is 0.0 .. 2.0.</string>
+              <string>Value is -1.0 .. 2.0.</string>
              </property>
              <property name="minimum">
-              <double>0.0</double>
+              <double>-1.0</double>
              </property>
              <property name="maximum">
               <double>2.0</double>

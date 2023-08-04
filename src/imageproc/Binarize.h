@@ -57,6 +57,10 @@ IMAGEPROC_EXPORT BinaryImage binarizeMokji(
  *
  * \see Help -> About -> References -> [7]
  */
+IMAGEPROC_EXPORT BinaryImage binarizeUse(
+    GrayImage const& src, unsigned int threshold = 128);
+IMAGEPROC_EXPORT unsigned int binarizeBiModalValue(
+    GrayImage const& src, int delta = 0);
 IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
     GrayImage const& src, int delta = 0);
 

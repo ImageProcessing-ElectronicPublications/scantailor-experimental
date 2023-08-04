@@ -20,7 +20,7 @@ update_translations_crashreporter.pro
 update_translations_scantailor.pro
 
 # The finished program
-scantailor
-scantailor-cli
-scantailor-cli.exe
-scantailor.exe
+scantailor-experimental
+scantailor-experimental-cli
+scantailor-experimental-cli.exe
+scantailor-experimental.exe

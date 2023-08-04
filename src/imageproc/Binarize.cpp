@@ -55,11 +55,52 @@ BinaryImage binarizeMokji(
     return BinaryImage(src, threshold);
 }
 
-BinaryImage binarizeBiModal(GrayImage const& src, int const delta)
+BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
 {
     if (src.isNull())
     {
         return BinaryImage();
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    uint8_t const* gray_line = src.data();
+    int const gray_bpl = src.stride();
+
+    BinaryImage bw_img(w, h);
+    uint32_t* bw_line = bw_img.data();
+    int const bw_wpl = bw_img.wordsPerLine();
+
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            static uint32_t const msb = uint32_t(1) << 31;
+            uint32_t const mask = msb >> (x & 31);
+            if (gray_line[x] < threshold)
+            {
+                // black
+                bw_line[x >> 5] |= mask;
+            }
+            else
+            {
+                // white
+                bw_line[x >> 5] &= ~mask;
+            }
+        }
+        gray_line += gray_bpl;
+        bw_line += bw_wpl;
+    }
+
+    return bw_img;
+}  // binarizeUse
+
+unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
+{
+    unsigned int threshold = 128;
+    if (src.isNull())
+    {
+        return threshold;
     }
 
     int const w = src.width();
@@ -79,7 +120,7 @@ BinaryImage binarizeBiModal(GrayImage const& src, int const delta)
         gray_line += gray_bpl;
     }
 
-    unsigned int k, Tn, threshold = 128;
+    unsigned int k, Tn;
     size_t im, iw, ib, Tw, Tb;
 
     double const part = 0.5 + (double) delta / 256.0;
@@ -121,31 +162,18 @@ BinaryImage binarizeBiModal(GrayImage const& src, int const delta)
         }
     }
 
-    BinaryImage bw_img(w, h);
-    uint32_t* bw_line = bw_img.data();
-    int const bw_wpl = bw_img.wordsPerLine();
+    return threshold;
+}  // binarizeBiModalValue
 
-    gray_line = src.data();
-    for (int y = 0; y < h; ++y)
+BinaryImage binarizeBiModal(GrayImage const& src, int const delta)
+{
+    if (src.isNull())
     {
-        for (int x = 0; x < w; ++x)
-        {
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (gray_line[x] < threshold)
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
-        }
-        gray_line += gray_bpl;
-        bw_line += bw_wpl;
+        return BinaryImage();
     }
+
+    unsigned int threshold = binarizeBiModalValue(src, delta);
+    BinaryImage bw_img = binarizeUse(src, threshold);
 
     return bw_img;
 }  // binarizeBiModal

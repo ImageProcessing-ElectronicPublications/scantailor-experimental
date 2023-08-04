@@ -1370,7 +1370,11 @@ MainWindow::filterResult(BackgroundTaskPtr const& task, FilterResultPtr const& r
             QApplication::alert(this); // Flash the taskbar entry.
             if (m_checkBeepWhenFinished())
             {
+#if defined(Q_OS_UNIX)
+                std::system("beep");
+#else
                 QApplication::beep();
+#endif
             }
 
             return;

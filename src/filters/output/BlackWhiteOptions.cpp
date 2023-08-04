@@ -40,7 +40,7 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
         m_thresholdWindowSize(el.attribute("thresholdWinSize").toInt()),
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble())
 {
-    if (m_dimmingColoredCoef < 0.0 || m_dimmingColoredCoef > 2.0)
+    if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
     {
         m_dimmingColoredCoef = 0.0;
     }

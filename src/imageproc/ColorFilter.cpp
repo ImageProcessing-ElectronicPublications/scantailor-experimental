@@ -160,7 +160,7 @@ void colorCurveFilterInPlace(
         uint8_t pix_replace[256];
 
         int thres = BinaryThreshold::otsuThreshold(image);
-        for (int j = 0; j < 256; j++)
+        for (unsigned int j = 0; j < 256; j++)
         {
             int val = 256 * j / 255;
             int sigm2 = val;
@@ -174,7 +174,7 @@ void colorCurveFilterInPlace(
 
         for (size_t i = 0; i < (h * image_bpl); i++)
         {
-            int val = image_line[i];
+            uint8_t val = image_line[i];
             image_line[i] = pix_replace[val];
         }
     }
@@ -191,32 +191,38 @@ GrayImage coloredSignificanceFilter(
 void coloredSignificanceFilterInPlace(
     QImage const& image, GrayImage& gray, double const coef)
 {
-    if (image.isNull() || gray.isNull())
+    if (image.isNull())
     {
         return;
     }
+    if (gray.isNull())
+    {
+        gray = GrayImage(image);
+    }
 
-    int const w = image.width();
-    int const h = image.height();
+    unsigned int const w = image.width();
+    unsigned int const h = image.height();
+    unsigned int const wg = gray.width();
+    unsigned int const hg = gray.height();
     uint8_t const* image_line = (uint8_t const*) image.bits();
     int const image_bpl = image.bytesPerLine();
     unsigned int const cnum = image_bpl / w;
     uint8_t* gray_line = gray.data();
     int const gray_bpl = gray.stride();
-    if ((coef != 0.0) && (cnum > 2))
+    if ((coef != 0.0) && (cnum > 2) && (w == wg) && (h == hg))
     {
         double const ycb[6] = {-0.168736, -0.331264, 0.5, 0.0, 0.0, 0.0};
         double const ycr[6] = {0.5, -0.418688, -0.081312, 0.0, 0.0, 0.0};
 
-        for (int y = 0; y < h; ++y)
+        for (unsigned int y = 0; y < h; ++y)
         {
-            for (int x = 0; x < w; ++x)
+            for (unsigned int x = 0; x < w; ++x)
             {
                 double ycbsum = 0.0;
                 double ycrsum = 0.0;
                 for (unsigned int c = 0; c < cnum; ++c)
                 {
-                    int const indx = x * cnum + c;
+                    unsigned int const indx = x * cnum + c;
                     double const origin = image_line[indx];
                     ycbsum += (origin * ycb[c]);
                     ycrsum += (origin * ycr[c]);
@@ -236,9 +242,9 @@ void coloredSignificanceFilterInPlace(
     }
     else
     {
-        for (int y = 0; y < h; ++y)
+        for (unsigned int y = 0; y < hg; ++y)
         {
-            for (int x = 0; x < w; ++x)
+            for (unsigned int x = 0; x < wg; ++x)
             {
                 gray_line[x] = (uint8_t) 255;
             }
@@ -265,32 +271,37 @@ void coloredDimmingFilterInPlace(
 
     double const ycb[6] = {-0.168736, -0.331264, 0.5, 0.0, 0.0, 0.0};
     double const ycr[6] = {0.5, -0.418688, -0.081312, 0.0, 0.0, 0.0};
-    int const w = image.width();
-    int const h = image.height();
-    uint8_t* image_line = (uint8_t*) image.bits();
-    int const image_bpl = image.bytesPerLine();
-    unsigned int const cnum = image_bpl / w;
-    uint8_t const* gray_line = gray.data();
-    int const gray_bpl = gray.stride();
-
-    for (int y = 0; y < h; ++y)
+    unsigned int const w = image.width();
+    unsigned int const h = image.height();
+    unsigned int const wg = gray.width();
+    unsigned int const hg = gray.height();
+    if ((w == wg) && (h == hg))
     {
-        for (int x = 0; x < w; ++x)
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
+        uint8_t const* gray_line = gray.data();
+        int const gray_bpl = gray.stride();
+
+        for (unsigned int y = 0; y < h; ++y)
         {
-            double ycbcr = gray_line[x];
-            for (unsigned int c = 0; c < cnum; ++c)
+            for (unsigned int x = 0; x < w; ++x)
             {
-                int const indx = x * cnum + c;
-                double const origin = image_line[indx];
-                double retval = origin;
-                retval *= ycbcr;
-                retval /= 255.0;
-                retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
-                image_line[indx] = (uint8_t) retval;
+                double ycbcr = gray_line[x];
+                for (unsigned int c = 0; c < cnum; ++c)
+                {
+                    unsigned int const indx = x * cnum + c;
+                    double const origin = image_line[indx];
+                    double retval = origin;
+                    retval *= (ycbcr + 1.0);
+                    retval /= 256.0;
+                    retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
+                    image_line[indx] = (uint8_t) retval;
+                }
             }
+            image_line += image_bpl;
+            gray_line += gray_bpl;
         }
-        image_line += image_bpl;
-        gray_line += gray_bpl;
     }
 }
 
