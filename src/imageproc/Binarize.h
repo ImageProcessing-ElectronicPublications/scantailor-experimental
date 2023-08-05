@@ -65,6 +65,14 @@ IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
     GrayImage const& src, int delta = 0);
 
 /**
+ * \brief Image binarization using DeltaMean global thresholding method.
+ *
+ * \see Help -> About -> References -> [7]
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeMean(
+    GrayImage const& src, int const delta = 0);
+
+/**
   * \brief Image binarization using Niblack's local thresholding method.
   *
   * \see Help -> About -> References -> [9]
@@ -127,6 +135,15 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     GrayImage const& src, QSize window_size,
     double kep = 0.5, double kdb = 0.5, int delta = 0);
+
+/**
+ * \brief Image binarization using MultiScale thresholding method.
+ *
+ * MultiScale thresholding method.
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeMScale(
+    GrayImage const& src, QSize window_size,
+    double coef = 0.5, int delta = 0);
 
 } // namespace imageproc
 

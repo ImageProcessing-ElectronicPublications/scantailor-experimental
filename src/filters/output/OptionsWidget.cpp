@@ -63,6 +63,7 @@ OptionsWidget::OptionsWidget(
     colorModeSelector->addItem(tr("Mixed"), ColorParams::MIXED);
 
     thresholdMethodSelector->addItem(tr("Otsu"), OTSU);
+    thresholdMethodSelector->addItem(tr("Mean"), MEANDELTA);
     thresholdMethodSelector->addItem(tr("Niblack"), NIBLACK);
     thresholdMethodSelector->addItem(tr("Gatos"), GATOS);
     thresholdMethodSelector->addItem(tr("Sauvola"), SAUVOLA);
@@ -71,6 +72,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgePlus"), EDGEPLUS);
     thresholdMethodSelector->addItem(tr("BlurDiv"), BLURDIV);
     thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
+    thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
 
     darkerThresholdLink->setText(
         Utils::richTextForLink(darkerThresholdLink->text())
@@ -582,7 +584,7 @@ OptionsWidget::updateColorsDisplay()
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
         thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
         thresholdCoef->setValue(black_white_options.thresholdCoef());
-        if (black_white_options.thresholdMethod() == OTSU)
+        if ((black_white_options.thresholdMethod() == OTSU) || (black_white_options.thresholdMethod() == MEANDELTA))
         {
             thresholdWindowSize->setEnabled( false );
             thresholdCoef->setEnabled( false );

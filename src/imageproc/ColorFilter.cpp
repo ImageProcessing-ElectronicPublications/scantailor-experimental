@@ -253,7 +253,7 @@ void coloredSignificanceFilterInPlace(
     }
 }
 
-QImage coloredDimmingFilterFilter(
+QImage coloredDimmingFilter(
     QImage& image, GrayImage& gray)
 {
     QImage dst(image);

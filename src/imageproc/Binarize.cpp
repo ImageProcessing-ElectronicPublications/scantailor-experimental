@@ -65,11 +65,11 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
     unsigned int const w = src.width();
     unsigned int const h = src.height();
     uint8_t const* gray_line = src.data();
-    int const gray_bpl = src.stride();
+    unsigned int const gray_bpl = src.stride();
 
     BinaryImage bw_img(w, h);
     uint32_t* bw_line = bw_img.data();
-    int const bw_wpl = bw_img.wordsPerLine();
+    unsigned int const bw_wpl = bw_img.wordsPerLine();
 
     for (unsigned int y = 0; y < h; ++y)
     {
@@ -103,16 +103,16 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
         return threshold;
     }
 
-    int const w = src.width();
-    int const h = src.height();
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
     uint8_t const* gray_line = src.data();
-    int const gray_bpl = src.stride();
+    unsigned int const gray_bpl = src.stride();
     unsigned int histsize = 256;
     size_t histogram[histsize] = {0};
 
-    for (int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; ++y)
     {
-        for (int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; ++x)
         {
             uint8_t const pixel = gray_line[x];
             histogram[pixel]++;
@@ -177,6 +177,140 @@ BinaryImage binarizeBiModal(GrayImage const& src, int const delta)
 
     return bw_img;
 }  // binarizeBiModal
+
+BinaryImage binarizeMean(GrayImage const& src, int const delta)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    uint8_t const* src_line = src.data();
+    unsigned int const src_bpl = src.stride();
+    size_t mean = 0, count = 0, meanw = 0, countw = 0, dist_mean = 0, countb = 0;
+    unsigned int dist, threshold = 128;
+
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            unsigned int const pixel = src_line[x];
+            mean += pixel;
+            count++;
+        }
+        src_line += src_bpl;
+    }
+    mean = (count > 0) ? ((mean + count / 2) / count) : 128;
+
+    src_line = src.data();
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            size_t const pixel = src_line[x];
+            dist = (pixel > mean) ? (pixel - mean) : (mean - pixel);
+            dist++;
+            dist = 256 / dist;
+            meanw += (pixel * dist);
+            countw += dist;
+        }
+        src_line += src_bpl;
+    }
+    meanw = (countw > 0) ? ((meanw + countw / 2) / countw) : 128;
+
+    src_line = src.data();
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            unsigned int const pixel = src_line[x];
+            dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
+            dist_mean += dist;
+        }
+        src_line += src_bpl;
+    }
+    dist_mean = (count > 0) ? ((dist_mean + count / 2) / count) : 64;
+    threshold = dist_mean;
+
+    src_line = src.data();
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            unsigned int const pixel = src_line[x];
+            dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
+            if (dist < threshold)
+            {
+                // white
+                countb++;
+            }
+        }
+        src_line += src_bpl;
+    }
+    countb += countb;
+
+    BinaryImage bw_img(w, h);
+    uint32_t* bw_line = bw_img.data();
+    unsigned int const bw_wpl = bw_img.wordsPerLine();
+
+    src_line = src.data();
+    if (countb < count)
+    {
+        threshold *= (1.0 + (double) delta * 0.01);
+        for (unsigned int y = 0; y < h; ++y)
+        {
+            for (unsigned int x = 0; x < w; ++x)
+            {
+                unsigned int const pixel = src_line[x];
+                dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
+                static uint32_t const msb = uint32_t(1) << 31;
+                uint32_t const mask = msb >> (x & 31);
+                if (dist < threshold)
+                {
+                    // black
+                    bw_line[x >> 5] |= mask;
+                }
+                else
+                {
+                    // white
+                    bw_line[x >> 5] &= ~mask;
+                }
+            }
+            src_line += src_bpl;
+            bw_line += bw_wpl;
+        }
+    }
+    else
+    {
+        threshold *= (1.0 - (double) delta * 0.01);
+        for (unsigned int y = 0; y < h; ++y)
+        {
+            for (unsigned int x = 0; x < w; ++x)
+            {
+                unsigned int const pixel = src_line[x];
+                dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
+                static uint32_t const msb = uint32_t(1) << 31;
+                uint32_t const mask = msb >> (x & 31);
+                if (dist < threshold)
+                {
+                    // white
+                    bw_line[x >> 5] &= ~mask;
+                }
+                else
+                {
+                    // black
+                    bw_line[x >> 5] |= mask;
+                }
+            }
+            src_line += src_bpl;
+            bw_line += bw_wpl;
+        }
+    }
+
+    return bw_img;
+}  // binarizeMean
 
 BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
                             double const k, int const delta)
@@ -679,6 +813,7 @@ BinaryImage binarizeBradley(
         src_line += src_bpl;
         bw_line += bw_wpl;
     }
+
     return bw_img;
 }  // binarizeBradley
 
@@ -766,7 +901,195 @@ BinaryImage binarizeEdgeDiv(
         }
         gray_line += gray_bpl;
     }
+
     return binarizeBiModal(gray, delta);
 }  // binarizeEdgeDiv
+
+BinaryImage binarizeMScale(
+    GrayImage const& src, QSize const window_size,
+    double const coef, int const delta)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMScale: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_bpl = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_bpl = gray.stride();
+
+    unsigned int whcp, l, i, j, blsz, rsz, radius;
+    double immean, st, kover, sensitivity, sensdiv, senspos, sensinv;
+    unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
+    unsigned int maskbl, maskover, tim, threshold = 0;
+    size_t idx;
+
+    radius = (window_size.height() + window_size.width()) >> 1;
+    whcp = (h + w) >> 1;
+    blsz = 1;
+    while (blsz < whcp)
+    {
+        level++;
+        blsz <<= 1;
+    }
+    blsz >>= 1;
+    rsz = 1;
+    while ((rsz < radius) && (level > 1))
+    {
+        level--;
+        rsz <<= 1;
+    }
+
+    gray_line = gray.data();
+    immin = gray_line[0];
+    immax = immin;
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            pim = gray_line[x];
+            if (pim < immin)
+            {
+                immin = pim;
+            }
+            if (pim > immax)
+            {
+                immax = pim;
+            }
+        }
+        gray_line += gray_bpl;
+    }
+    immean = (double) (immax + immin);
+    immean *= 0.5;
+    immean += 0.5;
+    tim = (unsigned int) immean;
+
+    gray_line = gray.data();
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            gray_line[x] = tim;
+        }
+        gray_line += gray_bpl;
+    }
+
+    kover = 1.5;
+
+    if (coef < 0.0)
+    {
+        sensitivity = -coef;
+        sensdiv = sensitivity;
+        sensdiv += 1.0;
+        sensinv = 1.0 / sensdiv;
+        senspos = sensitivity / sensdiv;
+    }
+    else
+    {
+        sensitivity = coef;
+        sensdiv = sensitivity;
+        sensdiv += 1.0;
+        senspos = 1.0 / sensdiv;
+        sensinv = sensitivity / sensdiv;
+    }
+
+    src_line = src.data();
+    gray_line = gray.data();
+    for (l = 0; l < level; l++)
+    {
+        cnth = (h + blsz - 1) / blsz;
+        cntw = (w + blsz - 1) / blsz;
+        maskbl = blsz;
+        maskover = (unsigned int) (kover * maskbl);
+        for (i = 0; i < cnth; i++)
+        {
+            int y0 = i * maskbl;
+            int y1 = y0 + maskover;
+            y1 = (y1 < h) ? y1 : h;
+            for (j = 0; j < cntw; j++)
+            {
+                int x0 = j * maskbl;
+                int x1 = x0 + maskover;
+                x1 = (x1 < w) ? x1 : w;
+
+                idx = y0 * src_bpl + x0;
+                immin = src_line[idx];
+                immax = immin;
+                for (int y = y0; y < y1; y++)
+                {
+                    for (int x = x0; x < x1; x++)
+                    {
+                        idx = y * src_bpl + x;
+                        pim = src_line[idx];
+                        if (pim < immin)
+                        {
+                            immin = pim;
+                        }
+                        if (pim > immax)
+                        {
+                            immax = pim;
+                        }
+                    }
+                }
+                immean = (double) (immax + immin);
+                immean *= 0.5;
+                immean *= sensinv;
+                for (int y = y0; y < y1; y++)
+                {
+                    for (int x = x0; x < x1; x++)
+                    {
+                        idx = y * gray_bpl + x;
+                        imt = gray_line[idx];
+                        imt *= senspos;
+                        imt += immean;
+                        imt += 0.5;
+                        imt = (imt < 0.0) ? 0.0 : ((imt < 255.0) ? imt : 255.0);
+                        gray_line[idx] = (uint8_t) imt;
+                    }
+                }
+            }
+        }
+        blsz >>= 1;
+    }
+
+    BinaryImage bw_img(w, h);
+    uint32_t* bw_line = bw_img.data();
+    int const bw_wpl = bw_img.wordsPerLine();
+
+    src_line = src.data();
+    gray_line = gray.data();
+    for (int y = 0; y < h; ++y)
+    {
+        for (int x = 0; x < w; ++x)
+        {
+            static uint32_t const msb = uint32_t(1) << 31;
+            uint32_t const mask = msb >> (x & 31);
+            if (src_line[x] < (gray_line[x] + delta))
+            {
+                // black
+                bw_line[x >> 5] |= mask;
+            }
+            else
+            {
+                // white
+                bw_line[x >> 5] &= ~mask;
+            }
+        }
+        src_line += src_bpl;
+        gray_line += gray_bpl;
+        bw_line += bw_wpl;
+    }
+
+    return bw_img;
+}  // binarizeMScale
 
 } // namespace imageproc

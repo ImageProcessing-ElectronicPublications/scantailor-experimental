@@ -47,7 +47,7 @@ IMAGEPROC_EXPORT QImage screenFilter(
 IMAGEPROC_EXPORT void screenFilterInPlace(
     QImage& image, QSize const& window_size, double coef = 0.0);
 
-IMAGEPROC_EXPORT QImage coloredDimmingFilterFilter(
+IMAGEPROC_EXPORT QImage coloredDimmingFilter(
     QImage& image, double coef = 0.5);
 
 IMAGEPROC_EXPORT void colorCurveFilterInPlace(

@@ -1038,6 +1038,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeBiModal(gray, threshold_delta);
             break;
         }
+        case MEANDELTA:
+        {
+            binarized = binarizeMean(gray, threshold_delta);
+            break;
+        }
         case NIBLACK:
         {
             binarized = binarizeNiblack(gray, window_size, threshold_coef, threshold_delta);
@@ -1076,6 +1081,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         case EDGEDIV:
         {
             binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, threshold_coef, threshold_delta);
+            break;
+        }
+        case MSCALE:
+        {
+            binarized = binarizeMScale(gray, window_size, threshold_coef, threshold_delta);
             break;
         }
         }
