@@ -93,7 +93,7 @@ private:
 CylindricalSurfaceDewarper::CylindricalSurfaceDewarper(
     std::vector<QPointF> const& img_directrix1,
     std::vector<QPointF> const& img_directrix2, double depth_perception)
-    :	m_pln2img(calcPlnToImgHomography(img_directrix1, img_directrix2)),
+    :   m_pln2img(calcPlnToImgHomography(img_directrix1, img_directrix2)),
       m_img2pln(m_pln2img.inv()),
       m_depthPerception(depth_perception),
       m_plnStraightLineY(
@@ -123,22 +123,26 @@ CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
     QPointF const img_directrix2_pt(
         m_imgDirectrix2Intersector.intersect(img_generatrix, state.m_intersectionHint2)
     );
-    QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, m_plnStraightLineY))));
     double const img_directrix1_proj(projector.projectionScalar(img_directrix1_pt));
     double const img_directrix2_proj(projector.projectionScalar(img_directrix2_pt));
-    double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
+    double const img_directrix0_proj = 0.5 * (img_directrix1_proj + img_directrix2_proj);
+    // QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, m_plnStraightLineY))));
+    // double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
     boost::array<std::pair<double, double>, 3> pairs;
     pairs[0] = std::make_pair(0.0, img_directrix1_proj);
     pairs[1] = std::make_pair(1.0, img_directrix2_proj);
-    if (fabs(m_plnStraightLineY) < 0.05 || fabs(m_plnStraightLineY - 1.0) < 0.05)
+
+    if (fabs(m_plnStraightLineY - 0.5) > 0.45)
     {
-        pairs[2] = std::make_pair(0.5, 0.5 * (img_directrix1_proj + img_directrix2_proj));
+        pairs[2] = std::make_pair(0.5, img_directrix0_proj);
     }
     else
     {
-        pairs[2] = std::make_pair(m_plnStraightLineY, img_straight_line_proj);
+        // pairs[2] = std::make_pair(m_plnStraightLineY, img_straight_line_proj);
+        pairs[2] = std::make_pair(m_plnStraightLineY, img_directrix0_proj);
     }
+
     HomographicTransform<1, double> H(threePoint1DHomography(pairs));
 
     return Generatrix(img_generatrix, H);
@@ -169,22 +173,26 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     QPointF const img_directrix2_pt(
         m_imgDirectrix2Intersector.intersect(img_generatrix, state.m_intersectionHint2)
     );
-    QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, m_plnStraightLineY))));
     double const img_directrix1_proj(projector.projectionScalar(img_directrix1_pt));
     double const img_directrix2_proj(projector.projectionScalar(img_directrix2_pt));
-    double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
+    double const img_directrix0_proj = 0.5 * (img_directrix1_proj + img_directrix2_proj);
+    // QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, m_plnStraightLineY))));
+    // double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
     boost::array<std::pair<double, double>, 3> pairs;
     pairs[0] = std::make_pair(img_directrix1_proj, 0.0);
     pairs[1] = std::make_pair(img_directrix2_proj, 1.0);
-    if (fabs(m_plnStraightLineY) < 0.05 || fabs(m_plnStraightLineY - 1.0) < 0.05)
+
+    if (fabs(m_plnStraightLineY - 0.5) > 0.45)
     {
-        pairs[2] = std::make_pair(0.5 * (img_directrix1_proj + img_directrix2_proj), 0.5);
+        pairs[2] = std::make_pair(img_directrix0_proj, 0.5);
     }
     else
     {
-        pairs[2] = std::make_pair(img_straight_line_proj, m_plnStraightLineY);
+        // pairs[2] = std::make_pair(img_straight_line_proj, m_plnStraightLineY);
+        pairs[2] = std::make_pair(img_directrix0_proj, m_plnStraightLineY);
     }
+
     HomographicTransform<1, double> const H(threePoint1DHomography(pairs));
 
     double const img_pt_proj(projector.projectionScalar(img_pt));
@@ -253,7 +261,7 @@ CylindricalSurfaceDewarper::calcPlnStraightLineY(
         weight_accum += weight;
     }
 
-    return weight_accum == 0 ? 0.5 : pln_y_accum / weight_accum;
+    return ((weight_accum == 0) ? 0.5 : (pln_y_accum / weight_accum));
 }
 
 HomographicTransform<2, double>
@@ -376,7 +384,7 @@ CylindricalSurfaceDewarper::CoupledPolylinesIterator::CoupledPolylinesIterator(
     std::vector<QPointF> const& img_directrix2,
     HomographicTransform<2, double> const& pln2img,
     HomographicTransform<2, double> const& img2pln)
-    :	m_seq1It(img_directrix1.begin()),
+    :   m_seq1It(img_directrix1.begin()),
       m_seq2It(img_directrix2.begin()),
       m_seq1End(img_directrix1.end()),
       m_seq2End(img_directrix2.end()),
