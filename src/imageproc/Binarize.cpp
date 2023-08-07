@@ -38,6 +38,22 @@
 namespace imageproc
 {
 
+static inline void binarySetBW(uint32_t* bw_line, unsigned int x, bool black)
+{
+    static uint32_t const msb = uint32_t(1) << 31;
+    uint32_t const mask = msb >> (x & 31);
+    if (black)
+    {
+        // black
+        bw_line[x >> 5] |= mask;
+    }
+    else
+    {
+        // white
+        bw_line[x >> 5] &= ~mask;
+    }
+}
+
 BinaryImage binarizeOtsu(QImage const& src, int const delta)
 {
     return BinaryImage(src, BinaryThreshold(BinaryThreshold::otsuThreshold(src) + delta));
@@ -75,18 +91,7 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (gray_line[x] < threshold)
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
+            binarySetBW(bw_line, x, (gray_line[x] < threshold));
         }
         gray_line += gray_bpl;
         bw_line += bw_wpl;
@@ -256,57 +261,17 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     unsigned int const bw_wpl = bw_img.wordsPerLine();
 
     src_line = src.data();
-    if (countb < count)
+    threshold *= (count < countb) ? (1.0 - (double) delta * 0.01) : (1.0 + (double) delta * 0.01);
+    for (unsigned int y = 0; y < h; ++y)
     {
-        threshold *= (1.0 + (double) delta * 0.01);
-        for (unsigned int y = 0; y < h; ++y)
+        for (unsigned int x = 0; x < w; ++x)
         {
-            for (unsigned int x = 0; x < w; ++x)
-            {
-                unsigned int const pixel = src_line[x];
-                dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
-                static uint32_t const msb = uint32_t(1) << 31;
-                uint32_t const mask = msb >> (x & 31);
-                if (dist < threshold)
-                {
-                    // black
-                    bw_line[x >> 5] |= mask;
-                }
-                else
-                {
-                    // white
-                    bw_line[x >> 5] &= ~mask;
-                }
-            }
-            src_line += src_bpl;
-            bw_line += bw_wpl;
+            unsigned int const pixel = src_line[x];
+            dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
+            binarySetBW(bw_line, x, ((dist < threshold) ^ (count < countb)));
         }
-    }
-    else
-    {
-        threshold *= (1.0 - (double) delta * 0.01);
-        for (unsigned int y = 0; y < h; ++y)
-        {
-            for (unsigned int x = 0; x < w; ++x)
-            {
-                unsigned int const pixel = src_line[x];
-                dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
-                static uint32_t const msb = uint32_t(1) << 31;
-                uint32_t const mask = msb >> (x & 31);
-                if (dist < threshold)
-                {
-                    // white
-                    bw_line[x >> 5] &= ~mask;
-                }
-                else
-                {
-                    // black
-                    bw_line[x >> 5] |= mask;
-                }
-            }
-            src_line += src_bpl;
-            bw_line += bw_wpl;
-        }
+        src_line += src_bpl;
+        bw_line += bw_wpl;
     }
 
     return bw_img;
@@ -381,18 +346,7 @@ BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
 
             double const threshold = mean - k * stddev;
 
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (int(src_line[x]) < (threshold + delta))
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
+            binarySetBW(bw_line, x, (int(src_line[x]) < (threshold + delta)));
         }
         src_line += src_stride;
         bw_line += bw_stride;
@@ -602,18 +556,7 @@ BinaryImage binarizeSauvola(
 
             double const threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
 
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (int(src_line[x]) < (threshold + delta))
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
+            binarySetBW(bw_line, x, (int(src_line[x]) < (threshold + delta)));
         }
         src_line += src_bpl;
         bw_line += bw_wpl;
@@ -715,20 +658,7 @@ BinaryImage binarizeWolf(
             double const a = 1.0 - deviation / max_deviation;
             double const threshold = mean - k * a * (mean - min_gray_level);
 
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (src_line[x] < lower_bound ||
-                    (src_line[x] <= upper_bound &&
-                     int(src_line[x]) < (threshold + delta)))
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
+            binarySetBW(bw_line, x, (src_line[x] < lower_bound || (src_line[x] <= upper_bound && int(src_line[x]) < (threshold + delta))));
         }
         src_line += src_bpl;
         bw_line += bw_wpl;
@@ -797,18 +727,7 @@ BinaryImage binarizeBradley(
             double const r_area = 1.0 / area;
             double const mean = window_sum * r_area;
             double const threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (int(src_line[x]) < (threshold + delta))
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
+            binarySetBW(bw_line, x, (int(src_line[x]) < (threshold + delta)));
         }
         src_line += src_bpl;
         bw_line += bw_wpl;
@@ -1071,18 +990,7 @@ BinaryImage binarizeMScale(
     {
         for (int x = 0; x < w; ++x)
         {
-            static uint32_t const msb = uint32_t(1) << 31;
-            uint32_t const mask = msb >> (x & 31);
-            if (src_line[x] < (gray_line[x] + delta))
-            {
-                // black
-                bw_line[x >> 5] |= mask;
-            }
-            else
-            {
-                // white
-                bw_line[x >> 5] &= ~mask;
-            }
+            binarySetBW(bw_line, x, (src_line[x] < (gray_line[x] + delta)));
         }
         src_line += src_bpl;
         gray_line += gray_bpl;
