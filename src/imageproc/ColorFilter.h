@@ -47,10 +47,16 @@ IMAGEPROC_EXPORT QImage screenFilter(
 IMAGEPROC_EXPORT void screenFilterInPlace(
     QImage& image, QSize const& window_size, double coef = 0.0);
 
-IMAGEPROC_EXPORT QImage coloredDimmingFilter(
+IMAGEPROC_EXPORT QImage colorCurveFilter(
     QImage& image, double coef = 0.5);
 
 IMAGEPROC_EXPORT void colorCurveFilterInPlace(
+    QImage& image, double coef = 0.5);
+
+IMAGEPROC_EXPORT QImage colorSqrFilter(
+    QImage& image, double coef = 0.5);
+
+IMAGEPROC_EXPORT void colorSqrFilterInPlace(
     QImage& image, double coef = 0.5);
 
 IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
@@ -59,7 +65,7 @@ IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
 IMAGEPROC_EXPORT void coloredSignificanceFilterInPlace(
     QImage const& image, GrayImage& gray, double coef = 0.0);
 
-IMAGEPROC_EXPORT QImage coloredDimmingFilterFilter(
+IMAGEPROC_EXPORT QImage coloredDimmingFilter(
     QImage& image, GrayImage& gray);
 
 IMAGEPROC_EXPORT void coloredDimmingFilterInPlace(

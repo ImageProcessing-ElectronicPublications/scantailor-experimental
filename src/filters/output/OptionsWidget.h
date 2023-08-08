@@ -71,6 +71,8 @@ private slots:
 
     void curveCoefChanged(double value);
 
+    void sqrCoefChanged(double value);
+
     void normalizeCoefChanged(double value);
 
     void whiteMarginsToggled(bool checked);

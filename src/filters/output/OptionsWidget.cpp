@@ -123,8 +123,8 @@ OptionsWidget::OptionsWidget(
         this, SLOT(curveCoefChanged(double))
     );
     connect(
-        dimmingColoredCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(dimmingColoredCoefChanged(double))
+        sqrCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(sqrCoefChanged(double))
     );
     connect(
         normalizeCoef, SIGNAL(valueChanged(double)),
@@ -137,6 +137,10 @@ OptionsWidget::OptionsWidget(
     connect(
         thresholdMethodSelector, SIGNAL(currentIndexChanged(int)),
         this, SLOT(thresholdMethodChanged(int))
+    );
+    connect(
+        dimmingColoredCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(dimmingColoredCoefChanged(double))
     );
     connect(
         lighterThresholdLink, SIGNAL(linkActivated(QString const&)),
@@ -301,6 +305,16 @@ OptionsWidget::curveCoefChanged(double value)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     color_options.setCurveCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::sqrCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setSqrCoef(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -568,6 +582,7 @@ OptionsWidget::updateColorsDisplay()
     screenCoef->setValue(color_options.screenCoef());
     screenWindowSize->setValue(color_options.screenWindowSize());
     curveCoef->setValue(color_options.curveCoef());
+    sqrCoef->setValue(color_options.sqrCoef());
     normalizeCoef->setValue(color_options.normalizeCoef());
     if (color_grayscale_options_visible)
     {

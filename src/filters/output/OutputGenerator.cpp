@@ -368,6 +368,8 @@ OutputGenerator::process(
 
     colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
 
+    colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
+
     GrayImage coloredSignificance(transformed_image);
     if (render_params.needBinarization())
     {

@@ -28,6 +28,7 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     :  m_screenCoef(el.attribute("screenCoef").toDouble()),
        m_screenWindowSize(el.attribute("screenWinSize").toInt()),
        m_curveCoef(el.attribute("curveCoef").toDouble()),
+       m_sqrCoef(el.attribute("sqrCoef").toDouble()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
        m_whiteMargins(el.attribute("whiteMargins") == "1")
 {
@@ -43,6 +44,10 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_curveCoef = 0.0;
     }
+    if (m_sqrCoef < -1.0 || m_sqrCoef > 1.0)
+    {
+        m_sqrCoef = 0.0;
+    }
     if (m_normalizeCoef < 0.0 || m_normalizeCoef > 1.0)
     {
         m_normalizeCoef = 0.0;
@@ -56,6 +61,7 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("screenCoef", m_screenCoef);
     el.setAttribute("screenWinSize", m_screenWindowSize);
     el.setAttribute("curveCoef", m_curveCoef);
+    el.setAttribute("sqrCoef", m_sqrCoef);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
     el.setAttribute("whiteMargins", m_whiteMargins ? "1" : "0");
     return el;
@@ -73,6 +79,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_curveCoef != other.m_curveCoef)
+    {
+        return false;
+    }
+    if (m_sqrCoef != other.m_sqrCoef)
     {
         return false;
     }

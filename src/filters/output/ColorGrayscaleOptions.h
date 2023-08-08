@@ -34,6 +34,7 @@ public:
           m_screenCoef(0.0),
           m_screenWindowSize(10),
           m_curveCoef(0.5),
+          m_sqrCoef(0.0),
           m_normalizeCoef(0.5) {}
 
     ColorGrayscaleOptions(QDomElement const& el);
@@ -66,6 +67,15 @@ public:
         m_curveCoef = val;
     }
 
+    double sqrCoef() const
+    {
+        return m_sqrCoef;
+    }
+    void setSqrCoef(double val)
+    {
+        m_sqrCoef = val;
+    }
+
     double normalizeCoef() const
     {
         return m_normalizeCoef;
@@ -92,6 +102,7 @@ private:
     double m_screenCoef;
     int m_screenWindowSize;
     double m_curveCoef;
+    double m_sqrCoef;
     double m_normalizeCoef;
 };
 

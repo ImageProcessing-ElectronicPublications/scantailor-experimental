@@ -152,7 +152,7 @@ void colorCurveFilterInPlace(
 
     if (coef != 0.0)
     {
-        int isigm = (int) (coef * 256 + 0.5);
+        int icoef = (int) (coef * 256.0 + 0.5);
         unsigned int const w = image.width();
         unsigned int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
@@ -160,16 +160,68 @@ void colorCurveFilterInPlace(
         uint8_t pix_replace[256];
 
         int thres = BinaryThreshold::otsuThreshold(image);
+        thres <<= 8;
         for (unsigned int j = 0; j < 256; j++)
         {
-            int val = 256 * j / 255;
-            int sigm2 = val;
-            int delta = (val - thres) * (val - thres);
-            delta = (val < thres) ? -(delta  / thres) : (delta / (256 - thres));
-            sigm2 += isigm * (val - thres - delta) / 256;
-            sigm2 *= 255;
-            sigm2 /= 256;
-            pix_replace[j] = (uint8_t) sigm2;
+            int val = (j << 8);
+            int delta = (val - thres);
+            int dsqr = delta * delta;
+            dsqr = (delta < 0) ? -(dsqr  / thres) : (dsqr / (65280 - thres));
+            delta -= dsqr;
+            delta *= icoef;
+            delta += 128;
+            delta >>= 8;
+            val += delta;
+            val += 128;
+            val >>= 8;
+            pix_replace[j] = (uint8_t) val;
+        }
+
+        for (size_t i = 0; i < (h * image_bpl); i++)
+        {
+            uint8_t val = image_line[i];
+            image_line[i] = pix_replace[val];
+        }
+    }
+}
+
+QImage colorSqrFilter(
+    QImage& image, double const coef)
+{
+    QImage dst(image);
+    colorSqrFilterInPlace(dst, coef);
+    return dst;
+}
+
+void colorSqrFilterInPlace(
+    QImage& image, double const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if (coef != 0.0)
+    {
+        int icoef = (int) (coef * 256.0 + 0.5);
+        unsigned int const w = image.width();
+        unsigned int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        uint8_t pix_replace[256];
+
+        for (unsigned int j = 0; j < 256; j++)
+        {
+            unsigned int val = j;
+            val++;
+            val *= val;
+            val += 255;
+            val >>= 8;
+            val--;
+            val = icoef * val + (256 - icoef) * j;
+            val += 128;
+            val >>= 8;
+            pix_replace[j] = (uint8_t) val;
         }
 
         for (size_t i = 0; i < (h * image_bpl); i++)
