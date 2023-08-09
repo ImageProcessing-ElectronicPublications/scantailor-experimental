@@ -80,13 +80,15 @@ void screenFilterInPlace(
             }
             gray_line += gray_bpl;
         }
-        gray = GrayImage(); // save memory
-
+ 
         int const window_lower_half = window_size.height() >> 1;
         int const window_upper_half = window_size.height() - window_lower_half;
         int const window_left_half = window_size.width() >> 1;
         int const window_right_half = window_size.width() - window_left_half;
 
+        size_t histogram[256] = {0};
+        size_t szi = (h * w) >> 8;
+        gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
             int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
@@ -102,36 +104,51 @@ void screenFilterInPlace(
 
                 double const r_area = 1.0 / area;
                 double const mean = window_sum * r_area;
-                double const meano = 255.0 - mean;
+                gray_line[x] = mean;
+                unsigned int indx = (unsigned int) (mean + 0.5);
+                histogram[indx]++;
+            }
+            gray_line += gray_bpl;
+        }
+
+        for (unsigned int i = 1; i < 256; i++)
+        {
+            histogram[i] += histogram[i - 1];
+        }
+        for (unsigned int i = 0; i < 256; i++)
+        {
+            histogram[i] += (szi >> 1);
+            histogram[i] /= szi;
+            histogram[i] = (histogram[i] < 255) ? histogram[i] : 255;
+        }
+
+        gray_line = gray.data();
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                double const origin = gray_line[x];
+                double const remap = histogram[gray_line[x]];
+                double const colscale = (remap + 1.0) / (origin + 1.0);
                 for (unsigned int c = 0; c < cnum; ++c)
                 {
                     int const indx = x * cnum + c;
-                    double const origin = image_line[indx];
-                    double retval = origin;
-                    // Overlay {origin, meano}
-                    if (origin > 127.5)
-                    {
-                        retval = 255.0 - retval;
-                        retval *= mean;
-                    }
-                    else
-                    {
-                        retval *= meano;
-                    }
-                    retval += retval;
+                    double origcol = image_line[indx];
+                    double valpos = origcol * colscale;
+                    double valneg = 255.0 - valpos;
+                    double retval = origcol * valneg;
                     retval /= 255.0;
-                    if (origin > 127.5)
-                    {
-                        retval = 255.0 - retval;
-                    }
-                    retval = coef * retval + (1.0 - coef) * origin;
+                    retval += valpos;
+                    retval = coef * retval + (1.0 - coef) * origcol;
                     retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
                     image_line[indx] = (uint8_t) retval;
                 }
             }
             image_line += image_bpl;
+            gray_line += gray_bpl;
         }
     }
+
 }
 
 QImage colorCurveFilter(
