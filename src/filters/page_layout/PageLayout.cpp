@@ -50,10 +50,13 @@ PageLayout::PageLayout(
         // aggregate_size = content_size * scale + margins * width * scale
         // Solving for scale:
         // scale = aggregate_size / (content_size + margins * width)
+        qreal pagewidth = m_innerRect.width();
+        qreal pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
+        pagewidth = (pagewidth <  pagewidthheight) ?  pagewidthheight :  pagewidth; 
         qreal const x_scale = aggregate_hard_size.width() /
-                              (m_innerRect.width() + (margins.left() + margins.right()) * m_innerRect.width());
+                              (m_innerRect.width() + (margins.left() + margins.right()) * pagewidth);
         qreal const y_scale = aggregate_hard_size.height() /
-                              (m_innerRect.height() + (margins.top() + margins.bottom()) * m_innerRect.width());
+                              (m_innerRect.height() + (margins.top() + margins.bottom()) * pagewidth);
 
         if (x_scale > 1.0 && y_scale > 1.0)
         {
@@ -73,9 +76,12 @@ PageLayout::PageLayout(
                       );
     }
 
+    qreal pagewidth = m_innerRect.width();
+    qreal pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
+    pagewidth = (pagewidth <  pagewidthheight) ?  pagewidthheight :  pagewidth; 
     if (have_content_box)
     {
-        m_middleRect = margins.extendContentRect(m_innerRect);
+        m_middleRect = margins.extendContentRect(m_innerRect, pagewidth);
     }
     else
     {

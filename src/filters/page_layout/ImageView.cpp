@@ -691,7 +691,10 @@ ImageView::forceNonNegativeHardMargins(QRectF& middle_rect) const
 RelativeMargins
 ImageView::calcHardMargins() const
 {
-    qreal const scale = 1.0 / m_innerRect.width();
+    qreal pagewidth = m_innerRect.width();
+    qreal pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
+    pagewidth = (pagewidth <  pagewidthheight) ?  pagewidthheight :  pagewidth; 
+    qreal const scale = 1.0 / pagewidth;
     return RelativeMargins(
                (m_innerRect.left() - m_middleRect.left()) * scale,
                (m_innerRect.top() - m_middleRect.top()) * scale,
