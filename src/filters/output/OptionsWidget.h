@@ -65,6 +65,10 @@ private slots:
 
     void colorModeChanged(int idx);
 
+    void knndCoefChanged(double value);
+
+    void knndRadiusChanged(int value);
+
     void screenCoefChanged(double value);
 
     void screenWindowSizeChanged(int value);

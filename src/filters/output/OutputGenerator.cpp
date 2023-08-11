@@ -364,6 +364,8 @@ OutputGenerator::process(
     BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
     double norm_coef = color_options.normalizeCoef();
 
+    knnDenoiserFilterInPlace(transformed_image, color_options.knndRadius(), color_options.knndCoef());
+
     screenFilterInPlace(transformed_image, QSize(color_options.screenWindowSize(), color_options.screenWindowSize()), color_options.screenCoef());
 
     colorCurveFilterInPlace(transformed_image, color_options.curveCoef());

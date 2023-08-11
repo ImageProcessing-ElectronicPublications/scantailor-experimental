@@ -25,13 +25,23 @@ namespace output
 {
 
 ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
-    :  m_screenCoef(el.attribute("screenCoef").toDouble()),
+    :  m_knndCoef(el.attribute("knnDenoiser").toDouble()),
+       m_knndRadius(el.attribute("knnDRadius").toInt()),
+       m_screenCoef(el.attribute("screenCoef").toDouble()),
        m_screenWindowSize(el.attribute("screenWinSize").toInt()),
        m_curveCoef(el.attribute("curveCoef").toDouble()),
        m_sqrCoef(el.attribute("sqrCoef").toDouble()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
        m_whiteMargins(el.attribute("whiteMargins") == "1")
 {
+    if (m_knndCoef < 0.0 || m_knndCoef > 1.0)
+    {
+        m_knndCoef = 0.0;
+    }
+    if (m_knndRadius < 1 || m_knndRadius > 16)
+    {
+        m_knndRadius = 1;
+    }
     if (m_screenCoef < -1.0 || m_screenCoef > 1.0)
     {
         m_screenCoef = 0.0;
@@ -58,6 +68,8 @@ QDomElement
 ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
+    el.setAttribute("knnDenoiser", m_knndCoef);
+    el.setAttribute("knnDRadius", m_knndRadius);
     el.setAttribute("screenCoef", m_screenCoef);
     el.setAttribute("screenWinSize", m_screenWindowSize);
     el.setAttribute("curveCoef", m_curveCoef);
@@ -70,6 +82,14 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 bool
 ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
 {
+    if (m_knndCoef != other.m_knndCoef)
+    {
+        return false;
+    }
+    if (m_knndRadius != other.m_knndRadius)
+    {
+        return false;
+    }
     if (m_screenCoef != other.m_screenCoef)
     {
         return false;

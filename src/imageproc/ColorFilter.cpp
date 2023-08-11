@@ -148,7 +148,6 @@ void screenFilterInPlace(
             gray_line += gray_bpl;
         }
     }
-
 }
 
 QImage colorCurveFilter(
@@ -366,6 +365,111 @@ void coloredDimmingFilterInPlace(
                     retval /= 256.0;
                     retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
                     image_line[indx] = (uint8_t) retval;
+                }
+            }
+            image_line += image_bpl;
+            gray_line += gray_bpl;
+        }
+    }
+}
+
+QImage knnDenoiserFilter(
+    QImage const& image, int const radius, double const coef)
+{
+    QImage dst(image);
+    knnDenoiserFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void knnDenoiserFilterInPlace(
+    QImage& image, int const radius, double const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef > 0.0))
+    {
+        float const threshold_weight = 0.02f;
+        float const threshold_lerp = 0.66f;
+        float const noise_eps = 0.0000001f;
+        float const noise_lerpc = 0.16f;
+
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+
+        GrayImage gray = GrayImage(image);
+        uint8_t* gray_line = gray.data();
+        int const gray_bpl = gray.stride();
+        unsigned int const cnum = image_bpl / w;
+
+        int const noise_area = ((2 * radius + 1) * (2 * radius + 1));
+        float const noise_area_inv = (1.0f / (float) noise_area);
+        float const noise_weight = (1.0f / (coef * coef));
+
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                // Normalized counter for the weight threshold
+                float f_count = 0.0f;
+                // Total sum of pixel weights
+                float sum_weights = 0.0f;
+                // Result accumulator
+                float color = 0.0f;
+                // Center of the filter
+                float const origin = gray_line[x];
+
+                for (int dy = -radius; dy <= radius; dy++)
+                {
+                    int yf = y + dy;
+
+                    if (yf < 0 || yf >= h)
+                        continue;
+
+                    uint8_t* gray_line_f = gray.data();
+                    gray_line_f += (gray_bpl * yf);
+                    for (int dx = -radius; dx <= radius; dx++)
+                    {
+                        int xf = x + dx;
+
+                        if (xf < 0 || xf >= w)
+                            continue;
+
+                        float color_f = gray_line_f[xf];
+                        float pixel_distance = dx * dx + dy * dy;
+                        float color_distance = (origin - color_f) / 255.0f;
+                        color_distance *= color_distance;
+
+                        // Denoising
+                        float weight_f = expf(-(pixel_distance * noise_area_inv + color_distance * noise_weight));
+                        color += color_f * weight_f;
+                        sum_weights += weight_f;
+                        f_count += (weight_f > threshold_weight) ? noise_area_inv : 0.0f;
+                    }
+                }
+
+                // Normalize result color
+                sum_weights = (sum_weights > 0.0f) ? (1.0f / sum_weights) : 1.0f;
+                color *= sum_weights;
+
+                float lerp_q = (f_count > threshold_lerp) ? noise_lerpc : (1.0f - noise_lerpc);
+                color = color + (origin - color) * lerp_q;
+                
+                // Result to memory
+                color = (color < 0.0f) ? 0.0f : ((color < 255.0f) ? color : 255.0f);
+
+                float const colscale = (color + 1.0f) / (origin + 1.0f);
+                for (unsigned int c = 0; c < cnum; ++c)
+                {
+                    int const indx = x * cnum + c;
+                    float origcol = image_line[indx];
+                    float val = origcol * colscale;
+                    val = (val < 0.0f) ? 0.0f : (val < 255.0f) ? val : 255.0f;
+                    image_line[indx] = (uint8_t) (val + 0.5f);
                 }
             }
             image_line += image_bpl;

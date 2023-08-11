@@ -111,6 +111,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(colorModeChanged(int))
     );
     connect(
+        knndCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(knndCoefChanged(double))
+    );
+    connect(
+        knndRadius, SIGNAL(valueChanged(int)),
+        this, SLOT(knndRadiusChanged(int))
+    );
+    connect(
         screenCoef, SIGNAL(valueChanged(double)),
         this, SLOT(screenCoefChanged(double))
     );
@@ -277,6 +285,26 @@ OptionsWidget::thresholdMethodChanged(int idx)
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::knndCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setKnndCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::knndRadiusChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setKnndRadius(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
 
@@ -579,6 +607,8 @@ OptionsWidget::updateColorsDisplay()
 
     colorGrayscaleOptions->setVisible(color_grayscale_options_visible);
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    knndCoef->setValue(color_options.knndCoef());
+    knndRadius->setValue(color_options.knndRadius());
     screenCoef->setValue(color_options.screenCoef());
     screenWindowSize->setValue(color_options.screenWindowSize());
     curveCoef->setValue(color_options.curveCoef());

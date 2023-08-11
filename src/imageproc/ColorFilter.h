@@ -71,6 +71,12 @@ IMAGEPROC_EXPORT QImage coloredDimmingFilter(
 IMAGEPROC_EXPORT void coloredDimmingFilterInPlace(
     QImage& image, GrayImage& gray);
 
+IMAGEPROC_EXPORT QImage knnDenoiserFilter(
+    QImage const& image, int radius = 1, double coef = 0.0);
+
+IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
+    QImage& image, int radius = 1, double coef = 0.0);
+
 } // namespace imageproc
 
 #endif

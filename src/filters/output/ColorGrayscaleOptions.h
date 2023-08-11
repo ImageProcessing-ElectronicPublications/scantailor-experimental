@@ -31,6 +31,8 @@ class ColorGrayscaleOptions
 public:
     ColorGrayscaleOptions()
         : m_whiteMargins(false),
+          m_knndCoef(0.0),
+          m_knndRadius(1),
           m_screenCoef(0.0),
           m_screenWindowSize(10),
           m_curveCoef(0.5),
@@ -40,6 +42,23 @@ public:
     ColorGrayscaleOptions(QDomElement const& el);
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    double knndCoef() const
+    {
+        return m_knndCoef;
+    }
+    void setKnndCoef(double val)
+    {
+        m_knndCoef = val;
+    }
+    int knndRadius() const
+    {
+        return m_knndRadius;
+    }
+    void setKnndRadius(double val)
+    {
+        m_knndRadius = val;
+    }
 
     double screenCoef() const
     {
@@ -99,6 +118,8 @@ public:
     bool operator!=(ColorGrayscaleOptions const& other) const;
 private:
     bool m_whiteMargins;
+    double m_knndCoef;
+    int m_knndRadius;
     double m_screenCoef;
     int m_screenWindowSize;
     double m_curveCoef;
