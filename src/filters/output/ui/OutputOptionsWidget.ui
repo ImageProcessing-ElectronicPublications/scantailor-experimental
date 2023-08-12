@@ -166,7 +166,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="normalizeOptions">
+       <layout class="QGridLayout" name="filterColorOptions">
         <item row="0" column="0">
          <widget class="QLabel" name="knndCoefLabel">
           <property name="text">
@@ -190,17 +190,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="knndRadiusLabel">
-          <property name="text">
-           <string>KNN denoiser radius:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
+        <item row="0" column="2">
          <widget class="QSpinBox" name="knndRadius">
           <property name="toolTip">
-           <string>The dimensions of a pixel neighborhood to consider.</string>
+           <string>The radius of a pixel neighborhood to consider.</string>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -210,14 +203,14 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="1" column="0">
          <widget class="QLabel" name="screenCoefLabel">
           <property name="text">
            <string>Screen filter</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="1" column="1">
          <widget class="QDoubleSpinBox" name="screenCoef">
           <property name="toolTip">
            <string>Value is -1.0 .. 1.0..</string>
@@ -229,18 +222,11 @@
            <double>1.0</double>
           </property>
           <property name="singleStep">
-           <double>0.1</double>
+           <double>0.05</double>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="screenWindowSizeLabel">
-          <property name="text">
-           <string>Screen window size:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
+        <item row="1" column="2">
          <widget class="QSpinBox" name="screenWindowSize">
           <property name="toolTip">
            <string>The dimensions of a pixel neighborhood to consider.</string>
@@ -253,14 +239,14 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="curveCoefLabel">
           <property name="text">
-           <string>Curve illumination</string>
+           <string>Curve/Sqr color</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="2" column="1">
          <widget class="QDoubleSpinBox" name="curveCoef">
           <property name="toolTip">
            <string>Value is -1.0 .. 1.0.</string>
@@ -272,18 +258,11 @@
            <double>1.0</double>
           </property>
           <property name="singleStep">
-           <double>0.1</double>
+           <double>0.05</double>
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="sqrCoefLabel">
-          <property name="text">
-           <string>Sqr illumination</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
+        <item row="2" column="2">
          <widget class="QDoubleSpinBox" name="sqrCoef">
           <property name="toolTip">
            <string>Value is -1.0 .. 1.0.</string>
@@ -295,18 +274,22 @@
            <double>1.0</double>
           </property>
           <property name="singleStep">
-           <double>0.1</double>
+           <double>0.05</double>
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="normalizeOptions">
+        <item row="0" column="0">
          <widget class="QLabel" name="normalizeCoefLabel">
           <property name="text">
            <string>Equalize illumination</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
+        <item row="0" column="1">
          <widget class="QDoubleSpinBox" name="normalizeCoef">
           <property name="toolTip">
            <string>Value is 0.0 .. 1.0.</string>
@@ -318,7 +301,7 @@
            <double>1.0</double>
           </property>
           <property name="singleStep">
-           <double>0.1</double>
+           <double>0.05</double>
           </property>
          </widget>
         </item>
@@ -406,7 +389,7 @@
               <double>2.0</double>
              </property>
              <property name="singleStep">
-              <double>0.1</double>
+              <double>0.05</double>
              </property>
             </widget>
            </item>
