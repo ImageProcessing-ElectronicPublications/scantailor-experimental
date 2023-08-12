@@ -16,6 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+#include <math.h>
+#include <stdint.h>
+#include <string.h>
+#include <assert.h>
+#include <QImage>
+#include <QRect>
+#include <QDebug>
 #include "Binarize.h"
 #include "BinaryImage.h"
 #include "BinaryThreshold.h"
@@ -24,16 +34,6 @@
 #include "IntegralImage.h"
 #include "WienerFilter.h"
 #include "RasterOpGeneric.h"
-#include <QImage>
-#include <QRect>
-#include <QDebug>
-#include <vector>
-#include <algorithm>
-#include <stdexcept>
-#include <math.h>
-#include <stdint.h>
-#include <string.h>
-#include <assert.h>
 
 namespace imageproc
 {

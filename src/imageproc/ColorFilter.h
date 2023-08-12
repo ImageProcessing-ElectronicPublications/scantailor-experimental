@@ -77,6 +77,12 @@ IMAGEPROC_EXPORT QImage knnDenoiserFilter(
 IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
     QImage& image, int radius = 1, double coef = 0.0);
 
+IMAGEPROC_EXPORT QImage wienerColorFilter(
+    QImage const& image, QSize const& window_size, double coef = 0.0);
+
+IMAGEPROC_EXPORT void wienerColorFilterInPlace(
+    QImage& image, QSize const& window_size, double coef = 0.0);
+
 } // namespace imageproc
 
 #endif

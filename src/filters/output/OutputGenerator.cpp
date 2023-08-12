@@ -364,6 +364,9 @@ OutputGenerator::process(
     BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
     double norm_coef = color_options.normalizeCoef();
 
+    // Color filters begin
+    wienerColorFilterInPlace(transformed_image, QSize(color_options.wienerWindowSize(), color_options.wienerWindowSize()), color_options.wienerCoef());
+
     knnDenoiserFilterInPlace(transformed_image, color_options.knndRadius(), color_options.knndCoef());
 
     screenFilterInPlace(transformed_image, QSize(color_options.screenWindowSize(), color_options.screenWindowSize()), color_options.screenCoef());
@@ -371,6 +374,7 @@ OutputGenerator::process(
     colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
 
     colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
+    // Color filters end
 
     GrayImage coloredSignificance(transformed_image);
     if (render_params.needBinarization())

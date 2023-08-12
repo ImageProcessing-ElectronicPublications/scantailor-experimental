@@ -31,6 +31,7 @@
 #include "GrayImage.h"
 #include "IntegralImage.h"
 #include "BinaryThreshold.h"
+#include "WienerFilter.h"
 #include "ColorFilter.h"
 
 namespace imageproc
@@ -62,11 +63,11 @@ void screenFilterInPlace(
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
         int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
         int const gray_bpl = gray.stride();
-        unsigned int const cnum = image_bpl / w;
 
         IntegralImage<uint32_t> integral_image(w, h);
 
@@ -80,7 +81,7 @@ void screenFilterInPlace(
             }
             gray_line += gray_bpl;
         }
- 
+
         int const window_lower_half = window_size.height() >> 1;
         int const window_upper_half = window_size.height() - window_lower_half;
         int const window_left_half = window_size.width() >> 1;
@@ -130,11 +131,12 @@ void screenFilterInPlace(
                 double const origin = gray_line[x];
                 double const remap = histogram[gray_line[x]];
                 double const colscale = (remap + 1.0) / (origin + 1.0);
+                double const coldelta = remap - origin * colscale;
                 for (unsigned int c = 0; c < cnum; ++c)
                 {
                     int const indx = x * cnum + c;
                     double origcol = image_line[indx];
-                    double valpos = origcol * colscale;
+                    double valpos = origcol * colscale + coldelta;
                     double valneg = 255.0 - valpos;
                     double retval = origcol * valneg;
                     retval /= 255.0;
@@ -277,6 +279,7 @@ void coloredSignificanceFilterInPlace(
     unsigned int const cnum = image_bpl / w;
     uint8_t* gray_line = gray.data();
     int const gray_bpl = gray.stride();
+
     if ((coef != 0.0) && (cnum > 2) && (w == wg) && (h == hg))
     {
         double const ycb[6] = {-0.168736, -0.331264, 0.5, 0.0, 0.0, 0.0};
@@ -400,11 +403,11 @@ void knnDenoiserFilterInPlace(
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
         int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
         int const gray_bpl = gray.stride();
-        unsigned int const cnum = image_bpl / w;
 
         int const noise_area = ((2 * radius + 1) * (2 * radius + 1));
         float const noise_area_inv = (1.0f / (float) noise_area);
@@ -458,22 +461,84 @@ void knnDenoiserFilterInPlace(
 
                 float lerp_q = (f_count > threshold_lerp) ? noise_lerpc : (1.0f - noise_lerpc);
                 color = color + (origin - color) * lerp_q;
-                
+
                 // Result to memory
                 color = (color < 0.0f) ? 0.0f : ((color < 255.0f) ? color : 255.0f);
 
                 float const colscale = (color + 1.0f) / (origin + 1.0f);
+                float const coldelta = color - origin * colscale;
                 for (unsigned int c = 0; c < cnum; ++c)
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    float val = origcol * colscale;
+                    float val = origcol * colscale + coldelta;
                     val = (val < 0.0f) ? 0.0f : (val < 255.0f) ? val : 255.0f;
                     image_line[indx] = (uint8_t) (val + 0.5f);
                 }
             }
             image_line += image_bpl;
             gray_line += gray_bpl;
+        }
+    }
+}
+
+QImage wienerColorFilter(
+    QImage const& image, QSize const& window_size, double const coef)
+{
+    QImage dst(image);
+    wienerColorFilterInPlace(dst, window_size, coef);
+    return dst;
+}
+
+void wienerColorFilterInPlace(
+    QImage& image, QSize const& window_size, double const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("wienerFilter: empty window_size");
+    }
+
+    if (coef > 0.0)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
+
+        GrayImage gray = GrayImage(image);
+        uint8_t* gray_line = gray.data();
+        int const gray_bpl = gray.stride();
+        GrayImage wiener(wienerFilter(gray, window_size, 255.0 * coef));
+        uint8_t* wiener_line = wiener.data();
+        int const wiener_bpl = wiener.stride();
+
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const origin = gray_line[x];
+                float color = wiener_line[x];
+                // color = coef * color + (1.0 - coef) * origin;
+
+                float const colscale = (color + 1.0f) / (origin + 1.0f);
+                float const coldelta = color - origin * colscale;
+                for (unsigned int c = 0; c < cnum; ++c)
+                {
+                    int const indx = x * cnum + c;
+                    float origcol = image_line[indx];
+                    float val = origcol * colscale + coldelta;
+                    val = (val < 0.0f) ? 0.0f : (val < 255.0f) ? val : 255.0f;
+                    image_line[indx] = (uint8_t) (val + 0.5f);
+                }
+            }
+            image_line += image_bpl;
+            gray_line += gray_bpl;
+            wiener_line += wiener_bpl;
         }
     }
 }

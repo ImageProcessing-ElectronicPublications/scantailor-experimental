@@ -65,6 +65,10 @@ private slots:
 
     void colorModeChanged(int idx);
 
+    void wienerCoefChanged(double value);
+
+    void wienerWindowSizeChanged(int value);
+
     void knndCoefChanged(double value);
 
     void knndRadiusChanged(int value);

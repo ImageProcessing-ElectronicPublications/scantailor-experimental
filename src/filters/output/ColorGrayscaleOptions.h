@@ -31,6 +31,8 @@ class ColorGrayscaleOptions
 public:
     ColorGrayscaleOptions()
         : m_whiteMargins(false),
+          m_wienerCoef(0.0),
+          m_wienerWindowSize(5),
           m_knndCoef(0.0),
           m_knndRadius(1),
           m_screenCoef(0.0),
@@ -42,6 +44,23 @@ public:
     ColorGrayscaleOptions(QDomElement const& el);
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
+
+    double wienerCoef() const
+    {
+        return m_wienerCoef;
+    }
+    void setWienerCoef(double val)
+    {
+        m_wienerCoef = val;
+    }
+    int wienerWindowSize() const
+    {
+        return m_wienerWindowSize;
+    }
+    void setWienerWindowSize(int val)
+    {
+        m_wienerWindowSize = val;
+    }
 
     double knndCoef() const
     {
@@ -118,6 +137,8 @@ public:
     bool operator!=(ColorGrayscaleOptions const& other) const;
 private:
     bool m_whiteMargins;
+    double m_wienerCoef;
+    int m_wienerWindowSize;
     double m_knndCoef;
     int m_knndRadius;
     double m_screenCoef;

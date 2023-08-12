@@ -25,7 +25,9 @@ namespace output
 {
 
 ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
-    :  m_knndCoef(el.attribute("knnDenoiser").toDouble()),
+    :  m_wienerCoef(el.attribute("wienerCoef").toDouble()),
+       m_wienerWindowSize(el.attribute("wienerWinSize").toInt()),
+       m_knndCoef(el.attribute("knnDenoiser").toDouble()),
        m_knndRadius(el.attribute("knnDRadius").toInt()),
        m_screenCoef(el.attribute("screenCoef").toDouble()),
        m_screenWindowSize(el.attribute("screenWinSize").toInt()),
@@ -34,6 +36,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
        m_whiteMargins(el.attribute("whiteMargins") == "1")
 {
+    if (m_wienerCoef < 0.0 || m_wienerCoef > 1.0)
+    {
+        m_wienerCoef = 0.0;
+    }
+    if (m_wienerWindowSize < 3)
+    {
+        m_wienerWindowSize = 5;
+    }
     if (m_knndCoef < 0.0 || m_knndCoef > 1.0)
     {
         m_knndCoef = 0.0;
@@ -68,6 +78,8 @@ QDomElement
 ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
+    el.setAttribute("wienerCoef", m_wienerCoef);
+    el.setAttribute("wienerWinSize", m_wienerWindowSize);
     el.setAttribute("knnDenoiser", m_knndCoef);
     el.setAttribute("knnDRadius", m_knndRadius);
     el.setAttribute("screenCoef", m_screenCoef);
@@ -82,6 +94,14 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 bool
 ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
 {
+    if (m_wienerCoef != other.m_wienerCoef)
+    {
+        return false;
+    }
+    if (m_wienerWindowSize != other.m_wienerWindowSize)
+    {
+        return false;
+    }
     if (m_knndCoef != other.m_knndCoef)
     {
         return false;

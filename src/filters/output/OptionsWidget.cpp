@@ -111,6 +111,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(colorModeChanged(int))
     );
     connect(
+        wienerCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(wienerCoefChanged(double))
+    );
+    connect(
+        wienerWindowSize, SIGNAL(valueChanged(int)),
+        this, SLOT(wienerWindowSizeChanged(int))
+    );
+    connect(
         knndCoef, SIGNAL(valueChanged(double)),
         this, SLOT(knndCoefChanged(double))
     );
@@ -285,6 +293,26 @@ OptionsWidget::thresholdMethodChanged(int idx)
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::wienerCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setWienerCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::wienerWindowSizeChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setWienerWindowSize(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
 
@@ -607,6 +635,8 @@ OptionsWidget::updateColorsDisplay()
 
     colorGrayscaleOptions->setVisible(color_grayscale_options_visible);
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    wienerCoef->setValue(color_options.wienerCoef());
+    wienerWindowSize->setValue(color_options.wienerWindowSize());
     knndCoef->setValue(color_options.knndCoef());
     knndRadius->setValue(color_options.knndRadius());
     screenCoef->setValue(color_options.screenCoef());
