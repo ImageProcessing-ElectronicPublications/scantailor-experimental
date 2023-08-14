@@ -16,6 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <memory>
+#include <exception>
+#include <QPointer>
+#include <QDebug>
 #include "DespeckleView.h"
 #include "DespeckleVisualization.h"
 #include "Despeckle.h"
@@ -32,10 +36,6 @@
 #include "TaskStatus.h"
 #include "imageproc/BinaryImage.h"
 #include "imageproc/RasterOp.h"
-#include <QPointer>
-#include <QDebug>
-#include <memory>
-#include <exception>
 
 using namespace imageproc;
 
@@ -74,7 +74,7 @@ public:
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         DespeckleState const& despeckle_state,
         IntrusivePtr<TaskCancelHandle> const& cancel_handle,
-        DespeckleLevel new_level, bool debug);
+        double new_factor, bool debug);
 
     virtual BackgroundExecutor::TaskResultPtr operator()();
 private:
@@ -84,6 +84,7 @@ private:
     IntrusivePtr<TaskCancelHandle> m_ptrCancelHandle;
     std::auto_ptr<DebugImagesImpl> m_ptrDbg;
     DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
 };
 
 
@@ -117,7 +118,7 @@ DespeckleView::DespeckleView(
     :	m_ptrAccelOps(accel_ops),
       m_despeckleState(despeckle_state),
       m_pProcessingIndicator(new ProcessingIndicationWidget(this)),
-      m_despeckleLevel(despeckle_state.level()),
+      m_despeckleFactor(despeckle_state.factor()),
       m_debug(debug)
 {
     addWidget(m_pProcessingIndicator);
@@ -138,14 +139,14 @@ DespeckleView::~DespeckleView()
 }
 
 void
-DespeckleView::despeckleLevelChanged(DespeckleLevel const new_level, bool* handled)
+DespeckleView::despeckleLevelChanged(double const new_factor, bool* handled)
 {
-    if (new_level == m_despeckleLevel)
+    if (new_factor == m_despeckleFactor)
     {
         return;
     }
 
-    m_despeckleLevel = new_level;
+    m_despeckleFactor = new_factor;
 
     if (isVisible())
     {
@@ -204,7 +205,7 @@ DespeckleView::initiateDespeckling(AnimationAction const anim_action)
     BackgroundExecutor::TaskPtr const task(
         new DespeckleTask(
             this, m_ptrAccelOps, m_despeckleState,
-            m_ptrCancelHandle, m_despeckleLevel, m_debug
+            m_ptrCancelHandle, m_despeckleFactor, m_debug
         )
     );
     ImageViewBase::backgroundExecutor().enqueueTask(task);
@@ -275,12 +276,12 @@ DespeckleView::DespeckleTask::DespeckleTask(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     DespeckleState const& despeckle_state,
     IntrusivePtr<TaskCancelHandle> const& cancel_handle,
-    DespeckleLevel const level, bool const debug)
+    double const factor, bool const debug)
     :	m_ptrOwner(owner),
       m_ptrAccelOps(accel_ops),
       m_despeckleState(despeckle_state),
       m_ptrCancelHandle(cancel_handle),
-      m_despeckleLevel(level)
+      m_despeckleFactor(factor)
 {
     if (debug)
     {
@@ -296,7 +297,7 @@ DespeckleView::DespeckleTask::operator()()
         m_ptrCancelHandle->throwIfCancelled();
 
         m_despeckleState = m_despeckleState.redespeckle(
-                               m_despeckleLevel, *m_ptrCancelHandle, m_ptrDbg.get()
+                               m_despeckleFactor, *m_ptrCancelHandle, m_ptrDbg.get()
                            );
 
         m_ptrCancelHandle->throwIfCancelled();

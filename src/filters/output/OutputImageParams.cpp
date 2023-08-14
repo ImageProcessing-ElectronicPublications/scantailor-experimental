@@ -16,15 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cmath>
+#include <utility>
+#include <QPolygonF>
+#include <QDomDocument>
+#include <QDomElement>
 #include "OutputImageParams.h"
 #include "XmlMarshaller.h"
 #include "XmlUnmarshaller.h"
 #include "../../Utils.h"
-#include <QPolygonF>
-#include <QDomDocument>
-#include <QDomElement>
-#include <cmath>
-#include <utility>
 
 namespace output
 {
@@ -32,12 +32,13 @@ namespace output
 OutputImageParams::OutputImageParams(
     QString const& transform_fingerprint,
     QRect const& output_image_rect, QRect const& content_rect,
-    ColorParams const& color_params, DespeckleLevel despeckle_level)
+    Params const& params)
     :   m_transformFingerprint(transform_fingerprint),
         m_outputImageRect(output_image_rect),
         m_contentRect(content_rect),
-        m_colorParams(color_params),
-        m_despeckleLevel(despeckle_level)
+        m_colorParams(params.colorParams()),
+        m_despeckleLevel(params.despeckleLevel()),
+        m_despeckleFactor(params.despeckleFactor())
 {
 }
 
@@ -50,7 +51,8 @@ OutputImageParams::OutputImageParams(QDomElement const& el)
     ,   m_outputImageRect(XmlUnmarshaller::rect(el.namedItem("output-image-rect").toElement())),
         m_contentRect(XmlUnmarshaller::rect(el.namedItem("content-rect").toElement())),
         m_colorParams(el.namedItem("color-params").toElement()),
-        m_despeckleLevel(despeckleLevelFromString(el.attribute("despeckleLevel")))
+        m_despeckleLevel(despeckleLevelFromString(el.attribute("despeckleLevel"))),
+        m_despeckleFactor(el.attribute("despeckleFactor").toDouble())
 {
 }
 
@@ -70,6 +72,7 @@ OutputImageParams::toXml(QDomDocument& doc, QString const& name) const
     el.appendChild(marshaller.rect(m_contentRect, "content-rect"));
     el.appendChild(m_colorParams.toXml(doc, "color-params"));
     el.setAttribute("despeckleLevel", despeckleLevelToString(m_despeckleLevel));
+    el.setAttribute("despeckleFactor", m_despeckleFactor);
 
     return el;
 }
@@ -87,8 +90,8 @@ OutputImageParams::matches(OutputImageParams const& other) const
         return false;
     }
 
-    if (!colorParamsMatch(m_colorParams, m_despeckleLevel,
-                          other.m_colorParams, other.m_despeckleLevel))
+    if (!colorParamsMatch(m_colorParams, m_despeckleLevel, m_despeckleFactor,
+                          other.m_colorParams, other.m_despeckleLevel, other.m_despeckleFactor))
     {
         return false;
     }
@@ -98,8 +101,8 @@ OutputImageParams::matches(OutputImageParams const& other) const
 
 bool
 OutputImageParams::colorParamsMatch(
-    ColorParams const& cp1, DespeckleLevel const dl1,
-    ColorParams const& cp2, DespeckleLevel const dl2)
+    ColorParams const& cp1, DespeckleLevel const dl1, double const df1,
+    ColorParams const& cp2, DespeckleLevel const dl2, double const df2)
 {
     if (cp1.colorMode() != cp2.colorMode())
     {
@@ -120,6 +123,10 @@ OutputImageParams::colorParamsMatch(
             return false;
         }
         if (dl1 != dl2)
+        {
+            return false;
+        }
+        if (df1 != df2)
         {
             return false;
         }

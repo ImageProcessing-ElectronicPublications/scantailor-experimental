@@ -16,6 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <boost/foreach.hpp>
+#include <QtGlobal>
+#include <QVariant>
+#include <QColorDialog>
+#include <QToolTip>
+#include <QString>
+#include <QCursor>
+#include <QPoint>
+#include <QSize>
+#include <Qt>
+#include <QDebug>
 #include "OptionsWidget.h"
 #include "ApplyColorsDialog.h"
 #include "Settings.h"
@@ -28,17 +39,6 @@
 #include "../../Utils.h"
 #include "ScopedIncDec.h"
 #include "config.h"
-#include <boost/foreach.hpp>
-#include <QtGlobal>
-#include <QVariant>
-#include <QColorDialog>
-#include <QToolTip>
-#include <QString>
-#include <QCursor>
-#include <QPoint>
-#include <QSize>
-#include <Qt>
-#include <QDebug>
 
 using namespace dewarping;
 
@@ -51,6 +51,7 @@ OptionsWidget::OptionsWidget(
     :   m_ptrSettings(settings),
         m_pageSelectionAccessor(page_selection_accessor),
         m_despeckleLevel(DESPECKLE_NORMAL),
+        m_despeckleFactor(despeckleLevelToFactor(DESPECKLE_NORMAL)),
         m_lastTab(TAB_OUTPUT),
         m_ignoreThresholdChanges(0),
         m_ignoreDespeckleLevelChanges(0),
@@ -219,6 +220,17 @@ OptionsWidget::OptionsWidget(
     }
     );
     connect(
+        despeckleCustomBtn, &QAbstractButton::toggled,
+        [this](bool checked)
+    {
+        if (checked) despeckleLevelSelected(DESPECKLE_CUSTOM);
+    }
+    );
+    connect(
+        despeckleFactor, SIGNAL(valueChanged(double)),
+        this, SLOT(despeckleFactorChanged(double))
+    );
+    connect(
         applyDespeckleButton, SIGNAL(clicked()),
         this, SLOT(applyDespeckleButtonClicked())
     );
@@ -239,6 +251,7 @@ OptionsWidget::preUpdateUI(PageId const& page_id)
     m_pageId = page_id;
     m_colorParams = params.colorParams();
     m_despeckleLevel = params.despeckleLevel();
+    m_despeckleFactor = params.despeckleFactor();
     m_thisPageOutputSize.reset();
     updateColorsDisplay();
     updateScaleDisplay();
@@ -526,21 +539,42 @@ OptionsWidget::despeckleLevelSelected(DespeckleLevel const level)
         return;
     }
 
+    double despeckle_factor_bak = m_despeckleFactor;
+    if (level == DESPECKLE_CUSTOM)
+    {
+        despeckleFactor->setEnabled( true );
+    }
+    else
+    {
+        m_despeckleFactor = despeckleLevelToFactor(level);
+        despeckleFactor->setEnabled( false );
+    }
     m_despeckleLevel = level;
+    if (m_despeckleFactor != despeckle_factor_bak)
+    {
+        despeckleFactor->setValue(m_despeckleFactor);
+    }
+
     m_ptrSettings->setDespeckleLevel(m_pageId, level);
+    m_ptrSettings->setDespeckleFactor(m_pageId, m_despeckleFactor);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::despeckleFactorChanged(double value)
+{
+    m_despeckleFactor = value;
+    m_ptrSettings->setDespeckleFactor(m_pageId, m_despeckleFactor);
 
     bool handled = false;
-    emit despeckleLevelChanged(level, &handled);
+    emit despeckleLevelChanged(m_despeckleFactor, &handled);
 
     if (handled)
     {
         // This means we are on the "Despeckling" tab.
         emit invalidateThumbnail(m_pageId);
     }
-    else
-    {
-        emit reloadRequested();
-    }
+    emit reloadRequested();
 }
 
 void
@@ -564,6 +598,7 @@ OptionsWidget::applyDespeckleConfirmed(std::set<PageId> const& pages)
     BOOST_FOREACH(PageId const& page_id, pages)
     {
         m_ptrSettings->setDespeckleLevel(page_id, m_despeckleLevel);
+        m_ptrSettings->setDespeckleFactor(page_id, m_despeckleFactor);
         emit invalidateThumbnail(page_id);
     }
 
@@ -686,7 +721,20 @@ OptionsWidget::updateColorsDisplay()
         case DESPECKLE_AGGRESSIVE:
             despeckleAggressiveBtn->setChecked(true);
             break;
+        case DESPECKLE_CUSTOM:
+            despeckleCustomBtn->setChecked(true);
+            break;
         }
+        if (m_despeckleLevel == DESPECKLE_CUSTOM)
+        {
+            despeckleFactor->setEnabled( true );
+        }
+        else
+        {
+            m_despeckleFactor = despeckleLevelToFactor(m_despeckleLevel);
+            despeckleFactor->setEnabled( false );
+        }
+        despeckleFactor->setValue(m_despeckleFactor);
 
         ScopedIncDec<int> const threshold_guard(m_ignoreThresholdChanges);
     }

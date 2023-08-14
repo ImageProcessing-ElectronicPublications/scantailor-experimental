@@ -19,11 +19,11 @@
 #ifndef OUTPUT_OUTPUT_IMAGE_PARAMS_H_
 #define OUTPUT_OUTPUT_IMAGE_PARAMS_H_
 
-#include "ColorParams.h"
-#include "DespeckleLevel.h"
 #include <QSize>
 #include <QRect>
 #include <QString>
+#include "Params.h"
+#include "DespeckleLevel.h"
 
 class QDomDocument;
 class QDomElement;
@@ -40,13 +40,18 @@ class OutputImageParams
 public:
     OutputImageParams(QString const& transform_fingerprint,
                       QRect const& output_image_rect, QRect const& content_rect,
-                      ColorParams const& color_params, DespeckleLevel despeckle_level);
+                      Params const& params);
 
     explicit OutputImageParams(QDomElement const& el);
 
     DespeckleLevel despeckleLevel() const
     {
         return m_despeckleLevel;
+    }
+
+    double despeckleFactor() const
+    {
+        return m_despeckleFactor;
     }
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
@@ -58,8 +63,8 @@ public:
     bool matches(OutputImageParams const& other) const;
 private:
     static bool colorParamsMatch(
-        ColorParams const& cp1, DespeckleLevel dl1,
-        ColorParams const& cp2, DespeckleLevel dl2);
+        ColorParams const& cp1, DespeckleLevel dl1, double df1,
+        ColorParams const& cp2, DespeckleLevel dl2, double df2);
 
     /**
      * Identifies the original -> output image transformation.
@@ -84,6 +89,7 @@ private:
 
     /** Despeckle level of the output image. */
     DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
 };
 
 } // namespace output

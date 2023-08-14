@@ -16,14 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdint.h>
+#include <new>
 #include "DespeckleState.h"
 #include "DespeckleVisualization.h"
 #include "Despeckle.h"
 #include "TaskStatus.h"
 #include "DebugImages.h"
 #include "imageproc/RasterOp.h"
-#include <new>
-#include <stdint.h>
 
 using namespace imageproc;
 
@@ -31,9 +31,9 @@ namespace output
 {
 
 DespeckleState::DespeckleState(
-    QImage const& output, BinaryImage const& speckles, DespeckleLevel level)
+    QImage const& output, BinaryImage const& speckles, double factor)
     :	m_speckles(speckles),
-      m_despeckleLevel(level)
+      m_despeckleFactor(factor)
 {
     m_everythingMixed = overlaySpeckles(output, speckles);
     m_everythingBW = extractBW(m_everythingMixed);
@@ -47,38 +47,26 @@ DespeckleState::visualize(std::shared_ptr<AcceleratableOperations> const& accel_
 
 DespeckleState
 DespeckleState::redespeckle(
-    DespeckleLevel const level,
+    double const factor,
     TaskStatus const& status, DebugImages* dbg) const
 {
     DespeckleState new_state(*this);
 
-    if (level == m_despeckleLevel)
+    if (factor == m_despeckleFactor)
     {
         return new_state;
     }
 
-    new_state.m_despeckleLevel = level;
+    new_state.m_despeckleFactor = factor;
 
-    Despeckle::Level level2 = Despeckle::NORMAL;
-    switch (level)
+    if (factor > 0.0)
     {
-    case DESPECKLE_OFF:
         // Null speckles image is equivalent to a white one.
         new_state.m_speckles.release();
         return new_state;
-    case DESPECKLE_CAUTIOUS:
-        level2 = Despeckle::CAUTIOUS;
-        break;
-    case DESPECKLE_NORMAL:
-        level2 = Despeckle::NORMAL;
-        break;
-    case DESPECKLE_AGGRESSIVE:
-        level2 = Despeckle::AGGRESSIVE;
-        break;
     }
-
     new_state.m_speckles = Despeckle::despeckle(
-                               m_everythingBW, level2, status, dbg
+                               m_everythingBW, factor, status, dbg
                            );
 
     status.throwIfCancelled();

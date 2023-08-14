@@ -213,13 +213,12 @@ void combineMixed(
 OutputGenerator::OutputGenerator(
     std::shared_ptr<AbstractImageTransform const> const& image_transform,
     QRectF const& content_rect, QRectF const& outer_rect,
-    ColorParams const& color_params,
-    DespeckleLevel const despeckle_level)
+    Params const& params)
     :   m_ptrImageTransform(image_transform)
-    ,   m_colorParams(color_params)
+    ,   m_colorParams(params.colorParams())
     ,   m_outRect(outer_rect.toRect())
     ,   m_contentRect(content_rect.toRect())
-    ,   m_despeckleLevel(despeckle_level)
+    ,   m_despeckleFactor(params.despeckleFactor())
 {
     // An empty outer_rect may be a result of all pages having no content box.
     if (m_outRect.width() <= 0)
@@ -424,11 +423,7 @@ OutputGenerator::process(
     QImage maybe_smoothed;
 
     // We only do smoothing if we are going to do binarization later.
-    if (!render_params.needBinarization())
-    {
-        maybe_smoothed = maybe_normalized;
-    }
-    else
+    if (render_params.needBinarization())
     {
         maybe_smoothed = smoothToGrayscale(maybe_normalized, accel_ops);
         coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
@@ -436,6 +431,10 @@ OutputGenerator::process(
         {
             dbg->add(maybe_smoothed, "smoothed");
         }
+    }
+    else
+    {
+        maybe_smoothed = maybe_normalized;
     }
     coloredSignificance = GrayImage(); // save memory
 
@@ -478,7 +477,7 @@ OutputGenerator::process(
             // is not accurate. Fortunately, that reconstruction is for
             // visualization purposes only and that's the best we can do
             // without caching the full-size input-to-despeckling images.
-            maybeDespeckleInPlace(bw_content, m_despeckleLevel, out_speckles_image, status, dbg);
+            maybeDespeckleInPlace(bw_content, m_despeckleFactor, out_speckles_image, status, dbg);
         }
 
         if (render_params.binaryOutput() || m_outRect.isEmpty())
@@ -1122,7 +1121,7 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
  */
 void
 OutputGenerator::maybeDespeckleInPlace(
-    imageproc::BinaryImage& image, DespeckleLevel const level,
+    imageproc::BinaryImage& image, double const despeckle_factor,
     BinaryImage* out_speckles_img, TaskStatus const& status, DebugImages* dbg) const
 {
     if (out_speckles_img)
@@ -1130,25 +1129,9 @@ OutputGenerator::maybeDespeckleInPlace(
         *out_speckles_img = image;
     }
 
-    if (level != DESPECKLE_OFF)
+    if (despeckle_factor > 0)
     {
-        Despeckle::Level lvl = Despeckle::NORMAL;
-        switch (level)
-        {
-        case DESPECKLE_CAUTIOUS:
-            lvl = Despeckle::CAUTIOUS;
-            break;
-        case DESPECKLE_NORMAL:
-            lvl = Despeckle::NORMAL;
-            break;
-        case DESPECKLE_AGGRESSIVE:
-            lvl = Despeckle::AGGRESSIVE;
-            break;
-        default:
-            ;
-        }
-
-        Despeckle::despeckleInPlace(image, lvl, status, dbg);
+        Despeckle::despeckleInPlace(image, despeckle_factor, status, dbg);
 
         if (dbg)
         {

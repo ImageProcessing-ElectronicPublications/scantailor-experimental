@@ -144,7 +144,7 @@ int main(int argc, char** argv)
 #endif
 
     Application app(argc, argv);
-    QIcon icon(":icons/appicon-about.png"); 
+    QIcon icon(":icons/appicon-about.png");
     app.setWindowIcon(icon);
 #ifdef _WIN32
     // Get rid of all references to Qt's installation directory.

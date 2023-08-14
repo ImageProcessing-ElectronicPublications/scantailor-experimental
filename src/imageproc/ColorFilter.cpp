@@ -16,14 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <vector>
-#include <algorithm>
-#include <stdexcept>
-#include <math.h>
 #include <cstdint>
 #include <cstddef>
+#include <stdexcept>
 #include <string.h>
 #include <assert.h>
+#include <vector>
+#include <cmath>
+#include <algorithm>
 #include <QImage>
 #include <QRect>
 #include <QDebug>

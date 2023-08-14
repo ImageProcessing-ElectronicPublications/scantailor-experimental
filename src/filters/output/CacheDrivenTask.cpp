@@ -84,8 +84,7 @@ CacheDrivenTask::processScaled(
         Params const params(m_ptrSettings->getParams(page_info.id()));
 
         OutputGenerator const generator(
-            full_size_image_transform, content_rect, outer_rect,
-            params.colorParams(), params.despeckleLevel()
+            full_size_image_transform, content_rect, outer_rect, params
         );
 
         bool need_reprocess = false;
@@ -105,8 +104,7 @@ CacheDrivenTask::processScaled(
 
             OutputImageParams const new_output_image_params(
                 full_size_image_transform->fingerprint(),
-                generator.outputImageRect(), generator.outputContentRect(),
-                params.colorParams(), params.despeckleLevel()
+                generator.outputImageRect(), generator.outputContentRect(), params
             );
 
             if (!stored_output_params->outputImageParams().matches(new_output_image_params))

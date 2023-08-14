@@ -19,11 +19,11 @@
 #ifndef OUTPUT_DESPECKLE_STATE_H_
 #define OUTPUT_DESPECKLE_STATE_H_
 
+#include <memory>
+#include <QImage>
 #include "DespeckleLevel.h"
 #include "imageproc/BinaryImage.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <QImage>
-#include <memory>
 
 class TaskStatus;
 class DebugImages;
@@ -42,17 +42,22 @@ class DespeckleState
     // Member-wise copying is OK.
 public:
     DespeckleState(QImage const& output,
-                   imageproc::BinaryImage const& speckles, DespeckleLevel level);
+                   imageproc::BinaryImage const& speckles, double factor);
 
     DespeckleLevel level() const
     {
         return m_despeckleLevel;
     }
 
+    double factor() const
+    {
+        return m_despeckleFactor;
+    }
+
     DespeckleVisualization visualize(
         std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
 
-    DespeckleState redespeckle(DespeckleLevel level,
+    DespeckleState redespeckle(double factor,
                                TaskStatus const& status, DebugImages* dbg = 0) const;
 private:
     static QImage overlaySpeckles(
@@ -84,6 +89,7 @@ private:
      * m_everythingBW.
      */
     DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
 };
 
 } // namespace output

@@ -42,14 +42,14 @@ public:
      * \return The despeckled image.
      */
     static imageproc::BinaryImage despeckle(
-        imageproc::BinaryImage const& src, Level level,
+        imageproc::BinaryImage const& src, double despeckle_factor,
         TaskStatus const& status, DebugImages* dbg = 0);
 
     /**
      * \brief A slightly faster, in-place version of despeckle().
      */
     static void despeckleInPlace(
-        imageproc::BinaryImage& image, Level level,
+        imageproc::BinaryImage& image, double despeckle_factor,
         TaskStatus const& status, DebugImages* dbg = 0);
 };
 

@@ -29,8 +29,11 @@ enum DespeckleLevel
     DESPECKLE_OFF,
     DESPECKLE_CAUTIOUS,
     DESPECKLE_NORMAL,
-    DESPECKLE_AGGRESSIVE
+    DESPECKLE_AGGRESSIVE,
+    DESPECKLE_CUSTOM
 };
+
+double despeckleLevelToFactor(DespeckleLevel level);
 
 QString despeckleLevelToString(DespeckleLevel level);
 

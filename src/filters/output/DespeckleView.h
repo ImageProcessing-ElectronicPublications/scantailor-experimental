@@ -20,14 +20,14 @@
 #ifndef OUTPUT_DESPECKLE_VIEW_H_
 #define OUTPUT_DESPECKLE_VIEW_H_
 
+#include <memory>
+#include <QStackedWidget>
+#include <QImage>
 #include "DespeckleLevel.h"
 #include "DespeckleState.h"
 #include "IntrusivePtr.h"
 #include "imageproc/BinaryImage.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <QStackedWidget>
-#include <QImage>
-#include <memory>
 
 class DebugImagesImpl;
 class ProcessingIndicationWidget;
@@ -56,7 +56,7 @@ public:
 
     virtual ~DespeckleView();
 public slots:
-    void despeckleLevelChanged(DespeckleLevel level, bool* handled);
+    void despeckleLevelChanged(double factor, bool* handled);
 protected:
     virtual void hideEvent(QHideEvent* evt);
 
@@ -83,6 +83,7 @@ private:
     IntrusivePtr<TaskCancelHandle> m_ptrCancelHandle;
     ProcessingIndicationWidget* m_pProcessingIndicator;
     DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
     bool m_debug;
 };
 

@@ -16,6 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdlib.h>
+#include <limits.h>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <limits>
+#include <cmath>
+#include <boost/foreach.hpp>
+#include <QRect>
+#include <QRectF>
+#include <QPolygonF>
+#include <QImage>
+#include <QColor>
+#include <QPainter>
+#include <QPainterPath>
+#include <QTransform>
+#include <QtGlobal>
+#include <Qt>
+#include <QDebug>
 #include "ContentBoxFinder.h"
 #include "TaskStatus.h"
 #include "DebugImages.h"
@@ -39,25 +58,6 @@
 #include "imageproc/ConnectivityMap.h"
 #include "imageproc/InfluenceMap.h"
 #include "imageproc/SEDM.h"
-#include <boost/foreach.hpp>
-#include <QRect>
-#include <QRectF>
-#include <QPolygonF>
-#include <QImage>
-#include <QColor>
-#include <QPainter>
-#include <QPainterPath>
-#include <QTransform>
-#include <QtGlobal>
-#include <Qt>
-#include <QDebug>
-#include <queue>
-#include <vector>
-#include <algorithm>
-#include <limits>
-#include <math.h>
-#include <stdlib.h>
-#include <limits.h>
 
 #include "CommandLine.h"
 
@@ -233,13 +233,15 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
     status.throwIfCancelled();
 
     CommandLine const& cli = CommandLine::get();
-    Despeckle::Level despeckleLevel = Despeckle::NORMAL;
+/*
+    Despeckle::Level despeckle_level = Despeckle::NORMAL;
     if (cli.hasContentRect())
     {
-        despeckleLevel = cli.getContentDetection();
+        despeckle_level = cli.getContentDetection();
     }
-
-    BinaryImage despeckled(Despeckle::despeckle(content, despeckleLevel, status, dbg));
+*/
+    double despeckle_factor = output::despeckleLevelToFactor(output::DESPECKLE_NORMAL);
+    BinaryImage despeckled(Despeckle::despeckle(content, despeckle_factor, status, dbg));
     if (dbg)
     {
         dbg->add(despeckled, "despeckled");

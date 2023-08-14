@@ -16,6 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <boost/foreach.hpp>
+#include <Qt>
+#include <QColor>
+#include <QMutexLocker>
 #include "Settings.h"
 #include "Params.h"
 #include "PictureLayerProperty.h"
@@ -23,10 +27,6 @@
 #include "RelinkablePath.h"
 #include "AbstractRelinker.h"
 #include "../../Utils.h"
-#include <boost/foreach.hpp>
-#include <Qt>
-#include <QColor>
-#include <QMutexLocker>
 
 namespace output
 {
@@ -160,6 +160,24 @@ Settings::setDespeckleLevel(PageId const& page_id, DespeckleLevel level)
     else
     {
         it->second.setDespeckleLevel(level);
+    }
+}
+
+void
+Settings::setDespeckleFactor(PageId const& page_id, double factor)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    PerPageParams::iterator const it(m_perPageParams.lower_bound(page_id));
+    if (it == m_perPageParams.end() || m_perPageParams.key_comp()(page_id, it->first))
+    {
+        Params params;
+        params.setDespeckleFactor(factor);
+        m_perPageParams.insert(it, PerPageParams::value_type(page_id, params));
+    }
+    else
+    {
+        it->second.setDespeckleFactor(factor);
     }
 }
 

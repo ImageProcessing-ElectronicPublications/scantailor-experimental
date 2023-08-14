@@ -16,26 +16,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDomDocument>
+#include <QDomElement>
+#include <QByteArray>
+#include <QString>
 #include "Params.h"
 #include "ColorGrayscaleOptions.h"
 #include "BlackWhiteOptions.h"
 #include "XmlMarshaller.h"
 #include "XmlUnmarshaller.h"
-#include <QDomDocument>
-#include <QDomElement>
-#include <QByteArray>
-#include <QString>
 
 namespace output
 {
 
 Params::Params()
-    :	m_despeckleLevel(DESPECKLE_CAUTIOUS)
+    :   m_despeckleLevel(DESPECKLE_CAUTIOUS)
 {
 }
 
 Params::Params(QDomElement const& el)
-    :	m_despeckleLevel(despeckleLevelFromString(el.attribute("despeckleLevel")))
+    :   m_despeckleLevel(despeckleLevelFromString(el.attribute("despeckleLevel"))),
+        m_despeckleFactor(el.attribute("despeckleFactor").toDouble())
 {
     QDomElement const cp(el.namedItem("color-params").toElement());
     m_colorParams.setColorMode(parseColorMode(cp.attribute("colorMode")));
@@ -56,6 +57,7 @@ Params::toXml(QDomDocument& doc, QString const& name) const
 
     QDomElement el(doc.createElement(name));
     el.setAttribute("despeckleLevel", despeckleLevelToString(m_despeckleLevel));
+    el.setAttribute("despeckleFactor", m_despeckleFactor);
 
     QDomElement cp(doc.createElement("color-params"));
     cp.setAttribute(

@@ -39,7 +39,6 @@ public:
     {
         return m_colorParams;
     }
-
     void setColorParams(ColorParams const& params)
     {
         m_colorParams = params;
@@ -49,10 +48,18 @@ public:
     {
         return m_despeckleLevel;
     }
-
     void setDespeckleLevel(DespeckleLevel level)
     {
         m_despeckleLevel = level;
+    }
+
+    double despeckleFactor() const
+    {
+        return m_despeckleFactor;
+    }
+    void setDespeckleFactor(double factor)
+    {
+        m_despeckleFactor = factor;
     }
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
@@ -63,6 +70,7 @@ private:
 
     ColorParams m_colorParams;
     DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
 };
 
 } // namespace output

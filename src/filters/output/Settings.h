@@ -19,6 +19,9 @@
 #ifndef OUTPUT_SETTINGS_H_
 #define OUTPUT_SETTINGS_H_
 
+#include <map>
+#include <memory>
+#include <QMutex>
 #include "RefCountable.h"
 #include "NonCopyable.h"
 #include "PageId.h"
@@ -27,9 +30,6 @@
 #include "DespeckleLevel.h"
 #include "ZoneSet.h"
 #include "PropertySet.h"
-#include <QMutex>
-#include <map>
-#include <memory>
 
 class AbstractRelinker;
 
@@ -57,6 +57,8 @@ public:
     void setColorParams(PageId const& page_id, ColorParams const& prms);
 
     void setDespeckleLevel(PageId const& page_id, DespeckleLevel level);
+
+    void setDespeckleFactor(PageId const& page_id, double factor);
 
     std::auto_ptr<OutputParams> getOutputParams(PageId const& page_id) const;
 

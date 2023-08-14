@@ -16,11 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "DespeckleLevel.h"
 #include <QString>
+#include "DespeckleLevel.h"
 
 namespace output
 {
+
+double despeckleLevelToFactor(DespeckleLevel const level)
+{
+    switch (level)
+    {
+    case DESPECKLE_OFF:
+        return 0.0;
+    case DESPECKLE_CAUTIOUS:
+        return 1.5;
+    case DESPECKLE_NORMAL:
+        return 2.5;
+    case DESPECKLE_AGGRESSIVE:
+        return 3.5;
+    }
+
+    return 0.0;
+}
 
 QString despeckleLevelToString(DespeckleLevel const level)
 {
@@ -34,6 +51,8 @@ QString despeckleLevelToString(DespeckleLevel const level)
         return "normal";
     case DESPECKLE_AGGRESSIVE:
         return "aggressive";
+    case DESPECKLE_CUSTOM:
+        return "custom";
     }
 
     return QString();
@@ -52,6 +71,10 @@ DespeckleLevel despeckleLevelFromString(QString const& str)
     else if (str == "aggressive")
     {
         return DESPECKLE_AGGRESSIVE;
+    }
+    else if (str == "custom")
+    {
+        return DESPECKLE_CUSTOM;
     }
     else
     {

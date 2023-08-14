@@ -19,6 +19,9 @@
 #ifndef OUTPUT_OPTIONSWIDGET_H_
 #define OUTPUT_OPTIONSWIDGET_H_
 
+#include <set>
+#include <boost/optional.hpp>
+#include <QSize>
 #include "ui_OutputOptionsWidget.h"
 #include "FilterOptionsWidget.h"
 #include "IntrusivePtr.h"
@@ -27,9 +30,6 @@
 #include "ColorParams.h"
 #include "DespeckleLevel.h"
 #include "ImageViewTab.h"
-#include <boost/optional.hpp>
-#include <QSize>
-#include <set>
 
 namespace output
 {
@@ -55,7 +55,7 @@ public:
         return m_lastTab;
     }
 signals:
-    void despeckleLevelChanged(DespeckleLevel level, bool* handled);
+    void despeckleLevelChanged(double factor, bool* handled);
 public slots:
     void tabChanged(ImageViewTab tab);
 private slots:
@@ -101,6 +101,8 @@ private slots:
 
     void bwThresholdChanged();
 
+    void despeckleFactorChanged(double value);
+
     void applyDespeckleButtonClicked();
 
     void applyDespeckleConfirmed(std::set<PageId> const& pages);
@@ -120,6 +122,7 @@ private:
     PageId m_pageId;
     ColorParams m_colorParams;
     DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
     boost::optional<QSize> m_thisPageOutputSize;
     ImageViewTab m_lastTab;
     int m_ignoreThresholdChanges;

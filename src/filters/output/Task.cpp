@@ -16,6 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <functional>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <QImage>
+#include <QString>
+#include <QObject>
+#include <QFile>
+#include <QDir>
+#include <QFileInfo>
+#include <QTabWidget>
+#include <QCoreApplication>
+#include <QDebug>
 #include "Task.h"
 #include "Filter.h"
 #include "OptionsWidget.h"
@@ -52,18 +64,6 @@
 #include "ErrorWidget.h"
 #include "imageproc/BinaryImage.h"
 #include "imageproc/PolygonUtils.h"
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <QImage>
-#include <QString>
-#include <QObject>
-#include <QFile>
-#include <QDir>
-#include <QFileInfo>
-#include <QTabWidget>
-#include <QCoreApplication>
-#include <QDebug>
-#include <functional>
 
 #include "CommandLine.h"
 
@@ -117,7 +117,6 @@ private:
     CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
     DespeckleState m_despeckleState;
     DespeckleVisualization m_despeckleVisualization;
-    DespeckleLevel m_despeckleLevel;
     bool m_batchProcessing;
     bool m_debug;
 };
@@ -199,14 +198,12 @@ Task::processScaled(
                                      && params.colorParams().colorMode() != ColorParams::COLOR_GRAYSCALE && !m_batchProcessing;
 
     OutputGenerator const generator(
-        orig_image_transform, content_rect, outer_rect,
-        params.colorParams(), params.despeckleLevel()
+        orig_image_transform, content_rect, outer_rect, params
     );
 
     OutputImageParams new_output_image_params(
         orig_image_transform->fingerprint(),
-        generator.outputImageRect(), generator.outputContentRect(),
-        params.colorParams(), params.despeckleLevel()
+        generator.outputImageRect(), generator.outputContentRect(), params
     );
 
     ZoneSet const new_picture_zones(m_ptrSettings->pictureZonesForPage(m_pageId));
@@ -619,8 +616,8 @@ Task::UiUpdater::updateUI(FilterUiInterface* ui)
             )
         );
         QObject::connect(
-            opt_widget, SIGNAL(despeckleLevelChanged(DespeckleLevel, bool*)),
-            despeckle_view.get(), SLOT(despeckleLevelChanged(DespeckleLevel, bool*))
+            opt_widget, SIGNAL(despeckleLevelChanged(double, bool*)),
+            despeckle_view.get(), SLOT(despeckleLevelChanged(double, bool*))
         );
     }
 

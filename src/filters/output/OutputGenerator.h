@@ -32,7 +32,7 @@
 #include <QPointF>
 #include <QLineF>
 #include <QPolygonF>
-#include "ColorParams.h"
+#include "Params.h"
 #include "DespeckleLevel.h"
 #include "CachingFactory.h"
 #include "Grid.h"
@@ -68,8 +68,7 @@ public:
     OutputGenerator(
         std::shared_ptr<imageproc::AbstractImageTransform const> const& image_transform,
         QRectF const& content_rect, QRectF const& outer_rect,
-        ColorParams const& color_params,
-        DespeckleLevel despeckle_level);
+        Params const& params);
 
     /**
      * \brief Produce the output image.
@@ -160,7 +159,7 @@ private:
         QImage const& image, imageproc::BinaryImage const& mask) const;
 
     void maybeDespeckleInPlace(
-        imageproc::BinaryImage& image, DespeckleLevel level,
+        imageproc::BinaryImage& image, double despeckle_factor,
         imageproc::BinaryImage* out_speckles_img,
         TaskStatus const& status, DebugImages* dbg) const;
 
@@ -215,7 +214,8 @@ private:
      */
     QRect m_contentRect;
 
-    DespeckleLevel m_despeckleLevel;
+//    DespeckleLevel m_despeckleLevel;
+    double m_despeckleFactor;
 };
 
 } // namespace output

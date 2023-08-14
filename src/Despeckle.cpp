@@ -1,6 +1,6 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
-	Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,6 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <assert.h>
+#include <vector>
+#include <map>
+#include <cmath>
+#include <limits>
+#include <algorithm>
+#include <boost/foreach.hpp>
+#include <QtGlobal>
+#include <QImage>
+#include <QSize>
+#include <QDebug>
 #include "Despeckle.h"
 #include "TaskStatus.h"
 #include "DebugImages.h"
@@ -23,18 +36,6 @@
 #include "imageproc/BinaryImage.h"
 #include "imageproc/ConnectivityMap.h"
 #include "imageproc/Connectivity.h"
-#include <boost/foreach.hpp>
-#include <QtGlobal>
-#include <QImage>
-#include <QSize>
-#include <QDebug>
-#include <vector>
-#include <map>
-#include <limits>
-#include <algorithm>
-#include <stddef.h>
-#include <stdint.h>
-#include <assert.h>
 
 /**
  * \file
@@ -90,40 +91,30 @@ struct Settings
      */
     int bigObjectThreshold;
 
-    static Settings get(Despeckle::Level level, QSize image_size);
+    static Settings get(double despeckle_factor, QSize image_size);
 };
 
 Settings
-Settings::get(Despeckle::Level const level, QSize const image_size)
+Settings::get(double const despeckle_factor, QSize const image_size)
 {
+    /*
+    despeckle_factor:
+    * 0.0 -> NONE;
+    * 1.5 -> CAUTIOUS:
+    * 2.5 -> NORMAL:
+    * 3.5 -> AGGRESSIVE:
+    */
     Settings settings;
 
-    int const min_dim = std::min(image_size.width(), image_size.height());
+    int const w = image_size.width();
+    int const h = image_size.height();
+    int const min_dim = (w < h) ? w : h;
     double const size_factor = min_dim / 2000.0;
+    double dfe = exp(3.125 - 0.525 * despeckle_factor);
 
-    // To silence compiler's warnings.
-    settings.minRelativeParentWeight = 0;
-    settings.pixelsToSqDist = 0;
-    settings.bigObjectThreshold = 0;
-
-    switch (level)
-    {
-    case Despeckle::CAUTIOUS:
-        settings.minRelativeParentWeight = 0.125 * size_factor;
-        settings.pixelsToSqDist = 10.0*10.0;
-        settings.bigObjectThreshold = qRound(7 * size_factor);
-        break;
-    case Despeckle::NORMAL:
-        settings.minRelativeParentWeight = 0.175 * size_factor;
-        settings.pixelsToSqDist = 6.5*6.5;
-        settings.bigObjectThreshold = qRound(12 * size_factor);
-        break;
-    case Despeckle::AGGRESSIVE:
-        settings.minRelativeParentWeight = 0.225 * size_factor;
-        settings.pixelsToSqDist = 3.5*3.5;
-        settings.bigObjectThreshold = qRound(17 * size_factor);
-        break;
-    }
+    settings.minRelativeParentWeight = 0.05 * (despeckle_factor + 1.0) * size_factor;
+    settings.pixelsToSqDist = (uint32_t) (dfe * dfe + 0.5);
+    settings.bigObjectThreshold = (int) (5.0 * despeckle_factor * size_factor + 0.5);
 
     return settings;
 }
@@ -788,20 +779,20 @@ void voronoiDistances(
 
 BinaryImage
 Despeckle::despeckle(
-    BinaryImage const& src, Level const level,
+    BinaryImage const& src, double const despeckle_factor,
     TaskStatus const& status, DebugImages* const dbg)
 {
     BinaryImage dst(src);
-    despeckleInPlace(dst, level, status, dbg);
+    despeckleInPlace(dst, despeckle_factor, status, dbg);
     return dst;
 }
 
 void
 Despeckle::despeckleInPlace(
-    BinaryImage& image, Level const level,
+    BinaryImage& image, double const despeckle_factor,
     TaskStatus const& status, DebugImages* const dbg)
 {
-    Settings const settings(Settings::get(level, image.size()));
+    Settings const settings(Settings::get(despeckle_factor, image.size()));
 
     ConnectivityMap cmap(image, CONN8);
     if (cmap.maxLabel() == 0)
