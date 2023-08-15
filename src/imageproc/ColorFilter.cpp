@@ -409,50 +409,56 @@ void knnDenoiserFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_bpl = gray.stride();
 
+        IntegralImage<uint32_t> integral_image(w, h);
+
+        for (int y = 0; y < h; ++y)
+        {
+            integral_image.beginRow();
+            for (int x = 0; x < w; ++x)
+            {
+                uint32_t const pixel = gray_line[x];
+                integral_image.push(pixel);
+            }
+            gray_line += gray_bpl;
+        }
+
         int const noise_area = ((2 * radius + 1) * (2 * radius + 1));
         float const noise_area_inv = (1.0f / (float) noise_area);
         float const noise_weight = (1.0f / (coef * coef));
+        float const pixel_weight = (1.0f / 255.0f);
 
+        gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
             for (int x = 0; x < w; ++x)
             {
-                // Normalized counter for the weight threshold
-                float f_count = 0.0f;
-                // Total sum of pixel weights
-                float sum_weights = 0.0f;
-                // Result accumulator
-                float color = 0.0f;
-                // Center of the filter
                 float const origin = gray_line[x];
+                float f_count = noise_area_inv;
+                float sum_weights = 1.0f;
+                float color = origin;
 
-                for (int dy = -radius; dy <= radius; dy++)
+                for (int r = 1; r <= radius; r++)
                 {
-                    int yf = y + dy;
+                    int const top = ((y - r) < 0) ? 0 : (y - r);
+                    int const bottom = ((y + r) < h) ? (y + r) : h;
+                    int const left = ((x - r) < 0) ? 0 : (x - r);
+                    int const right = ((x + r) < w) ? (x + r) : w;
+                    int const area = (bottom - top) * (right - left);
+                    QRect const rect(left, top, right - left, bottom - top);
+                    float const window_sum = integral_image.sum(rect);
+                    float const r_area = 1.0f / area;
+                    float const mean = window_sum * r_area;
+                    float const delta = (origin - mean) * pixel_weight * r;
+                    float const deltasq = delta * delta;
 
-                    if (yf < 0 || yf >= h)
-                        continue;
-
-                    uint8_t* gray_line_f = gray.data();
-                    gray_line_f += (gray_bpl * yf);
-                    for (int dx = -radius; dx <= radius; dx++)
-                    {
-                        int xf = x + dx;
-
-                        if (xf < 0 || xf >= w)
-                            continue;
-
-                        float color_f = gray_line_f[xf];
-                        float pixel_distance = dx * dx + dy * dy;
-                        float color_distance = (origin - color_f) / 255.0f;
-                        color_distance *= color_distance;
-
-                        // Denoising
-                        float weight_f = expf(-(pixel_distance * noise_area_inv + color_distance * noise_weight));
-                        color += color_f * weight_f;
-                        sum_weights += weight_f;
-                        f_count += (weight_f > threshold_weight) ? noise_area_inv : 0.0f;
-                    }
+                    // Denoising
+                    float r2 = r * r;
+                    float weight_f = expf(-(r2 * noise_area_inv + deltasq * noise_weight));
+                    float weight_r = (r << 3);
+                    float weight_fr = weight_f * weight_r;
+                    color += mean * weight_fr;
+                    sum_weights += weight_fr;
+                    f_count += (weight_f > threshold_weight) ? (noise_area_inv * weight_r) : 0.0f;
                 }
 
                 // Normalize result color

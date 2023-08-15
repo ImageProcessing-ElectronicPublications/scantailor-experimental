@@ -222,7 +222,7 @@
            <double>1.0</double>
           </property>
           <property name="singleStep">
-           <double>0.05</double>
+           <double>0.01</double>
           </property>
          </widget>
         </item>
@@ -235,7 +235,7 @@
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>16</number>
+           <number>99</number>
           </property>
          </widget>
         </item>
@@ -471,10 +471,10 @@
          <item>
           <widget class="QSlider" name="thresholdSlider">
            <property name="minimum">
-            <number>-30</number>
+            <number>-50</number>
            </property>
            <property name="maximum">
-            <number>30</number>
+            <number>50</number>
            </property>
            <property name="pageStep">
             <number>5</number>

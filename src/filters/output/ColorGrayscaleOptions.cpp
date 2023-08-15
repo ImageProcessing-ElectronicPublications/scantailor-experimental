@@ -48,9 +48,9 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_knndCoef = 0.0;
     }
-    if (m_knndRadius < 1 || m_knndRadius > 16)
+    if (m_knndRadius < 1)
     {
-        m_knndRadius = 1;
+        m_knndRadius = 5;
     }
     if (m_screenCoef < -1.0 || m_screenCoef > 1.0)
     {

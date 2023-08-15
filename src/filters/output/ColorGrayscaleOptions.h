@@ -34,7 +34,7 @@ public:
           m_wienerCoef(0.0),
           m_wienerWindowSize(5),
           m_knndCoef(0.0),
-          m_knndRadius(1),
+          m_knndRadius(5),
           m_screenCoef(0.0),
           m_screenWindowSize(10),
           m_curveCoef(0.5),
