@@ -56,6 +56,12 @@ public:
 
     void setColorParams(PageId const& page_id, ColorParams const& prms);
 
+    void setColorGrayscaleOptions(PageId const& page_id, ColorGrayscaleOptions const& color_options);
+
+    void setColorMode(PageId const& page_id, ColorParams::ColorMode const& color_mode);
+
+    void setBlackWhiteOptions(PageId const& page_id, BlackWhiteOptions const& black_white_options);
+
     void setDespeckleLevel(PageId const& page_id, DespeckleLevel level);
 
     void setDespeckleFactor(PageId const& page_id, double factor);

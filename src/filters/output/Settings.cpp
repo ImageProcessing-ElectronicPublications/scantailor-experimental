@@ -32,9 +32,9 @@ namespace output
 {
 
 Settings::Settings()
-    :	m_scalingFactor(defaultScalingFactor())
-    ,	m_defaultPictureZoneProps(initialPictureZoneProps())
-    ,	m_defaultFillZoneProps(initialFillZoneProps())
+    :   m_scalingFactor(defaultScalingFactor())
+    ,   m_defaultPictureZoneProps(initialPictureZoneProps())
+    ,   m_defaultFillZoneProps(initialFillZoneProps())
 {
 }
 
@@ -142,6 +142,60 @@ Settings::setColorParams(PageId const& page_id, ColorParams const& prms)
     else
     {
         it->second.setColorParams(prms);
+    }
+}
+
+void
+Settings::setColorGrayscaleOptions(PageId const& page_id, ColorGrayscaleOptions const& color_options)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    PerPageParams::iterator const it(m_perPageParams.lower_bound(page_id));
+    if (it == m_perPageParams.end() || m_perPageParams.key_comp()(page_id, it->first))
+    {
+        Params params;
+        params.setColorGrayscaleOptions(color_options);
+        m_perPageParams.insert(it, PerPageParams::value_type(page_id, params));
+    }
+    else
+    {
+        it->second.setColorGrayscaleOptions(color_options);
+    }
+}
+
+void
+Settings::setColorMode(PageId const& page_id, ColorParams::ColorMode const& color_mode)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    PerPageParams::iterator const it(m_perPageParams.lower_bound(page_id));
+    if (it == m_perPageParams.end() || m_perPageParams.key_comp()(page_id, it->first))
+    {
+        Params params;
+        params.setColorMode(color_mode);
+        m_perPageParams.insert(it, PerPageParams::value_type(page_id, params));
+    }
+    else
+    {
+        it->second.setColorMode(color_mode);
+    }
+}
+
+void
+Settings::setBlackWhiteOptions(PageId const& page_id, BlackWhiteOptions const& black_white_options)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    PerPageParams::iterator const it(m_perPageParams.lower_bound(page_id));
+    if (it == m_perPageParams.end() || m_perPageParams.key_comp()(page_id, it->first))
+    {
+        Params params;
+        params.setBlackWhiteOptions(black_white_options);
+        m_perPageParams.insert(it, PerPageParams::value_type(page_id, params));
+    }
+    else
+    {
+        it->second.setBlackWhiteOptions(black_white_options);
     }
 }
 

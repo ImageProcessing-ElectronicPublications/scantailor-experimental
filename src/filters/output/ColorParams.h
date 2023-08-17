@@ -43,7 +43,6 @@ public:
     {
         return m_colorMode;
     }
-
     void setColorMode(ColorMode mode)
     {
         m_colorMode = mode;
@@ -53,7 +52,6 @@ public:
     {
         return m_colorGrayscaleOptions;
     }
-
     void setColorGrayscaleOptions(ColorGrayscaleOptions const& opt)
     {
         m_colorGrayscaleOptions = opt;

@@ -108,10 +108,6 @@ OptionsWidget::OptionsWidget(
     }
     );
     connect(
-        colorModeSelector, SIGNAL(currentIndexChanged(int)),
-        this, SLOT(colorModeChanged(int))
-    );
-    connect(
         wienerCoef, SIGNAL(valueChanged(double)),
         this, SLOT(wienerCoefChanged(double))
     );
@@ -152,6 +148,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(whiteMarginsToggled(bool))
     );
     connect(
+        applyColorsFiltersButton, SIGNAL(clicked()),
+        this, SLOT(applyColorsFiltersButtonClicked())
+    );
+    connect(
+        colorModeSelector, SIGNAL(currentIndexChanged(int)),
+        this, SLOT(colorModeChanged(int))
+    );
+    connect(
         thresholdMethodSelector, SIGNAL(currentIndexChanged(int)),
         this, SLOT(thresholdMethodChanged(int))
     );
@@ -188,8 +192,8 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdCoefChanged(double))
     );
     connect(
-        applyColorsButton, SIGNAL(clicked()),
-        this, SLOT(applyColorsButtonClicked())
+        applyColorsModeButton, SIGNAL(clicked()),
+        this, SLOT(applyColorsModeButtonClicked())
     );
     connect(
         despeckleOffBtn, &QAbstractButton::toggled,
@@ -284,28 +288,6 @@ OptionsWidget::scaleChanged(double const scale)
     updateScaleDisplay();
 
     emit invalidateAllThumbnails();
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::colorModeChanged(int const idx)
-{
-    int const mode = colorModeSelector->itemData(idx).toInt();
-    m_colorParams.setColorMode((ColorParams::ColorMode)mode);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    updateColorsDisplay();
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::thresholdMethodChanged(int idx)
-{
-    ThresholdFilter const method = (ThresholdFilter) thresholdMethodSelector->itemData(idx).toInt();
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setThresholdMethod(method);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    updateColorsDisplay();
     emit reloadRequested();
 }
 
@@ -410,6 +392,59 @@ OptionsWidget::whiteMarginsToggled(bool const checked)
 }
 
 void
+OptionsWidget::applyColorsFiltersButtonClicked()
+{
+    ApplyColorsDialog* dialog = new ApplyColorsDialog(
+        this, m_pageId, m_pageSelectionAccessor
+    );
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(
+        dialog, SIGNAL(accepted(std::set<PageId> const&)),
+        this, SLOT(applyColorsFiltersConfirmed(std::set<PageId> const&))
+    );
+    dialog->show();
+}
+
+void
+OptionsWidget::applyColorsFiltersConfirmed(std::set<PageId> const& pages)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    BOOST_FOREACH(PageId const& page_id, pages)
+    {
+//        m_ptrSettings->setColorParams(page_id, m_colorParams);
+        m_ptrSettings->setColorGrayscaleOptions(page_id, color_options);
+        emit invalidateThumbnail(page_id);
+    }
+
+    if (pages.find(m_pageId) != pages.end())
+    {
+        emit reloadRequested();
+    }
+}
+
+void
+OptionsWidget::colorModeChanged(int const idx)
+{
+    int const mode = colorModeSelector->itemData(idx).toInt();
+    m_colorParams.setColorMode((ColorParams::ColorMode)mode);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::thresholdMethodChanged(int idx)
+{
+    ThresholdFilter const method = (ThresholdFilter) thresholdMethodSelector->itemData(idx).toInt();
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setThresholdMethod(method);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::setLighterThreshold()
 {
     thresholdSlider->setValue(thresholdSlider->value() - 1);
@@ -503,7 +538,7 @@ OptionsWidget::thresholdCoefChanged(double value)
 }
 
 void
-OptionsWidget::applyColorsButtonClicked()
+OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
         this, m_pageId, m_pageSelectionAccessor
@@ -511,17 +546,21 @@ OptionsWidget::applyColorsButtonClicked()
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(
         dialog, SIGNAL(accepted(std::set<PageId> const&)),
-        this, SLOT(applyColorsConfirmed(std::set<PageId> const&))
+        this, SLOT(applyColorsModeConfirmed(std::set<PageId> const&))
     );
     dialog->show();
 }
 
 void
-OptionsWidget::applyColorsConfirmed(std::set<PageId> const& pages)
+OptionsWidget::applyColorsModeConfirmed(std::set<PageId> const& pages)
 {
+    ColorParams::ColorMode mode(m_colorParams.colorMode());
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
     BOOST_FOREACH(PageId const& page_id, pages)
     {
-        m_ptrSettings->setColorParams(page_id, m_colorParams);
+//        m_ptrSettings->setColorParams(page_id, m_colorParams);
+        m_ptrSettings->setColorMode(page_id, mode);
+        m_ptrSettings->setBlackWhiteOptions(page_id, black_white_options);
         emit invalidateThumbnail(page_id);
     }
 
@@ -668,7 +707,7 @@ OptionsWidget::updateColorsDisplay()
         break;
     }
 
-    colorGrayscaleOptions->setVisible(color_grayscale_options_visible);
+    colorMarginOptions->setVisible(color_grayscale_options_visible);
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     wienerCoef->setValue(color_options.wienerCoef());
     wienerWindowSize->setValue(color_options.wienerWindowSize());

@@ -1,6 +1,6 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
-	Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,6 +42,33 @@ public:
     void setColorParams(ColorParams const& params)
     {
         m_colorParams = params;
+    }
+
+    ColorGrayscaleOptions const& colorGrayscaleOptions() const
+    {
+        return m_colorParams.colorGrayscaleOptions();
+    }
+    void setColorGrayscaleOptions(ColorGrayscaleOptions const& color_options)
+    {
+        m_colorParams.setColorGrayscaleOptions(color_options);
+    }
+
+    ColorParams::ColorMode const& colorMode() const
+    {
+        return m_colorParams.colorMode();
+    }
+    void setColorMode(ColorParams::ColorMode const& color_mode)
+    {
+        m_colorParams.setColorMode(color_mode);
+    }
+
+    BlackWhiteOptions const& blackWhiteOptions() const
+    {
+        return m_colorParams.blackWhiteOptions();
+    }
+    void setBlackWhiteOptions(BlackWhiteOptions const& black_white_options)
+    {
+        m_colorParams.setBlackWhiteOptions(black_white_options);
     }
 
     DespeckleLevel despeckleLevel() const
