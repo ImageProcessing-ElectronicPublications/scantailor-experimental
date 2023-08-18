@@ -41,7 +41,6 @@ SET(
     PolynomialSurface.cpp PolynomialSurface.h
     SavGolKernel.cpp SavGolKernel.h
     SavGolFilter.cpp SavGolFilter.h
-    WienerFilter.cpp WienerFilter.h
     ColorFilter.cpp ColorFilter.h
     DrawOver.cpp DrawOver.h
     AdjustBrightness.cpp AdjustBrightness.h

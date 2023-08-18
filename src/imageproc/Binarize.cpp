@@ -32,7 +32,7 @@
 #include "Grayscale.h"
 #include "GrayImage.h"
 #include "IntegralImage.h"
-#include "WienerFilter.h"
+#include "ColorFilter.h"
 #include "RasterOpGeneric.h"
 
 namespace imageproc

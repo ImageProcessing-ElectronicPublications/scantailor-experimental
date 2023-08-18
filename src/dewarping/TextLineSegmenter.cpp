@@ -16,6 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
+#include <array>
+#include <list>
+#include <vector>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <limits>
+#include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <cmath>
+#include <utility>
+#include <boost/dynamic_bitset.hpp>
+#include <QPoint>
+#include <QPointF>
+#include <QSizeF>
+#include <QRect>
+#include <QRectF>
+#include <QPolygonF>
+#include <QLineF>
+#include <QImage>
+#include <QTransform>
+#include <QPainter>
+#include <Qt>
 #include "TextLineSegmenter.h"
 #include "TaskStatus.h"
 #include "DebugImages.h"
@@ -46,35 +71,10 @@
 #include "imageproc/PolygonRasterizer.h"
 #include "imageproc/Constants.h"
 #include "imageproc/SkewFinder.h"
-#include "imageproc/WienerFilter.h"
+#include "imageproc/ColorFilter.h"
 #include "imageproc/WatershedSegmentation.h"
 #include "imageproc/PlugHoles.h"
 #include "imageproc/IntegralImage.h"
-#include <boost/dynamic_bitset.hpp>
-#include <QPoint>
-#include <QPointF>
-#include <QSizeF>
-#include <QRect>
-#include <QRectF>
-#include <QPolygonF>
-#include <QLineF>
-#include <QImage>
-#include <QTransform>
-#include <QPainter>
-#include <Qt>
-#include <algorithm>
-#include <array>
-#include <list>
-#include <vector>
-#include <deque>
-#include <queue>
-#include <stack>
-#include <limits>
-#include <cassert>
-#include <cstdint>
-#include <cstring>
-#include <cmath>
-#include <utility>
 
 using namespace imageproc;
 

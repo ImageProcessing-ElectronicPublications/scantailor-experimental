@@ -30,6 +30,24 @@ namespace imageproc
 class GrayImage;
 
 /**
+ * @brief Applies the Wiener filter to a grayscale image.
+ *
+ * @param image The image to apply the filter to. A null image is allowed.
+ * @param window_size The local neighbourhood around a pixel to use.
+ * @param noise_sigma The standard deviation of noise in the image.
+ * @return The filtered image.
+ */
+IMAGEPROC_EXPORT GrayImage wienerFilter(
+    GrayImage const& image, QSize const& window_size, double noise_sigma);
+
+/**
+ * @brief An in-place version of wienerFilter().
+ * @see wienerFilter()
+ */
+IMAGEPROC_EXPORT void wienerFilterInPlace(
+    GrayImage& image, QSize const& window_size, double noise_sigma);
+
+/**
  * @brief Applies the Screen filter to a image.
  *
  * @param image The image to apply the filter to. A null image is allowed.
