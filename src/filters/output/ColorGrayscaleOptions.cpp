@@ -29,6 +29,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_wienerWindowSize(el.attribute("wienerWinSize").toInt()),
        m_knndCoef(el.attribute("knnDenoiser").toDouble()),
        m_knndRadius(el.attribute("knnDRadius").toInt()),
+       m_blurCoef(el.attribute("blurCoef").toDouble()),
+       m_blurWindowSize(el.attribute("blurWinSize").toInt()),
        m_screenCoef(el.attribute("screenCoef").toDouble()),
        m_screenWindowSize(el.attribute("screenWinSize").toInt()),
        m_curveCoef(el.attribute("curveCoef").toDouble()),
@@ -51,6 +53,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_knndRadius < 1)
     {
         m_knndRadius = 5;
+    }
+    if (m_blurCoef < -2.0 || m_blurCoef > 1.0)
+    {
+        m_blurCoef = 0.0;
+    }
+    if (m_blurWindowSize < 3)
+    {
+        m_blurWindowSize = 5;
     }
     if (m_screenCoef < -1.0 || m_screenCoef > 1.0)
     {
@@ -82,6 +92,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("wienerWinSize", m_wienerWindowSize);
     el.setAttribute("knnDenoiser", m_knndCoef);
     el.setAttribute("knnDRadius", m_knndRadius);
+    el.setAttribute("blurCoef", m_blurCoef);
+    el.setAttribute("blurWinSize", m_blurWindowSize);
     el.setAttribute("screenCoef", m_screenCoef);
     el.setAttribute("screenWinSize", m_screenWindowSize);
     el.setAttribute("curveCoef", m_curveCoef);
@@ -94,27 +106,19 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 bool
 ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
 {
-    if (m_wienerCoef != other.m_wienerCoef)
+    if ((m_wienerCoef != other.m_wienerCoef) || (m_wienerWindowSize != other.m_wienerWindowSize))
     {
         return false;
     }
-    if (m_wienerWindowSize != other.m_wienerWindowSize)
+    if ((m_knndCoef != other.m_knndCoef) || (m_knndRadius != other.m_knndRadius))
     {
         return false;
     }
-    if (m_knndCoef != other.m_knndCoef)
+    if ((m_blurCoef != other.m_blurCoef) || (m_blurWindowSize != other.m_blurWindowSize))
     {
         return false;
     }
-    if (m_knndRadius != other.m_knndRadius)
-    {
-        return false;
-    }
-    if (m_screenCoef != other.m_screenCoef)
-    {
-        return false;
-    }
-    if (m_screenWindowSize != other.m_screenWindowSize)
+    if ((m_screenCoef != other.m_screenCoef) || (m_screenWindowSize != other.m_screenWindowSize))
     {
         return false;
     }

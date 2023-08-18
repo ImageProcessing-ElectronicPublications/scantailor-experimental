@@ -38,14 +38,32 @@ class GrayImage;
  * @return The filtered image.
  */
 IMAGEPROC_EXPORT GrayImage wienerFilter(
-    GrayImage const& image, QSize const& window_size, double noise_sigma);
+    GrayImage const& image, QSize const& window_size, float noise_sigma);
 
 /**
  * @brief An in-place version of wienerFilter().
  * @see wienerFilter()
  */
 IMAGEPROC_EXPORT void wienerFilterInPlace(
-    GrayImage& image, QSize const& window_size, double noise_sigma);
+    GrayImage& image, QSize const& window_size, float noise_sigma);
+
+IMAGEPROC_EXPORT QImage wienerColorFilter(
+    QImage const& image, QSize const& window_size, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void wienerColorFilterInPlace(
+    QImage& image, QSize const& window_size, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage knnDenoiserFilter(
+    QImage const& image, int radius = 1, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
+    QImage& image, int radius = 1, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage blurFilter(
+    QImage const& image, QSize const& window_size, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void blurFilterInPlace(
+    QImage& image, QSize const& window_size, float coef = 0.0f);
 
 /**
  * @brief Applies the Screen filter to a image.
@@ -56,50 +74,38 @@ IMAGEPROC_EXPORT void wienerFilterInPlace(
  * @return The filtered image.
  */
 IMAGEPROC_EXPORT QImage screenFilter(
-    QImage const& image, QSize const& window_size, double coef = 0.0);
+    QImage const& image, QSize const& window_size, float coef = 0.0f);
 
 /**
  * @brief An in-place version of screenFilter().
  * @see screenFilter()
  */
 IMAGEPROC_EXPORT void screenFilterInPlace(
-    QImage& image, QSize const& window_size, double coef = 0.0);
+    QImage& image, QSize const& window_size, float coef = 0.0f);
 
 IMAGEPROC_EXPORT QImage colorCurveFilter(
-    QImage& image, double coef = 0.5);
+    QImage& image, float coef = 0.5f);
 
 IMAGEPROC_EXPORT void colorCurveFilterInPlace(
-    QImage& image, double coef = 0.5);
+    QImage& image, float coef = 0.5f);
 
 IMAGEPROC_EXPORT QImage colorSqrFilter(
-    QImage& image, double coef = 0.5);
+    QImage& image, float coef = 0.5f);
 
 IMAGEPROC_EXPORT void colorSqrFilterInPlace(
-    QImage& image, double coef = 0.5);
+    QImage& image, float coef = 0.5f);
 
 IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
-    QImage const& image, double coef = 0.0);
+    QImage const& image, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void coloredSignificanceFilterInPlace(
-    QImage const& image, GrayImage& gray, double coef = 0.0);
+    QImage const& image, GrayImage& gray, float coef = 0.0f);
 
 IMAGEPROC_EXPORT QImage coloredDimmingFilter(
     QImage& image, GrayImage& gray);
 
 IMAGEPROC_EXPORT void coloredDimmingFilterInPlace(
     QImage& image, GrayImage& gray);
-
-IMAGEPROC_EXPORT QImage knnDenoiserFilter(
-    QImage const& image, int radius = 1, double coef = 0.0);
-
-IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
-    QImage& image, int radius = 1, double coef = 0.0);
-
-IMAGEPROC_EXPORT QImage wienerColorFilter(
-    QImage const& image, QSize const& window_size, double coef = 0.0);
-
-IMAGEPROC_EXPORT void wienerColorFilterInPlace(
-    QImage& image, QSize const& window_size, double coef = 0.0);
 
 } // namespace imageproc
 

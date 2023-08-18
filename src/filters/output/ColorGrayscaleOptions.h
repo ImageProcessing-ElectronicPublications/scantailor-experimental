@@ -35,6 +35,8 @@ public:
           m_wienerWindowSize(5),
           m_knndCoef(0.0),
           m_knndRadius(5),
+          m_blurCoef(0.0),
+          m_blurWindowSize(5),
           m_screenCoef(0.0),
           m_screenWindowSize(10),
           m_curveCoef(0.5),
@@ -77,6 +79,23 @@ public:
     void setKnndRadius(double val)
     {
         m_knndRadius = val;
+    }
+
+    double blurCoef() const
+    {
+        return m_blurCoef;
+    }
+    void setBlurCoef(double val)
+    {
+        m_blurCoef = val;
+    }
+    int blurWindowSize() const
+    {
+        return m_blurWindowSize;
+    }
+    void setBlurWindowSize(int val)
+    {
+        m_blurWindowSize = val;
     }
 
     double screenCoef() const
@@ -136,16 +155,18 @@ public:
 
     bool operator!=(ColorGrayscaleOptions const& other) const;
 private:
-    bool m_whiteMargins;
     double m_wienerCoef;
     int m_wienerWindowSize;
     double m_knndCoef;
     int m_knndRadius;
+    double m_blurCoef;
+    int m_blurWindowSize;
     double m_screenCoef;
     int m_screenWindowSize;
     double m_curveCoef;
     double m_sqrCoef;
     double m_normalizeCoef;
+    bool m_whiteMargins;
 };
 
 } // namespace output

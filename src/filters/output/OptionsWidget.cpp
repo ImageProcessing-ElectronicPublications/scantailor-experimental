@@ -124,6 +124,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(knndRadiusChanged(int))
     );
     connect(
+        blurCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(blurCoefChanged(double))
+    );
+    connect(
+        blurWindowSize, SIGNAL(valueChanged(int)),
+        this, SLOT(blurWindowSizeChanged(int))
+    );
+    connect(
         screenCoef, SIGNAL(valueChanged(double)),
         this, SLOT(screenCoefChanged(double))
     );
@@ -326,6 +334,26 @@ OptionsWidget::knndRadiusChanged(int value)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     color_options.setKnndRadius(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::blurCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setBlurCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::blurWindowSizeChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setBlurWindowSize(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -713,6 +741,8 @@ OptionsWidget::updateColorsDisplay()
     wienerWindowSize->setValue(color_options.wienerWindowSize());
     knndCoef->setValue(color_options.knndCoef());
     knndRadius->setValue(color_options.knndRadius());
+    blurCoef->setValue(color_options.blurCoef());
+    blurWindowSize->setValue(color_options.blurWindowSize());
     screenCoef->setValue(color_options.screenCoef());
     screenWindowSize->setValue(color_options.screenWindowSize());
     curveCoef->setValue(color_options.curveCoef());

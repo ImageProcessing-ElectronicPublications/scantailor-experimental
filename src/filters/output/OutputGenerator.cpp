@@ -368,6 +368,8 @@ OutputGenerator::process(
 
     knnDenoiserFilterInPlace(transformed_image, color_options.knndRadius(), color_options.knndCoef());
 
+    blurFilterInPlace(transformed_image, QSize(color_options.blurWindowSize(), color_options.blurWindowSize()), color_options.blurCoef());
+
     screenFilterInPlace(transformed_image, QSize(color_options.screenWindowSize(), color_options.screenWindowSize()), color_options.screenCoef());
 
     colorCurveFilterInPlace(transformed_image, color_options.curveCoef());

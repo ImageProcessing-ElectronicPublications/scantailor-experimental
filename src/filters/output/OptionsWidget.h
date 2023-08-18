@@ -67,6 +67,10 @@ private slots:
 
     void knndRadiusChanged(int value);
 
+    void blurCoefChanged(double value);
+
+    void blurWindowSizeChanged(int value);
+
     void screenCoefChanged(double value);
 
     void screenWindowSizeChanged(int value);
