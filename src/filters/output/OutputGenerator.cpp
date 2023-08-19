@@ -358,7 +358,6 @@ OutputGenerator::process(
 #endif
     );
 
-    QImage maybe_normalized;
     ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
     BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
     double norm_coef = color_options.normalizeCoef();
@@ -385,6 +384,7 @@ OutputGenerator::process(
 
     if (norm_coef > 0.0)
     {
+        QImage maybe_normalized;
         // For background estimation we need a downscaled image of about 200x300 pixels.
         // We can't just downscale transformed_image, as this background estimation we
         // need to set outside pixels to black.
@@ -414,10 +414,14 @@ OutputGenerator::process(
                                transformed_for_bg_estimation, norm_coef,
                                downscaled_region_of_intereset, dbg
                            );
-    }
-    else
-    {
-        maybe_normalized = transformed_image;
+        if (orig_image.allGray())
+        {
+            transformed_image = QImage(maybe_normalized);
+        }
+        else
+        {
+            adjustBrightnessGrayscale(transformed_image, maybe_normalized);
+        }
     }
 
     status.throwIfCancelled();
@@ -427,7 +431,7 @@ OutputGenerator::process(
     // We only do smoothing if we are going to do binarization later.
     if (render_params.needBinarization())
     {
-        maybe_smoothed = smoothToGrayscale(maybe_normalized, accel_ops);
+        maybe_smoothed = smoothToGrayscale(transformed_image, accel_ops);
         coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
         if (dbg)
         {
@@ -436,7 +440,7 @@ OutputGenerator::process(
     }
     else
     {
-        maybe_smoothed = maybe_normalized;
+        maybe_smoothed = transformed_image;
     }
     coloredSignificance = GrayImage(); // save memory
 
@@ -492,9 +496,9 @@ OutputGenerator::process(
         {
             // This block should go before the block with
             // adjustBrightnessGrayscale(), which may convert
-            // maybe_normalized from grayscale to color mode.
+            // transformed_image from grayscale to color mode.
 
-            bw_mask = estimateBinarizationMask(status, GrayImage(maybe_normalized), dbg);
+            bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg);
             if (dbg)
             {
                 dbg->add(bw_mask, "bw_mask");
@@ -534,27 +538,10 @@ OutputGenerator::process(
         }
     }
 
-    if ((norm_coef > 0.0) && !orig_image.allGray())
-    {
-        assert(maybe_normalized.format() == QImage::Format_Indexed8);
-
-        QImage tmp(transformed_image);
-        adjustBrightnessGrayscale(tmp, maybe_normalized);
-
-        status.throwIfCancelled();
-
-        maybe_normalized = tmp;
-        if (dbg)
-        {
-            dbg->add(maybe_normalized, "norm_illum_color");
-        }
-    }
-    transformed_image = QImage(); // save memory
-
     if (!render_params.mixedOutput())
     {
         // It's "Color / Grayscale" mode, as we handle B/W above.
-        reserveBlackAndWhite(maybe_normalized);
+        reserveBlackAndWhite(transformed_image);
     }
     else
     {
@@ -564,19 +551,19 @@ OutputGenerator::process(
 
         status.throwIfCancelled();
 
-        if (maybe_normalized.format() == QImage::Format_Indexed8)
+        if (transformed_image.format() == QImage::Format_Indexed8)
         {
             combineMixed<uint8_t>(
-                maybe_normalized, bw_content, bw_mask
+                transformed_image, bw_content, bw_mask
             );
         }
         else
         {
-            assert(maybe_normalized.format() == QImage::Format_RGB32
-                   || maybe_normalized.format() == QImage::Format_ARGB32);
+            assert(transformed_image.format() == QImage::Format_RGB32
+                   || transformed_image.format() == QImage::Format_ARGB32);
 
             combineMixed<uint32_t>(
-                maybe_normalized, bw_content, bw_mask
+                transformed_image, bw_content, bw_mask
             );
         }
     }
@@ -584,11 +571,11 @@ OutputGenerator::process(
 
     status.throwIfCancelled();
 
-    QImage dst(maybe_normalized);
+    QImage dst(transformed_image);
 
     if (render_params.whiteMargins())
     {
-        dst = QImage(m_outRect.size(), maybe_normalized.format());
+        dst = QImage(m_outRect.size(), transformed_image.format());
 
         if (dst.format() == QImage::Format_Indexed8)
         {
@@ -612,11 +599,11 @@ OutputGenerator::process(
 
         if (!m_contentRect.isEmpty())
         {
-            drawOver(dst, m_contentRect, maybe_normalized, m_contentRect);
+            drawOver(dst, m_contentRect, transformed_image, m_contentRect);
         }
     }
 
-    maybe_normalized = QImage(); // Save memory and avoid a copy-on-write below.
+    transformed_image = QImage(); // Save memory and avoid a copy-on-write below.
     applyFillZonesInPlace(dst, fill_zones);
 
     return dst;
