@@ -489,10 +489,8 @@ OutputGenerator::process(
         if (render_params.binaryOutput() || m_outRect.isEmpty())
         {
             applyFillZonesInPlace(bw_content, fill_zones);
-            return bw_content.toQImage();
         }
-
-        if (render_params.mixedOutput())
+        else
         {
             // This block should go before the block with
             // adjustBrightnessGrayscale(), which may convert
@@ -538,73 +536,83 @@ OutputGenerator::process(
         }
     }
 
-    if (!render_params.mixedOutput())
+    QImage dst;
+    if (render_params.binaryOutput() || m_outRect.isEmpty())
     {
-        // It's "Color / Grayscale" mode, as we handle B/W above.
-        reserveBlackAndWhite(transformed_image);
+        dst = bw_content.toQImage();
+        bw_content.release(); // Save memory.
+        transformed_image = QImage(); // Save memory.
     }
     else
     {
-        // We don't want speckles in non-B/W areas, as they would
-        // then get visualized on the Despeckling tab.
-        rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
+        if (render_params.mixedOutput())
+        {
+            // We don't want speckles in non-B/W areas, as they would
+            // then get visualized on the Despeckling tab.
+            rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
+
+            status.throwIfCancelled();
+
+            if (transformed_image.format() == QImage::Format_Indexed8)
+            {
+                combineMixed<uint8_t>(
+                    transformed_image, bw_content, bw_mask
+                );
+            }
+            else
+            {
+                assert(transformed_image.format() == QImage::Format_RGB32
+                       || transformed_image.format() == QImage::Format_ARGB32);
+
+                combineMixed<uint32_t>(
+                    transformed_image, bw_content, bw_mask
+                );
+            }
+        }
+        else
+        {
+            // It's "Color / Grayscale" mode, as we handle B/W above.
+            reserveBlackAndWhite(transformed_image);
+        }
+        bw_content.release(); // Save memory.
 
         status.throwIfCancelled();
 
-        if (transformed_image.format() == QImage::Format_Indexed8)
-        {
-            combineMixed<uint8_t>(
-                transformed_image, bw_content, bw_mask
-            );
-        }
-        else
-        {
-            assert(transformed_image.format() == QImage::Format_RGB32
-                   || transformed_image.format() == QImage::Format_ARGB32);
+        dst = QImage(transformed_image);
 
-            combineMixed<uint32_t>(
-                transformed_image, bw_content, bw_mask
-            );
+        if (render_params.whiteMargins())
+        {
+            dst = QImage(m_outRect.size(), transformed_image.format());
+
+            if (dst.format() == QImage::Format_Indexed8)
+            {
+                dst.setColorTable(createGrayscalePalette());
+                // White.  0xff is reserved if in "Color / Grayscale" mode.
+                uint8_t const color = render_params.mixedOutput() ? 0xff : 0xfe;
+                dst.fill(color);
+            }
+            else
+            {
+                // White.  0x[ff]ffffff is reserved if in "Color / Grayscale" mode.
+                uint32_t const color = render_params.mixedOutput() ? 0xffffffff : 0xfffefefe;
+                dst.fill(color);
+            }
+
+            if (dst.isNull())
+            {
+                // Both the constructor and setColorTable() above can leave the image null.
+                throw std::bad_alloc();
+            }
+
+            if (!m_contentRect.isEmpty())
+            {
+                drawOver(dst, m_contentRect, transformed_image, m_contentRect);
+            }
         }
+
+        transformed_image = QImage(); // Save memory and avoid a copy-on-write below.
+        applyFillZonesInPlace(dst, fill_zones);
     }
-    bw_content.release(); // Save memory.
-
-    status.throwIfCancelled();
-
-    QImage dst(transformed_image);
-
-    if (render_params.whiteMargins())
-    {
-        dst = QImage(m_outRect.size(), transformed_image.format());
-
-        if (dst.format() == QImage::Format_Indexed8)
-        {
-            dst.setColorTable(createGrayscalePalette());
-            // White.  0xff is reserved if in "Color / Grayscale" mode.
-            uint8_t const color = render_params.mixedOutput() ? 0xff : 0xfe;
-            dst.fill(color);
-        }
-        else
-        {
-            // White.  0x[ff]ffffff is reserved if in "Color / Grayscale" mode.
-            uint32_t const color = render_params.mixedOutput() ? 0xffffffff : 0xfffefefe;
-            dst.fill(color);
-        }
-
-        if (dst.isNull())
-        {
-            // Both the constructor and setColorTable() above can leave the image null.
-            throw std::bad_alloc();
-        }
-
-        if (!m_contentRect.isEmpty())
-        {
-            drawOver(dst, m_contentRect, transformed_image, m_contentRect);
-        }
-    }
-
-    transformed_image = QImage(); // Save memory and avoid a copy-on-write below.
-    applyFillZonesInPlace(dst, fill_zones);
 
     return dst;
 }
