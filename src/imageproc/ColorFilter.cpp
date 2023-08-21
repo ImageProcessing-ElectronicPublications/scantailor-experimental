@@ -30,6 +30,7 @@
 #include <QDebug>
 #include "Grayscale.h"
 #include "GrayImage.h"
+#include "BinaryImage.h"
 #include "IntegralImage.h"
 #include "BinaryThreshold.h"
 #include "ColorFilter.h"
