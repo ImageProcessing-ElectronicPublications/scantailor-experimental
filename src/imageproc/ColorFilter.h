@@ -107,6 +107,9 @@ IMAGEPROC_EXPORT QImage coloredDimmingFilter(
 IMAGEPROC_EXPORT void coloredDimmingFilterInPlace(
     QImage& image, GrayImage& gray);
 
+IMAGEPROC_EXPORT void hsvKMeansInPlace(
+    QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount, float const coef_sat, float const coef_norm);
+
 } // namespace imageproc
 
 #endif

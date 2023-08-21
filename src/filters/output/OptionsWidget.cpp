@@ -200,6 +200,18 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdCoefChanged(double))
     );
     connect(
+        kmeansCount, SIGNAL(valueChanged(int)),
+        this, SLOT(kmeansCountChanged(int))
+    );
+    connect(
+        kmeansNorm, SIGNAL(valueChanged(double)),
+        this, SLOT(kmeansNormChanged(double))
+    );
+    connect(
+        kmeansSat, SIGNAL(valueChanged(double)),
+        this, SLOT(kmeansSatChanged(double))
+    );
+     connect(
         applyColorsModeButton, SIGNAL(clicked()),
         this, SLOT(applyColorsModeButtonClicked())
     );
@@ -566,6 +578,36 @@ OptionsWidget::thresholdCoefChanged(double value)
 }
 
 void
+OptionsWidget::kmeansCountChanged(int value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setKmeansCount(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansSatChanged(double value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setKmeansSat(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansNormChanged(double value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setKmeansNorm(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -772,6 +814,19 @@ OptionsWidget::updateColorsDisplay()
         {
             thresholdWindowSize->setEnabled( true );
             thresholdCoef->setEnabled( true );
+        }
+        kmeansCount->setValue(black_white_options.kmeansCount());
+        kmeansSat->setValue(black_white_options.kmeansSat());
+        kmeansNorm->setValue(black_white_options.kmeansNorm());
+        if (black_white_options.kmeansCount() > 0)
+        {
+            kmeansSat->setEnabled( true );
+            kmeansNorm->setEnabled( true );
+        }
+        else
+        {
+            kmeansSat->setEnabled( false );
+            kmeansNorm->setEnabled( false );
         }
 
         ScopedIncDec<int> const despeckle_guard(m_ignoreDespeckleLevelChanges);

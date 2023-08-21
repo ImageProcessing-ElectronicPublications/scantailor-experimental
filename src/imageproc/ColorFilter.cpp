@@ -718,4 +718,372 @@ void coloredDimmingFilterInPlace(
     }
 }
 
+void hsvKMeansInPlace(
+    QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount, float const coef_sat, float const coef_norm)
+{
+    if (dst.isNull() || image.isNull() || mask.isNull())
+    {
+        return;
+    }
+
+    if ((ncount > 0) && (ncount < 256))
+    {
+        unsigned int const w = dst.width();
+        unsigned int const h = dst.height();
+        unsigned int const wi = image.width();
+        unsigned int const hi = image.height();
+        unsigned int const wm = mask.width();
+        unsigned int const hm = mask.height();
+
+        if ((w != wi) || (h != hi) || (w != wm) || (h != hm))
+        {
+            return;
+        }
+
+        uint8_t* dst_line = (uint8_t*) dst.bits();
+        int const dst_bpl = dst.bytesPerLine();
+        unsigned int const dnum = dst_bpl / w;
+        uint8_t const* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        unsigned int const inum = image_bpl / w;
+        uint32_t const* mask_line = mask.data();
+        int const mask_wpl = mask.wordsPerLine();
+
+        QImage hsv_img(w, h, QImage::Format_RGB32);
+        uint8_t* hsv_line = (uint8_t*) hsv_img.bits();
+        int const hsv_bpl = hsv_img.bytesPerLine();
+        unsigned int const hnum = hsv_bpl / w;
+
+        uint32_t const msb = uint32_t(1) << 31;
+
+        for (unsigned int y = 0; y < h; y++)
+        {
+            QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+            for (unsigned int x = 0; x < w; x++)
+            {
+                int r = 0;
+                int g = 0;
+                int b = 255;
+                if (mask_line[x >> 5] & (msb >> (x & 31)))
+                {
+                    int hsv_h, hsv_s, hsv_v;
+                    int max = 0, min = 255;
+                    QRgb pixel = image.pixel(x, y);
+                    r = qRed(pixel);
+                    g = qGreen(pixel);
+                    b = qBlue(pixel);
+                    max = (r < g) ? g : r;
+                    max = (max < b) ? b : max;
+                    min = (r > g) ? g : r;
+                    min = (min > b) ? b : min;
+                    hsv_h = max - min;
+                    if (hsv_h > 0)
+                    {
+                        if (max == r)
+                        {
+                            hsv_h = (255 * (g - b) / hsv_h + 3) / 6;
+                            if (hsv_h < 0)
+                            {
+                                hsv_h += 255;
+                            }
+                        }
+                        else if (max == g)
+                        {
+                            hsv_h = (255 * 2 + 255 * (b - r) / hsv_h + 3) / 6;
+                        }
+                        else
+                        {
+                            hsv_h = (255 * 4 + 255 * (r - g) / hsv_h + 3) / 6;
+                        }
+                    }
+                    hsv_s = max - min;
+                    if (max > 0)
+                    {
+                        hsv_s *= 255;
+                        hsv_s += max / 2;
+                        hsv_s /= max;
+                    }
+                    hsv_v = max;
+                    r = hsv_h;
+                    g = hsv_s;
+                    b = hsv_v;
+                }
+                rowh[x] = qRgb(r, g, b);
+            }
+            mask_line += mask_wpl;
+        }
+
+        GrayImage clusters(image);
+        uint8_t* clusters_line = clusters.data();
+        int const clusters_bpl = clusters.stride();
+
+        unsigned long mean_len[256] = {0};
+        float mean_h[256] = {0.0};
+        float mean_s[256] = {0.0};
+        float mean_v[256] = {0.0};
+
+        float fk = (ncount > 0) ? (255.0 / (float) ncount) : 0.0;
+        for (int i = 0; i < ncount; i++)
+        {
+            float hsv_h = ((float) i + 0.5) * fk;
+            mean_h[i] = hsv_h;
+            mean_s[i] = 255.0;
+            mean_v[i] = 255.0;
+        }
+
+        mask_line = mask.data();
+        for (unsigned int y = 0; y < h; y++)
+        {
+            QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+            for (unsigned int x = 0; x < w; x++)
+            {
+                if (mask_line[x >> 5] & (msb >> (x & 31)))
+                {
+                    float hsv_h = qRed(rowh[x]);
+                    float hsv_s = qGreen(rowh[x]);
+                    float hsv_v = qBlue(rowh[x]);
+                    float dist_min = 196608.0;
+                    int indx_min = 0;
+                    for (int k = 0; k < ncount; k++)
+                    {
+                        float delta_h = (hsv_h > mean_h[k]) ? (hsv_h - mean_h[k]) : (mean_h[k] - hsv_h);
+                        delta_h = (delta_h < 128.0) ? delta_h : (255.0 - delta_h);
+                        float delta_s = hsv_s - mean_s[k];
+                        float delta_v = hsv_v - mean_v[k];
+                        float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
+                        if (dist < dist_min)
+                        {
+                            indx_min = k;
+                            dist_min = dist;
+                        }
+                    }
+                    clusters_line[x] = indx_min;
+                }
+            }
+            mask_line += mask_wpl;
+            clusters_line += clusters_bpl;
+        }
+
+        for (unsigned int itr = 0; itr < 50; itr++)
+        {
+            for (int i = 0; i < ncount; i++)
+            {
+                mean_h[i] = 0.0;
+                mean_s[i] = 0.0;
+                mean_v[i] = 0.0;
+                mean_len[i] = 0;
+            }
+
+            mask_line = mask.data();
+            clusters_line = clusters.data();
+            for (unsigned int y = 0; y < h; y++)
+            {
+                QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+                for (unsigned int x = 0; x < w; x++)
+                {
+                    if (mask_line[x >> 5] & (msb >> (x & 31)))
+                    {
+                        int cluster = clusters_line[x];
+                        float hsv_h = qRed(rowh[x]);
+                        float hsv_s = qGreen(rowh[x]);
+                        float hsv_v = qBlue(rowh[x]);
+                        mean_h[cluster] += hsv_h;
+                        mean_s[cluster] += hsv_s;
+                        mean_v[cluster] += hsv_v;
+                        mean_len[cluster]++;
+                    }
+                }
+                mask_line += mask_wpl;
+                clusters_line += clusters_bpl;
+            }
+            unsigned long changes = 0;
+            for (int i = 0; i < ncount; i++)
+            {
+                if (mean_len[i] > 0)
+                {
+                    float mean_lr = 1.0 / (float) mean_len[i];
+                    mean_h[i] *= mean_lr;
+                    mean_s[i] *= mean_lr;
+                    mean_v[i] *= mean_lr;
+                }
+                else
+                {
+                    float hsv_hm = ((float)i + 0.5) * fk;
+                    mean_h[i] = hsv_hm;
+                    mean_s[i] = 255.0;
+                    mean_v[i] = 255.0;
+
+                    mask_line = mask.data();
+                    float dist_min = 196608.0;
+                    for (unsigned int y = 0; y < h; y++)
+                    {
+                        QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+                        for (unsigned int x = 0; x < w; x++)
+                        {
+                            if (mask_line[x >> 5] & (msb >> (x & 31)))
+                            {
+                                float hsv_h = qRed(rowh[x]);
+                                float hsv_s = qGreen(rowh[x]);
+                                float hsv_v = qBlue(rowh[x]);
+                                float dist_min = 196608.0;
+                                int indx_min = 0;
+                                float delta_h = (hsv_h > hsv_hm) ? (hsv_h - hsv_hm) : (hsv_hm - hsv_h);
+                                delta_h = (delta_h < 128.0) ? delta_h : (255.0 - delta_h);
+                                float delta_s = 255.0 - hsv_s;
+                                float delta_v = 255.0 - hsv_v;
+                                float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
+                                if (dist < dist_min)
+                                {
+                                    mean_h[i] = hsv_h;
+                                    mean_s[i] = hsv_s;
+                                    mean_v[i] = hsv_v;
+                                    dist_min = dist;
+                                }
+                            }
+                        }
+                        mask_line += mask_wpl;
+                    }
+                    mean_len[i] = 1;
+                    changes++;
+                }
+            }
+
+            mask_line = mask.data();
+            clusters_line = clusters.data();
+            for (unsigned int y = 0; y < h; y++)
+            {
+                QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+                for (unsigned int x = 0; x < w; x++)
+                {
+                    if (mask_line[x >> 5] & (msb >> (x & 31)))
+                    {
+                        float hsv_h = qRed(rowh[x]);
+                        float hsv_s = qGreen(rowh[x]);
+                        float hsv_v = qBlue(rowh[x]);
+                        float dist_min = 196608.0;
+                        int indx_min = 0;
+                        for (int k = 0; k < ncount; k++)
+                        {
+                            float delta_h = (hsv_h > mean_h[k]) ? (hsv_h - mean_h[k]) : (mean_h[k] - hsv_h);
+                            delta_h = (delta_h < 128.0) ? delta_h : (255.0 - delta_h);
+                            float delta_s = hsv_s - mean_s[k];
+                            float delta_v = hsv_v - mean_v[k];
+                            float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
+                            if (dist < dist_min)
+                            {
+                                indx_min = k;
+                                dist_min = dist;
+                            }
+                        }
+                        if (indx_min != clusters_line[x])
+                        {
+                            clusters_line[x] = indx_min;
+                            changes++;
+                        }
+                    }
+                }
+                mask_line += mask_wpl;
+                clusters_line += clusters_bpl;
+            }
+
+            if (changes == 0)
+            {
+                break;
+            }
+        }
+
+        float min_sat = 512.0f;
+        float max_sat = 0.0f;
+        float min_vol = 512.0f;
+        float max_vol = 255.0f;
+        for (int k = 0; k < ncount; k++)
+        {
+            min_sat = (mean_s[k] < min_sat) ? mean_s[k] : min_sat;
+            max_sat = (mean_s[k] > max_sat) ? mean_s[k] : max_sat;
+            min_vol = (mean_v[k] < min_vol) ? mean_v[k] : min_vol;
+        }
+        float d_sat = max_sat - min_sat;
+        float d_vol = max_vol - min_vol;
+        for (int k = 0; k < ncount; k++)
+        {
+            double sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0 / d_sat) : 255.0f;
+            sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
+            double vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0 / d_vol) : 0.0f;
+            vol_new = vol_new * coef_norm + mean_v[k] * (1.0f - coef_norm);
+            mean_s[k] = sat_new;
+            mean_v[k] = vol_new;
+        }
+
+        mask_line = mask.data();
+        clusters_line = clusters.data();
+        for (unsigned int y = 0; y < h; y++)
+        {
+            QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+            for (unsigned int x = 0; x < w; x++)
+            {
+                int r = 0;
+                int g = 0;
+                int b = 255;
+                if (mask_line[x >> 5] & (msb >> (x & 31)))
+                {
+                    int cluster = clusters_line[x];
+                    float hsv_h = mean_h[cluster];
+                    float hsv_s = mean_s[cluster];
+                    float hsv_v = mean_v[cluster];
+                    r = g = b = (int) hsv_v;
+                    int hsv_hi = (int)(hsv_h + 0.5);
+                    int i = (hsv_hi * 6 / 255) % 6;
+                    int vm = (int) ((255 - hsv_s) * hsv_v + 127)/ 255;
+                    int va = (int) ((hsv_v - vm) * (6 * hsv_hi - i * 255) + 127)/ 255;
+                    int vi = vm + va;
+                    int vd = hsv_v - va;
+                    if (hsv_s > 0.0)
+                    {
+                        switch (i)
+                        {
+                        default:
+                        case 0:
+                            g = vi;
+                            b = vm;
+                            break;
+                        case 1:
+                            r = vd;
+                            b = vm;
+                            break;
+                        case 2:
+                            r = vm;
+                            b = vi;
+                            break;
+                        case 3:
+                            r = vm;
+                            g = vd;
+                            break;
+                        case 4:
+                            r = vi;
+                            g = vm;
+                            break;
+                        case 5:
+                            g = vm;
+                            b = vd;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    QRgb pixel = dst.pixel(x, y);
+                    r = qRed(pixel);
+                    g = qGreen(pixel);
+                    b = qBlue(pixel);
+                }
+                rowh[x] = qRgb(r, g, b);
+            }
+            mask_line += mask_wpl;
+            clusters_line += clusters_bpl;
+        }
+
+        dst = hsv_img;
+    }
+}
+
 } // namespace imageproc

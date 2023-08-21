@@ -103,6 +103,12 @@ private slots:
 
     void thresholdCoefChanged(double value);
 
+    void kmeansCountChanged(int value);
+
+    void kmeansSatChanged(double value);
+
+    void kmeansNormChanged(double value);
+
     void bwThresholdChanged();
 
     void applyColorsModeButtonClicked();

@@ -606,6 +606,15 @@ OutputGenerator::process(
         }
         applyFillZonesInPlace(dst, fill_zones);
     }
+
+    // KMeans based HSV
+    if (render_params.binaryOutput() || render_params.mixedOutput())
+    {
+        if (!m_contentRect.isEmpty() && (black_white_options.kmeansCount() > 0))
+        {
+            hsvKMeansInPlace(dst, transformed_image, bw_content, black_white_options.kmeansCount(), black_white_options.kmeansSat(), black_white_options.kmeansNorm());
+        }
+    }
     bw_content.release(); // Save memory.
     transformed_image = QImage(); // Save memory.
 

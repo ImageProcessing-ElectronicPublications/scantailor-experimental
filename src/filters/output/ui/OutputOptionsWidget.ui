@@ -638,7 +638,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="thresholdWindowSizeLabel">
              <property name="text">
-              <string>Window size:</string>
+              <string> - window size:</string>
              </property>
             </widget>
            </item>
@@ -658,7 +658,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="thresholdCoefLabel">
              <property name="text">
-              <string>Coef:</string>
+              <string> - coef:</string>
              </property>
             </widget>
            </item>
@@ -675,6 +675,72 @@
              </property>
              <property name="singleStep">
               <double>0.01</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="kmeansCountLabel">
+             <property name="text">
+              <string>KMeans:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="kmeansCount">
+             <property name="toolTip">
+              <string>Number of KMeans colors.</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="kmeansSatLabel">
+             <property name="text">
+              <string> - saturation:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="kmeansSat">
+             <property name="toolTip">
+              <string>Default value is 0.0.</string>
+             </property>
+             <property name="minimum">
+              <double>0.0</double>
+             </property>
+             <property name="maximum">
+              <double>1.0</double>
+             </property>
+             <property name="singleStep">
+              <double>0.1</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="kmeansNormLabel">
+             <property name="text">
+              <string> - normalization:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QDoubleSpinBox" name="kmeansNorm">
+             <property name="toolTip">
+              <string>Default value is 0.0.</string>
+             </property>
+             <property name="minimum">
+              <double>0.0</double>
+             </property>
+             <property name="maximum">
+              <double>1.0</double>
+             </property>
+             <property name="singleStep">
+              <double>0.1</double>
              </property>
             </widget>
            </item>
