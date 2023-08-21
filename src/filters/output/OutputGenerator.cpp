@@ -612,7 +612,11 @@ OutputGenerator::process(
     {
         if (!m_contentRect.isEmpty() && (black_white_options.kmeansCount() > 0))
         {
-            hsvKMeansInPlace(dst, transformed_image, bw_content, black_white_options.kmeansCount(), black_white_options.kmeansSat(), black_white_options.kmeansNorm());
+            hsvKMeansInPlace(dst, transformed_image, bw_content,
+                             black_white_options.kmeansCount(),
+                             black_white_options.kmeansSat(),
+                             black_white_options.kmeansNorm(),
+                             black_white_options.kmeansBG());
         }
     }
     bw_content.release(); // Save memory.

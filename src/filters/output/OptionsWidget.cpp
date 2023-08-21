@@ -204,14 +204,18 @@ OptionsWidget::OptionsWidget(
         this, SLOT(kmeansCountChanged(int))
     );
     connect(
+        kmeansSat, SIGNAL(valueChanged(double)),
+        this, SLOT(kmeansSatChanged(double))
+    );
+    connect(
         kmeansNorm, SIGNAL(valueChanged(double)),
         this, SLOT(kmeansNormChanged(double))
     );
     connect(
-        kmeansSat, SIGNAL(valueChanged(double)),
-        this, SLOT(kmeansSatChanged(double))
+        kmeansBG, SIGNAL(valueChanged(double)),
+        this, SLOT(kmeansBGChanged(double))
     );
-     connect(
+    connect(
         applyColorsModeButton, SIGNAL(clicked()),
         this, SLOT(applyColorsModeButtonClicked())
     );
@@ -608,6 +612,16 @@ OptionsWidget::kmeansNormChanged(double value)
 }
 
 void
+OptionsWidget::kmeansBGChanged(double value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setKmeansBG(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -818,15 +832,18 @@ OptionsWidget::updateColorsDisplay()
         kmeansCount->setValue(black_white_options.kmeansCount());
         kmeansSat->setValue(black_white_options.kmeansSat());
         kmeansNorm->setValue(black_white_options.kmeansNorm());
+        kmeansBG->setValue(black_white_options.kmeansBG());
         if (black_white_options.kmeansCount() > 0)
         {
             kmeansSat->setEnabled( true );
             kmeansNorm->setEnabled( true );
+            kmeansBG->setEnabled( true );
         }
         else
         {
             kmeansSat->setEnabled( false );
             kmeansNorm->setEnabled( false );
+            kmeansBG->setEnabled( false );
         }
 
         ScopedIncDec<int> const despeckle_guard(m_ignoreDespeckleLevelChanges);

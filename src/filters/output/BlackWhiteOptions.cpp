@@ -32,7 +32,8 @@ BlackWhiteOptions::BlackWhiteOptions()
         m_thresholdCoef(0.3),
         m_kmeansCount(0),
         m_kmeansSat(0.0),
-        m_kmeansNorm(0.0)
+        m_kmeansNorm(0.0),
+        m_kmeansBG(0.0)
 {
 }
 
@@ -44,7 +45,8 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
         m_kmeansCount(el.attribute("kmeans").toInt()),
         m_kmeansSat(el.attribute("kmeansSat").toDouble()),
-        m_kmeansNorm(el.attribute("kmeansNorm").toDouble())
+        m_kmeansNorm(el.attribute("kmeansNorm").toDouble()),
+        m_kmeansBG(el.attribute("kmeansBG").toDouble())
 {
     if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
     {
@@ -70,6 +72,10 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     {
         m_kmeansNorm = 0.0;
     }
+    if (m_kmeansBG < 0.0 || m_kmeansBG > 1.0)
+    {
+        m_kmeansBG = 0.0;
+    }
 }
 
 QDomElement
@@ -84,6 +90,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("kmeans", m_kmeansCount);
     el.setAttribute("kmeansSat", m_kmeansSat);
     el.setAttribute("kmeansNorm", m_kmeansNorm);
+    el.setAttribute("kmeansBG", m_kmeansBG);
     return el;
 }
 
@@ -119,6 +126,10 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_kmeansNorm != other.m_kmeansNorm)
+    {
+        return false;
+    }
+    if (m_kmeansBG != other.m_kmeansBG)
     {
         return false;
     }

@@ -719,7 +719,7 @@ void coloredDimmingFilterInPlace(
 }
 
 void hsvKMeansInPlace(
-    QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount, float const coef_sat, float const coef_norm)
+    QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount, float const coef_sat, float const coef_norm, float const coef_bg)
 {
     if (dst.isNull() || image.isNull() || mask.isNull())
     {
@@ -754,6 +754,8 @@ void hsvKMeansInPlace(
         int const hsv_bpl = hsv_img.bytesPerLine();
         unsigned int const hnum = hsv_bpl / w;
 
+        float mean_bg_r = 0.0f, mean_bg_g = 0.0f, mean_bg_b = 0.0f;
+        unsigned long mean_bg_count = 0;
         uint32_t const msb = uint32_t(1) << 31;
 
         for (unsigned int y = 0; y < h; y++)
@@ -761,17 +763,14 @@ void hsvKMeansInPlace(
             QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
             for (unsigned int x = 0; x < w; x++)
             {
-                int r = 0;
-                int g = 0;
-                int b = 255;
+                QRgb pixel = image.pixel(x, y);
+                int r = qRed(pixel);
+                int g = qGreen(pixel);
+                int b = qBlue(pixel);
                 if (mask_line[x >> 5] & (msb >> (x & 31)))
                 {
                     int hsv_h, hsv_s, hsv_v;
                     int max = 0, min = 255;
-                    QRgb pixel = image.pixel(x, y);
-                    r = qRed(pixel);
-                    g = qGreen(pixel);
-                    b = qBlue(pixel);
                     max = (r < g) ? g : r;
                     max = (max < b) ? b : max;
                     min = (r > g) ? g : r;
@@ -808,27 +807,48 @@ void hsvKMeansInPlace(
                     g = hsv_s;
                     b = hsv_v;
                 }
+                else
+                {
+                    mean_bg_r += r;
+                    mean_bg_g += g;
+                    mean_bg_b += b;
+                    mean_bg_count++;
+                }
                 rowh[x] = qRgb(r, g, b);
             }
             mask_line += mask_wpl;
         }
+
+        if (mean_bg_count > 0)
+        {
+            float mean_bg_part = 1.0f / (float) mean_bg_count;
+            mean_bg_r *= mean_bg_part;
+            mean_bg_g *= mean_bg_part;
+            mean_bg_b *= mean_bg_part;
+        }
+        mean_bg_r *= coef_bg;
+        mean_bg_g *= coef_bg;
+        mean_bg_b *= coef_bg;
+        mean_bg_r += ((1.0f - coef_bg) * 255.0f);
+        mean_bg_g += ((1.0f - coef_bg) * 255.0f);
+        mean_bg_b += ((1.0f - coef_bg) * 255.0f);
 
         GrayImage clusters(image);
         uint8_t* clusters_line = clusters.data();
         int const clusters_bpl = clusters.stride();
 
         unsigned long mean_len[256] = {0};
-        float mean_h[256] = {0.0};
-        float mean_s[256] = {0.0};
-        float mean_v[256] = {0.0};
+        float mean_h[256] = {0.0f};
+        float mean_s[256] = {0.0f};
+        float mean_v[256] = {0.0f};
 
-        float fk = (ncount > 0) ? (255.0 / (float) ncount) : 0.0;
+        float fk = (ncount > 0) ? (255.0f / (float) ncount) : 0.0f;
         for (int i = 0; i < ncount; i++)
         {
-            float hsv_h = ((float) i + 0.5) * fk;
+            float hsv_h = ((float) i + 0.5f) * fk;
             mean_h[i] = hsv_h;
-            mean_s[i] = 255.0;
-            mean_v[i] = 255.0;
+            mean_s[i] = 255.0f;
+            mean_v[i] = 255.0f;
         }
 
         mask_line = mask.data();
@@ -842,12 +862,12 @@ void hsvKMeansInPlace(
                     float hsv_h = qRed(rowh[x]);
                     float hsv_s = qGreen(rowh[x]);
                     float hsv_v = qBlue(rowh[x]);
-                    float dist_min = 196608.0;
+                    float dist_min = 196608.0f;
                     int indx_min = 0;
                     for (int k = 0; k < ncount; k++)
                     {
                         float delta_h = (hsv_h > mean_h[k]) ? (hsv_h - mean_h[k]) : (mean_h[k] - hsv_h);
-                        delta_h = (delta_h < 128.0) ? delta_h : (255.0 - delta_h);
+                        delta_h = (delta_h < 128.0f) ? delta_h : (255.0f - delta_h);
                         float delta_s = hsv_s - mean_s[k];
                         float delta_v = hsv_v - mean_v[k];
                         float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
@@ -868,9 +888,9 @@ void hsvKMeansInPlace(
         {
             for (int i = 0; i < ncount; i++)
             {
-                mean_h[i] = 0.0;
-                mean_s[i] = 0.0;
-                mean_v[i] = 0.0;
+                mean_h[i] = 0.0f;
+                mean_s[i] = 0.0f;
+                mean_v[i] = 0.0f;
                 mean_len[i] = 0;
             }
 
@@ -901,20 +921,20 @@ void hsvKMeansInPlace(
             {
                 if (mean_len[i] > 0)
                 {
-                    float mean_lr = 1.0 / (float) mean_len[i];
+                    float mean_lr = 1.0f / (float) mean_len[i];
                     mean_h[i] *= mean_lr;
                     mean_s[i] *= mean_lr;
                     mean_v[i] *= mean_lr;
                 }
                 else
                 {
-                    float hsv_hm = ((float)i + 0.5) * fk;
+                    float hsv_hm = ((float)i + 0.5f) * fk;
                     mean_h[i] = hsv_hm;
-                    mean_s[i] = 255.0;
-                    mean_v[i] = 255.0;
+                    mean_s[i] = 255.0f;
+                    mean_v[i] = 255.0f;
 
                     mask_line = mask.data();
-                    float dist_min = 196608.0;
+                    float dist_min = 196608.0f;
                     for (unsigned int y = 0; y < h; y++)
                     {
                         QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
@@ -925,12 +945,10 @@ void hsvKMeansInPlace(
                                 float hsv_h = qRed(rowh[x]);
                                 float hsv_s = qGreen(rowh[x]);
                                 float hsv_v = qBlue(rowh[x]);
-                                float dist_min = 196608.0;
-                                int indx_min = 0;
                                 float delta_h = (hsv_h > hsv_hm) ? (hsv_h - hsv_hm) : (hsv_hm - hsv_h);
-                                delta_h = (delta_h < 128.0) ? delta_h : (255.0 - delta_h);
-                                float delta_s = 255.0 - hsv_s;
-                                float delta_v = 255.0 - hsv_v;
+                                delta_h = (delta_h < 128.0f) ? delta_h : (255.0f - delta_h);
+                                float delta_s = 255.0f - hsv_s;
+                                float delta_v = 255.0f - hsv_v;
                                 float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
                                 if (dist < dist_min)
                                 {
@@ -960,12 +978,12 @@ void hsvKMeansInPlace(
                         float hsv_h = qRed(rowh[x]);
                         float hsv_s = qGreen(rowh[x]);
                         float hsv_v = qBlue(rowh[x]);
-                        float dist_min = 196608.0;
+                        float dist_min = 196608.0f;
                         int indx_min = 0;
                         for (int k = 0; k < ncount; k++)
                         {
                             float delta_h = (hsv_h > mean_h[k]) ? (hsv_h - mean_h[k]) : (mean_h[k] - hsv_h);
-                            delta_h = (delta_h < 128.0) ? delta_h : (255.0 - delta_h);
+                            delta_h = (delta_h < 128.0f) ? delta_h : (255.0f - delta_h);
                             float delta_s = hsv_s - mean_s[k];
                             float delta_v = hsv_v - mean_v[k];
                             float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
@@ -1006,9 +1024,9 @@ void hsvKMeansInPlace(
         float d_vol = max_vol - min_vol;
         for (int k = 0; k < ncount; k++)
         {
-            double sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0 / d_sat) : 255.0f;
+            double sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0f / d_sat) : 255.0f;
             sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
-            double vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0 / d_vol) : 0.0f;
+            double vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0f / d_vol) : 0.0f;
             vol_new = vol_new * coef_norm + mean_v[k] * (1.0f - coef_norm);
             mean_s[k] = sat_new;
             mean_v[k] = vol_new;
@@ -1030,14 +1048,14 @@ void hsvKMeansInPlace(
                     float hsv_h = mean_h[cluster];
                     float hsv_s = mean_s[cluster];
                     float hsv_v = mean_v[cluster];
-                    r = g = b = (int) hsv_v;
-                    int hsv_hi = (int)(hsv_h + 0.5);
+                    r = g = b = (int) (hsv_v + 0.5f);
+                    int hsv_hi = (int)(hsv_h + 0.5f);
                     int i = (hsv_hi * 6 / 255) % 6;
                     int vm = (int) ((255 - hsv_s) * hsv_v + 127)/ 255;
                     int va = (int) ((hsv_v - vm) * (6 * hsv_hi - i * 255) + 127)/ 255;
                     int vi = vm + va;
                     int vd = hsv_v - va;
-                    if (hsv_s > 0.0)
+                    if (hsv_s > 0.0f)
                     {
                         switch (i)
                         {
@@ -1075,6 +1093,12 @@ void hsvKMeansInPlace(
                     r = qRed(pixel);
                     g = qGreen(pixel);
                     b = qBlue(pixel);
+                    if ((r == 255) && (g == 255) && (b == 255))
+                    {
+                        r = mean_bg_r;
+                        g = mean_bg_g;
+                        b = mean_bg_b;
+                    }
                 }
                 rowh[x] = qRgb(r, g, b);
             }

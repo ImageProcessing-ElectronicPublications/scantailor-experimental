@@ -109,6 +109,15 @@ public:
         m_kmeansNorm = val;
     }
 
+    double kmeansBG() const
+    {
+        return m_kmeansBG;
+    }
+    void setKmeansBG(double val)
+    {
+        m_kmeansBG = val;
+    }
+
     bool operator==(BlackWhiteOptions const& other) const;
 
     bool operator!=(BlackWhiteOptions const& other) const;
@@ -121,6 +130,7 @@ private:
     int m_kmeansCount;
     double m_kmeansSat;
     double m_kmeansNorm;
+    double m_kmeansBG;
 
     static ThresholdFilter parseThresholdMethod(QString const& str);
 
