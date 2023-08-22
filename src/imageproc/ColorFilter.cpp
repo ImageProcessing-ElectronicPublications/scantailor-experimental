@@ -1031,6 +1031,54 @@ void hsvKMeansInPlace(
             mean_s[k] = sat_new;
             mean_v[k] = vol_new;
         }
+        for (int k = 0; k < ncount; k++)
+        {
+            int r, g, b;
+            float hsv_h = mean_h[k];
+            float hsv_s = mean_s[k];
+            float hsv_v = mean_v[k];
+            r = g = b = (int) (hsv_v + 0.5f);
+            int hsv_hi = (int)(hsv_h + 0.5f);
+            int i = (hsv_hi * 6 / 255) % 6;
+            int vm = (int) ((255 - hsv_s) * hsv_v + 127)/ 255;
+            int va = (int) ((hsv_v - vm) * (6 * hsv_hi - i * 255) + 127)/ 255;
+            int vi = vm + va;
+            int vd = hsv_v - va;
+            if (hsv_s > 0.0f)
+            {
+                switch (i)
+                {
+                default:
+                case 0:
+                    g = vi;
+                    b = vm;
+                    break;
+                case 1:
+                    r = vd;
+                    b = vm;
+                    break;
+                case 2:
+                    r = vm;
+                    b = vi;
+                    break;
+                case 3:
+                    r = vm;
+                    g = vd;
+                    break;
+                case 4:
+                    r = vi;
+                    g = vm;
+                    break;
+                case 5:
+                    g = vm;
+                    b = vd;
+                    break;
+                }
+            }
+            mean_h[k] = r;
+            mean_s[k] = g;
+            mean_v[k] = b;
+        }
 
         mask_line = mask.data();
         clusters_line = clusters.data();
@@ -1045,47 +1093,9 @@ void hsvKMeansInPlace(
                 if (mask_line[x >> 5] & (msb >> (x & 31)))
                 {
                     int cluster = clusters_line[x];
-                    float hsv_h = mean_h[cluster];
-                    float hsv_s = mean_s[cluster];
-                    float hsv_v = mean_v[cluster];
-                    r = g = b = (int) (hsv_v + 0.5f);
-                    int hsv_hi = (int)(hsv_h + 0.5f);
-                    int i = (hsv_hi * 6 / 255) % 6;
-                    int vm = (int) ((255 - hsv_s) * hsv_v + 127)/ 255;
-                    int va = (int) ((hsv_v - vm) * (6 * hsv_hi - i * 255) + 127)/ 255;
-                    int vi = vm + va;
-                    int vd = hsv_v - va;
-                    if (hsv_s > 0.0f)
-                    {
-                        switch (i)
-                        {
-                        default:
-                        case 0:
-                            g = vi;
-                            b = vm;
-                            break;
-                        case 1:
-                            r = vd;
-                            b = vm;
-                            break;
-                        case 2:
-                            r = vm;
-                            b = vi;
-                            break;
-                        case 3:
-                            r = vm;
-                            g = vd;
-                            break;
-                        case 4:
-                            r = vi;
-                            g = vm;
-                            break;
-                        case 5:
-                            g = vm;
-                            b = vd;
-                            break;
-                        }
-                    }
+                    r = mean_h[cluster];
+                    g = mean_s[cluster];
+                    b = mean_v[cluster];
                 }
                 else
                 {
