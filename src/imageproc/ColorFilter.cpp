@@ -759,6 +759,7 @@ void hsvKMeansInPlace(
         float mean_s[256] = {0.0f};
         float mean_v[256] = {0.0f};
 
+        float ctorad = 2.0f * M_PI / 256.0f;
         uint32_t const msb = uint32_t(1) << 31;
 
         for (unsigned int y = 0; y < h; y++)
@@ -770,7 +771,7 @@ void hsvKMeansInPlace(
                 int r = qRed(pixel);
                 int g = qGreen(pixel);
                 int b = qBlue(pixel);
-                int hsv_h, hsv_s, hsv_v;
+                float hsv_h, hsv_s, hsv_v;
                 int max = 0, min = 255;
                 max = (r < g) ? g : r;
                 max = (max < b) ? b : max;
@@ -804,8 +805,8 @@ void hsvKMeansInPlace(
                     hsv_s /= max;
                 }
                 hsv_v = max;
-                r = hsv_h;
-                g = hsv_s;
+                r = 127.5f + 0.5f * hsv_s * cos(hsv_h * ctorad);
+                g = 127.5f + 0.5f * hsv_s * sin(hsv_h * ctorad);
                 b = hsv_v;
                 if (!(mask_line[x >> 5] & (msb >> (x & 31))))
                 {
@@ -835,8 +836,8 @@ void hsvKMeansInPlace(
         for (int i = 1; i <= ncount; i++)
         {
             float hsv_h = ((float) i - 0.5f) * fk;
-            mean_h[i] = hsv_h;
-            mean_s[i] = 255.0f;
+            mean_h[i] = 127.5f + 127.5f * cos(hsv_h * ctorad);
+            mean_s[i] = 127.5f + 127.5f * sin(hsv_h * ctorad);
             mean_v[i] = 255.0f;
         }
 
@@ -855,8 +856,7 @@ void hsvKMeansInPlace(
                     int indx_min = 0;
                     for (int k = 1; k <= ncount; k++)
                     {
-                        float delta_h = (hsv_h > mean_h[k]) ? (hsv_h - mean_h[k]) : (mean_h[k] - hsv_h);
-                        delta_h = (delta_h < 128.0f) ? delta_h : (255.0f - delta_h);
+                        float delta_h = hsv_h - mean_h[k];
                         float delta_s = hsv_s - mean_s[k];
                         float delta_v = hsv_v - mean_v[k];
                         float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
@@ -896,7 +896,6 @@ void hsvKMeansInPlace(
                         float hsv_h = qRed(rowh[x]);
                         float hsv_s = qGreen(rowh[x]);
                         float hsv_v = qBlue(rowh[x]);
-                        hsv_h = (hsv_h > 212.5f) ? (hsv_h - 256.0f) : hsv_h;
                         mean_h[cluster] += hsv_h;
                         mean_s[cluster] += hsv_s;
                         mean_v[cluster] += hsv_v;
@@ -915,13 +914,14 @@ void hsvKMeansInPlace(
                     mean_h[i] *= mean_lr;
                     mean_s[i] *= mean_lr;
                     mean_v[i] *= mean_lr;
-                    mean_h[i] = (mean_h[i] < 0.0f) ? (mean_h[i] + 256.0f) : mean_h[i];
                 }
                 else
                 {
                     float hsv_hm = ((float)i - 0.5f) * fk;
-                    mean_h[i] = hsv_hm;
-                    mean_s[i] = 255.0f;
+                    float hsv_hmc = 127.5f + 127.5f * cos(hsv_hm * ctorad);
+                    float hsv_hms = 127.5f + 127.5f * sin(hsv_hm * ctorad);
+                    mean_h[i] = hsv_hmc;
+                    mean_s[i] = hsv_hms;
                     mean_v[i] = 255.0f;
 
                     mask_line = mask.data();
@@ -936,9 +936,8 @@ void hsvKMeansInPlace(
                                 float hsv_h = qRed(rowh[x]);
                                 float hsv_s = qGreen(rowh[x]);
                                 float hsv_v = qBlue(rowh[x]);
-                                float delta_h = (hsv_h > hsv_hm) ? (hsv_h - hsv_hm) : (hsv_hm - hsv_h);
-                                delta_h = (delta_h < 128.0f) ? delta_h : (255.0f - delta_h);
-                                float delta_s = 255.0f - hsv_s;
+                                float delta_h = hsv_h - hsv_hmc;
+                                float delta_s = hsv_s - hsv_hms;
                                 float delta_v = 255.0f - hsv_v;
                                 float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
                                 if (dist < dist_min)
@@ -973,8 +972,7 @@ void hsvKMeansInPlace(
                         int indx_min = 0;
                         for (int k = 1; k <= ncount; k++)
                         {
-                            float delta_h = (hsv_h > mean_h[k]) ? (hsv_h - mean_h[k]) : (mean_h[k] - hsv_h);
-                            delta_h = (delta_h < 128.0f) ? delta_h : (255.0f - delta_h);
+                            float delta_h = hsv_h - mean_h[k];
                             float delta_s = hsv_s - mean_s[k];
                             float delta_v = hsv_v - mean_v[k];
                             float dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
@@ -1001,6 +999,17 @@ void hsvKMeansInPlace(
             }
         }
 
+        for (int k = 0; k <= ncount; k++)
+        {
+            float hsv_hsc = (mean_h[k] - 127.5f) * 2.0f;
+            float hsv_hss = (mean_s[k] - 127.5f) * 2.0f;
+            float hsv_v = mean_v[k];
+            float hsv_h = atan2(hsv_hss, hsv_hsc) / ctorad;
+            hsv_h = (hsv_h < 0.0f) ? (hsv_h + 256.0f) : hsv_h;
+            float hsv_s = sqrt(hsv_hsc * hsv_hsc + hsv_hss * hsv_hss); 
+            mean_h[k] = hsv_h;
+            mean_s[k] = hsv_s;
+        }
         float min_sat = 512.0f;
         float max_sat = 0.0f;
         float min_vol = 512.0f;
