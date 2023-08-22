@@ -784,7 +784,7 @@ void hsvKMeansInPlace(
                         hsv_h = (255 * (g - b) / hsv_h + 3) / 6;
                         if (hsv_h < 0)
                         {
-                            hsv_h += 255;
+                            hsv_h += 256;
                         }
                     }
                     else if (max == g)
@@ -896,6 +896,7 @@ void hsvKMeansInPlace(
                         float hsv_h = qRed(rowh[x]);
                         float hsv_s = qGreen(rowh[x]);
                         float hsv_v = qBlue(rowh[x]);
+                        hsv_h = (hsv_h > 212.5f) ? (hsv_h - 256.0f) : hsv_h;
                         mean_h[cluster] += hsv_h;
                         mean_s[cluster] += hsv_s;
                         mean_v[cluster] += hsv_v;
@@ -914,6 +915,7 @@ void hsvKMeansInPlace(
                     mean_h[i] *= mean_lr;
                     mean_s[i] *= mean_lr;
                     mean_v[i] *= mean_lr;
+                    mean_h[i] = (mean_h[i] < 0.0f) ? (mean_h[i] + 256.0f) : mean_h[i];
                 }
                 else
                 {
@@ -1029,9 +1031,9 @@ void hsvKMeansInPlace(
             float hsv_v = mean_v[k];
             r = g = b = (int) (hsv_v + 0.5f);
             int hsv_hi = (int)(hsv_h + 0.5f);
-            int i = (hsv_hi * 6 / 255) % 6;
+            int i = (int) (hsv_h * 6 / 255) % 6;
             int vm = (int) ((255 - hsv_s) * hsv_v + 127)/ 255;
-            int va = (int) ((hsv_v - vm) * (6 * hsv_hi - i * 255) + 127)/ 255;
+            int va = (int) ((hsv_v - vm) * (6 * hsv_h - i * 255) + 127)/ 255;
             int vi = vm + va;
             int vd = hsv_v - va;
             if (hsv_s > 0.0f)
