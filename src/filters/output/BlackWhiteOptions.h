@@ -118,6 +118,15 @@ public:
         m_kmeansBG = val;
     }
 
+    double coloredMaskCoef() const
+    {
+        return m_coloredMaskCoef;
+    }
+    void setColoredMaskCoef(double val)
+    {
+        m_coloredMaskCoef = val;
+    }
+
     bool operator==(BlackWhiteOptions const& other) const;
 
     bool operator!=(BlackWhiteOptions const& other) const;
@@ -131,6 +140,7 @@ private:
     double m_kmeansSat;
     double m_kmeansNorm;
     double m_kmeansBG;
+    double m_coloredMaskCoef;
 
     static ThresholdFilter parseThresholdMethod(QString const& str);
 

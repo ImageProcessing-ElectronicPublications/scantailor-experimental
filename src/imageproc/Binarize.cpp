@@ -129,7 +129,16 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
     size_t im, iw, ib, Tw, Tb;
 
     double const part = 0.5 + (double) delta / 256.0;
-    threshold = (unsigned int) (part * (double) histsize + 0.5);
+    double const partval = part * (double) histsize;
+    if (partval <= 0.0)
+    {
+        return 0;
+    }
+    if (partval >= 256.0)
+    {
+        return 256;
+    }
+    threshold = (unsigned int) (partval + 0.5);
     Tn = 0;
     while ( threshold != Tn )
     {

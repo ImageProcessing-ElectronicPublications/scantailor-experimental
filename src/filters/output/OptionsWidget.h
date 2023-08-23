@@ -99,6 +99,8 @@ private slots:
 
     void dimmingColoredCoefChanged(double value);
 
+    void bwThresholdChanged();
+
     void thresholdWindowSizeChanged(int value);
 
     void thresholdCoefChanged(double value);
@@ -111,7 +113,7 @@ private slots:
 
     void kmeansBGChanged(double value);
 
-    void bwThresholdChanged();
+    void coloredMaskCoefChanged(double value);
 
     void applyColorsModeButtonClicked();
 

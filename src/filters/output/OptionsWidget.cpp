@@ -216,6 +216,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(kmeansBGChanged(double))
     );
     connect(
+        coloredMaskCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(coloredMaskCoefChanged(double))
+    );
+    connect(
         applyColorsModeButton, SIGNAL(clicked()),
         this, SLOT(applyColorsModeButtonClicked())
     );
@@ -622,6 +626,16 @@ OptionsWidget::kmeansBGChanged(double value)
 }
 
 void
+OptionsWidget::coloredMaskCoefChanged(double value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setColoredMaskCoef(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -833,11 +847,17 @@ OptionsWidget::updateColorsDisplay()
         kmeansSat->setValue(black_white_options.kmeansSat());
         kmeansNorm->setValue(black_white_options.kmeansNorm());
         kmeansBG->setValue(black_white_options.kmeansBG());
+        coloredMaskCoef->setValue(black_white_options.coloredMaskCoef());
+        coloredMaskCoef->setEnabled( false );
         if (black_white_options.kmeansCount() > 0)
         {
             kmeansSat->setEnabled( true );
             kmeansNorm->setEnabled( true );
             kmeansBG->setEnabled( true );
+            if (black_white_options.dimmingColoredCoef() > 0.0)
+            {
+                 coloredMaskCoef->setEnabled( true );
+            }
         }
         else
         {

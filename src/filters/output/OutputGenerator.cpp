@@ -442,6 +442,11 @@ OutputGenerator::process(
     {
         maybe_smoothed = transformed_image;
     }
+    BinaryImage coloredMask;
+    if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_white_options.coloredMaskCoef() > 0.0))
+    {
+        coloredMask = binarizeBiModal(coloredSignificance, (0.5 - black_white_options.coloredMaskCoef()) * 256);
+    }
     coloredSignificance = GrayImage(); // save memory
 
     status.throwIfCancelled();
@@ -612,6 +617,10 @@ OutputGenerator::process(
     {
         if (!m_contentRect.isEmpty() && (black_white_options.kmeansCount() > 0))
         {
+            if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_white_options.coloredMaskCoef() > 0.0))
+            {
+                coloredMaskInPlace(transformed_image, bw_content, coloredMask);
+            }
             hsvKMeansInPlace(dst, transformed_image, bw_content,
                              black_white_options.kmeansCount(),
                              black_white_options.kmeansSat(),
