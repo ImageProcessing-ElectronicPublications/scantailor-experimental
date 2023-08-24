@@ -54,7 +54,7 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     {
         m_dimmingColoredCoef = 0.0;
     }
-    if (m_thresholdWindowSize == 0)
+    if (m_thresholdWindowSize <= 0)
     {
         m_thresholdWindowSize = 200;
     }
