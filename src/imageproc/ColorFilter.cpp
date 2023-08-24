@@ -829,36 +829,38 @@ void hsvKMeansInPlace(
                 min = (r > g) ? g : r;
                 min = (min > b) ? b : min;
                 hsv_h = max - min;
-                if (hsv_h > 0)
+                if (hsv_h > 0.0f)
                 {
                     if (max == r)
                     {
-                        hsv_h = (255 * (g - b) / hsv_h + 3) / 6;
-                        if (hsv_h < 0)
+                        hsv_h = (256.0f * (g - b) / hsv_h) / 6.0f;
+                        if (hsv_h < 0.0f)
                         {
-                            hsv_h += 256;
+                            hsv_h += 256.0f;
                         }
                     }
                     else if (max == g)
                     {
-                        hsv_h = (255 * 2 + 255 * (b - r) / hsv_h + 3) / 6;
+                        hsv_h = (256.0f * (2.0f + (float) (b - r) / hsv_h)) / 6.0f;
                     }
                     else
                     {
-                        hsv_h = (255 * 4 + 255 * (r - g) / hsv_h + 3) / 6;
+                        hsv_h = (256.0f * (4.0f + (float) (r - g) / hsv_h)) / 6.0f;
                     }
                 }
                 hsv_s = max - min;
                 if (max > 0)
                 {
-                    hsv_s *= 255;
-                    hsv_s += max / 2;
+                    hsv_s *= 256.0f;
                     hsv_s /= max;
                 }
                 hsv_v = max;
-                r = 127.5f + 0.5f * hsv_s * cos(hsv_h * ctorad);
-                g = 127.5f + 0.5f * hsv_s * sin(hsv_h * ctorad);
-                b = hsv_v;
+                r = (int) (128.0f + 0.5f * hsv_s * cos(hsv_h * ctorad)); // +0.5f for round
+                r = (r < 0) ? 0 : (r < 255) ? r : 255;
+                g = (int) (128.0f + 0.5f * hsv_s * sin(hsv_h * ctorad)); // +0.5f for round
+                g = (g < 0) ? 0 : (g < 255) ? g : 255;
+                b = (int) (0.5f + hsv_v); // +0.5f for round
+                b = (b < 0) ? 0 : (b < 255) ? b : 255;
                 if (!(mask_line[x >> 5] & (msb >> (x & 31))))
                 {
                     mean_h[0] += r;
@@ -883,12 +885,12 @@ void hsvKMeansInPlace(
         uint8_t* clusters_line = clusters.data();
         int const clusters_bpl = clusters.stride();
 
-        float const fk = (ncount > 0) ? (255.0f / (float) ncount) : 0.0f;
+        float const fk = (ncount > 0) ? (256.0f / (float) ncount) : 0.0f;
         for (int i = 1; i <= ncount; i++)
         {
             float const hsv_h = ((float) i - 0.5f) * fk;
-            mean_h0[i] = 127.5f + 127.5f * cos(hsv_h * ctorad);
-            mean_s0[i] = 127.5f + 127.5f * sin(hsv_h * ctorad);
+            mean_h0[i] = 128.0f * (1.0f + cos(hsv_h * ctorad));
+            mean_s0[i] = 128.0f * (1.0f + sin(hsv_h * ctorad));
             mean_h[i] = mean_h0[i];
             mean_s[i] = mean_s0[i];
             mean_v[i] = 255.0f;
@@ -1053,8 +1055,8 @@ void hsvKMeansInPlace(
 
         for (int k = 0; k <= ncount; k++)
         {
-            float const hsv_hsc = (mean_h[k] - 127.5f) * 2.0f;
-            float const hsv_hss = (mean_s[k] - 127.5f) * 2.0f;
+            float const hsv_hsc = (mean_h[k] - 128.0f) * 2.0f;
+            float const hsv_hss = (mean_s[k] - 128.0f) * 2.0f;
             float const hsv_v = mean_v[k];
             float hsv_h = atan2(hsv_hss, hsv_hsc) / ctorad;
             hsv_h = (hsv_h < 0.0f) ? (hsv_h + 256.0f) : hsv_h;
@@ -1091,10 +1093,9 @@ void hsvKMeansInPlace(
             float const hsv_s = mean_s[k];
             float const hsv_v = mean_v[k];
             r = g = b = (int) (hsv_v + 0.5f);
-            int const hsv_hi = (int)(hsv_h + 0.5f);
-            int const i = (int) (hsv_h * 6 / 255) % 6;
-            int const vm = (int) ((255 - hsv_s) * hsv_v + 127)/ 255;
-            int const va = (int) ((hsv_v - vm) * (6 * hsv_h - i * 255) + 127)/ 255;
+            int const i = (int) (hsv_h * 6.0f / 256.0f) % 6;
+            int const vm = (int) ((256.0f - hsv_s) * hsv_v + 127)/ 256;
+            int const va = (int) ((hsv_v - vm) * (6.0f * hsv_h - i * 256.0f) + 127)/ 256;
             int const vi = vm + va;
             int const vd = hsv_v - va;
             if (hsv_s > 0.0f)
@@ -1128,6 +1129,9 @@ void hsvKMeansInPlace(
                     break;
                 }
             }
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
             mean_h[k] = r;
             mean_s[k] = g;
             mean_v[k] = b;
