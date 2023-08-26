@@ -804,11 +804,11 @@ void hsvKMeansInPlace(
         unsigned int const hnum = hsv_bpl / w;
 
         unsigned long mean_len[256] = {0};
-        float mean_h0[256] = {0.0f};
-        float mean_s0[256] = {0.0f};
-        float mean_h[256] = {0.0f};
-        float mean_s[256] = {0.0f};
-        float mean_v[256] = {0.0f};
+        double mean_h0[256] = {0.0};
+        double mean_s0[256] = {0.0};
+        double mean_h[256] = {0.0};
+        double mean_s[256] = {0.0};
+        double mean_v[256] = {0.0};
 
         float ctorad = 2.0f * M_PI / 256.0f;
         uint32_t const msb = uint32_t(1) << 31;
@@ -875,7 +875,7 @@ void hsvKMeansInPlace(
 
         if (mean_len[0] > 0)
         {
-            float mean_bg_part = 1.0f / (float) mean_len[0];
+            double mean_bg_part = 1.0 / (double) mean_len[0];
             mean_h[0] *= mean_bg_part;
             mean_s[0] *= mean_bg_part;
             mean_v[0] *= mean_bg_part;
@@ -889,11 +889,11 @@ void hsvKMeansInPlace(
         for (int i = 1; i <= ncount; i++)
         {
             float const hsv_h = ((float) i - 0.5f) * fk;
-            mean_h0[i] = 128.0f * (1.0f + cos(hsv_h * ctorad));
-            mean_s0[i] = 128.0f * (1.0f + sin(hsv_h * ctorad));
+            mean_h0[i] = 128.0 * (1.0 + cos(hsv_h * ctorad));
+            mean_s0[i] = 128.0 * (1.0 + sin(hsv_h * ctorad));
             mean_h[i] = mean_h0[i];
             mean_s[i] = mean_s0[i];
-            mean_v[i] = 255.0f;
+            mean_v[i] = 255.0;
         }
 
         mask_line = mask.data();
@@ -932,9 +932,9 @@ void hsvKMeansInPlace(
         {
             for (int i = 1; i <= ncount; i++)
             {
-                mean_h[i] = 0.0f;
-                mean_s[i] = 0.0f;
-                mean_v[i] = 0.0f;
+                mean_h[i] = 0.0;
+                mean_s[i] = 0.0;
+                mean_v[i] = 0.0;
                 mean_len[i] = 0;
             }
 
@@ -976,7 +976,7 @@ void hsvKMeansInPlace(
                     float const hsv_hms = mean_s0[i];
                     mean_h[i] = hsv_hmc;
                     mean_s[i] = hsv_hms;
-                    mean_v[i] = 255.0f;
+                    mean_v[i] = 255.0;
 
                     mask_line = mask.data();
                     float dist_min = 196608.0f;
