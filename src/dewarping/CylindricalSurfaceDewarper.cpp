@@ -123,26 +123,18 @@ CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
     QPointF const img_directrix2_pt(
         m_imgDirectrix2Intersector.intersect(img_generatrix, state.m_intersectionHint2)
     );
+    double const pln_straight_line_y = (fabs(m_plnStraightLineY - 0.5) > 0.45) ? 0.5 : m_plnStraightLineY;
     double const img_directrix1_proj(projector.projectionScalar(img_directrix1_pt));
     double const img_directrix2_proj(projector.projectionScalar(img_directrix2_pt));
-    double const img_directrix0_proj = 0.5 * (img_directrix1_proj + img_directrix2_proj);
-    double const img_directrix12f_proj = (1.0 - m_plnStraightLineY) * img_directrix1_proj
-                                       + m_plnStraightLineY * img_directrix2_proj;
+    double const img_directrix12f_proj = (1.0 - pln_straight_line_y) * img_directrix1_proj
+                                       + pln_straight_line_y * img_directrix2_proj;
     QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12f_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
     boost::array<std::pair<double, double>, 3> pairs;
     pairs[0] = std::make_pair(0.0, img_directrix1_proj);
     pairs[1] = std::make_pair(1.0, img_directrix2_proj);
-
-    if (fabs(m_plnStraightLineY - 0.5) > 0.45)
-    {
-        pairs[2] = std::make_pair(0.5, img_directrix0_proj);
-    }
-    else
-    {
-        pairs[2] = std::make_pair(m_plnStraightLineY, img_straight_line_proj);
-    }
+    pairs[2] = std::make_pair(pln_straight_line_y, img_straight_line_proj);
 
     HomographicTransform<1, double> H(threePoint1DHomography(pairs));
 
@@ -174,26 +166,18 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     QPointF const img_directrix2_pt(
         m_imgDirectrix2Intersector.intersect(img_generatrix, state.m_intersectionHint2)
     );
+    double const pln_straight_line_y = (fabs(m_plnStraightLineY - 0.5) > 0.45) ? 0.5 : m_plnStraightLineY;
     double const img_directrix1_proj(projector.projectionScalar(img_directrix1_pt));
     double const img_directrix2_proj(projector.projectionScalar(img_directrix2_pt));
-    double const img_directrix0_proj = 0.5 * (img_directrix1_proj + img_directrix2_proj);
-    double const img_directrix12f_proj = (1.0 - m_plnStraightLineY) * img_directrix1_proj
-                                       + m_plnStraightLineY * img_directrix2_proj;
+    double const img_directrix12f_proj = (1.0 - pln_straight_line_y) * img_directrix1_proj
+                                       + pln_straight_line_y * img_directrix2_proj;
     QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12f_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
     boost::array<std::pair<double, double>, 3> pairs;
     pairs[0] = std::make_pair(img_directrix1_proj, 0.0);
     pairs[1] = std::make_pair(img_directrix2_proj, 1.0);
-
-    if (fabs(m_plnStraightLineY - 0.5) > 0.45)
-    {
-        pairs[2] = std::make_pair(img_directrix0_proj, 0.5);
-    }
-    else
-    {
-        pairs[2] = std::make_pair(img_straight_line_proj, m_plnStraightLineY);
-    }
+    pairs[2] = std::make_pair(img_straight_line_proj, pln_straight_line_y);
 
     HomographicTransform<1, double> const H(threePoint1DHomography(pairs));
 
