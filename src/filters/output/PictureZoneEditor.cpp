@@ -287,12 +287,12 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
 
     typedef PictureLayerProperty PLP;
 
-    // Pass 1: ZONEERASER1
+    // Pass 1: ZONEERASER
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
     BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones)
     {
-        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEERASER1)
+        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEERASER)
         {
             painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
         }
@@ -320,23 +320,34 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
         }
     }
 
-    // Pass 4: ZONEPAINTER2
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    // Pass 4: ZONEMASK
+    painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
     BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
     {
-        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEPAINTER2)
+        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEMASK)
         {
             painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
         }
     }
 
-    // Pass 5: ZONEERASER1
+    // Pass 5: ZONEPAINTER
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+
+    BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
+    {
+        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEPAINTER)
+        {
+            painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
+        }
+    }
+
+    // Pass 6: ZONECLEAN
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
     BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
     {
-        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEERASER3)
+        if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONECLEAN)
         {
             painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
         }

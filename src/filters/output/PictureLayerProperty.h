@@ -33,7 +33,7 @@ namespace output
 class PictureLayerProperty : public Property
 {
 public:
-    enum Layer { ZONENOOP, ZONEERASER1, ZONEPAINTER2, ZONEERASER3, ZONEFG, ZONEBG };
+    enum Layer { ZONENOOP, ZONEERASER, ZONEPAINTER, ZONECLEAN, ZONEFG, ZONEBG, ZONEMASK };
 
     PictureLayerProperty(Layer layer = ZONENOOP) : m_layer(layer) {}
 

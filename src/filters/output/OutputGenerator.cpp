@@ -828,10 +828,10 @@ OutputGenerator::modifyBinarizationMask(
     typedef PictureLayerProperty PLP;
     imageproc::BinaryImage bw_content_bg(bw_content);
 
-    // Pass 1: ZONEERASER1
+    // Pass 1: ZONEERASER
     for (Zone const& zone : zones)
     {
-        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEERASER1)
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEERASER)
         {
             QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
             PolygonRasterizer::fill(bw_mask, BLACK, poly, Qt::WindingFill);
@@ -863,20 +863,31 @@ OutputGenerator::modifyBinarizationMask(
     }
     BinaryImageXOR(bw_mask, bw_content_bg, BLACK);
 
-    // Pass 4: ZONEPAINTER2
+    // Pass 4: ZONEMASK
     for (Zone const& zone : zones)
     {
-        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEPAINTER2)
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEMASK)
+        {
+            QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
+            PolygonRasterizer::fill(bw_mask, BLACK, poly, Qt::WindingFill);
+            PolygonRasterizer::fill(bw_content, BLACK, poly, Qt::WindingFill);
+        }
+    }
+
+    // Pass 5: ZONEPAINTER
+    for (Zone const& zone : zones)
+    {
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEPAINTER)
         {
             QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
             PolygonRasterizer::fill(bw_mask, WHITE, poly, Qt::WindingFill);
         }
     }
 
-    // Pass 5: ZONEERASER3
+    // Pass 6: ZONECLEAN
     for (Zone const& zone : zones)
     {
-        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONEERASER3)
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONECLEAN)
         {
             QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
             PolygonRasterizer::fill(bw_mask, BLACK, poly, Qt::WindingFill);

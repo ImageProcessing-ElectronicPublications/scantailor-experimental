@@ -62,17 +62,17 @@ PictureLayerProperty::construct(QDomElement const& el)
 PictureLayerProperty::Layer
 PictureLayerProperty::layerFromString(QString const& str)
 {
-    if (str == "eraser1")
+    if (str == "eraser")
     {
-        return ZONEERASER1;
+        return ZONEERASER;
     }
-    else if (str == "painter2")
+    else if (str == "painter")
     {
-        return ZONEPAINTER2;
+        return ZONEPAINTER;
     }
-    else if (str == "eraser3")
+    else if (str == "clean")
     {
-        return ZONEERASER3;
+        return ZONECLEAN;
     }
     else if (str == "foreground")
     {
@@ -81,6 +81,10 @@ PictureLayerProperty::layerFromString(QString const& str)
     else if (str == "background")
     {
         return ZONEBG;
+    }
+    else if (str == "mask")
+    {
+        return ZONEMASK;
     }
     else
     {
@@ -95,20 +99,23 @@ PictureLayerProperty::layerToString(Layer layer)
 
     switch (layer)
     {
-    case ZONEERASER1:
-        str = "eraser1";
+    case ZONEERASER:
+        str = "eraser";
         break;
-    case ZONEPAINTER2:
-        str = "painter2";
+    case ZONEPAINTER:
+        str = "painter";
         break;
-    case ZONEERASER3:
-        str = "eraser3";
+    case ZONECLEAN:
+        str = "clean";
         break;
     case ZONEFG:
         str = "foreground";
         break;
     case ZONEBG:
         str = "background";
+        break;
+    case ZONEMASK:
+        str = "mask";
         break;
     default:
         str = "";

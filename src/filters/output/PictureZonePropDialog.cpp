@@ -34,14 +34,14 @@ PictureZonePropDialog::PictureZonePropDialog(
     {
     case PictureLayerProperty::ZONENOOP:
         break;
-    case PictureLayerProperty::ZONEERASER1:
-        ui.zoneeraser1->setChecked(true);
+    case PictureLayerProperty::ZONEERASER:
+        ui.zoneeraser->setChecked(true);
         break;
-    case PictureLayerProperty::ZONEPAINTER2:
-        ui.zonepainter2->setChecked(true);
+    case PictureLayerProperty::ZONEPAINTER:
+        ui.zonepainter->setChecked(true);
         break;
-    case PictureLayerProperty::ZONEERASER3:
-        ui.zoneeraser3->setChecked(true);
+    case PictureLayerProperty::ZONECLEAN:
+        ui.zoneclean->setChecked(true);
         break;
     case PictureLayerProperty::ZONEFG:
         ui.zonefg->setChecked(true);
@@ -49,13 +49,17 @@ PictureZonePropDialog::PictureZonePropDialog(
     case PictureLayerProperty::ZONEBG:
         ui.zonebg->setChecked(true);
         break;
+    case PictureLayerProperty::ZONEMASK:
+        ui.zonemask->setChecked(true);
+        break;
     }
 
-    connect(ui.zoneeraser1, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
-    connect(ui.zonepainter2, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
-    connect(ui.zoneeraser3, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
+    connect(ui.zoneeraser, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
+    connect(ui.zonepainter, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
+    connect(ui.zoneclean, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
     connect(ui.zonefg, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
     connect(ui.zonebg, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
+    connect(ui.zonemask, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
 }
 
 void
@@ -64,17 +68,17 @@ PictureZonePropDialog::itemToggled(bool selected)
     PictureLayerProperty::Layer layer = PictureLayerProperty::ZONENOOP;
 
     QObject* const obj = sender();
-    if (obj == ui.zoneeraser1)
+    if (obj == ui.zoneeraser)
     {
-        layer = PictureLayerProperty::ZONEERASER1;
+        layer = PictureLayerProperty::ZONEERASER;
     }
-    else if (obj == ui.zonepainter2)
+    else if (obj == ui.zonepainter)
     {
-        layer = PictureLayerProperty::ZONEPAINTER2;
+        layer = PictureLayerProperty::ZONEPAINTER;
     }
-    else if (obj == ui.zoneeraser3)
+    else if (obj == ui.zoneclean)
     {
-        layer = PictureLayerProperty::ZONEERASER3;
+        layer = PictureLayerProperty::ZONECLEAN;
     }
     else if (obj == ui.zonefg)
     {
@@ -83,6 +87,10 @@ PictureZonePropDialog::itemToggled(bool selected)
     else if (obj == ui.zonebg)
     {
         layer = PictureLayerProperty::ZONEBG;
+    }
+    else if (obj == ui.zonemask)
+    {
+        layer = PictureLayerProperty::ZONEMASK;
     }
 
     m_ptrProps->locateOrCreate<PictureLayerProperty>()->setLayer(layer);

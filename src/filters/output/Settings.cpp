@@ -343,7 +343,7 @@ PropertySet
 Settings::initialPictureZoneProps()
 {
     PropertySet props;
-    props.locateOrCreate<PictureLayerProperty>()->setLayer(PictureLayerProperty::ZONEPAINTER2);
+    props.locateOrCreate<PictureLayerProperty>()->setLayer(PictureLayerProperty::ZONEPAINTER);
     return props;
 }
 
