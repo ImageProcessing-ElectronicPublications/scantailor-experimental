@@ -856,7 +856,7 @@ OptionsWidget::updateColorsDisplay()
             kmeansBG->setEnabled( true );
             if (black_white_options.dimmingColoredCoef() > 0.0)
             {
-                 coloredMaskCoef->setEnabled( true );
+                coloredMaskCoef->setEnabled( true );
             }
         }
         else

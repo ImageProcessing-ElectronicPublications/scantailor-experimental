@@ -491,11 +491,7 @@ OutputGenerator::process(
             maybeDespeckleInPlace(bw_content, m_despeckleFactor, out_speckles_image, status, dbg);
         }
 
-        if (render_params.binaryOutput() || m_outRect.isEmpty())
-        {
-            applyFillZonesInPlace(bw_content, fill_zones);
-        }
-        else
+        if (render_params.mixedOutput() && !m_outRect.isEmpty())
         {
             // This block should go before the block with
             // adjustBrightnessGrayscale(), which may convert
@@ -539,6 +535,7 @@ OutputGenerator::process(
                 dbg->add(bw_mask, "bw_mask with zones");
             }
         }
+        applyFillZonesInPlace(bw_content, fill_zones);
     }
 
     QImage dst;
@@ -548,6 +545,7 @@ OutputGenerator::process(
     }
     else
     {
+        applyFillZonesInPlace(transformed_image, fill_zones);
         dst = QImage(transformed_image);
 
         if (render_params.mixedOutput())
@@ -609,7 +607,7 @@ OutputGenerator::process(
             }
             dst = QImage(margin);
         }
-        applyFillZonesInPlace(dst, fill_zones);
+//        applyFillZonesInPlace(dst, fill_zones);
     }
 
     // KMeans based HSV
