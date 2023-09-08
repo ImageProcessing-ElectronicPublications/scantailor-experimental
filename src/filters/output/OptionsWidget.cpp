@@ -108,6 +108,20 @@ OptionsWidget::OptionsWidget(
     }
     );
     connect(
+        scale3xBtn, &QAbstractButton::toggled,
+        [this](bool checked)
+    {
+        if (checked) scaleChanged(3.0);
+    }
+    );
+    connect(
+        scale4xBtn, &QAbstractButton::toggled,
+        [this](bool checked)
+    {
+        if (checked) scaleChanged(4.0);
+    }
+    );
+    connect(
         wienerCoef, SIGNAL(valueChanged(double)),
         this, SLOT(wienerCoefChanged(double))
     );
@@ -917,9 +931,17 @@ OptionsWidget::updateScaleDisplay()
     {
         scale15xBtn->setChecked(true);
     }
-    else
+    else if (scale < 2.5)
     {
         scale2xBtn->setChecked(true);
+    }
+    else if (scale < 3.5)
+    {
+        scale3xBtn->setChecked(true);
+    }
+    else
+    {
+        scale4xBtn->setChecked(true);
     }
 
     if (m_thisPageOutputSize)

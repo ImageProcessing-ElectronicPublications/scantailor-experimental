@@ -56,31 +56,31 @@ ImageView::ImageView(
     ImagePixmapUnion const& downscaled_image,
     ContentBox const& content_box,
     OptionsWidget const& opt_widget)
-    :	ImageViewBase(
-          accel_ops, affine_transformed_image.origImage(), downscaled_image,
-          ImagePresentation(
-              affine_transformed_image.xform().transform(),
-              affine_transformed_image.xform().transformedCropArea()
-          ),
-          QMarginsF(5.0, 5.0, 5.0, 5.0)
-      ),
-      m_dragHandler(*this),
-      m_zoomHandler(*this),
-      m_ptrSettings(settings),
-      m_pageId(page_id),
-      m_unscaledAffineTransform(affine_transformed_image.xform()),
-      m_unscaledContentRect(content_box.toTransformedRect(*orig_transform)),
-      m_affineImageContentTopLeft(
-          m_unscaledAffineTransform.transform().inverted().map(
-              m_unscaledContentRect.topLeft()
-          )
-      ),
-      m_aggregateHardSize(settings->getAggregateHardSize()),
-      m_committedAggregateHardSize(m_aggregateHardSize),
-      m_matchSizeMode(opt_widget.matchSizeMode()),
-      m_alignment(opt_widget.alignment()),
-      m_leftRightLinked(opt_widget.leftRightLinked()),
-      m_topBottomLinked(opt_widget.topBottomLinked())
+    :   ImageViewBase(
+            accel_ops, affine_transformed_image.origImage(), downscaled_image,
+            ImagePresentation(
+                affine_transformed_image.xform().transform(),
+                affine_transformed_image.xform().transformedCropArea()
+            ),
+            QMarginsF(5.0, 5.0, 5.0, 5.0)
+        ),
+        m_dragHandler(*this),
+        m_zoomHandler(*this),
+        m_ptrSettings(settings),
+        m_pageId(page_id),
+        m_unscaledAffineTransform(affine_transformed_image.xform()),
+        m_unscaledContentRect(content_box.toTransformedRect(*orig_transform)),
+        m_affineImageContentTopLeft(
+            m_unscaledAffineTransform.transform().inverted().map(
+                m_unscaledContentRect.topLeft()
+            )
+        ),
+        m_aggregateHardSize(settings->getAggregateHardSize()),
+        m_committedAggregateHardSize(m_aggregateHardSize),
+        m_matchSizeMode(opt_widget.matchSizeMode()),
+        m_alignment(opt_widget.alignment()),
+        m_leftRightLinked(opt_widget.leftRightLinked()),
+        m_topBottomLinked(opt_widget.topBottomLinked())
 {
     setMouseTracking(true);
 
@@ -312,8 +312,13 @@ ImageView::aggregateHardSizeChanged()
 void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
+    QRectF centerRectV = QRectF((m_outerRect.right() + m_outerRect.left()) * 0.5 - 1, m_outerRect.top(), 3, (m_outerRect.bottom() - m_outerRect.top()));
+    QRectF centerRectH = QRectF(m_outerRect.left(), (m_outerRect.bottom() + m_outerRect.top()) * 0.5 - 1, (m_outerRect.right() - m_outerRect.left()), 3);
+
     QPainterPath outer_outline;
     outer_outline.addPolygon(m_outerRect);
+    outer_outline.addPolygon(centerRectV);
+    outer_outline.addPolygon(centerRectH);
 
     QPainterPath content_outline;
     content_outline.addPolygon(m_innerRect);
@@ -693,7 +698,7 @@ ImageView::calcHardMargins() const
 {
     qreal pagewidth = m_innerRect.width();
     qreal pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
-    pagewidth = (pagewidth <  pagewidthheight) ?  pagewidthheight :  pagewidth; 
+    pagewidth = (pagewidth < pagewidthheight) ? pagewidthheight : pagewidth;
     qreal const scale = 1.0 / pagewidth;
     return RelativeMargins(
                (m_innerRect.left() - m_middleRect.left()) * scale,

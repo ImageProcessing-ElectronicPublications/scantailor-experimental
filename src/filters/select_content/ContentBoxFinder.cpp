@@ -149,7 +149,8 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     downscaled_transform.translateSoThatPointBecomes(downscaled_rect.topLeft(), QPointF(0, 0));
 
-    BinaryImage bw150(binarizeWolf(GrayImage(gray150), QSize(51, 51), 50));
+    // BinaryImage bw150(binarizeWolf(GrayImage(gray150), QSize(51, 51), 50));
+    BinaryImage bw150(binarizeEdgeDiv(GrayImage(gray150), QSize(51, 51), 0.0, 0.75, 0));
     if (dbg)
     {
         dbg->add(bw150, "bw150");
@@ -233,13 +234,13 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
     status.throwIfCancelled();
 
     CommandLine const& cli = CommandLine::get();
-/*
-    Despeckle::Level despeckle_level = Despeckle::NORMAL;
-    if (cli.hasContentRect())
-    {
-        despeckle_level = cli.getContentDetection();
-    }
-*/
+    /*
+        Despeckle::Level despeckle_level = Despeckle::NORMAL;
+        if (cli.hasContentRect())
+        {
+            despeckle_level = cli.getContentDetection();
+        }
+    */
     double despeckle_factor = output::despeckleLevelToFactor(output::DESPECKLE_NORMAL);
     BinaryImage despeckled(Despeckle::despeckle(content, despeckle_factor, status, dbg));
     if (dbg)

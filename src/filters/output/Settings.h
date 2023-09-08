@@ -104,12 +104,12 @@ public:
 
     static double maxScalingFactor()
     {
-        return 2.0;
+        return 4.0;
     }
 
     static double defaultScalingFactor()
     {
-        return 2.0;
+        return 1.0;
     }
 
     double scalingFactor() const
