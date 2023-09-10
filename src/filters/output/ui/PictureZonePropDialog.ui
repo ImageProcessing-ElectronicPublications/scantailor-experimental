@@ -57,6 +57,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QRadioButton" name="zonenokmeans">
+     <property name="text">
+      <string>Subtract from k-means</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

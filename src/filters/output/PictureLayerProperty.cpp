@@ -86,6 +86,10 @@ PictureLayerProperty::layerFromString(QString const& str)
     {
         return ZONEMASK;
     }
+    else if (str == "nokmeans")
+    {
+        return ZONENOKMEANS;
+    }
     else
     {
         return ZONENOOP;
@@ -116,6 +120,9 @@ PictureLayerProperty::layerToString(Layer layer)
         break;
     case ZONEMASK:
         str = "mask";
+        break;
+    case ZONENOKMEANS:
+        str = "nokmeans";
         break;
     default:
         str = "";

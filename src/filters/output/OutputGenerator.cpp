@@ -442,10 +442,14 @@ OutputGenerator::process(
     {
         maybe_smoothed = transformed_image;
     }
-    BinaryImage coloredMask;
+    BinaryImage colored_mask;
     if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_white_options.coloredMaskCoef() > 0.0))
     {
-        coloredMask = binarizeBiModal(coloredSignificance, (0.5 - black_white_options.coloredMaskCoef()) * 256);
+        colored_mask = binarizeBiModal(coloredSignificance, (0.5 - black_white_options.coloredMaskCoef()) * 256);
+    }
+    else
+    {
+        colored_mask = BinaryImage(transformed_image.size(), BLACK);
     }
     coloredSignificance = GrayImage(); // save memory
 
@@ -491,36 +495,41 @@ OutputGenerator::process(
             maybeDespeckleInPlace(bw_content, m_despeckleFactor, out_speckles_image, status, dbg);
         }
 
-        if (render_params.mixedOutput() && !m_outRect.isEmpty())
+        if (!m_outRect.isEmpty())
         {
-            // This block should go before the block with
-            // adjustBrightnessGrayscale(), which may convert
-            // transformed_image from grayscale to color mode.
-
-            bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg);
-            if (dbg)
+            if (render_params.mixedOutput())
             {
-                dbg->add(bw_mask, "bw_mask");
-            }
+                // This block should go before the block with
+                // adjustBrightnessGrayscale(), which may convert
+                // transformed_image from grayscale to color mode.
 
-            if (out_auto_picture_mask)
-            {
-                if (out_auto_picture_mask->size() != m_outRect.size())
+                bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg);
+
+                if (dbg)
                 {
-                    BinaryImage(m_outRect.size()).swap(*out_auto_picture_mask);
+                    dbg->add(bw_mask, "bw_mask");
                 }
-                out_auto_picture_mask->fill(BLACK);
 
-                if (!m_contentRect.isEmpty())
+                if (out_auto_picture_mask)
                 {
-                    rasterOp<RopSrc>(
-                        *out_auto_picture_mask, m_contentRect,
-                        bw_mask, m_contentRect.topLeft()
-                    );
+                    if (out_auto_picture_mask->size() != m_outRect.size())
+                    {
+                        BinaryImage(m_outRect.size()).swap(*out_auto_picture_mask);
+                    }
+                    out_auto_picture_mask->fill(BLACK);
+
+                    if (!m_contentRect.isEmpty())
+                    {
+                        rasterOp<RopSrc>(
+                            *out_auto_picture_mask, m_contentRect,
+                            bw_mask, m_contentRect.topLeft()
+                        );
+                    }
                 }
             }
 
             status.throwIfCancelled();
+
             std::function<QPointF(QPointF const&)> forward_mapper(m_ptrImageTransform->forwardMapper());
             QPointF const origin(m_outRect.topLeft());
             auto orig_to_output = [forward_mapper, origin](QPointF const& pt)
@@ -528,11 +537,20 @@ OutputGenerator::process(
                 return forward_mapper(pt) - origin;
             };
 
-            modifyBinarizationMask(bw_mask, bw_content, picture_zones, orig_to_output);
+            if (render_params.mixedOutput())
+            {
+                modifyBinarizationMask(bw_mask, bw_content, picture_zones, orig_to_output);
+
+                if (dbg)
+                {
+                    dbg->add(bw_mask, "bw_mask with zones");
+                }
+            }
+            modifyColoredMask(colored_mask, picture_zones, orig_to_output);
 
             if (dbg)
             {
-                dbg->add(bw_mask, "bw_mask with zones");
+                dbg->add(bw_mask, "colored_mask with zones");
             }
         }
         applyFillZonesInPlace(bw_content, fill_zones);
@@ -567,6 +585,7 @@ OutputGenerator::process(
 
                 combineMixed<uint32_t>(dst, bw_content, bw_mask);
             }
+            bw_mask.release(); // Save memory.
         }
         else
         {
@@ -615,10 +634,7 @@ OutputGenerator::process(
     {
         if (!m_contentRect.isEmpty() && (black_white_options.kmeansCount() > 0))
         {
-            if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_white_options.coloredMaskCoef() > 0.0))
-            {
-                coloredMaskInPlace(transformed_image, bw_content, coloredMask);
-            }
+            coloredMaskInPlace(transformed_image, bw_content, colored_mask);
             hsvKMeansInPlace(dst, transformed_image, bw_content,
                              black_white_options.kmeansCount(),
                              black_white_options.kmeansSat(),
@@ -627,6 +643,7 @@ OutputGenerator::process(
         }
     }
     bw_content.release(); // Save memory.
+    colored_mask.release(); // Save memory.
     transformed_image = QImage(); // Save memory.
 
     return dst;
@@ -892,6 +909,24 @@ OutputGenerator::modifyBinarizationMask(
         }
     }
     BinaryImageXOR(bw_content, bw_mask, WHITE);
+}
+
+void
+OutputGenerator::modifyColoredMask(
+    imageproc::BinaryImage& colored_mask, ZoneSet const& zones,
+    std::function<QPointF(QPointF const&)> const& orig_to_output) const
+{
+    typedef PictureLayerProperty PLP;
+
+    // Pass 1: ZONENOKMEANS
+    for (Zone const& zone : zones)
+    {
+        if (zone.properties().locateOrDefault<PLP>()->layer() == PLP::ZONENOKMEANS)
+        {
+            QPolygonF const poly(zone.spline().transformed(orig_to_output).toPolygon());
+            PolygonRasterizer::fill(colored_mask, WHITE, poly, Qt::WindingFill);
+        }
+    }
 }
 
 QImage

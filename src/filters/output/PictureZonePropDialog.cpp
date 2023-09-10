@@ -52,6 +52,9 @@ PictureZonePropDialog::PictureZonePropDialog(
     case PictureLayerProperty::ZONEMASK:
         ui.zonemask->setChecked(true);
         break;
+    case PictureLayerProperty::ZONENOKMEANS:
+        ui.zonenokmeans->setChecked(true);
+        break;
     }
 
     connect(ui.zoneeraser, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
@@ -60,6 +63,7 @@ PictureZonePropDialog::PictureZonePropDialog(
     connect(ui.zonefg, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
     connect(ui.zonebg, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
     connect(ui.zonemask, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
+    connect(ui.zonenokmeans, SIGNAL(toggled(bool)), SLOT(itemToggled(bool)));
 }
 
 void
@@ -91,6 +95,10 @@ PictureZonePropDialog::itemToggled(bool selected)
     else if (obj == ui.zonemask)
     {
         layer = PictureLayerProperty::ZONEMASK;
+    }
+    else if (obj == ui.zonenokmeans)
+    {
+        layer = PictureLayerProperty::ZONENOKMEANS;
     }
 
     m_ptrProps->locateOrCreate<PictureLayerProperty>()->setLayer(layer);

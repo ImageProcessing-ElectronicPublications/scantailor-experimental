@@ -116,21 +116,21 @@ PictureZoneEditor::PictureZoneEditor(
     PageId const& page_id, IntrusivePtr<Settings> const& settings,
     std::function<QPointF(QPointF const&)> const& orig_to_output,
     std::function<QPointF(QPointF const&)> const& output_to_orig)
-    :	ImageViewBase(
-          accel_ops, transformed_orig_image, downscaled_transformed_orig_image,
-          ImagePresentation(QTransform(), QRectF(transformed_orig_image.rect())),
-          OutputMargins()
-      ),
-      m_ptrAccelOps(accel_ops),
-      m_context(*this, m_zones),
-      m_dragHandler(*this),
-      m_zoomHandler(*this),
-      m_outputPictureMask(output_picture_mask),
-      m_pictureMaskAnimationPhase(270),
-      m_pageId(page_id),
-      m_ptrSettings(settings),
-      m_origToOutput(orig_to_output),
-      m_outputToOrig(output_to_orig)
+    :   ImageViewBase(
+            accel_ops, transformed_orig_image, downscaled_transformed_orig_image,
+            ImagePresentation(QTransform(), QRectF(transformed_orig_image.rect())),
+            OutputMargins()
+        ),
+        m_ptrAccelOps(accel_ops),
+        m_context(*this, m_zones),
+        m_dragHandler(*this),
+        m_zoomHandler(*this),
+        m_outputPictureMask(output_picture_mask),
+        m_pictureMaskAnimationPhase(270),
+        m_pageId(page_id),
+        m_ptrSettings(settings),
+        m_origToOutput(orig_to_output),
+        m_outputToOrig(output_to_orig)
 {
     m_zones.setDefaultProperties(m_ptrSettings->defaultPictureZoneProperties());
 
@@ -352,6 +352,10 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
             painter.drawPolygon(zone.spline()->toPolygon(), Qt::WindingFill);
         }
     }
+
+    /*
+        // Pass 7: ZONENOKMEANS
+    */
 }
 
 void
@@ -412,11 +416,11 @@ PictureZoneEditor::MaskTransformTask::MaskTransformTask(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     BinaryImage const& mask, QTransform const& xform,
     QSize const& target_size)
-    :	m_ptrAccelOps(accel_ops),
-      m_ptrResult(new Result(zone_editor)),
-      m_origMask(mask),
-      m_xform(xform),
-      m_targetSize(target_size)
+    :   m_ptrAccelOps(accel_ops),
+        m_ptrResult(new Result(zone_editor)),
+        m_origMask(mask),
+        m_xform(xform),
+        m_targetSize(target_size)
 {
 }
 
@@ -457,7 +461,7 @@ PictureZoneEditor::MaskTransformTask::operator()()
 
 PictureZoneEditor::MaskTransformTask::Result::Result(
     PictureZoneEditor* zone_editor)
-    :	m_ptrZoneEditor(zone_editor)
+    :   m_ptrZoneEditor(zone_editor)
 {
 }
 

@@ -152,6 +152,10 @@ private:
         imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, ZoneSet const& zones,
         std::function<QPointF(QPointF const&)> const& orig_to_output) const;
 
+    void modifyColoredMask(
+        imageproc::BinaryImage& coloredMask, ZoneSet const& zones,
+        std::function<QPointF(QPointF const&)> const& orig_to_output) const;
+
     imageproc::BinaryThreshold adjustThreshold(
         imageproc::BinaryThreshold threshold) const;
 
