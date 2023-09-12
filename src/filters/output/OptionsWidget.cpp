@@ -218,6 +218,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(kmeansCountChanged(int))
     );
     connect(
+        kmeansMorphology, SIGNAL(valueChanged(int)),
+        this, SLOT(kmeansMorphologyChanged(int))
+    );
+    connect(
         kmeansSat, SIGNAL(valueChanged(double)),
         this, SLOT(kmeansSatChanged(double))
     );
@@ -610,6 +614,16 @@ OptionsWidget::kmeansCountChanged(int value)
 }
 
 void
+OptionsWidget::kmeansMorphologyChanged(int value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setKmeansMorphology(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::kmeansSatChanged(double value)
 {
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
@@ -858,6 +872,7 @@ OptionsWidget::updateColorsDisplay()
             thresholdCoef->setEnabled( true );
         }
         kmeansCount->setValue(black_white_options.kmeansCount());
+        kmeansMorphology->setValue(black_white_options.kmeansMorphology());
         kmeansSat->setValue(black_white_options.kmeansSat());
         kmeansNorm->setValue(black_white_options.kmeansNorm());
         kmeansBG->setValue(black_white_options.kmeansBG());
@@ -865,6 +880,7 @@ OptionsWidget::updateColorsDisplay()
         coloredMaskCoef->setEnabled( false );
         if (black_white_options.kmeansCount() > 0)
         {
+            kmeansMorphology->setEnabled( true );
             kmeansSat->setEnabled( true );
             kmeansNorm->setEnabled( true );
             kmeansBG->setEnabled( true );
@@ -875,6 +891,7 @@ OptionsWidget::updateColorsDisplay()
         }
         else
         {
+            kmeansMorphology->setEnabled( false );
             kmeansSat->setEnabled( false );
             kmeansNorm->setEnabled( false );
             kmeansBG->setEnabled( false );

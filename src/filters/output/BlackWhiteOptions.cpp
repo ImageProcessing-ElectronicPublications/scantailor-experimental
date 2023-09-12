@@ -31,6 +31,7 @@ BlackWhiteOptions::BlackWhiteOptions()
         m_thresholdWindowSize(200),
         m_thresholdCoef(0.3),
         m_kmeansCount(0),
+        m_kmeansMorphology(0),
         m_kmeansSat(0.0),
         m_kmeansNorm(0.0),
         m_kmeansBG(0.0),
@@ -45,6 +46,7 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
         m_thresholdWindowSize(el.attribute("thresholdWinSize").toInt()),
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
         m_kmeansCount(el.attribute("kmeans").toInt()),
+        m_kmeansMorphology(el.attribute("kmeansMorphology").toInt()),
         m_kmeansSat(el.attribute("kmeansSat").toDouble()),
         m_kmeansNorm(el.attribute("kmeansNorm").toDouble()),
         m_kmeansBG(el.attribute("kmeansBG").toDouble()),
@@ -94,6 +96,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("thresholdWinSize", m_thresholdWindowSize);
     el.setAttribute("thresholdCoef", m_thresholdCoef);
     el.setAttribute("kmeans", m_kmeansCount);
+    el.setAttribute("kmeansMorphology", m_kmeansMorphology);
     el.setAttribute("kmeansSat", m_kmeansSat);
     el.setAttribute("kmeansNorm", m_kmeansNorm);
     el.setAttribute("kmeansBG", m_kmeansBG);
@@ -125,6 +128,10 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_kmeansCount != other.m_kmeansCount)
+    {
+        return false;
+    }
+    if (m_kmeansMorphology != other.m_kmeansMorphology)
     {
         return false;
     }

@@ -91,6 +91,15 @@ public:
         m_kmeansCount = val;
     }
 
+    int kmeansMorphology() const
+    {
+        return m_kmeansMorphology;
+    }
+    void setKmeansMorphology(int val)
+    {
+        m_kmeansMorphology = val;
+    }
+
     double kmeansSat() const
     {
         return m_kmeansSat;
@@ -137,6 +146,7 @@ private:
     int m_thresholdWindowSize;
     double m_thresholdCoef;
     int m_kmeansCount;
+    int m_kmeansMorphology;
     double m_kmeansSat;
     double m_kmeansNorm;
     double m_kmeansBG;

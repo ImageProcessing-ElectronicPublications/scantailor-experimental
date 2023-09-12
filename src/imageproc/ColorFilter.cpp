@@ -1181,4 +1181,201 @@ void hsvKMeansInPlace(
     }
 }
 
+void maskMorphologicalErode(
+    QImage& image, BinaryImage const& mask, int const radius)
+{
+    if (image.isNull() || mask.isNull())
+    {
+        return;
+    }
+
+    int const w = image.width();
+    int const h = image.height();
+
+    int const wm = mask.width();
+    int const hm = mask.height();
+
+    if ((w != wm) || (h != hm))
+    {
+        return;
+    }
+
+    if (radius > 0)
+    {
+        GrayImage gray = GrayImage(image);
+        uint8_t* gray_line = gray.data();
+        int const gray_bpl = gray.stride();
+
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
+        uint32_t const* mask_line = mask.data();
+        int const mask_wpl = mask.wordsPerLine();
+        uint32_t const msb = uint32_t(1) << 31;
+
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                if (mask_line[x >> 5] & (msb >> (x & 31)))
+                {
+                    int origin = gray_line[x];
+                    for (int yf = (y - radius); yf <= (y + radius); yf++)
+                    {
+                        if ((yf >= 0) && (yf < h))
+                        {
+                            uint32_t const* mask_line_f = mask.data();
+                            mask_line_f += (mask_wpl * yf);
+                            uint8_t* gray_line_f = gray.data();
+                            gray_line_f += (gray_bpl * yf);
+                            uint8_t* image_line_f = (uint8_t*) image.bits();
+                            image_line_f += (image_bpl * yf);
+                            for (int xf = (x - radius); xf <= (x + radius); xf++)
+                            {
+                                if ((xf >= 0) && (xf < w))
+                                {
+                                    int const refer = gray_line_f[xf];
+                                    if (mask_line_f[xf >> 5] & (msb >> (xf & 31)))
+                                    {
+                                        if (origin > refer)
+                                        {
+                                            for (unsigned int c = 0; c < cnum; c++)
+                                            {
+                                                image_line[x * cnum + c] = image_line_f[xf * cnum + c];
+                                            }
+                                            origin = refer;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            image_line += image_bpl;
+            gray_line += gray_bpl;
+            mask_line += mask_wpl;
+        }
+    }
+}
+
+void maskMorphologicalDilate(
+    QImage& image, BinaryImage const& mask, int const radius)
+{
+    if (image.isNull() || mask.isNull())
+    {
+        return;
+    }
+
+    int const w = image.width();
+    int const h = image.height();
+
+    int const wm = mask.width();
+    int const hm = mask.height();
+
+    if ((w != wm) || (h != hm))
+    {
+        return;
+    }
+
+    if (radius > 0)
+    {
+        GrayImage gray = GrayImage(image);
+        uint8_t* gray_line = gray.data();
+        int const gray_bpl = gray.stride();
+
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
+        uint32_t const* mask_line = mask.data();
+        int const mask_wpl = mask.wordsPerLine();
+        uint32_t const msb = uint32_t(1) << 31;
+
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                if (mask_line[x >> 5] & (msb >> (x & 31)))
+                {
+                    int origin = gray_line[x];
+                    for (int yf = (y - radius); yf <= (y + radius); yf++)
+                    {
+                        if ((yf >= 0) && (yf < h))
+                        {
+                            uint32_t const* mask_line_f = mask.data();
+                            mask_line_f += (mask_wpl * yf);
+                            uint8_t* gray_line_f = gray.data();
+                            gray_line_f += (gray_bpl * yf);
+                            uint8_t* image_line_f = (uint8_t*) image.bits();
+                            image_line_f += (image_bpl * yf);
+                            for (int xf = (x - radius); xf <= (x + radius); xf++)
+                            {
+                                if ((xf >= 0) && (xf < w))
+                                {
+                                    int const refer = gray_line_f[xf];
+                                    if (mask_line_f[xf >> 5] & (msb >> (xf & 31)))
+                                    {
+                                        if (origin < refer)
+                                        {
+                                            for (unsigned int c = 0; c < cnum; c++)
+                                            {
+                                                image_line[x * cnum + c] = image_line_f[xf * cnum + c];
+                                            }
+                                            origin = refer;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            image_line += image_bpl;
+            gray_line += gray_bpl;
+            mask_line += mask_wpl;
+        }
+    }
+}
+
+void maskMorphologicalOpen(
+    QImage& image, BinaryImage const& mask, int const radius)
+{
+    if (image.isNull() || mask.isNull())
+    {
+        return;
+    }
+    maskMorphologicalErode(image, mask, radius);
+    maskMorphologicalDilate(image, mask, radius);
+}
+
+void maskMorphologicalClose(
+    QImage& image, BinaryImage const& mask, int const radius)
+{
+    if (image.isNull() || mask.isNull())
+    {
+        return;
+    }
+    maskMorphologicalDilate(image, mask, radius);
+    maskMorphologicalErode(image, mask, radius);
+}
+
+void maskMorphological(
+    QImage& image, BinaryImage const& mask, int const radius)
+{
+    if (image.isNull() || mask.isNull())
+    {
+        return;
+    }
+    if (radius < 0)
+    {
+        maskMorphologicalClose(image, mask, -radius);
+        maskMorphologicalOpen(image, mask, -radius);
+    }
+    else
+    {
+        maskMorphologicalOpen(image, mask, radius);
+        maskMorphologicalClose(image, mask, radius);
+    }
+}
+
 } // namespace imageproc

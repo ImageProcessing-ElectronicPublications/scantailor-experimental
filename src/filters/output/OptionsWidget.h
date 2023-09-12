@@ -107,6 +107,8 @@ private slots:
 
     void kmeansCountChanged(int value);
 
+    void kmeansMorphologyChanged(int value);
+
     void kmeansSatChanged(double value);
 
     void kmeansNormChanged(double value);

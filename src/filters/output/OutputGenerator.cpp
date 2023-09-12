@@ -640,6 +640,7 @@ OutputGenerator::process(
                              black_white_options.kmeansSat(),
                              black_white_options.kmeansNorm(),
                              black_white_options.kmeansBG());
+            maskMorphological(dst, bw_content, black_white_options.kmeansMorphology());
         }
     }
     bw_content.release(); // Save memory.
