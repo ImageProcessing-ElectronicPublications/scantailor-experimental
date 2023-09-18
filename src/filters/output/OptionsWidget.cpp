@@ -87,6 +87,14 @@ OptionsWidget::OptionsWidget(
     updateScaleDisplay();
 
     connect(
+        scalingPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(scalingPanelToggled(bool))
+    );
+    connect(
+        scalingPanel, SIGNAL(clicked(bool)),
+        this, SLOT(scalingPanelToggled(bool))
+    );
+    connect(
         scale1xBtn, &QAbstractButton::toggled,
         [this](bool checked)
     {
@@ -120,6 +128,14 @@ OptionsWidget::OptionsWidget(
     {
         if (checked) scaleChanged(4.0);
     }
+    );
+    connect(
+        filtersPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(filtersPanelToggled(bool))
+    );
+    connect(
+        filtersPanel, SIGNAL(clicked(bool)),
+        this, SLOT(filtersPanelToggled(bool))
     );
     connect(
         wienerCoef, SIGNAL(valueChanged(double)),
@@ -172,6 +188,14 @@ OptionsWidget::OptionsWidget(
     connect(
         applyColorsFiltersButton, SIGNAL(clicked()),
         this, SLOT(applyColorsFiltersButtonClicked())
+    );
+    connect(
+        modePanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(modePanelToggled(bool))
+    );
+    connect(
+        modePanel, SIGNAL(clicked(bool)),
+        this, SLOT(modePanelToggled(bool))
     );
     connect(
         colorModeSelector, SIGNAL(currentIndexChanged(int)),
@@ -240,6 +264,14 @@ OptionsWidget::OptionsWidget(
     connect(
         applyColorsModeButton, SIGNAL(clicked()),
         this, SLOT(applyColorsModeButtonClicked())
+    );
+    connect(
+        despecklePanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(despecklePanelToggled(bool))
+    );
+    connect(
+        despecklePanel, SIGNAL(clicked(bool)),
+        this, SLOT(despecklePanelToggled(bool))
     );
     connect(
         despeckleOffBtn, &QAbstractButton::toggled,
@@ -323,6 +355,15 @@ OptionsWidget::tabChanged(ImageViewTab const tab)
 }
 
 void
+OptionsWidget::scalingPanelToggled(bool const checked)
+{
+    scalingPanelEmpty->setVisible(!checked);
+    scalingPanelEmpty->setChecked(checked);
+    scalingPanel->setVisible(checked);
+    scalingPanel->setChecked(checked);
+}
+
+void
 OptionsWidget::scaleChanged(double const scale)
 {
     if (m_ignoreScaleChanges)
@@ -335,6 +376,15 @@ OptionsWidget::scaleChanged(double const scale)
 
     emit invalidateAllThumbnails();
     emit reloadRequested();
+}
+
+void
+OptionsWidget::filtersPanelToggled(bool const checked)
+{
+    filtersPanelEmpty->setVisible(!checked);
+    filtersPanelEmpty->setChecked(checked);
+    filtersPanel->setVisible(checked);
+    filtersPanel->setChecked(checked);
 }
 
 void
@@ -486,6 +536,15 @@ OptionsWidget::applyColorsFiltersConfirmed(std::set<PageId> const& pages)
     {
         emit reloadRequested();
     }
+}
+
+void
+OptionsWidget::modePanelToggled(bool const checked)
+{
+    modePanelEmpty->setVisible(!checked);
+    modePanelEmpty->setChecked(checked);
+    modePanel->setVisible(checked);
+    modePanel->setChecked(checked);
 }
 
 void
@@ -697,6 +756,15 @@ OptionsWidget::applyColorsModeConfirmed(std::set<PageId> const& pages)
 }
 
 void
+OptionsWidget::despecklePanelToggled(bool const checked)
+{
+    despecklePanelEmpty->setVisible(!checked);
+    despecklePanelEmpty->setChecked(checked);
+    despecklePanel->setVisible(checked);
+    despecklePanel->setChecked(checked);
+}
+
+void
 OptionsWidget::despeckleLevelSelected(DespeckleLevel const level)
 {
     if (m_ignoreDespeckleLevelChanges)
@@ -852,6 +920,7 @@ OptionsWidget::updateColorsDisplay()
     }
 
     bwOptions->setVisible(bw_options_visible);
+    despecklePanelEmpty->setVisible(bw_options_visible);
     despecklePanel->setVisible(bw_options_visible);
     if (bw_options_visible)
     {
@@ -897,6 +966,7 @@ OptionsWidget::updateColorsDisplay()
             kmeansBG->setEnabled( false );
         }
 
+        despecklePanelToggled(despecklePanel->isEnabled());
         ScopedIncDec<int> const despeckle_guard(m_ignoreDespeckleLevelChanges);
 
         switch (m_despeckleLevel)

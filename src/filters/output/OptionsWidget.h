@@ -59,6 +59,10 @@ signals:
 public slots:
     void tabChanged(ImageViewTab tab);
 private slots:
+    void scalingPanelToggled(bool checked);
+
+    void filtersPanelToggled(bool checked);
+
     void wienerCoefChanged(double value);
 
     void wienerWindowSizeChanged(int value);
@@ -86,6 +90,8 @@ private slots:
     void applyColorsFiltersButtonClicked();
 
     void applyColorsFiltersConfirmed(std::set<PageId> const& pages);
+
+    void modePanelToggled(bool checked);
 
     void colorModeChanged(int idx);
 
@@ -120,6 +126,8 @@ private slots:
     void applyColorsModeButtonClicked();
 
     void applyColorsModeConfirmed(std::set<PageId> const& pages);
+
+    void despecklePanelToggled(bool checked);
 
     void despeckleFactorChanged(double value);
 

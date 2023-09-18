@@ -13,15 +13,31 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_6">
+  <layout class="QVBoxLayout" name="OutputOptionsVerticalLayout">
+   <item>
+    <widget class="QCheckBox" name="scalingPanelEmpty">
+     <property name="text">
+      <string>Resolution Enhancement</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="scalingPanel">
      <property name="title">
       <string>Resolution Enhancement</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="scalingPanelVerticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="scalingPanelHorizontalLayout">
         <item>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
@@ -159,6 +175,19 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="filtersPanelEmpty">
+     <property name="text">
+      <string>Filters</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="filtersPanel">
      <property name="title">
       <string>Filters</string>
@@ -167,7 +196,7 @@
       <bool>false</bool>
      </property>
      <property name="checkable">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <layout class="QVBoxLayout" name="fitersVerticalLayout">
       <item>
@@ -480,6 +509,19 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="modePanelEmpty">
+     <property name="text">
+      <string>Mode</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="modePanel">
      <property name="title">
       <string>Mode</string>
@@ -488,7 +530,7 @@
       <bool>false</bool>
      </property>
      <property name="checkable">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
@@ -671,7 +713,6 @@
            </item>
           </layout>
          </item>
-
          <item>
           <layout class="QGridLayout" name="thresholdAdaptiveOptions">
            <item row="0" column="0">
@@ -878,9 +919,25 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="despecklePanelEmpty">
+     <property name="text">
+      <string>Despeckling</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="despecklePanel">
      <property name="title">
       <string>Despeckling</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
