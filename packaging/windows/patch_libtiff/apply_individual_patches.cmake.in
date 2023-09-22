@@ -1,9 +1,0 @@
-FILE(STRINGS "@TIFF_DIR@/debian/patches/series" patch_list)
-
-FOREACH(patch_file ${patch_list})
-	EXECUTE_PROCESS(
-		COMMAND "@PATCH_EXE@" -p1 --binary -i
-		"@TIFF_DIR@/debian/patches/${patch_file}"
-		WORKING_DIRECTORY "@TIFF_DIR@"
-	)
-ENDFOREACH(patch_file)

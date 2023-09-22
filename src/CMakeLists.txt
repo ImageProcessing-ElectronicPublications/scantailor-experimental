@@ -164,7 +164,7 @@ ENDIF()
 
 SET(win32_resource_file "")
 IF(WIN32)
-    SET(rc_file "${CMAKE_SOURCE_DIR}/resources/win32/resources.rc")
+    SET(rc_file "${CMAKE_CURRENT_SOURCE_DIR}/resources/win32/resources.rc")
     FILE(GLOB win32_resources resources/win32/*.ico)
     SET_SOURCE_FILES_PROPERTIES(
         "${rc_file}" PROPERTIES

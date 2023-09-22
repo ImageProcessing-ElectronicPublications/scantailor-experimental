@@ -121,49 +121,10 @@ CMAKE_DEPENDENT_OPTION(
 SET(STAGING_LIBS_DIR "")
 
 IF(WIN32)
-    FILE(GLOB eigen_dirs1 "${build_outer_dir}/eigen-*")
-    FILE(GLOB eigen_dirs2 "${source_outer_dir}/eigen-*")
-
-    FIND_PATH(
-        EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
-        PATHS ${eigen_dirs1} ${eigen_dirs2}
-        DOC "Path to Eigen include directory (containing \"Eigen\" subdirectory)"
-    )
-
-    FIND_PATH(
-        DEPS_BUILD_DIR export-vars.cmake
-        HINTS "${build_outer_dir}/scantailor-deps-build"
-        DOC "Build directory for Scan Tailor dependencies."
-    )
-    IF(NOT DEPS_BUILD_DIR)
-        MESSAGE(
-            FATAL_ERROR "The build directory for Scan Tailor dependencies could not be found! "
-            "You can specify it manually in DEPS_BUILD_DIR variable. Make sure you build the dependencies first!"
-        )
-    ENDIF()
     SET(STAGING_LIBS_DIR "${DEPS_BUILD_DIR}/staging/libs")
-    INCLUDE("${DEPS_BUILD_DIR}/export-vars.cmake")
-
-    SET(Qt5Core_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5Core")
-    SET(Qt5Gui_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5Gui")
-    SET(Qt5Widgets_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5Widgets")
-    SET(Qt5Xml_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5Xml")
-    SET(Qt5Network_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5Network")
-    SET(Qt5OpenGL_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5OpenGL")
-    IF(QT_PREBUILT_DIR)
-        SET(Qt5LinguistTools_DIR "${QT_PREBUILT_DIR}/lib/cmake/Qt5LinguistTools")
-    ELSE()
-        SET(Qt5LinguistTools_DIR "${QT_SRC_DIR}/qtbase/lib/cmake/Qt5LinguistTools")
-    ENDIF()
 ENDIF()
 
-FIND_PACKAGE(Eigen3)
-IF(NOT EIGEN3_FOUND)
-    MESSAGE(FATAL_ERROR
-        "Could not find Eigen (version 3) headers.\n"
-        "You may need to install Eigen3 or set EIGEN3_INCLUDE_DIR manually."
-    )
-ENDIF()
+FIND_PACKAGE(Eigen3 REQUIRED)
 INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
 
 # Once Eigen starts using C++11 alignas() feature, this can be removed.
@@ -181,129 +142,17 @@ IF(ENABLE_OPENGL)
     FIND_PACKAGE(Qt5OpenGL ${qt_min_version} REQUIRED)
 ENDIF()
 
-FIND_PATH(
-    JPEG_INCLUDE_DIR jpeglib.h
-    PATHS /usr/local/include /usr/include
-    HINTS ${JPEG_DIR} # JPEG_DIR may come from export-vars.cmake
-    DOC "Path to libjpeg headers."
-)
-IF(NOT JPEG_INCLUDE_DIR)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find jpeg headers.\n"
-        "You may need to install a package named libjpeg62-dev or similarly."
-    )
-ENDIF()
-
+FIND_PACKAGE(JPEG REQUIRED)
 INCLUDE_DIRECTORIES("${JPEG_INCLUDE_DIR}")
 
-FIND_LIBRARY(
-    JPEG_LIBRARY NAMES jpeg libjpeg.lib
-    PATHS /usr/local/lib /usr/lib
-    HINTS ${STAGING_LIBS_DIR}
-    DOC "Path to jpeg library."
-)
-IF(NOT JPEG_LIBRARY)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find jpeg library.\n"
-        "You may need to install a package named libjpeg62-dev or similarly."
-    )
-ENDIF()
-
-
-FIND_PATH(
-    ZLIB_INCLUDE_DIR zlib.h
-    PATHS /usr/local/include /usr/include
-    HINTS ${ZLIB_DIR} # ZLIB_DIR may come from export-vars.cmake
-    DOC "Path to zlib headers."
-)
-IF(NOT ZLIB_INCLUDE_DIR)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find zlib headers.\n"
-        "You may need to install a package named zlib1g-dev or similarly."
-    )
-ENDIF()
-
+FIND_PACKAGE(ZLIB REQUIRED)
 INCLUDE_DIRECTORIES("${ZLIB_INCLUDE_DIR}")
 
-FIND_LIBRARY(
-    ZLIB_LIBRARY NAMES z zdll.lib
-    PATHS /usr/local/lib /usr/lib
-    HINTS ${STAGING_LIBS_DIR}
-    DOC "Path to zlib library."
-)
-IF(NOT ZLIB_LIBRARY)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find zlib library.\n"
-        "You may need to install a package named zlib1g-dev or similarly."
-    )
-ENDIF()
-
-FIND_PATH(
-    PNG_INCLUDE_DIR png.h
-    PATHS /usr/local/include /usr/include
-    HINTS ${PNG_DIR} # PNG_DIR may come from export-vars.cmake
-    DOC "Path to libpng headers."
-)
-IF(NOT PNG_INCLUDE_DIR)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find libpng headers.\n"
-        "You may need to install a package named libpng12-dev or similarly."
-    )
-ENDIF()
-
+FIND_PACKAGE(PNG REQUIRED)
 INCLUDE_DIRECTORIES("${PNG_INCLUDE_DIR}")
 
-FIND_LIBRARY(
-    PNG_LIBRARY NAMES png libpng.lib
-    PATHS /usr/local/lib /usr/lib
-    HINTS ${STAGING_LIBS_DIR}
-    DOC "Path to png library."
-)
-IF(NOT PNG_LIBRARY)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find libpng library.\n"
-        "You may need to install a package named libpng12-dev or similarly."
-    )
-ENDIF()
-
-
-FIND_PATH(
-    TIFF_INCLUDE_DIR tiff.h
-    PATHS /usr/local/include /usr/include
-    HINTS ${TIFF_DIR} # TIFF_DIR may come from export-vars.cmake
-    PATH_SUFFIXES libtiff
-    DOC "Path to libtiff headers."
-)
-IF(NOT TIFF_INCLUDE_DIR)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find libtiff headers.\n"
-        "You may need to install a package named libtiff4-dev or similarly."
-    )
-ENDIF()
-
+FIND_PACKAGE(TIFF REQUIRED)
 INCLUDE_DIRECTORIES("${TIFF_INCLUDE_DIR}")
-
-FIND_LIBRARY(
-    TIFF_LIBRARY tiff libtiff.lib
-    PATHS /usr/local/lib /usr/lib
-    HINTS ${STAGING_LIBS_DIR}
-    PATH_SUFFIXES libtiff
-    DOC "Path to tiff library."
-)
-IF(NOT TIFF_LIBRARY)
-    MESSAGE(
-        FATAL_ERROR
-        "Could not find libtiff library.\n"
-        "You may need to install a package named libtiff4-dev or similarly."
-    )
-ENDIF()
 
 IF(WIN32)
     ADD_DEFINITIONS(-DUSE_LIBTIFF_DLL)
@@ -464,6 +313,49 @@ INCLUDE(CPack)
 IF(WIN32)
     # Copy some DLLs to the staging dir.
     
+    find_file(LIBPNG_DLL
+        NAMES libpng16.dll
+        PATHS ${CMAKE_PREFIX_PATH}
+        PATH_SUFFIXES bin lib
+        NO_DEFAULT_PATH)
+    IF(NOT LIBPNG_DLL)
+        message(SEND_ERROR "Could not find LIBPNG dll. You may specify it manually.")
+    ENDIF()
+
+    find_file(LIBJPEG_DLL
+        NAMES jpeg62.dll
+        PATHS ${CMAKE_PREFIX_PATH}
+        PATH_SUFFIXES bin lib
+        NO_DEFAULT_PATH)
+    IF(NOT LIBJPEG_DLL)
+        message(SEND_ERROR "Could not find LIBJPEG dll. You may specify it manually.")
+    ENDIF()
+
+    find_file(LIBTIFF_DLL
+        NAMES tiff.dll
+        PATHS ${CMAKE_PREFIX_PATH}
+        PATH_SUFFIXES bin lib
+        NO_DEFAULT_PATH)
+    IF(NOT LIBTIFF_DLL)
+        message(SEND_ERROR "Could not find LIBTIFF dll. You may specify it manually.")
+    ENDIF()
+
+    find_file(ZLIB_DLL
+        NAMES zlib1.dll
+        PATHS ${CMAKE_PREFIX_PATH}
+        PATH_SUFFIXES bin lib
+        NO_DEFAULT_PATH)
+    IF(NOT ZLIB_DLL)
+        message(SEND_ERROR "Could not find ZLIB dll. You may specify it manually.")
+    ENDIF()
+
+    SET(DLL_DIR "${QT_SRC_DIR}/qtbase/bin")
+    COPY_TO_BUILD_DIR(
+        "${LIBPNG_DLL}" "${LIBJPEG_DLL}"
+        "${LIBTIFF_DLL}" "${ZLIB_DLL}"
+    )
+    
+    # Qt's libs.
     SET(
         qt5_libs
         ${Qt5Widgets_LIBRARIES} ${Qt5Gui_LIBRARIES}
@@ -478,23 +370,22 @@ IF(WIN32)
         COPY_TO_BUILD_DIR("${debug_loc}" CONFIGURATIONS Debug)
         COPY_TO_BUILD_DIR("${release_loc}" CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
     ENDFOREACH()
-        
-    SET(DLL_DIR "${QT_SRC_DIR}/qtbase/bin")
-    COPY_TO_BUILD_DIR(
-        "${DLL_DIR}/libpng.dll" "${DLL_DIR}/libjpeg.dll"
-        "${DLL_DIR}/libtiff.dll" "${DLL_DIR}/zdll.dll"
-    )
 
     # Qt's plugins.
-    SET(PLUGINS_DIR "${QT_SRC_DIR}/qtbase/plugins")
-    COPY_TO_BUILD_DIR(
-        "${PLUGINS_DIR}/platforms/qwindows.dll" SUBDIR platforms
-        CONFIGURATIONS Release MinSizeRel RelWithDebInfo
-    )
-    COPY_TO_BUILD_DIR(
-        "${PLUGINS_DIR}/platforms/qwindowsd.dll" SUBDIR platforms
-        CONFIGURATIONS Debug
-    )
+    cmake_path(SET Qt5_DIR NORMALIZE "${Qt5Core_DIR}/../../..")
+    cmake_path(APPEND Qt5_DIR "plugins" OUTPUT_VARIABLE PLUGINS_DIR)
+
+    IF(EXISTS "${PLUGINS_DIR}/imageformats/qjpeg.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qjpeg.dll" SUBDIR imageformats)
+    ENDIF()
+
+    IF(EXISTS "${PLUGINS_DIR}/imageformats/qtiff.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qtiff.dll" SUBDIR imageformats)
+    ENDIF()
+    
+    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindows.dll" SUBDIR platforms)
+    
+    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyle.dll" SUBDIR styles)
 
     IF(EXISTS "${PLUGINS_DIR}/accessible/qtaccessiblewidgets.dll")
         COPY_TO_BUILD_DIR(

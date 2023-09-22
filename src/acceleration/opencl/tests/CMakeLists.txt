@@ -2,7 +2,7 @@ INCLUDE_DIRECTORIES(BEFORE ..)
 
 SET(
     sources
-    "${CMAKE_SOURCE_DIR}/tests/main.cpp"
+    "${CMAKE_SOURCE_DIR}/src/tests/main.cpp"
     TestCopy.cpp
     TestTranspose.cpp
     TestGaussBlur.cpp

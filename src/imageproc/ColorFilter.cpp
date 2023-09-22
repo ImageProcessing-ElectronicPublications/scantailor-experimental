@@ -16,13 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define _USE_MATH_DEFINES
+
 #include <string.h>
+#include <math.h>
 #include <cstdint>
 #include <cstddef>
 #include <cassert>
 #include <stdexcept>
 #include <vector>
-#include <cmath>
 #include <algorithm>
 #include <QImage>
 #include <QtGlobal>
