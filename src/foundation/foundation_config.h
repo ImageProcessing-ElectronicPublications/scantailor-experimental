@@ -3,10 +3,6 @@
 
 #include <QtGlobal>
 
-#if defined(BUILDING_FOUNDATION)
-#	define FOUNDATION_EXPORT Q_DECL_EXPORT
-#else
-#	define FOUNDATION_EXPORT Q_DECL_IMPORT
-#endif
+#define FOUNDATION_EXPORT
 
 #endif

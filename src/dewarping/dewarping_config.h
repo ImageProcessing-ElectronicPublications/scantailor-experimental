@@ -3,10 +3,6 @@
 
 #include <QtGlobal>
 
-#if defined(BUILDING_DEWARPING)
-#	define DEWARPING_EXPORT Q_DECL_EXPORT
-#else
-#	define DEWARPING_EXPORT Q_DECL_IMPORT
-#endif
+#define DEWARPING_EXPORT
 
 #endif

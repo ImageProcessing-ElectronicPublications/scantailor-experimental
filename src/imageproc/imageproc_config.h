@@ -3,10 +3,6 @@
 
 #include <QtGlobal>
 
-#if defined(BUILDING_IMAGEPROC)
-#	define IMAGEPROC_EXPORT Q_DECL_EXPORT
-#else
-#	define IMAGEPROC_EXPORT Q_DECL_IMPORT
-#endif
+#define IMAGEPROC_EXPORT
 
 #endif

@@ -45,14 +45,5 @@ SET(
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 
-ADD_DEFINITIONS(-DBUILDING_FOUNDATION)
 ADD_LIBRARY(foundation STATIC ${sources})
 TARGET_LINK_LIBRARIES(foundation Qt5::Gui Qt5::Core Qt5::Xml)
-
-# We want the DLL located where executables can find it.
-SET_TARGET_PROPERTIES(
-    foundation PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-)
-
-INSTALL(TARGETS foundation DESTINATION lib/scantailor-experimental)

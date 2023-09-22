@@ -3,10 +3,6 @@
 
 #include <QtGlobal>
 
-#if defined(BUILDING_ACCELERATION)
-#	define ACCELERATION_EXPORT Q_DECL_EXPORT
-#else
-#	define ACCELERATION_EXPORT Q_DECL_IMPORT
-#endif
+#define ACCELERATION_EXPORT
 
 #endif

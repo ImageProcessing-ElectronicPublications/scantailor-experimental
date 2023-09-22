@@ -37,8 +37,7 @@ CONFIGURE_FILE(
 
 SET(
     dist_targets
-    scantailor-experimental scantailor-experimental-cli foundation math imageproc dewarping
-    acceleration CrashReporter opencl_plugin
+    scantailor-experimental scantailor-experimental-cli CrashReporter opencl_plugin
 )
 SET(BUILT_BINARIES "")
 FOREACH(target ${dist_targets})
