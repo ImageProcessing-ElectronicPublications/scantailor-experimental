@@ -59,6 +59,11 @@ IMAGEPROC_EXPORT BinaryImage binarizeMokji(
  */
 IMAGEPROC_EXPORT BinaryImage binarizeUse(
     GrayImage const& src, unsigned int threshold = 128);
+IMAGEPROC_EXPORT BinaryImage binarizeFromMap(
+    GrayImage const& src, GrayImage const& threshold,
+    unsigned char const lower_bound = 0,
+    unsigned char const upper_bound = 255,
+    int const delta = 0);
 IMAGEPROC_EXPORT unsigned int binarizeBiModalValue(
     GrayImage const& src, int delta = 0);
 IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
@@ -77,6 +82,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeMean(
   *
   * \see Help -> About -> References -> [9]
   */
+IMAGEPROC_EXPORT GrayImage binarizeNiblackMap(
+    GrayImage const& src, QSize window_size, double k = 0.20);
 IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
     GrayImage const& src, QSize window_size,
     double k = 0.20, int delta = 0);
@@ -89,15 +96,20 @@ IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
  *
  * \see Help -> About -> References -> [10]
  */
+IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
+    GrayImage& wiener, BinaryImage const& niblack,
+    QSize const window_size);
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
     GrayImage const& src, QSize window_size,
-    double noise_sigma = 3.0, double k = 0.2, int deltak = 0);
+    double noise_sigma = 3.0, double k = 0.2, int delta = 0);
 
 /**
  * \brief Image binarization using Sauvola's local thresholding method.
  *
  * \see Help -> About -> References -> [11]
  */
+IMAGEPROC_EXPORT GrayImage binarizeSauvolaMap(
+    GrayImage const& src, QSize window_size, double k = 0.34);
 IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
     GrayImage const& src, QSize window_size,
     double k = 0.34, int delta = 0);
@@ -112,6 +124,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
  * \param lower_bound The minimum possible gray level that can be made white.
  * \param upper_bound The maximum possible gray level that can be made black.
  */
+IMAGEPROC_EXPORT GrayImage binarizeWolfMap(
+    GrayImage const& src, QSize window_size, double k = 0.30);
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
     GrayImage const& src, QSize window_size,
     unsigned char lower_bound = 1, unsigned char upper_bound = 254,
@@ -123,15 +137,20 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
  * Derek Bradley, Gerhard Roth. 2005. "Adaptive Thresholding Using the Integral Image".
  * http://www.scs.carleton.ca/~roth/iit-publications-iti/docs/gerh-50002.pdf
  */
+IMAGEPROC_EXPORT GrayImage binarizeBradleyMap(
+    GrayImage const& src, QSize window_size, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     GrayImage const& src, QSize window_size,
-    double k = 0.75, int delta = 0);
+    double k = 0.2, int delta = 0);
 
 /**
  * \brief Image binarization using EdgeDiv (EdgePlus & BlurDiv) local/global thresholding method.
  *
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
  */
+IMAGEPROC_EXPORT GrayImage binarizeEdgeDivPrefilter(
+    GrayImage const& src, QSize const window_size,
+    double const kep, double const kbd, int const delta);
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     GrayImage const& src, QSize window_size,
     double kep = 0.5, double kdb = 0.5, int delta = 0);
@@ -141,6 +160,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
  *
  * MultiScale thresholding method.
  */
+IMAGEPROC_EXPORT GrayImage binarizeMScaleMap(
+    GrayImage const& src, QSize window_size,
+    double coef = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeMScale(
     GrayImage const& src, QSize window_size,
     double coef = 0.5, int delta = 0);

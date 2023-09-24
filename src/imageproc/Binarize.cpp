@@ -80,8 +80,8 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
 
     unsigned int const w = src.width();
     unsigned int const h = src.height();
-    uint8_t const* gray_line = src.data();
-    unsigned int const gray_bpl = src.stride();
+    uint8_t const* src_line = src.data();
+    unsigned int const src_bpl = src.stride();
 
     BinaryImage bw_img(w, h);
     uint32_t* bw_line = bw_img.data();
@@ -91,14 +91,55 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            binarySetBW(bw_line, x, (gray_line[x] < threshold));
+            binarySetBW(bw_line, x, (src_line[x] < threshold));
         }
-        gray_line += gray_bpl;
+        src_line += src_bpl;
         bw_line += bw_wpl;
     }
 
     return bw_img;
 }  // binarizeUse
+
+BinaryImage binarizeFromMap(GrayImage const& src, GrayImage const& threshold,
+                            unsigned char const lower_bound, unsigned char const upper_bound, int const delta)
+{
+    if (src.isNull() || threshold.isNull())
+    {
+        return BinaryImage();
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    unsigned int const wt = threshold.width();
+    unsigned int const ht = threshold.height();
+
+    if ((w != wt) || (h != ht))
+    {
+        return BinaryImage();
+    }
+
+    uint8_t const* src_line = src.data();
+    unsigned int const src_bpl = src.stride();
+    uint8_t const* threshold_line = threshold.data();
+    unsigned int const threshold_bpl = threshold.stride();
+
+    BinaryImage bw_img(w, h);
+    uint32_t* bw_line = bw_img.data();
+    unsigned int const bw_wpl = bw_img.wordsPerLine();
+
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            binarySetBW(bw_line, x, (src_line[x] < lower_bound || (src_line[x] <= upper_bound && ((int) src_line[x] < ((int) threshold_line[x] + delta)))));
+        }
+        src_line += src_bpl;
+        threshold_line += threshold_bpl;
+        bw_line += bw_wpl;
+    }
+
+    return bw_img;
+}  // binarizeFromMap
 
 unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
 {
@@ -286,23 +327,26 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     return bw_img;
 }  // binarizeMean
 
-BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
-                            double const k, int const delta)
+GrayImage binarizeNiblackMap(
+    GrayImage const& src, QSize const window_size, double const k)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeNiblack: invalid window_size");
+        throw std::invalid_argument("binarizeNiblackMap: invalid window_size");
     }
 
     if (src.isNull())
     {
-        return BinaryImage();
+        return GrayImage();
     }
 
+    GrayImage gray = GrayImage(src);
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
@@ -324,10 +368,6 @@ BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
     int const window_upper_half = window_size.height() - window_lower_half;
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
-
-    BinaryImage bw_img(w, h);
-    uint32_t* bw_line = bw_img.data();
-    int const bw_stride = bw_img.wordsPerLine();
 
     src_line = src.data();
     for (int y = 0; y < h; ++y)
@@ -353,24 +393,25 @@ BinaryImage binarizeNiblack(GrayImage const& src, QSize const window_size,
             double const variance = sqmean - mean * mean;
             double const stddev = sqrt(fabs(variance));
 
-            double const threshold = mean - k * stddev;
+            double threshold = mean - k * stddev;
 
-            binarySetBW(bw_line, x, (int(src_line[x]) < (threshold + delta)));
+            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+            gray_line[x] = (uint8_t) threshold;
         }
         src_line += src_stride;
-        bw_line += bw_stride;
+        gray_line += gray_stride;
     }
 
-    return bw_img;
+    return gray;
 }
 
-BinaryImage binarizeGatos(
+BinaryImage binarizeNiblack(
     GrayImage const& src, QSize const window_size,
-    double const noise_sigma, double const k, int const deltak)
+    double const k, int const delta)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeGatos: invalid window_size");
+        throw std::invalid_argument("binarizeNiblack: invalid window_size");
     }
 
     if (src.isNull())
@@ -378,11 +419,36 @@ BinaryImage binarizeGatos(
         return BinaryImage();
     }
 
-    int const w = src.width();
-    int const h = src.height();
+    GrayImage threshold_map(binarizeNiblackMap(src, window_size, k));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
-    GrayImage wiener(wienerFilter(src, QSize(5, 5), noise_sigma));
-    BinaryImage niblack(binarizeNiblack(wiener, window_size, k, deltak));
+    return bw_img;
+}
+
+BinaryImage binarizeGatosCleaner(
+    GrayImage& wiener, BinaryImage const& niblack,
+    QSize const window_size)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeGatosPostfilter: invalid window_size");
+    }
+
+    if (wiener.isNull() || niblack.isNull())
+    {
+        return niblack;
+    }
+
+    int const w = wiener.width();
+    int const h = wiener.height();
+    int const wb = niblack.width();
+    int const hb = niblack.height();
+
+    if ((w != wb) || (h != hb))
+    {
+        return niblack;
+    }
+
     IntegralImage<uint32_t> niblack_bg_ii(w, h);
     IntegralImage<uint32_t> wiener_bg_ii(w, h);
 
@@ -428,7 +494,7 @@ BinaryImage binarizeGatos(
     // sum(background) pixels for background pixels according to Niblack.
     uint32_t sum_bg = 0;
 
-    QRect const image_rect(src.rect());
+    QRect const image_rect(wiener.rect());
     GrayImage background(wiener);
     uint8_t* background_line = background.data();
     int const background_stride = background.stride();
@@ -495,13 +561,13 @@ BinaryImage binarizeGatos(
     return BinaryImage(wiener);
 }
 
-BinaryImage binarizeSauvola(
+BinaryImage binarizeGatos(
     GrayImage const& src, QSize const window_size,
-    double const k, int const delta)
+    double const noise_sigma, double const k, int const delta)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeSauvola: invalid window_size");
+        throw std::invalid_argument("binarizeGatos: invalid window_size");
     }
 
     if (src.isNull())
@@ -511,8 +577,34 @@ BinaryImage binarizeSauvola(
 
     int const w = src.width();
     int const h = src.height();
+
+    GrayImage wiener(wienerFilter(src, QSize(5, 5), noise_sigma));
+    BinaryImage niblack(binarizeNiblack(wiener, window_size, k, delta));
+    BinaryImage bw_img(binarizeGatosCleaner(wiener, niblack, window_size));
+
+    return bw_img;
+}
+
+GrayImage binarizeSauvolaMap(
+    GrayImage const& src, QSize const window_size, double const k)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeSauvolaMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    int const w = src.width();
+    int const h = src.height();
     uint8_t const* src_line = src.data();
-    int const src_bpl = src.stride();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
@@ -527,17 +619,13 @@ BinaryImage binarizeSauvola(
             integral_image.push(pixel);
             integral_sqimage.push(pixel * pixel);
         }
-        src_line += src_bpl;
+        src_line += src_stride;
     }
 
     int const window_lower_half = window_size.height() >> 1;
     int const window_upper_half = window_size.height() - window_lower_half;
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
-
-    BinaryImage bw_img(w, h);
-    uint32_t* bw_line = bw_img.data();
-    int const bw_wpl = bw_img.wordsPerLine();
 
     src_line = src.data();
     for (int y = 0; y < h; ++y)
@@ -563,25 +651,25 @@ BinaryImage binarizeSauvola(
             double const variance = sqmean - mean * mean;
             double const deviation = sqrt(fabs(variance));
 
-            double const threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
+            double threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
 
-            binarySetBW(bw_line, x, (int(src_line[x]) < (threshold + delta)));
+            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+            gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_bpl;
-        bw_line += bw_wpl;
+        src_line += src_stride;
+        gray_line += gray_stride;
     }
 
-    return bw_img;
+    return gray;
 }
 
-BinaryImage binarizeWolf(
+BinaryImage binarizeSauvola(
     GrayImage const& src, QSize const window_size,
-    unsigned char const lower_bound, unsigned char const upper_bound,
     double const k, int const delta)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeWolf: invalid window_size");
+        throw std::invalid_argument("binarizeSauvola: invalid window_size");
     }
 
     if (src.isNull())
@@ -589,10 +677,33 @@ BinaryImage binarizeWolf(
         return BinaryImage();
     }
 
+    GrayImage threshold_map(binarizeSauvolaMap(src, window_size, k));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+
+    return bw_img;
+}
+
+GrayImage binarizeWolfMap(
+    GrayImage const& src, QSize const window_size, double const k)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeWolfMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
-    int const src_bpl = src.stride();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+
 
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
@@ -610,7 +721,7 @@ BinaryImage binarizeWolf(
             integral_sqimage.push(pixel * pixel);
             min_gray_level = std::min(min_gray_level, pixel);
         }
-        src_line += src_bpl;
+        src_line += src_stride;
     }
 
     int const window_lower_half = window_size.height() >> 1;
@@ -651,12 +762,6 @@ BinaryImage binarizeWolf(
         }
     }
 
-    // TODO: integral images can be disposed at this point.
-
-    BinaryImage bw_img(w, h);
-    uint32_t* bw_line = bw_img.data();
-    int const bw_wpl = bw_img.wordsPerLine();
-
     src_line = src.data();
     for (int y = 0; y < h; ++y)
     {
@@ -665,24 +770,26 @@ BinaryImage binarizeWolf(
             double const mean = means[y * w + x];
             double const deviation = deviations[y * w + x];
             double const a = 1.0 - deviation / max_deviation;
-            double const threshold = mean - k * a * (mean - min_gray_level);
+            double threshold = mean - k * a * (mean - min_gray_level);
 
-            binarySetBW(bw_line, x, (src_line[x] < lower_bound || (src_line[x] <= upper_bound && int(src_line[x]) < (threshold + delta))));
+            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+            gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_bpl;
-        bw_line += bw_wpl;
+        src_line += src_stride;
+        gray_line += gray_stride;
     }
 
-    return bw_img;
+    return gray;
 }
 
-BinaryImage binarizeBradley(
+BinaryImage binarizeWolf(
     GrayImage const& src, QSize const window_size,
+    unsigned char const lower_bound, unsigned char const upper_bound,
     double const k, int const delta)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeBradley: invalid window_size");
+        throw std::invalid_argument("binarizeWolf: invalid window_size");
     }
 
     if (src.isNull())
@@ -690,10 +797,32 @@ BinaryImage binarizeBradley(
         return BinaryImage();
     }
 
+    GrayImage threshold_map(binarizeWolfMap(src, window_size, k));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, lower_bound, upper_bound, delta));
+
+    return bw_img;
+}
+
+GrayImage binarizeBradleyMap(
+    GrayImage const& src, QSize const window_size, double const k)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeBradleyMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
-    int const src_bpl = src.stride();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
 
@@ -705,17 +834,13 @@ BinaryImage binarizeBradley(
             uint32_t const pixel = src_line[x];
             integral_image.push(pixel);
         }
-        src_line += src_bpl;
+        src_line += src_stride;
     }
 
     int const window_lower_half = window_size.height() >> 1;
     int const window_upper_half = window_size.height() - window_lower_half;
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
-
-    BinaryImage bw_img(w, h);
-    uint32_t* bw_line = bw_img.data();
-    int const bw_wpl = bw_img.wordsPerLine();
 
     src_line = src.data();
     for (int y = 0; y < h; ++y)
@@ -735,28 +860,50 @@ BinaryImage binarizeBradley(
 
             double const r_area = 1.0 / area;
             double const mean = window_sum * r_area;
-            double const threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
-            binarySetBW(bw_line, x, (int(src_line[x]) < (threshold + delta)));
+            double threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
+
+            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+            gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_bpl;
-        bw_line += bw_wpl;
+        src_line += src_stride;
+        gray_line += gray_stride;
     }
 
-    return bw_img;
-}  // binarizeBradley
+    return gray;
+}  // binarizeBradleyMap
 
-BinaryImage binarizeEdgeDiv(
+BinaryImage binarizeBradley(
     GrayImage const& src, QSize const window_size,
-    double const kep, double const kbd, int const delta)
+    double const k, int const delta)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeBlurDiv: invalid window_size");
+        throw std::invalid_argument("binarizeBradley: invalid window_size");
     }
 
     if (src.isNull())
     {
         return BinaryImage();
+    }
+
+    GrayImage threshold_map(binarizeBradleyMap(src, window_size, k));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+
+    return bw_img;
+}  // binarizeBradley
+
+GrayImage binarizeEdgeDivPrefilter(
+    GrayImage const& src, QSize const window_size,
+    double const kep, double const kbd, int const delta)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeBlurDivPrefilter: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
     }
 
     GrayImage gray = GrayImage(src);
@@ -830,21 +977,40 @@ BinaryImage binarizeEdgeDiv(
         gray_line += gray_bpl;
     }
 
-    return binarizeBiModal(gray, delta);
-}  // binarizeEdgeDiv
+    return gray;
+}  // binarizeEdgeDivPrefilter
 
-BinaryImage binarizeMScale(
+BinaryImage binarizeEdgeDiv(
     GrayImage const& src, QSize const window_size,
-    double const coef, int const delta)
+    double const kep, double const kbd, int const delta)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeMScale: invalid window_size");
+        throw std::invalid_argument("binarizeBlurDiv: invalid window_size");
     }
 
     if (src.isNull())
     {
         return BinaryImage();
+    }
+
+    GrayImage gray(binarizeEdgeDivPrefilter(src, window_size, kep, kbd, delta));
+    BinaryImage bw_img(binarizeBiModal(gray, delta));
+
+    return bw_img;
+}  // binarizeEdgeDiv
+
+GrayImage binarizeMScaleMap(
+    GrayImage const& src, QSize const window_size, double const coef)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMScaleMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
     }
 
     GrayImage gray = GrayImage(src);
@@ -989,22 +1155,25 @@ BinaryImage binarizeMScale(
         blsz >>= 1;
     }
 
-    BinaryImage bw_img(w, h);
-    uint32_t* bw_line = bw_img.data();
-    int const bw_wpl = bw_img.wordsPerLine();
+    return gray;
+}  // binarizeMScaleMap
 
-    src_line = src.data();
-    gray_line = gray.data();
-    for (int y = 0; y < h; ++y)
+BinaryImage binarizeMScale(
+    GrayImage const& src, QSize const window_size,
+    double const coef, int const delta)
+{
+    if (window_size.isEmpty())
     {
-        for (int x = 0; x < w; ++x)
-        {
-            binarySetBW(bw_line, x, (src_line[x] < (gray_line[x] + delta)));
-        }
-        src_line += src_bpl;
-        gray_line += gray_bpl;
-        bw_line += bw_wpl;
+        throw std::invalid_argument("binarizeMScale: invalid window_size");
     }
+
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(binarizeMScaleMap(src, window_size, coef));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
 }  // binarizeMScale
