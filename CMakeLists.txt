@@ -341,7 +341,7 @@ IF(WIN32)
     ENDIF()
 
     find_file(ZLIB_DLL
-        NAMES zlib1.dll
+        NAMES zlib.dll zlib1.dll z.dll
         PATHS ${CMAKE_PREFIX_PATH}
         PATH_SUFFIXES bin lib
         NO_DEFAULT_PATH)
