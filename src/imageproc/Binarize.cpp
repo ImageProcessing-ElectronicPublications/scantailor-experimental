@@ -171,50 +171,30 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
 
     double const part = 0.5 + (double) delta / 256.0;
     double const partval = part * (double) histsize;
-    if (partval <= 0.0)
-    {
-        return 0;
-    }
-    if (partval >= 256.0)
-    {
-        return 256;
-    }
     threshold = (unsigned int) (partval + 0.5);
     Tn = 0;
-    while ( threshold != Tn )
+    while (threshold != Tn)
     {
         Tn = threshold;
         Tb = Tw = ib = iw = 0;
-        for (k = 0; k < threshold; k++)
+        for (k = 0; k < histsize; k++)
         {
-            im = histogram[k];
-            Tb += (im * k);
-            ib += im;
+            if (k < threshold)
+            {
+                im = histogram[k];
+                Tb += (im * k);
+                ib += im;
+            }
+            else
+            {
+                im = histogram[k];
+                Tw += (im * k);
+                iw += im;
+            }
         }
-        for (k = threshold; k < histsize; k++)
-        {
-            im = histogram[k];
-            Tw += (im * k);
-            iw += im;
-        }
-        Tb /= ((ib > 1) ? ib : 1);
-        Tw /= ((iw > 1) ? iw : 1);
-        if (iw == 0 && ib == 0)
-        {
-            threshold = Tn;
-        }
-        else if (iw == 0)
-        {
-            threshold = (unsigned int) Tb;
-        }
-        else if (ib == 0)
-        {
-            threshold = (unsigned int) Tw;
-        }
-        else
-        {
-            threshold = (unsigned int) (part * (double) Tw + (1.0 - part) * (double) Tb + 0.5);
-        }
+        Tb = (ib > 0) ? (Tb / ib) : 0;
+        Tw = (iw > 0) ? (Tw / iw) : histsize;
+        threshold = (unsigned int) (part * (double) Tw + (1.0 - part) * (double) Tb + 0.5);
     }
 
     return threshold;
