@@ -966,7 +966,7 @@ OptionsWidget::updateColorsDisplay()
             kmeansBG->setEnabled( false );
         }
 
-        despecklePanelToggled(despecklePanel->isChecked());
+        despecklePanelToggled(despecklePanelEmpty->isChecked());
         ScopedIncDec<int> const despeckle_guard(m_ignoreDespeckleLevelChanges);
 
         switch (m_despeckleLevel)

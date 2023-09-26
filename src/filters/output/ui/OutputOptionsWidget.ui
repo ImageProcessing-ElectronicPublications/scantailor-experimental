@@ -23,7 +23,7 @@
       <bool>true</bool>
      </property>
      <property name="visible">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -34,6 +34,9 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="scalingPanelVerticalLayout">
       <item>
@@ -183,7 +186,7 @@
       <bool>true</bool>
      </property>
      <property name="visible">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -197,6 +200,9 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="fitersVerticalLayout">
       <item>
@@ -931,7 +937,7 @@
       <bool>true</bool>
      </property>
      <property name="visible">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -942,6 +948,9 @@
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
