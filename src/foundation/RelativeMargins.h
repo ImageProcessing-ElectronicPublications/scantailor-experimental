@@ -37,14 +37,19 @@ public:
     RelativeMargins(double left, double top, double right, double bottom)
         : m_top(top), m_bottom(bottom), m_left(left), m_right(right) {}
 
-    QRectF extendContentRect(QRectF const& rect, double const scale) const
+    QRectF extendContentRect(QRectF const& rect) const
     {
+        double const scalex = rect.width();
+        double const scaley = rect.height() * 0.7071067811865475244;
+        double const scale = (scalex < scaley) ? scaley : scalex;
         return rect.adjusted(-m_left * scale, -m_top * scale, m_right * scale, m_bottom * scale);
     }
 
     QSizeF extendContentSize(QSizeF const& size) const
     {
-        double const scale = size.width();
+        double const scalex = size.width();
+        double const scaley = size.height() * 0.7071067811865475244;
+        double const scale = (scalex < scaley) ? scaley : scalex;
         return QSizeF(
                    size.width() + (m_left + m_right) * scale,
                    size.height() + (m_top + m_bottom) * scale
