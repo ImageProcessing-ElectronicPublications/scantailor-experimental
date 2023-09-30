@@ -625,34 +625,28 @@ void coloredSignificanceFilterInPlace(
     uint8_t* gray_line = gray.data();
     int const gray_bpl = gray.stride();
 
-    if ((coef != 0.0f) && (cnum > 2) && (w == wg) && (h == hg))
+    if ((coef != 0.0f) && (w == wg) && (h == hg))
     {
-        float const ycb[6] = {-0.168736f, -0.331264f, 0.5f, 0.0f, 0.0f, 0.0f};
-        float const ycr[6] = {0.5f, -0.418688f, -0.081312f, 0.0f, 0.0f, 0.0f};
-
-        for (unsigned int y = 0; y < h; ++y)
+        for (unsigned int y = 0; y < h; y++)
         {
-            for (unsigned int x = 0; x < w; ++x)
+            for (unsigned int x = 0; x < w; x++)
             {
-                float ycbsum = 0.0f;
-                float ycrsum = 0.0f;
-                for (unsigned int c = 0; c < cnum; ++c)
-                {
-                    unsigned int const indx = x * cnum + c;
-                    float const origin = image_line[indx];
-                    ycbsum += (origin * ycb[c]);
-                    ycrsum += (origin * ycr[c]);
-                }
-                ycbsum = (ycbsum < 0.0f) ? -ycbsum : ycbsum;
-                ycrsum = (ycrsum < 0.0f) ? -ycrsum : ycrsum;
-                float ycbcr = (ycbsum + ycrsum);
-                ycbcr = (ycbcr < 0.0f) ? -ycbcr : ycbcr;
-                ycbcr = 255.0f - ycbcr;
-                float retval = coef * ycbcr + (1.0f - coef) * 255.0f;
+                QRgb pixel = image.pixel(x, y);
+                int r = qRed(pixel);
+                int g = qGreen(pixel);
+                int b = qBlue(pixel);
+                int hsv_s, hsv_si;
+                int max = 0, min = 255;
+                max = (r < g) ? g : r;
+                max = (max < b) ? b : max;
+                min = (r > g) ? g : r;
+                min = (min > b) ? b : min;
+                hsv_s = max - min;
+                hsv_si = 255 - hsv_s;
+                float retval = coef * (float) hsv_si + (1.0f - coef) * 255.0f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
                 gray_line[x] = (uint8_t) retval;
             }
-            image_line += image_bpl;
             gray_line += gray_bpl;
         }
     }
