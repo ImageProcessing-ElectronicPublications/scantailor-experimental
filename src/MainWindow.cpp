@@ -1606,7 +1606,7 @@ MainWindow::showAboutDialog()
     Ui::AboutDialog ui;
     QDialog* dialog = new QDialog(this);
     ui.setupUi(dialog);
-    ui.version->setText(QString::fromUtf8(VERSION "\n" VERSION_QUAD));
+    ui.version->setText(QString::fromUtf8(STFAMILY "\n" VERSION));
 
     QResource license(":/GPLv3.html");
     ui.licenseViewer->setHtml(QString::fromUtf8((char const*)license.data(), license.size()));

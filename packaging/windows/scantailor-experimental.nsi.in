@@ -1,5 +1,4 @@
 !define VERSION "@VERSION@"
-!define VERSION_QUAD "@VERSION_QUAD@"
 !define LICENSE_FILE "@LICENSE_FILE@"
 !define INSTALLER_FILENAME "@INSTALLER_FILENAME@"
 !define STAGING_DIR "@STAGING_DIR@"
@@ -17,7 +16,7 @@
 BrandingText " " # To remove the mention of NullSoft.
 #LoadLanguageFile "${NSISDIR}\Contrib\Language files\Russian.nlf"
 
-Name "Scan Tailor version ${VERSION}"
+Name "Scan Tailor Experimental version ${VERSION}"
 
 OutFile "${INSTALLER_FILENAME}"
 
@@ -37,7 +36,7 @@ AllowSkipFiles off
 
 SetCompressor /SOLID /FINAL lzma
 
-!if "${VERSION_QUAD}" != ""
+!if "${VERSION}" != ""
   VIAddVersionKey "ProductName" "Scan Tailor Experimental"
   VIAddVersionKey "ProductVersion" "${VERSION}"
   VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
@@ -46,7 +45,7 @@ SetCompressor /SOLID /FINAL lzma
   VIAddVersionKey "LegalCopyright" "� Joseph Artsimovich et al."
   VIAddVersionKey "FileDescription" "Post-processing tool for scanned pages."
   VIAddVersionKey "FileVersion" "${VERSION}"
-  VIProductVersion "${VERSION_QUAD}"
+  VIProductVersion "${VERSION}"
 !endif
 
 !define MUI_ABORTWARNING

@@ -58,25 +58,25 @@ IF(NOT "${PROJECT_BINARY_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
     FILE(REMOVE "${PROJECT_BINARY_DIR}/src/version.h")
 ENDIF()
 
-# Extract VERSION and VERSION_QUAD from version.h
+# Extract STFAMILY and VERSION from version.h
 FILE(READ "${PROJECT_SOURCE_DIR}/src/version.h" version_h_contents)
 STRING(
     REGEX REPLACE
-    ".*#define[ \\t]+VERSION[ \\t]+\"([^\"]*)\".*"
+    ".*#define[ \\t]+STFAMILY[ \\t]+\"([^\"]*)\".*"
+    "\\1" STFAMILY "${version_h_contents}"
+)
+IF("${STFAMILY}" STREQUAL "${version_h_contents}")
+    MESSAGE(FATAL_ERROR "Failed to extract STFAMILY from version.h")
+ENDIF()
+
+# VERSION must be either empty or be in the form of X.Y.Z.Y
+STRING(
+    REGEX REPLACE
+    ".*#define[ \\t]+VERSION[ \\t]+\"(([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)?)\".*"
     "\\1" VERSION "${version_h_contents}"
 )
 IF("${VERSION}" STREQUAL "${version_h_contents}")
     MESSAGE(FATAL_ERROR "Failed to extract VERSION from version.h")
-ENDIF()
-
-# VERSION_QUAD must be either empty or be in the form of X.Y.Z.Y
-STRING(
-    REGEX REPLACE
-    ".*#define[ \\t]+VERSION_QUAD[ \\t]+\"(([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)?)\".*"
-    "\\1" VERSION_QUAD "${version_h_contents}"
-)
-IF("${VERSION_QUAD}" STREQUAL "${version_h_contents}")
-    MESSAGE(FATAL_ERROR "Failed to extract VERSION_QUAD from version.h")
 ENDIF()
 
 # This has to go quite early on, as otherwise we risk picking

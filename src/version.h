@@ -19,7 +19,7 @@
 #ifndef SCANTAILOR_VERSION_H_
 #define SCANTAILOR_VERSION_H_
 
-#define VERSION "experimental"
-#define VERSION_QUAD "0.2023.09.30" // Must be "x.x.x.x" or an empty string.
+#define STFAMILY "experimental"
+#define VERSION "0.2023.10.03" // Must be "x.x.x.x" or an empty string.
 
 #endif
