@@ -33,6 +33,11 @@
    Сайт: http://nsis.sourceforge.net/
 
    Файл: nsis-3.09-setup.exe
+   
+   Также скачать плагин [NsProcess](https://nsis.sourceforge.io/NsProcess_plugin) и установить в папку с nsis:
+   * Папку `NsProcess.zip\Include` копируем в `c:\Program Files (x86)\NSIS\`.
+   * Файл `NsProcess.zip\Plugin\nsProcess.dll` копируем в `c:\Program Files (x86)\NSIS\Plugins\x86-ansi\`.
+   * Файл `NsProcess.zip\Plugin\nsProcessW.dll` копируем в `c:\Program Files (x86)\NSIS\Plugins\x86-unicode` и переименовываем в `nsProcess.dll`.
 
 6. **Eigen3**
 
