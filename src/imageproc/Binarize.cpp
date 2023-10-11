@@ -262,12 +262,13 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
         {
             unsigned int const pixel = src_line[x];
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
+            dist *= dist;
             dist_mean += dist;
         }
         src_line += src_bpl;
     }
-    dist_mean = (count > 0) ? ((dist_mean + count / 2) / count) : 64;
-    threshold = dist_mean;
+    dist_mean = (count > 0) ? ((dist_mean + count / 2) / count) : 64 * 64;
+    threshold = sqrt(dist_mean);
 
     src_line = src.data();
     for (unsigned int y = 0; y < h; ++y)
@@ -291,7 +292,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     unsigned int const bw_wpl = bw_img.wordsPerLine();
 
     src_line = src.data();
-    threshold *= (count < countb) ? (1.0 - (double) delta * 0.01) : (1.0 + (double) delta * 0.01);
+    threshold *= (count < countb) ? (1.0 - (double) delta * 0.02) : (1.0 + (double) delta * 0.02);
     for (unsigned int y = 0; y < h; ++y)
     {
         for (unsigned int x = 0; x < w; ++x)
