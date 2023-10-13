@@ -323,7 +323,7 @@ IF(WIN32)
     ENDIF()
 
     find_file(LIBJPEG_DLL
-        NAMES libjpeg.dll jpeg62.dll
+        NAMES libjpeg.dll jpeg.dll jpeg62.dll
         PATHS ${CMAKE_PREFIX_PATH}
         PATH_SUFFIXES bin lib
         NO_DEFAULT_PATH)
