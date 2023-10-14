@@ -45,7 +45,11 @@ SOURCE_GROUP("Sources" FILES ${sources})
 FILE(GLOB ui_files "ui/*.ui")
 SOURCE_GROUP("UI Files" FILES ${ui_files})
 
-QT5_WRAP_UI(ui_sources ${ui_files})
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    QT5_WRAP_UI(ui_sources ${ui_files})
+ELSE()
+    QT6_WRAP_UI(ui_sources ${ui_files})
+ENDIF()
 
 ADD_LIBRARY(output STATIC ${sources} ${ui_sources})
 TARGET_LINK_LIBRARIES(output Qt5::Widgets Qt5::Xml)

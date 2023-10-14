@@ -62,5 +62,7 @@ IF(ENABLE_OPENCL)
 
     INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION lib/scantailor-experimental)
 
-    ADD_SUBDIRECTORY(tests)
+    IF(NOT STE_NO_TESTS STREQUAL "ON")
+        ADD_SUBDIRECTORY(tests)
+    ENDIF()
 ENDIF()

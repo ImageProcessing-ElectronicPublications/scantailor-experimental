@@ -21,6 +21,10 @@ SET(
 SOURCE_GROUP("Sources" FILES ${sources})
 
 ADD_LIBRARY(dewarping STATIC ${sources})
-TARGET_LINK_LIBRARIES(dewarping imageproc math foundation Qt5::Widgets Qt5::Xml)
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    TARGET_LINK_LIBRARIES(dewarping imageproc math foundation Qt5::Widgets Qt5::Xml)
+ELSE()
+    TARGET_LINK_LIBRARIES(dewarping imageproc math foundation Qt6::Widgets Qt6::Xml)
+ENDIF()
 
 TRANSLATION_SOURCES(scantailor-experimental ${sources})

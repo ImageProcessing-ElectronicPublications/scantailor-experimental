@@ -46,4 +46,8 @@ SET(
 SOURCE_GROUP("Sources" FILES ${sources})
 
 ADD_LIBRARY(foundation STATIC ${sources})
-TARGET_LINK_LIBRARIES(foundation Qt5::Gui Qt5::Core Qt5::Xml)
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    TARGET_LINK_LIBRARIES(foundation Qt5::Gui Qt5::Core Qt5::Xml)
+ELSE()
+    TARGET_LINK_LIBRARIES(foundation Qt6::Gui Qt6::Core Qt6::Xml)
+ENDIF()

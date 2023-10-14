@@ -19,6 +19,9 @@ SET(
 SOURCE_GROUP(Sources FILES ${sources})
 
 ADD_LIBRARY(interaction STATIC ${sources})
-TARGET_LINK_LIBRARIES(interaction Qt5::Widgets)
-
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    TARGET_LINK_LIBRARIES(interaction Qt5::Widgets)
+ELSE()
+    TARGET_LINK_LIBRARIES(interaction Qt6::Widgets)
+ENDIF()
 TRANSLATION_SOURCES(scantailor-experimental ${sources})
