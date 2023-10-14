@@ -1,5 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
 
+IF(NOT DEFINED STE_ARCH)
+    SET(STE_ARCH "X86")
+ENDIF()
+IF(STE_ARCH STREQUAL "ARM")
+    # Because OpenGL is always software here
+    SET(ENABLE_OPENCL OFF)
+ENDIF()
+
+
 IF(POLICY CMP0003)
     # Allow linking with full library path instead of -L/path -llibrary
     CMAKE_POLICY(SET CMP0003 NEW)

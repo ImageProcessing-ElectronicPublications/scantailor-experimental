@@ -18,7 +18,11 @@ ENDIF()
 
 MATH(EXPR bits "${CMAKE_SIZEOF_VOID_P} * 8")
 SET(LICENSE_FILE "${CMAKE_SOURCE_DIR}/LICENSE")
+IF(STE_ARCH STREQUAL "ARM")
+SET(INSTALLER_FILENAME "scantailor-experimental-${VERSION}-arm${bits}-install.exe")
+ELSE()
 SET(INSTALLER_FILENAME "scantailor-experimental-${VERSION}-${bits}bit-install.exe")
+ENDIF()
 SET(REGISTER_EXTENSION_NSH "${CMAKE_CURRENT_SOURCE_DIR}/registerExtension.nsh")
 
 SET(
