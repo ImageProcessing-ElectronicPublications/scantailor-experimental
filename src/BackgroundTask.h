@@ -46,12 +46,20 @@ public:
 
     virtual void cancel()
     {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
         m_cancelFlag.store(1);
+#else
+        m_cancelFlag.storeRelaxed(1);
+#endif
     }
 
     virtual bool isCancelled() const
     {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
         return m_cancelFlag.load() != 0;
+#else
+        return m_cancelFlag.loadRelaxed() != 0;
+#endif
     }
 
     /**
