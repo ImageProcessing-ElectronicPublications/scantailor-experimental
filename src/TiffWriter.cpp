@@ -252,7 +252,7 @@ TiffWriter::writeBitonalOrIndexed8Image(
     case QImage::Format_MonoLSB:
         // Don't use CCITTFAX4 compression, as Photoshop
         // has problems with it.
-        //compression = COMPRESSION_CCITTFAX4;
+        compression = COMPRESSION_CCITTFAX4;
         bits_per_sample = 1;
         if (image.colorCount() < 2)
         {
