@@ -1003,7 +1003,7 @@ GrayImage binarizeMScaleMap(
     int const gray_bpl = gray.stride();
 
     unsigned int whcp, l, i, j, blsz, rsz, radius;
-    double immean, st, kover, sensitivity, sensdiv, senspos, sensinv;
+    double immean, kover, sensitivity, sensdiv, senspos, sensinv;
     unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
     unsigned int maskbl, maskover, tim, threshold = 0;
     size_t idx;

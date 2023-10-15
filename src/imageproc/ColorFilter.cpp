@@ -806,7 +806,7 @@ void hsvKMeansInPlace(
         double mean_s[256] = {0.0};
         double mean_v[256] = {0.0};
 
-        float ctorad = 2.0f * M_PI / 256.0f;
+        float ctorad = (float)(2.0 * M_PI / 256.0);
         uint32_t const msb = uint32_t(1) << 31;
 
         for (unsigned int y = 0; y < h; y++)
