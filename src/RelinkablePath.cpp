@@ -33,7 +33,12 @@ RelinkablePath::normalize(QString const& path)
     front_slashes.replace(QChar('\\'), QLatin1String("/"));
 
     QStringList new_components;
-    BOOST_FOREACH(QString const& comp, front_slashes.split(QChar('/'), QString::KeepEmptyParts))
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QString::SplitBehavior behavior = QString::KeepEmptyParts;
+#else
+    Qt::SplitBehavior behavior = Qt::KeepEmptyParts;
+#endif
+    BOOST_FOREACH(QString const& comp, front_slashes.split(QChar('/'), behavior))
     {
         if (comp.isEmpty())
         {

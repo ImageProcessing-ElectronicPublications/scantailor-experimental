@@ -24,7 +24,7 @@
 
 #include <QDir>
 #include <QMap>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 
 #include "ImageId.h"
@@ -54,11 +54,16 @@ CommandLine::set(CommandLine const& cl)
 void
 CommandLine::parseCli(QStringList const& argv)
 {
-    QRegExp rx("^--([^=]+)=(.*)$");
-    QRegExp rx_switch("^--([^=]+)$");
-    QRegExp rx_short("^-([^=]+)=(.*)$");
-    QRegExp rx_short_switch("^-([^=]+)$");
-    QRegExp rx_project(".*\\.ScanTailor$", Qt::CaseInsensitive);
+    QRegularExpression rx("^--([^=]+)=(.*)$");
+    QRegularExpression rx_switch("^--([^=]+)$");
+    QRegularExpression rx_short("^-([^=]+)=(.*)$");
+    QRegularExpression rx_short_switch("^-([^=]+)$");
+    QRegularExpression rx_project(".*\\.ScanTailor$", QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch rx_match;
+    QRegularExpressionMatch rx_switch_match;
+    QRegularExpressionMatch rx_short_match;
+    QRegularExpressionMatch rx_short_switch_match;
+    QRegularExpressionMatch rx_project_match;
 
     QMap<QString, QString> shortMap;
     shortMap["h"] = "help";
@@ -74,29 +79,29 @@ CommandLine::parseCli(QStringList const& argv)
 #ifdef DEBUG_CLI
         std::cout << "arg[" << i << "]=" << argv[i].toAscii().constData() << "\n";
 #endif
-        if (rx.exactMatch(argv[i]))
+        if ((rx_match = rx.match(argv[i])).hasMatch())
         {
             // option with a value
-            m_options[rx.cap(1)] = rx.cap(2);
+            m_options[rx_match.captured(1)] = rx_match.captured(2);
         }
-        else if (rx_switch.exactMatch(argv[i]))
+        else if ((rx_switch_match = rx_switch.match(argv[i])).hasMatch())
         {
             // option without value
-            m_options[rx_switch.cap(1)] = "true";
+            m_options[rx_switch_match.captured(1)] = "true";
         }
-        else if (rx_short.exactMatch(argv[i]))
+        else if ((rx_short_match = rx_short.match(argv[i])).hasMatch())
         {
             // option with a value
-            QString key = shortMap[rx_short.cap(1)];
-            m_options[key] = rx_short.cap(2);
+            QString key = shortMap[rx_short_match.captured(1)];
+            m_options[key] = rx_short_match.captured(2);
         }
-        else if (rx_short_switch.exactMatch(argv[i]))
+        else if ((rx_short_switch_match = rx_short_switch.match(argv[i])).hasMatch())
         {
-            QString key = shortMap[rx_short_switch.cap(1)];
+            QString key = shortMap[rx_short_switch_match.captured(1)];
             if (key == "") continue;
             m_options[key] = "true";
         }
-        else if (rx_project.exactMatch(argv[i]))
+        else if ((rx_project_match = rx_project.match(argv[i])).hasMatch())
         {
             // project file
             CommandLine::m_projectFile = argv[i];

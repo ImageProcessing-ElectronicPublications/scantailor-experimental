@@ -82,7 +82,7 @@ private:
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
     DespeckleState m_despeckleState;
     IntrusivePtr<TaskCancelHandle> m_ptrCancelHandle;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     DespeckleLevel m_despeckleLevel;
     double m_despeckleFactor;
 };
@@ -96,14 +96,14 @@ public:
         IntrusivePtr<TaskCancelHandle> const& cancel_handle,
         DespeckleState const& despeckle_state,
         DespeckleVisualization const& visualization,
-        std::auto_ptr<DebugImagesImpl> debug_images);
+        std::unique_ptr<DebugImagesImpl>& debug_images);
 
     // This method is called from the main thread.
     virtual void operator()();
 private:
     QPointer<DespeckleView> m_ptrOwner;
     IntrusivePtr<TaskCancelHandle> m_ptrCancelHandle;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     DespeckleState m_despeckleState;
     DespeckleVisualization m_visualization;
 };
@@ -327,13 +327,13 @@ DespeckleView::DespeckleResult::DespeckleResult(
     IntrusivePtr<TaskCancelHandle> const& cancel_handle,
     DespeckleState const& despeckle_state,
     DespeckleVisualization const& visualization,
-    std::auto_ptr<DebugImagesImpl> debug_images)
+    std::unique_ptr<DebugImagesImpl>& debug_images)
     :	m_ptrOwner(owner),
       m_ptrCancelHandle(cancel_handle),
-      m_ptrDbg(debug_images),
       m_despeckleState(despeckle_state),
       m_visualization(visualization)
 {
+    m_ptrDbg = std::move(debug_images);
 }
 
 void
