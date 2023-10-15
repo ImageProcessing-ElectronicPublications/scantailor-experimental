@@ -32,6 +32,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <stdint.h>
 
 /**
  * m_reverseBitsLUT[byte] gives the same byte, but with bit order reversed.
@@ -238,9 +239,9 @@ TiffWriter::writeBitonalOrIndexed8Image(
 {
     TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16(1));
 
-    uint16 compression = COMPRESSION_LZW;
-    uint16 bits_per_sample = 8;
-    uint16 photometric = PHOTOMETRIC_PALETTE;
+    uint16_t compression = COMPRESSION_LZW;
+    uint16_t bits_per_sample = 8;
+    uint16_t photometric = PHOTOMETRIC_PALETTE;
     if (image.isGrayscale())
     {
         photometric = PHOTOMETRIC_MINISBLACK;
@@ -291,9 +292,9 @@ TiffWriter::writeBitonalOrIndexed8Image(
         {
             color_table.resize(num_colors);
         }
-        std::vector<uint16> pr(num_colors, 0);
-        std::vector<uint16> pg(num_colors, 0);
-        std::vector<uint16> pb(num_colors, 0);
+        std::vector<uint16_t> pr(num_colors, 0);
+        std::vector<uint16_t> pg(num_colors, 0);
+        std::vector<uint16_t> pb(num_colors, 0);
         for (int i = 0; i < color_table.size(); ++i)
         {
             QRgb const rgb = color_table[i];
