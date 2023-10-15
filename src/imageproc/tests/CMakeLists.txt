@@ -29,7 +29,14 @@ SOURCE_GROUP("Sources" FILES ${sources})
 
 SET(
     libs
-    imageproc math foundation Qt5::Widgets Qt5::Xml
+    imageproc math foundation 
+)
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    LIST(APPEND libs Qt5::Widgets Qt5::Xml)
+ELSE()
+    LIST(APPEND libs Qt6::Widgets Qt6::Xml)
+ENDIF()
+LIST(APPEND libs
     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
     ${Boost_PRG_EXECUTION_MONITOR_LIBRARY} ${EXTRA_LIBS}
 )

@@ -52,7 +52,11 @@ ELSE()
 ENDIF()
 
 ADD_LIBRARY(output STATIC ${sources} ${ui_sources})
-TARGET_LINK_LIBRARIES(output Qt5::Widgets Qt5::Xml)
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    TARGET_LINK_LIBRARIES(output Qt5::Widgets Qt5::Xml)
+ELSE()
+    TARGET_LINK_LIBRARIES(output Qt6::Widgets Qt6::Xml)
+ENDIF()
 ADD_DEPENDENCIES(output toplevel_ui_sources)
 
 TRANSLATION_SOURCES(scantailor-experimental ${sources} ${ui_files})
