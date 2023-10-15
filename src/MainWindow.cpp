@@ -413,7 +413,7 @@ MainWindow::switchToNewProject(
 void
 MainWindow::showNewOpenProjectPanel()
 {
-    std::auto_ptr<QWidget> outer_widget(new QWidget);
+    std::unique_ptr<QWidget> outer_widget(new QWidget);
     QGridLayout* layout = new QGridLayout(outer_widget.get());
     outer_widget->setLayout(layout);
 
@@ -1971,7 +1971,7 @@ MainWindow::showInsertFileDialog(BeforeOrAfter before_or_after, ImageId const& e
         QFileInfoList m_inProjectFiles;
     };
 
-    std::auto_ptr<QFileDialog> dialog(
+    std::unique_ptr<QFileDialog> dialog(
         new QFileDialog(
             this, tr("Files to insert"),
             QFileInfo(existing.filePath()).absolutePath()

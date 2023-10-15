@@ -69,10 +69,10 @@ DebugImagesImpl::add(QImage const& image, QString const& label)
             m_swapper.swapOut();
         }
 
-        virtual std::auto_ptr<QWidget> newInstance()
+        virtual std::unique_ptr<QWidget> newInstance()
         {
             auto accel_ops = std::make_shared<NonAcceleratedOperations>();
-            return std::auto_ptr<QWidget>(new BasicImageView(accel_ops, m_swapper.constObject()));
+            return std::unique_ptr<QWidget>(new BasicImageView(accel_ops, m_swapper.constObject()));
         }
     private:
         ObjectSwapper<QImage> m_swapper;
@@ -154,9 +154,9 @@ DebugImagesImpl::add(QString const& label,
             m_swapOutAction();
         }
 
-        virtual std::auto_ptr<QWidget> newInstance()
+        virtual std::unique_ptr<QWidget> newInstance()
         {
-            return std::auto_ptr<QWidget>(m_imageViewFactory());
+            return std::unique_ptr<QWidget>(m_imageViewFactory());
         }
     private:
         boost::function<QWidget*()> m_imageViewFactory;

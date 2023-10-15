@@ -51,7 +51,7 @@ public:
      * Implementations will sandwich this code between swapIn() and swapOut()
      * in case swap in is required. Otherwise, no swapIn() or swapOut() is called.
      */
-    virtual std::auto_ptr<QWidget> newInstance() = 0;
+    virtual std::unique_ptr<QWidget> newInstance() = 0;
 };
 
 #endif

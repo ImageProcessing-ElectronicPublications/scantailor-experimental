@@ -111,7 +111,7 @@ DebugImageView::factoryReady()
 
     if (m_isLive && currentWidget() == m_pPlaceholderWidget)
     {
-        std::auto_ptr<QWidget> image_view(m_ptrFactory->newInstance());
+        std::unique_ptr<QWidget> image_view(m_ptrFactory->newInstance());
         setCurrentIndex(addWidget(image_view.release()));
     }
 
