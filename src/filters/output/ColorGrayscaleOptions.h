@@ -30,8 +30,7 @@ class ColorGrayscaleOptions
 {
 public:
     ColorGrayscaleOptions()
-        : m_whiteMargins(false),
-          m_wienerCoef(0.0),
+        : m_wienerCoef(0.0),
           m_wienerWindowSize(5),
           m_knndCoef(0.0),
           m_knndRadius(5),
@@ -41,7 +40,8 @@ public:
           m_screenWindowSize(10),
           m_curveCoef(0.5),
           m_sqrCoef(0.0),
-          m_normalizeCoef(0.5) {}
+          m_normalizeCoef(0.5),
+          m_whiteMargins(false) {}
 
     ColorGrayscaleOptions(QDomElement const& el);
 
