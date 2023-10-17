@@ -76,9 +76,9 @@ public:
     {
         return m_knndRadius;
     }
-    void setKnndRadius(double val)
+    void setKnndRadius(int val)
     {
-        m_knndRadius = (int)val; // Shouldn't we use here some rounding?
+        m_knndRadius = val;
     }
 
     double blurCoef() const
