@@ -3,6 +3,7 @@ CMakeFiles
 *.qm
 *.h.moc
 build/
+build-*/
 *~
 *_automoc.cpp
 moc_*cpp
