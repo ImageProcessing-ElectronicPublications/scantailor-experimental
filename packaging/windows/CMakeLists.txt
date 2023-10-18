@@ -18,21 +18,21 @@ ENDIF()
 
 MATH(EXPR bits "${CMAKE_SIZEOF_VOID_P} * 8")
 SET(LICENSE_FILE "${CMAKE_SOURCE_DIR}/LICENSE")
-IF(STE_ARCH STREQUAL "ARM")
-SET(INSTALLER_FILENAME "scantailor-experimental-${VERSION}-arm${bits}-install.exe")
+IF(ST_ARCH STREQUAL "ARM")
+SET(INSTALLER_FILENAME "scantailor-${ST_FAMILY_LOWER}-${ST_VERSION}-arm${bits}-install.exe")
 ELSE()
-SET(INSTALLER_FILENAME "scantailor-experimental-${VERSION}-${bits}bit-install.exe")
+SET(INSTALLER_FILENAME "scantailor-${ST_FAMILY_LOWER}-${ST_VERSION}-${bits}bit-install.exe")
 ENDIF()
 SET(REGISTER_EXTENSION_NSH "${CMAKE_CURRENT_SOURCE_DIR}/registerExtension.nsh")
 
 SET(
     SOURCES
-    scantailor-experimental.nsi.in "${CMAKE_SOURCE_DIR}/cmake/generate_nsi_file.cmake.in"
+    "scantailor-${ST_FAMILY_LOWER}.nsi.in" "${CMAKE_SOURCE_DIR}/cmake/generate_nsi_file.cmake.in"
     "${CMAKE_SOURCE_DIR}/cmake/prepare_staging_dir.cmake.in"
 )
 
 SOURCE_GROUP("Sources" FILES ${SOURCES})
-SOURCE_GROUP("Generated" FILES "${CMAKE_BINARY_DIR}/scantailor-experimental.nsi")
+SOURCE_GROUP("Generated" FILES "${CMAKE_BINARY_DIR}/scantailor-${ST_FAMILY_LOWER}.nsi")
 
 CONFIGURE_FILE(
     "${CMAKE_SOURCE_DIR}/cmake/prepare_staging_dir.cmake.in"
@@ -41,7 +41,7 @@ CONFIGURE_FILE(
 
 SET(
     dist_targets
-    scantailor-experimental scantailor-experimental-cli CrashReporter opencl_plugin
+    "scantailor-${ST_FAMILY_LOWER}" "scantailor-${ST_FAMILY_LOWER}-cli" CrashReporter opencl_plugin
 )
 SET(BUILT_BINARIES "")
 FOREACH(target ${dist_targets})
@@ -68,13 +68,13 @@ ADD_CUSTOM_TARGET(
 )
 ADD_DEPENDENCIES(
     prepare_staging_dir
-    scantailor-experimental scantailor-experimental-cli compile_translations
+    "scantailor-${ST_FAMILY_LOWER}" "scantailor-${ST_FAMILY_LOWER}-cli" compile_translations
 )
 IF(ENABLE_CRASH_REPORTER)
     ADD_DEPENDENCIES(prepare_staging_dir CrashReporter)
 ENDIF()
 
-SET(extra_deps scantailor-experimental compile_translations)
+SET(extra_deps "scantailor-${ST_FAMILY_LOWER}" compile_translations)
 
 SET(DUMP_SYMBOLS_COMMANDS "")
 IF(ENABLE_CRASH_REPORTER)
@@ -102,7 +102,7 @@ CONFIGURE_FILE(
 
 SET(
     scantailor_nsi_command
-    OUTPUT "${CMAKE_BINARY_DIR}/scantailor-experimental.nsi"
+    OUTPUT "${CMAKE_BINARY_DIR}/scantailor-${ST_FAMILY_LOWER}.nsi"
     COMMAND "${CMAKE_COMMAND}" "-DCFG=$<CONFIGURATION>"
 )
 IF(ENABLE_CRASH_REPORTER)
@@ -114,7 +114,7 @@ ENDIF()
 LIST(
     APPEND scantailor_nsi_command
     -P "${CMAKE_BINARY_DIR}/generate_nsi_file.cmake"
-    DEPENDS scantailor-experimental.nsi.in
+    DEPENDS scantailor-${ST_FAMILY_LOWER}.nsi.in
     "${CMAKE_SOURCE_DIR}/cmake/generate_nsi_file.cmake.in"
     VERBATIM
 )
@@ -123,9 +123,9 @@ ADD_CUSTOM_COMMAND(${scantailor_nsi_command})
 ADD_CUSTOM_COMMAND(
     OUTPUT "${INSTALLER_FILENAME}"
     ${DUMP_SYMBOLS_COMMANDS}
-    COMMAND "${MAKENSIS_EXE}" /V2 scantailor-experimental.nsi
+    COMMAND "${MAKENSIS_EXE}" /V2 "scantailor-${ST_FAMILY_LOWER}.nsi"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-    MAIN_DEPENDENCY "${CMAKE_BINARY_DIR}/scantailor-experimental.nsi"
+    MAIN_DEPENDENCY "${CMAKE_BINARY_DIR}/scantailor-${ST_FAMILY_LOWER}.nsi"
     DEPENDS ${extra_deps}
     VERBATIM
 )

@@ -1,11 +1,10 @@
-!define VERSION "@VERSION@"
+!define VERSION "@ST_VERSION@"
 !define LICENSE_FILE "@LICENSE_FILE@"
 !define INSTALLER_FILENAME "@INSTALLER_FILENAME@"
 !define STAGING_DIR "@STAGING_DIR@"
-!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scan Tailor Experimental"
-
-# The window identifier of the main Scan Tailor window.
-!define WNDCLASS "ScanTailor-experimental_Window"
+!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scan Tailor @ST_FAMILY@"
+!define PRODUCT_FAMILY "@ST_FAMILY@"
+!define PRODUCT_FAMILY_LOWERCASE "@ST_FAMILY_LOWER@"
 
 !include "@REGISTER_EXTENSION_NSH@"
 !include "x64.nsh"
@@ -16,17 +15,17 @@
 BrandingText " " # To remove the mention of NullSoft.
 #LoadLanguageFile "${NSISDIR}\Contrib\Language files\Russian.nlf"
 
-Name "Scan Tailor Experimental version ${VERSION}"
+Name "Scan Tailor ${PRODUCT_FAMILY} version ${VERSION}"
 
 OutFile "${INSTALLER_FILENAME}"
 
-!if "@STE_ARCH@" == "ARM"
-  InstallDir "$PROGRAMFILES\Scan Tailor Experimental"
+!if "@ST_ARCH@" == "ARM"
+  InstallDir "$PROGRAMFILES\Scan Tailor ${PRODUCT_FAMILY}"
 !else
   !if "@SIZEOF_VOID_PTR@" == "8"
-    InstallDir "$PROGRAMFILES64\Scan Tailor Experimental"
+    InstallDir "$PROGRAMFILES64\Scan Tailor ${PRODUCT_FAMILY}"
   !else
-    InstallDir "$PROGRAMFILES32\Scan Tailor Experimental"
+    InstallDir "$PROGRAMFILES32\Scan Tailor ${PRODUCT_FAMILY}"
   !endif
 !endif
 
@@ -41,12 +40,12 @@ AllowSkipFiles off
 SetCompressor /SOLID /FINAL lzma
 
 !if "${VERSION}" != ""
-  VIAddVersionKey "ProductName" "Scan Tailor Experimental"
+  VIAddVersionKey "ProductName" "Scan Tailor ${PRODUCT_FAMILY}"
   VIAddVersionKey "ProductVersion" "${VERSION}"
   VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
   VIAddVersionKey "CompanyName" "Joseph Artsimovich"
   VIAddVersionKey "LegalTrademarks" ""
-  VIAddVersionKey "LegalCopyright" "� Joseph Artsimovich et al."
+  VIAddVersionKey "LegalCopyright" "${U+00A9} Joseph Artsimovich et al."
   VIAddVersionKey "FileDescription" "Post-processing tool for scanned pages."
   VIAddVersionKey "FileVersion" "${VERSION}"
   VIProductVersion "${VERSION}"
@@ -70,7 +69,7 @@ Function .onInit
     MessageBox MB_ICONSTOP|MB_OK "A 64-bit version of Scan Tailor won't work on a 32-bit version of Windows."
     Abort
   ${EndIf}
-!if "@STE_ARCH@" == "ARM"
+!if "@ST_ARCH@" == "ARM"
   ${IfNot} ${IsNativeARM64}
     MessageBox MB_ICONSTOP|MB_OK "An ARM64 version of Scan Tailor won't work on an AMD64 version of Windows."
     Abort
@@ -91,24 +90,24 @@ Section
   WriteUninstaller $INSTDIR\Uninstaller.exe
   
   # Write uninstall registry records.
-  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scan Tailor Experimental"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scan Tailor ${PRODUCT_FAMILY}"
   WriteRegStr HKLM "${UNINST_REGKEY}" "UninstallString" "$INSTDIR\Uninstaller.exe"
   
   # Create menu shortcuts.
   SetShellVarContext all
-  CreateDirectory "$SMPROGRAMS\Scan Tailor Experimental"
-  CreateShortcut "$SMPROGRAMS\Scan Tailor Experimental\Scan Tailor Experimental.lnk" "$INSTDIR\scantailor-experimental.exe"
-  CreateShortcut "$SMPROGRAMS\Scan Tailor Experimental\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"  
+  CreateDirectory "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}"
+  CreateShortcut "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}\Scan Tailor ${PRODUCT_FAMILY}.lnk" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
+  CreateShortcut "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"  
 
   # Register the ".ScanTailor" file extension.
-  ${registerExtension} "$INSTDIR\scantailor-experimental.exe" ".ScanTailor" \
-  "Scan Tailor Project" "$INSTDIR\scantailor-experimental.exe"
+  ${registerExtension} "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe" ".ScanTailor" \
+  "Scan Tailor Project" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
 SectionEnd
 
 
 Function un.onInit
   #FindWindow $0 "${WNDCLASS}" ""
-  ${nsProcess::FindProcess} "scantailor-experimental.exe" $0
+  ${nsProcess::FindProcess} "scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe" $0
   ${nsProcess::Unload}
   StrCmp $0 0 0 continueInstall
     MessageBox MB_ICONSTOP|MB_OK "The application you are trying to remove is running. Close it and try again."
@@ -122,8 +121,8 @@ Section "Uninstall"
   ${unregisterExtension} ".ScanTailor" "Scan Tailor Project"
   
   # Remove program files.
-  Delete "$INSTDIR\scantailor-experimental.exe"
-  Delete "$INSTDIR\scantailor-experimental-cli.exe"
+  Delete "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
+  Delete "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}-cli.exe"
   Delete "$INSTDIR\opencl_plugin.dll"
   Delete "$INSTDIR\acceleration.dll"
   Delete "$INSTDIR\foundation.dll"
@@ -184,5 +183,5 @@ Section "Uninstall"
 
   # Remove menu entries
   SetShellVarContext all
-  RMDir /r "$SMPROGRAMS\Scan Tailor Experimental"
+  RMDir /r "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}"
 SectionEnd

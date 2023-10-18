@@ -1,14 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
 
-IF(NOT DEFINED STE_ARCH)
-    SET(STE_ARCH "X86")
+IF(NOT DEFINED ST_ARCH)
+    SET(ST_ARCH "X86")
 ENDIF()
-IF(STE_ARCH STREQUAL "ARM")
+IF(ST_ARCH STREQUAL "ARM")
     # Because OpenGL is always software here
     SET(ENABLE_OPENCL OFF)
 ENDIF()
 
-IF(STE_ARCH STREQUAL "ARM")
+IF(ST_ARCH STREQUAL "ARM")
     SET(STE_NO_TESTS ON)
     SET(STE_USE_QT6 ON)
 ENDIF()
@@ -77,19 +77,25 @@ FILE(READ "${PROJECT_SOURCE_DIR}/src/version.h" version_h_contents)
 STRING(
     REGEX REPLACE
     ".*#define[ \\t]+STFAMILY[ \\t]+\"([^\"]*)\".*"
-    "\\1" STFAMILY "${version_h_contents}"
+    "\\1" ST_FAMILY "${version_h_contents}"
 )
-IF("${STFAMILY}" STREQUAL "${version_h_contents}")
+IF("${ST_FAMILY}" STREQUAL "${version_h_contents}")
     MESSAGE(FATAL_ERROR "Failed to extract STFAMILY from version.h")
 ENDIF()
+STRING(TOLOWER "${ST_FAMILY}" ST_FAMILY_LOWER)
+# Make ST_FAMILY with capital letter
+STRING(TOUPPER "${ST_FAMILY}" ST_FAMILY)
+STRING(SUBSTRING "${ST_FAMILY}" 0 1 ST_FAMILY)
+STRING(SUBSTRING "${ST_FAMILY_LOWER}" 1 -1 ST_FAMILY_TEMP)
+STRING(CONCAT ST_FAMILY "${ST_FAMILY}" "${ST_FAMILY_TEMP}")
 
 # VERSION must be either empty or be in the form of X.Y.Z.Y
 STRING(
     REGEX REPLACE
     ".*#define[ \\t]+VERSION[ \\t]+\"(([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)?)\".*"
-    "\\1" VERSION "${version_h_contents}"
+    "\\1" ST_VERSION "${version_h_contents}"
 )
-IF("${VERSION}" STREQUAL "${version_h_contents}")
+IF("${ST_VERSION}" STREQUAL "${version_h_contents}")
     MESSAGE(FATAL_ERROR "Failed to extract VERSION from version.h")
 ENDIF()
 
@@ -341,7 +347,7 @@ INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translation
 # Source code packaging
 SET(CPACK_CMAKE_GENERATOR "")
 SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_SOURCE_PACKAGE_FILE_NAME "scantailor-experimental-${VERSION}")
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "scantailor-experimental-${ST_VERSION}")
 SET(
     CPACK_SOURCE_IGNORE_FILES
     "/\\\\.svn/"
