@@ -1371,7 +1371,7 @@ MainWindow::filterResult(BackgroundTaskPtr const& task, FilterResultPtr const& r
             if (m_checkBeepWhenFinished())
             {
 #if defined(Q_OS_UNIX)
-                std::system("beep");
+                int result = std::system("beep");
 #else
                 QApplication::beep();
 #endif

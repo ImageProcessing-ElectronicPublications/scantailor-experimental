@@ -34,9 +34,9 @@ double despeckleLevelToFactor(DespeckleLevel const level)
         return 2.5;
     case DESPECKLE_AGGRESSIVE:
         return 3.5;
-    }
-
-    return 0.0;
+    default:
+        return 0.0;
+    } 
 }
 
 QString despeckleLevelToString(DespeckleLevel const level)

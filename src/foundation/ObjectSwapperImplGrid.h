@@ -74,7 +74,8 @@ ObjectSwapperImpl<Grid<Node> >::swapIn()
     }
 
     size_t const bytes = (m_width + m_padding*2) * (m_height + m_padding*2) * sizeof(Node);
-    if (file.size() != bytes)
+    qint64 file_size = file.size();
+    if (file_size < 0 || (quint64)file_size > SIZE_MAX || (size_t)file_size != bytes)
     {
         qDebug() << "Unexpected size of file: " << m_file.get();
         return grid;
