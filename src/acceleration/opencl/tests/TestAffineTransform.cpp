@@ -32,7 +32,7 @@
 #include <CL/cl2.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <cstdint>
 #include <cmath>
 #include <algorithm>

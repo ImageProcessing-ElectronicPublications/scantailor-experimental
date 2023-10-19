@@ -21,7 +21,7 @@
 #include "GridAccessor.h"
 #include "RasterOpGeneric.h"
 #include "Utils.h"
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <QSize>
 #include <QPoint>
 #include <QRect>

@@ -28,7 +28,7 @@
 #include <QColor>
 #include <QtGlobal>
 #include <QDebug>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/foreach.hpp>
 #include <algorithm>
 
@@ -101,7 +101,7 @@ ImageView::setupCuttersInteraction()
                 boost::bind(&ImageView::handlePosition, this, i, j)
             );
             m_handles[i][j].setMoveRequestCallback(
-                boost::bind(&ImageView::handleMoveRequest, this, i, j, _1)
+                boost::bind(&ImageView::handleMoveRequest, this, i, j, boost::placeholders::_1)
             );
             m_handles[i][j].setDragFinishedCallback(
                 boost::bind(&ImageView::dragFinished, this)
@@ -116,7 +116,7 @@ ImageView::setupCuttersInteraction()
             boost::bind(&ImageView::linePosition, this, i)
         );
         m_lineSegments[i].setMoveRequestCallback(
-            boost::bind(&ImageView::lineMoveRequest, this, i, _1)
+            boost::bind(&ImageView::lineMoveRequest, this, i, boost::placeholders::_1)
         );
         m_lineSegments[i].setDragFinishedCallback(
             boost::bind(&ImageView::dragFinished, this)

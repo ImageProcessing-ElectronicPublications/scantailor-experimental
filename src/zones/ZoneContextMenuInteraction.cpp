@@ -33,7 +33,7 @@
 #include <QDebug>
 #include <QtGlobal> // For Q_OS_*
 #include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <vector>
 #include <assert.h>
 
@@ -56,7 +56,7 @@ ZoneContextMenuInteraction::create(
 {
     return create(
                context, interaction,
-               boost::bind(&ZoneContextMenuInteraction::defaultMenuCustomizer, _1, _2)
+               boost::bind(&ZoneContextMenuInteraction::defaultMenuCustomizer, boost::placeholders::_1, boost::placeholders::_2)
            );
 }
 

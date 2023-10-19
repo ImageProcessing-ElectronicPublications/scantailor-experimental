@@ -32,7 +32,7 @@
 #include <QScrollBar>
 #include <QStyle>
 #include <Qt>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <algorithm>
 #include <math.h>
 
@@ -82,7 +82,7 @@ ImageView::ImageView(
             boost::bind(&ImageView::handlePosition, this, i)
         );
         m_handles[i].setMoveRequestCallback(
-            boost::bind(&ImageView::handleMoveRequest, this, i, _1)
+            boost::bind(&ImageView::handleMoveRequest, this, i, boost::placeholders::_1)
         );
         m_handles[i].setDragFinishedCallback(
             boost::bind(&ImageView::dragFinished, this)

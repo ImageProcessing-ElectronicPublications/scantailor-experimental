@@ -21,7 +21,7 @@
 #include "ZoneCreationInteraction.h"
 #include "ZoneVertexDragInteraction.h"
 #include "ZoneContextMenuInteraction.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 ZoneInteractionContext::ZoneInteractionContext(
     ImageViewBase& image_view, EditableZoneSet& zones)
@@ -31,13 +31,13 @@ ZoneInteractionContext::ZoneInteractionContext(
           boost::bind(&ZoneInteractionContext::createStdDefaultInteraction, this)
       ),
       m_zoneCreationInteractionCreator(
-          boost::bind(&ZoneInteractionContext::createStdZoneCreationInteraction, this, _1)
+          boost::bind(&ZoneInteractionContext::createStdZoneCreationInteraction, this, boost::placeholders::_1)
       ),
       m_vertexDragInteractionCreator(
-          boost::bind(&ZoneInteractionContext::createStdVertexDragInteraction, this, _1, _2, _3)
+          boost::bind(&ZoneInteractionContext::createStdVertexDragInteraction, this, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3)
       ),
       m_contextMenuInteractionCreator(
-          boost::bind(&ZoneInteractionContext::createStdContextMenuInteraction, this, _1)
+          boost::bind(&ZoneInteractionContext::createStdContextMenuInteraction, this, boost::placeholders::_1)
       ),
       m_showPropertiesCommand(&ZoneInteractionContext::showPropertiesStub)
 {

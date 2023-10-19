@@ -31,7 +31,7 @@
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <cmath>
 
 namespace imageproc

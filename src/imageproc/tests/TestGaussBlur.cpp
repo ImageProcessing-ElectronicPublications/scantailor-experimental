@@ -27,7 +27,7 @@
 #include <QPoint>
 #include <QString>
 #include <QApplication>
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <cmath>
 
 using namespace Eigen;

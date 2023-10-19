@@ -22,7 +22,7 @@
 #include "Utils.h"
 #include <iostream>
 #include <QImage>
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <math.h>
 

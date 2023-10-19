@@ -23,7 +23,7 @@
 #include "../Utils.h"
 #include "PerformanceTimer.h"
 #include <CL/cl2.hpp>
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <string>
 #include <vector>
 

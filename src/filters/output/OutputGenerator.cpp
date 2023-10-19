@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <QImage>
 #include <QSize>

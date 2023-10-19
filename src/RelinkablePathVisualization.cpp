@@ -31,7 +31,7 @@
 #include <QStyleOptionButton>
 #include <QFile>
 #include <QVariant>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/foreach.hpp>
 #include <vector>
 
