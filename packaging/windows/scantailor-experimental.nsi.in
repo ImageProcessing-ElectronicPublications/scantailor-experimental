@@ -43,7 +43,7 @@ SetCompressor /SOLID /FINAL lzma
   VIAddVersionKey "ProductName" "Scan Tailor ${PRODUCT_FAMILY}"
   VIAddVersionKey "ProductVersion" "${VERSION}"
   VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
-  VIAddVersionKey "CompanyName" "Joseph Artsimovich"
+  VIAddVersionKey "CompanyName" "Joseph Artsimovich and contributors"
   VIAddVersionKey "LegalTrademarks" ""
   VIAddVersionKey "LegalCopyright" "${U+00A9} Joseph Artsimovich et al."
   VIAddVersionKey "FileDescription" "Post-processing tool for scanned pages."
@@ -90,8 +90,12 @@ Section
   WriteUninstaller $INSTDIR\Uninstaller.exe
   
   # Write uninstall registry records.
-  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scan Tailor ${PRODUCT_FAMILY}"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayIcon" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scantailor-${PRODUCT_FAMILY}"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "InstallLocation" "$INSTDIR\"
   WriteRegStr HKLM "${UNINST_REGKEY}" "UninstallString" "$INSTDIR\Uninstaller.exe"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "Publisher" "ImageProcessing-ElectronicPublications"
   
   # Create menu shortcuts.
   SetShellVarContext all
