@@ -2,7 +2,7 @@
 !define LICENSE_FILE "@LICENSE_FILE@"
 !define INSTALLER_FILENAME "@INSTALLER_FILENAME@"
 !define STAGING_DIR "@STAGING_DIR@"
-!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scan Tailor @ST_FAMILY@"
+!define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scantailor-@ST_FAMILY@"
 !define PRODUCT_FAMILY "@ST_FAMILY@"
 !define PRODUCT_FAMILY_LOWERCASE "@ST_FAMILY_LOWER@"
 
@@ -15,17 +15,17 @@
 BrandingText " " # To remove the mention of NullSoft.
 #LoadLanguageFile "${NSISDIR}\Contrib\Language files\Russian.nlf"
 
-Name "Scan Tailor ${PRODUCT_FAMILY} version ${VERSION}"
+Name "Scantailor-${PRODUCT_FAMILY} version ${VERSION}"
 
 OutFile "${INSTALLER_FILENAME}"
 
 !if "@ST_ARCH@" == "ARM"
-  InstallDir "$PROGRAMFILES\Scan Tailor ${PRODUCT_FAMILY}"
+  InstallDir "$PROGRAMFILES\Scantailor-${PRODUCT_FAMILY}"
 !else
   !if "@SIZEOF_VOID_PTR@" == "8"
-    InstallDir "$PROGRAMFILES64\Scan Tailor ${PRODUCT_FAMILY}"
+    InstallDir "$PROGRAMFILES64\Scantailor-${PRODUCT_FAMILY}"
   !else
-    InstallDir "$PROGRAMFILES32\Scan Tailor ${PRODUCT_FAMILY}"
+    InstallDir "$PROGRAMFILES32\Scantailor-${PRODUCT_FAMILY}"
   !endif
 !endif
 
@@ -40,7 +40,7 @@ AllowSkipFiles off
 SetCompressor /SOLID /FINAL lzma
 
 !if "${VERSION}" != ""
-  VIAddVersionKey "ProductName" "Scan Tailor ${PRODUCT_FAMILY}"
+  VIAddVersionKey "ProductName" "Scantailor-${PRODUCT_FAMILY}"
   VIAddVersionKey "ProductVersion" "${VERSION}"
   VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
   VIAddVersionKey "CompanyName" "Joseph Artsimovich and contributors"
@@ -66,17 +66,17 @@ SetCompressor /SOLID /FINAL lzma
 !if "@SIZEOF_VOID_PTR@" == "8"
 Function .onInit
   ${IfNot} ${RunningX64}
-    MessageBox MB_ICONSTOP|MB_OK "A 64-bit version of Scan Tailor won't work on a 32-bit version of Windows."
+    MessageBox MB_ICONSTOP|MB_OK "A 64-bit version of ScanTailor won't work on a 32-bit version of Windows."
     Abort
   ${EndIf}
 !if "@ST_ARCH@" == "ARM"
   ${IfNot} ${IsNativeARM64}
-    MessageBox MB_ICONSTOP|MB_OK "An ARM64 version of Scan Tailor won't work on an AMD64 version of Windows."
+    MessageBox MB_ICONSTOP|MB_OK "An ARM64 version of ScanTailor won't work on an AMD64 version of Windows."
     Abort
   ${EndIf}
 !else
   ${IfNot} ${IsNativeAMD64}
-    MessageBox MB_ICONSTOP|MB_OK "An AMD64 version of Scan Tailor won't work on an ARM64 version of Windows."
+    MessageBox MB_ICONSTOP|MB_OK "An AMD64 version of ScanTailor won't work on an ARM64 version of Windows."
     Abort
   ${EndIf}
 !endif
@@ -99,13 +99,13 @@ Section
   
   # Create menu shortcuts.
   SetShellVarContext all
-  CreateDirectory "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}"
-  CreateShortcut "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}\Scan Tailor ${PRODUCT_FAMILY}.lnk" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
-  CreateShortcut "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"  
+  CreateDirectory "$SMPROGRAMS\Scantailor-${PRODUCT_FAMILY}"
+  CreateShortcut "$SMPROGRAMS\Scantailor-${PRODUCT_FAMILY}\Scantailor-${PRODUCT_FAMILY}.lnk" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
+  CreateShortcut "$SMPROGRAMS\Scantailor-${PRODUCT_FAMILY}\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"  
 
   # Register the ".ScanTailor" file extension.
   ${registerExtension} "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe" ".ScanTailor" \
-  "Scan Tailor Project" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
+  "Scantailor Project" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
 SectionEnd
 
 
@@ -122,7 +122,7 @@ FunctionEnd
 
 Section "Uninstall"
   # Unregister the ".ScanTailor" file extension.
-  ${unregisterExtension} ".ScanTailor" "Scan Tailor Project"
+  ${unregisterExtension} ".ScanTailor" "Scantailor Project"
   
   # Remove program files.
   Delete "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
@@ -187,5 +187,5 @@ Section "Uninstall"
 
   # Remove menu entries
   SetShellVarContext all
-  RMDir /r "$SMPROGRAMS\Scan Tailor ${PRODUCT_FAMILY}"
+  RMDir /r "$SMPROGRAMS\Scantailor-${PRODUCT_FAMILY}"
 SectionEnd
