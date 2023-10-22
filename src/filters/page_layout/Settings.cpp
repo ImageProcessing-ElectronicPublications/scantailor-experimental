@@ -264,7 +264,7 @@ Settings::checkEverythingDefined(
     return m_ptrImpl->checkEverythingDefined(pages, ignore);
 }
 
-std::auto_ptr<Params>
+std::unique_ptr<Params>
 Settings::getPageParams(PageId const& page_id) const
 {
     return m_ptrImpl->getPageParams(page_id);

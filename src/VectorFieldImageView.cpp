@@ -96,7 +96,7 @@ VectorFieldImageView::onPaint(QPainter& painter, InteractionState const& interac
 
     Vec2f vec(m_directions(m_imageFocalPoint.x(), m_imageFocalPoint.y()));
     vec *= m_dirScale;
-    QPointF const arrow_tip(m_imageFocalPoint + vec);
+    QPointF const arrow_tip(QPointF(m_imageFocalPoint) + vec);
     painter.drawLine(m_imageFocalPoint, arrow_tip);
 
     // Now we will be drawing  the > part of the arrow.

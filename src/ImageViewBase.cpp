@@ -50,7 +50,7 @@
 #include <assert.h>
 #include <math.h>
 
-#ifdef ENABLE_OPENGL
+#if defined(ENABLE_OPENGL) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 #include <QGLWidget>
 #include <QGLFormat>
 #endif
@@ -192,7 +192,7 @@ ImageViewBase::ImageViewBase(
      */
     viewport()->setAutoFillBackground(false);
 
-#ifdef ENABLE_OPENGL
+#if defined(ENABLE_OPENGL) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     if (QSettings().value("settings/use_3d_acceleration", false) != false)
     {
         if (OpenGLSupport::supported())
@@ -687,7 +687,7 @@ ImageViewBase::resizeEvent(QResizeEvent* event)
 }
 
 void
-ImageViewBase::enterEvent(QEvent* event)
+ImageViewBase::enterEvent(QEnterEvent* event)
 {
     viewport()->setFocus();
     QAbstractScrollArea::enterEvent(event);

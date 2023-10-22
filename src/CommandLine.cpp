@@ -388,14 +388,16 @@ CommandLine::fetchContentDetection()
 QRectF
 CommandLine::fetchContentRect()
 {
+    QRegularExpressionMatch rx_match;
+
     if (!hasContentRect())
         return QRectF();
 
-    QRegExp rx("([\\d\\.]+)x([\\d\\.]+):([\\d\\.]+)x([\\d\\.]+)");
+    QRegularExpression rx("([\\d\\.]+)x([\\d\\.]+):([\\d\\.]+)x([\\d\\.]+)");
 
-    if (rx.exactMatch(m_options["content-box"]))
+    if ((rx_match = rx.match(m_options["content-box"])).hasMatch())
     {
-        return QRectF(rx.cap(1).toFloat(), rx.cap(2).toFloat(), rx.cap(3).toFloat(), rx.cap(4).toFloat());
+        return QRectF(rx_match.captured(1).toFloat(), rx_match.captured(2).toFloat(), rx_match.captured(3).toFloat(), rx_match.captured(4).toFloat());
     }
 
     std::cout << "invalid --content-box=" << m_options["content-box"].toLocal8Bit().constData() << "\n";

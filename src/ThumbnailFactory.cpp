@@ -34,20 +34,20 @@ class ThumbnailFactory::Collector : public ThumbnailCollector
 public:
     Collector(IntrusivePtr<ThumbnailPixmapCache> const& cache, QSizeF const& max_size);
 
-    virtual void processThumbnail(std::auto_ptr<QGraphicsItem> thumbnail);
+    virtual void processThumbnail(std::unique_ptr<QGraphicsItem> thumbnail);
 
     virtual IntrusivePtr<ThumbnailPixmapCache> thumbnailCache();
 
     virtual QSizeF maxLogicalThumbSize() const;
 
-    std::auto_ptr<QGraphicsItem> retrieveThumbnail()
+    std::unique_ptr<QGraphicsItem> retrieveThumbnail()
     {
-        return m_ptrThumbnail;
+        return std::move(m_ptrThumbnail);
     }
 private:
     IntrusivePtr<ThumbnailPixmapCache> m_ptrCache;
     QSizeF m_maxSize;
-    std::auto_ptr<QGraphicsItem> m_ptrThumbnail;
+    std::unique_ptr<QGraphicsItem> m_ptrThumbnail;
 };
 
 
@@ -64,7 +64,7 @@ ThumbnailFactory::~ThumbnailFactory()
 {
 }
 
-std::auto_ptr<QGraphicsItem>
+std::unique_ptr<QGraphicsItem>
 ThumbnailFactory::get(PageInfo const& page_info)
 {
     AffineImageTransform image_transform(page_info.metadata().size());
@@ -85,9 +85,9 @@ ThumbnailFactory::Collector::Collector(
 
 void
 ThumbnailFactory::Collector::processThumbnail(
-    std::auto_ptr<QGraphicsItem> thumbnail)
+    std::unique_ptr<QGraphicsItem> thumbnail)
 {
-    m_ptrThumbnail = thumbnail;
+    m_ptrThumbnail = std::move(thumbnail);
 }
 
 IntrusivePtr<ThumbnailPixmapCache>

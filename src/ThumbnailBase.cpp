@@ -130,7 +130,7 @@ ThumbnailBase::paint(QPainter* painter,
 
     QPixmap temp_pixmap;
     QString const cache_key(QString::fromLatin1("ThumbnailBase::temp_pixmap"));
-    if (QPixmapCache::find(cache_key, temp_pixmap)
+    if (QPixmapCache::find(cache_key, &temp_pixmap)
             && temp_pixmap.width() >= display_rect.width()
             && temp_pixmap.height() >= display_rect.width())
     {

@@ -138,7 +138,7 @@ CacheDrivenTask::process(
     if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
     {
 
-        std::auto_ptr<QGraphicsItem> thumb;
+        std::unique_ptr<QGraphicsItem> thumb;
 
         switch (params->distortionType())
         {
@@ -208,7 +208,7 @@ CacheDrivenTask::process(
         }
 
         assert(thumb.get());
-        thumb_col->processThumbnail(thumb);
+        thumb_col->processThumbnail(std::move(thumb));
     }
 }
 
