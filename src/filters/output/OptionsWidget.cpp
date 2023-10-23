@@ -206,6 +206,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdMethodChanged(int))
     );
     connect(
+        morphologyCB, SIGNAL(clicked(bool)),
+        this, SLOT(morphologyToggled(bool))
+    );
+    connect(
         dimmingColoredCoef, SIGNAL(valueChanged(double)),
         this, SLOT(dimmingColoredCoefChanged(double))
     );
@@ -570,6 +574,16 @@ OptionsWidget::thresholdMethodChanged(int idx)
 }
 
 void
+OptionsWidget::morphologyToggled(bool const checked)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setMorphology(checked);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::setLighterThreshold()
 {
     thresholdSlider->setValue(thresholdSlider->value() - 1);
@@ -926,6 +940,7 @@ OptionsWidget::updateColorsDisplay()
     {
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
         thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
+        morphologyCB->setChecked(black_white_options.morphology());
         dimmingColoredCoef->setValue(black_white_options.dimmingColoredCoef());
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
         thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());

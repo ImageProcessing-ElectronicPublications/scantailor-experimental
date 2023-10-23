@@ -46,6 +46,15 @@ public:
         m_thresholdMethod = val;
     }
 
+    bool morphology() const
+    {
+        return m_morphology;
+    }
+    void setMorphology(bool val)
+    {
+        m_morphology = val;
+    }
+
     double dimmingColoredCoef() const
     {
         return m_dimmingColoredCoef;
@@ -141,6 +150,7 @@ public:
     bool operator!=(BlackWhiteOptions const& other) const;
 private:
     ThresholdFilter m_thresholdMethod;
+    bool m_morphology;
     double m_dimmingColoredCoef;
     int m_thresholdAdjustment;
     int m_thresholdWindowSize;
