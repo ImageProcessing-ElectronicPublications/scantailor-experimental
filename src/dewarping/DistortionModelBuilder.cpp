@@ -26,6 +26,7 @@
 #include "DebugImages.h"
 #include "VecNT.h"
 #include "ToVec.h"
+#include "../foundation/MultipleTargetsSupport.h"
 #include <QTransform>
 #include <QImage>
 #include <QPainter>
@@ -391,7 +392,7 @@ DistortionModelBuilder::intersectFront(
 
     QLineF const front_segment(polyline.front(), polyline[1]);
     QPointF intersection;
-    if (bound.intersect(front_segment, &intersection) != QLineF::NoIntersection)
+    if (QLineIntersect(bound, front_segment, &intersection) != QLineF::NoIntersection)
     {
         polyline.front() = intersection;
     }
@@ -405,7 +406,7 @@ DistortionModelBuilder::intersectBack(
 
     QLineF const back_segment(polyline[polyline.size() - 2], polyline.back());
     QPointF intersection;
-    if (bound.intersect(back_segment, &intersection) != QLineF::NoIntersection)
+    if (QLineIntersect(bound, back_segment, &intersection) != QLineF::NoIntersection)
     {
         polyline.back() = intersection;
     }
@@ -421,7 +422,7 @@ DistortionModelBuilder::fitExtendedSpline(
     {
         QLineF const line(polyline[0], polyline[1]);
         QPointF intersection;
-        if (line.intersect(bounds.first, &intersection) != QLineF::NoIntersection)
+        if (QLineIntersect(line, bounds.first, &intersection) != QLineF::NoIntersection)
         {
             if (Vec2d(intersection - polyline[0]).squaredNorm() > 1.0)
             {
@@ -439,7 +440,7 @@ DistortionModelBuilder::fitExtendedSpline(
     {
         QLineF const line(polyline[polyline.size() - 2], polyline.back());
         QPointF intersection;
-        if (line.intersect(bounds.second, &intersection) != QLineF::NoIntersection)
+        if (QLineIntersect(line, bounds.second, &intersection) != QLineF::NoIntersection)
         {
             if (Vec2d(intersection - polyline.back()).squaredNorm() > 1.0)
             {

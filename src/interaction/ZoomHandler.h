@@ -22,6 +22,7 @@
 #include "InteractionHandler.h"
 #include "InteractionState.h"
 #include <QPoint>
+#include <QWheelEvent>
 #include <QCoreApplication>
 #include <boost/function.hpp>
 

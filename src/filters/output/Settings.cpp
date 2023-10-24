@@ -235,7 +235,7 @@ Settings::setDespeckleFactor(PageId const& page_id, double factor)
     }
 }
 
-std::auto_ptr<OutputParams>
+std::unique_ptr<OutputParams>
 Settings::getOutputParams(PageId const& page_id) const
 {
     QMutexLocker const locker(&m_mutex);
@@ -243,11 +243,11 @@ Settings::getOutputParams(PageId const& page_id) const
     PerPageOutputParams::const_iterator const it(m_perPageOutputParams.find(page_id));
     if (it != m_perPageOutputParams.end())
     {
-        return std::auto_ptr<OutputParams>(new OutputParams(it->second));
+        return std::unique_ptr<OutputParams>(new OutputParams(it->second));
     }
     else
     {
-        return std::auto_ptr<OutputParams>();
+        return std::unique_ptr<OutputParams>();
     }
 }
 

@@ -21,6 +21,7 @@
 #include "NumericTraits.h"
 #include "ToVec.h"
 #include "ToPoint.h"
+#include "../foundation/MultipleTargetsSupport.h"
 #include <Eigen/Core>
 #include <Eigen/QR>
 #include <QLineF>
@@ -414,7 +415,7 @@ CylindricalSurfaceDewarper::CoupledPolylinesIterator::next1(QPointF& img_pt1, QP
     Vector2d const pln_ptx(pln_pt1[0], pln_pt1[1] + 1);
     QPointF const img_ptx(toPoint(m_pln2img(pln_ptx)));
 
-    if (QLineF(img_pt1, img_ptx).intersect(QLineF(m_nextImgPt2, m_prevImgPt2), &img_pt2) == QLineF::NoIntersection)
+    if (QLineIntersect(QLineF(img_pt1, img_ptx), QLineF(m_nextImgPt2, m_prevImgPt2), &img_pt2) == QLineF::NoIntersection)
     {
         img_pt2 = m_nextImgPt2;
     }
@@ -436,7 +437,7 @@ CylindricalSurfaceDewarper::CoupledPolylinesIterator::next2(QPointF& img_pt1, QP
     Vector2d const pln_ptx(pln_pt2[0], pln_pt2[1] + 1);
     QPointF const img_ptx(toPoint(m_pln2img(pln_ptx)));
 
-    if (QLineF(img_pt2, img_ptx).intersect(QLineF(m_nextImgPt1, m_prevImgPt1), &img_pt1) == QLineF::NoIntersection)
+    if (QLineIntersect(QLineF(img_pt2, img_ptx), QLineF(m_nextImgPt1, m_prevImgPt1), &img_pt1) == QLineF::NoIntersection)
     {
         img_pt1 = m_nextImgPt1;
     }

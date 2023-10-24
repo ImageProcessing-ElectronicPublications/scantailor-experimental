@@ -80,7 +80,7 @@ class Task::NoDistortionUiUpdater : public FilterResult
 public:
     NoDistortionUiUpdater(IntrusivePtr<Filter> const& filter,
                           std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                          std::auto_ptr<DebugImagesImpl> dbg_img,
+                          std::unique_ptr<DebugImagesImpl> dbg_img,
                           AffineTransformedImage const& transformed_image,
                           PageId const& page_id,
                           Params const& page_params,
@@ -95,7 +95,7 @@ public:
 private:
     IntrusivePtr<Filter> m_ptrFilter;
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     AffineTransformedImage m_fullSizeImage;
     QImage m_downscaledImage;
     PageId m_pageId;
@@ -108,7 +108,7 @@ class Task::RotationUiUpdater : public FilterResult
 public:
     RotationUiUpdater(IntrusivePtr<Filter> const& filter,
                       std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                      std::auto_ptr<DebugImagesImpl> dbg_img,
+                      std::unique_ptr<DebugImagesImpl> dbg_img,
                       AffineTransformedImage const& full_size_image,
                       PageId const& page_id,
                       Params const& page_params,
@@ -123,7 +123,7 @@ public:
 private:
     IntrusivePtr<Filter> m_ptrFilter;
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     AffineTransformedImage m_fullSizeImage;
     QImage m_downscaledImage;
     PageId m_pageId;
@@ -136,7 +136,7 @@ class Task::PerspectiveUiUpdater : public FilterResult
 public:
     PerspectiveUiUpdater(IntrusivePtr<Filter> const& filter,
                          std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                         std::auto_ptr<DebugImagesImpl> dbg_img,
+                         std::unique_ptr<DebugImagesImpl> dbg_img,
                          AffineTransformedImage const& full_size_image,
                          PageId const& page_id, Params const& page_params,
                          bool batch_processing);
@@ -150,7 +150,7 @@ public:
 private:
     IntrusivePtr<Filter> m_ptrFilter;
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     AffineTransformedImage m_fullSizeImage;
     QImage m_downscaledImage;
     PageId m_pageId;
@@ -163,7 +163,7 @@ class Task::DewarpingUiUpdater : public FilterResult
 public:
     DewarpingUiUpdater(IntrusivePtr<Filter> const& filter,
                        std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                       std::auto_ptr<DebugImagesImpl> dbg_img,
+                       std::unique_ptr<DebugImagesImpl> dbg_img,
                        AffineTransformedImage const& full_size_image,
                        PageId const& page_id, Params const& page_params,
                        bool batch_processing);
@@ -177,7 +177,7 @@ public:
 private:
     IntrusivePtr<Filter> m_ptrFilter;
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     AffineTransformedImage m_fullSizeImage;
     QImage m_downscaledImage;
     PageId m_pageId;
@@ -288,7 +288,7 @@ Task::processNoDistortion(
     {
         return FilterResultPtr(
                    new NoDistortionUiUpdater(
-                       m_ptrFilter, accel_ops, m_ptrDbg,
+                       m_ptrFilter, accel_ops, std::move(m_ptrDbg),
                        AffineTransformedImage(orig_image, orig_image_transform),
                        m_pageId, params, m_batchProcessing
                    )
@@ -372,7 +372,7 @@ Task::processRotationDistortion(
     {
         return FilterResultPtr(
                    new RotationUiUpdater(
-                       m_ptrFilter, accel_ops, m_ptrDbg,
+                       m_ptrFilter, accel_ops, std::move(m_ptrDbg),
                        AffineTransformedImage(orig_image, orig_image_transform),
                        m_pageId, params, m_batchProcessing
                    )
@@ -479,7 +479,7 @@ Task::processPerspectiveDistortion(
     {
         return FilterResultPtr(
                    new PerspectiveUiUpdater(
-                       m_ptrFilter, accel_ops, m_ptrDbg,
+                       m_ptrFilter, accel_ops, std::move(m_ptrDbg),
                        AffineTransformedImage(orig_image, orig_image_transform),
                        m_pageId, params, m_batchProcessing
                    )
@@ -568,7 +568,7 @@ Task::processWarpDistortion(
     {
         return FilterResultPtr(
                    new DewarpingUiUpdater(
-                       m_ptrFilter, accel_ops, m_ptrDbg,
+                       m_ptrFilter, accel_ops, std::move(m_ptrDbg),
                        AffineTransformedImage(orig_image, orig_image_transform),
                        m_pageId, params, m_batchProcessing
                    )
@@ -620,14 +620,14 @@ Task::cleanup(TaskStatus const& status, BinaryImage& image)
 Task::NoDistortionUiUpdater::NoDistortionUiUpdater(
     IntrusivePtr<Filter> const& filter,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
-    std::auto_ptr<DebugImagesImpl> dbg_img,
+    std::unique_ptr<DebugImagesImpl> dbg_img,
     AffineTransformedImage const& full_size_image,
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
     :	m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
-      m_ptrDbg(dbg_img),
+      m_ptrDbg(std::move(dbg_img)),
       m_fullSizeImage(full_size_image),
       m_downscaledImage(
           ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
@@ -664,14 +664,14 @@ Task::NoDistortionUiUpdater::updateUI(FilterUiInterface* ui)
 Task::RotationUiUpdater::RotationUiUpdater(
     IntrusivePtr<Filter> const& filter,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
-    std::auto_ptr<DebugImagesImpl> dbg_img,
+    std::unique_ptr<DebugImagesImpl> dbg_img,
     AffineTransformedImage const& full_size_image,
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
     :	m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
-      m_ptrDbg(dbg_img),
+      m_ptrDbg(std::move(dbg_img)),
       m_fullSizeImage(full_size_image),
       m_downscaledImage(
           ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
@@ -717,14 +717,14 @@ Task::RotationUiUpdater::updateUI(FilterUiInterface* ui)
 Task::PerspectiveUiUpdater::PerspectiveUiUpdater(
     IntrusivePtr<Filter> const& filter,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
-    std::auto_ptr<DebugImagesImpl> dbg_img,
+    std::unique_ptr<DebugImagesImpl> dbg_img,
     AffineTransformedImage const& full_size_image,
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
     :	m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
-      m_ptrDbg(dbg_img),
+      m_ptrDbg(std::move(dbg_img)),
       m_fullSizeImage(full_size_image),
       m_downscaledImage(
           ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
@@ -794,14 +794,14 @@ Task::PerspectiveUiUpdater::updateUI(FilterUiInterface* ui)
 Task::DewarpingUiUpdater::DewarpingUiUpdater(
     IntrusivePtr<Filter> const& filter,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
-    std::auto_ptr<DebugImagesImpl> dbg_img,
+    std::unique_ptr<DebugImagesImpl> dbg_img,
     AffineTransformedImage const& full_size_image,
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
     :	m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
-      m_ptrDbg(dbg_img),
+      m_ptrDbg(std::move(dbg_img)),
       m_fullSizeImage(full_size_image),
       m_downscaledImage(
           ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)

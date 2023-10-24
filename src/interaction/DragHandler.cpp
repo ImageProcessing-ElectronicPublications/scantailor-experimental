@@ -58,7 +58,7 @@ DragHandler::onMousePressEvent(QMouseEvent* event, InteractionState& interaction
 {
     m_lastMousePos = event->pos();
 
-    if ((event->buttons() & (Qt::LeftButton|Qt::MidButton)) &&
+    if ((event->buttons() & (Qt::LeftButton|Qt::MiddleButton)) &&
             !interaction.capturedBy(m_interaction)
             && m_interactionPermitter(interaction))
     {

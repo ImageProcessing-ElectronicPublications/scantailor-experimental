@@ -44,6 +44,9 @@ BOOST_AUTO_TEST_CASE(test_null_image)
 
 static bool fuzzyCompare(QImage const& img1, QImage const& img2)
 {
+    bool result = true;
+    size_t failed_pixels = 0;
+    double error_val = 0.0;
     BOOST_REQUIRE(img1.size() == img2.size());
 
     int const width = img1.width();
@@ -59,14 +62,18 @@ static bool fuzzyCompare(QImage const& img1, QImage const& img2)
         {
             if (abs(int(line1[x]) - int(line2[x])) > 1)
             {
-                return false;
+                result = false;
+                failed_pixels++;
             }
+            error_val += fabs(line1[x]-line2[x]);
         }
         line1 += line1_bpl;
         line2 += line2_bpl;
     }
 
-    return true;
+    printf("failed pixels %d %f\n", (int)failed_pixels, error_val);
+
+    return result;
 }
 
 static bool checkScale(GrayImage const& img, QSize const& new_size)
@@ -96,11 +103,11 @@ BOOST_AUTO_TEST_CASE(test_random_image)
     // produce too different results when upscaling.
 
     BOOST_CHECK(checkScale(img, QSize(50, 50)));
-    //BOOST_CHECK(checkScale(img, QSize(200, 200)));
+    BOOST_CHECK(checkScale(img, QSize(200, 200)));
     BOOST_CHECK(checkScale(img, QSize(80, 80)));
-    //BOOST_CHECK(checkScale(img, QSize(140, 140)));
-    //BOOST_CHECK(checkScale(img, QSize(55, 145)));
-    //BOOST_CHECK(checkScale(img, QSize(145, 55)));
+    BOOST_CHECK(checkScale(img, QSize(140, 140)));
+    BOOST_CHECK(checkScale(img, QSize(55, 145)));
+    BOOST_CHECK(checkScale(img, QSize(145, 55)));
 }
 
 BOOST_AUTO_TEST_SUITE_END();

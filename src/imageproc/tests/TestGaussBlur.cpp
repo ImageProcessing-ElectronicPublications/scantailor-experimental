@@ -109,7 +109,7 @@ static void saveImpulseResponse(Grid<float> const& response, QString const& file
     rasterOpGeneric(
         [](float const src, uint8_t& dst)
     {
-        dst = static_cast<uint8_t>(qBound<long>(0, std::lroundf(src * 255.f), 255));
+        dst = static_cast<uint8_t>(qBound<long>(0l, std::lroundf(src * 255.f), 255l));
     },
     response, image
     );

@@ -60,7 +60,7 @@ CacheDrivenTask::process(
 {
     Dependencies const deps(image_transform.origCropArea(), pre_rotation);
 
-    std::auto_ptr<Params> params(m_ptrSettings->getPageParams(page_info.id()));
+    std::unique_ptr<Params> params(m_ptrSettings->getPageParams(page_info.id()));
     if (!params.get() || !deps.matches(params->dependencies()) ||
             !params->validForDistortionType(params->distortionType()))
     {
@@ -68,7 +68,7 @@ CacheDrivenTask::process(
         if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
         {
             thumb_col->processThumbnail(
-                std::auto_ptr<QGraphicsItem>(
+                std::unique_ptr<QGraphicsItem>(
                     new IncompleteThumbnail(
                         thumb_col->thumbnailCache(),
                         thumb_col->maxLogicalThumbSize(),

@@ -1954,7 +1954,7 @@ MainWindow::showInsertFileDialog(BeforeOrAfter before_or_after, ImageId const& e
     protected:
         virtual bool filterAcceptsRow(int source_row, QModelIndex const& source_parent) const
         {
-            QModelIndex const idx(source_parent.child(source_row, 0));
+            QModelIndex const idx(source_parent.sibling(source_row, 0));
             QVariant const data(idx.data(QFileSystemModel::FilePathRole));
             if (data.isNull())
             {
@@ -2032,7 +2032,7 @@ MainWindow::showInsertFileDialog(BeforeOrAfter before_or_after, ImageId const& e
 
     if (!failed_files.empty())
     {
-        std::auto_ptr<LoadFilesStatusDialog> err_dialog(new LoadFilesStatusDialog(this));
+        std::unique_ptr<LoadFilesStatusDialog> err_dialog(new LoadFilesStatusDialog(this));
         err_dialog->setLoadedFiles(loaded_files);
         err_dialog->setFailedFiles(failed_files);
         err_dialog->setOkButtonName(QString(" %1 ").arg(tr("Skip failed files")));
@@ -2063,7 +2063,7 @@ MainWindow::showInsertFileDialog(BeforeOrAfter before_or_after, ImageId const& e
 void
 MainWindow::showRemovePagesDialog(std::set<PageId> const& pages)
 {
-    std::auto_ptr<QDialog> dialog(new QDialog(this));
+    std::unique_ptr<QDialog> dialog(new QDialog(this));
     Ui::RemovePagesDialog ui;
     ui.setupUi(dialog.get());
     ui.icon->setPixmap(style()->standardIcon(QStyle::SP_MessageBoxQuestion).pixmap(48, 48));

@@ -36,9 +36,9 @@ public:
     }
 
     template<typename Obj>
-    ObjectSwapper<Obj> operator()(std::auto_ptr<Obj> obj) const
+    ObjectSwapper<Obj> operator()(std::unique_ptr<Obj> obj) const
     {
-        return ObjectSwapper<Obj>(obj, m_swapDir);
+        return ObjectSwapper<Obj>(std::move(obj), m_swapDir);
     }
 private:
     QString m_swapDir;

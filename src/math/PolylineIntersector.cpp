@@ -18,6 +18,7 @@
 
 #include "PolylineIntersector.h"
 #include "ToLineProjector.h"
+#include "../foundation/MultipleTargetsSupport.h"
 #include <math.h>
 
 PolylineIntersector::Hint::Hint()
@@ -127,7 +128,7 @@ PolylineIntersector::intersectWithSegment(QLineF const& line, int segment) const
 {
     QLineF const seg_line(m_polyline[segment], m_polyline[segment + 1]);
     QPointF intersection;
-    if (line.intersect(seg_line, &intersection) == QLineF::NoIntersection)
+    if (QLineIntersect(line, seg_line, &intersection) == QLineF::NoIntersection)
     {
         // Considering we were called for a reason, the segment must
         // be on the same line as our subject line.  Just return segment
@@ -177,7 +178,7 @@ PolylineIntersector::tryIntersectingOutsideOfPolyline(
         segment.setPoints(m_polyline.back(), m_polyline[m_polyline.size() - 2]);
     }
 
-    if (line.intersect(segment, &intersection) == QLineF::NoIntersection)
+    if (QLineIntersect(line, segment, &intersection) == QLineF::NoIntersection)
     {
         intersection = ToLineProjector(line).projectionPoint(segment.p1());
     }

@@ -26,9 +26,8 @@ QColor colorInterpolation(QColor const& from, QColor const& to, double dist)
 {
     dist = qBound(0.0, dist, 1.0);
 
-    qreal r1, g1, b1, a1, r2, g2, b2, a2;
-    from.getRgbF(&r1, &g1, &b1, &a1);
-    to.getRgbF(&r2, &g2, &b2, &a2);
+    qreal r1(from.redF()), g1(from.greenF()), b1(from.blueF()), a1(from.alphaF());
+    qreal r2(to.redF()), g2(to.greenF()), b2(to.blueF()), a2(to.alphaF());
 
     qreal const r = r1 + (r2 - r1) * dist;
     qreal const g = g1 + (g2 - g1) * dist;

@@ -127,7 +127,7 @@ Filter::writePageSettings(
     QDomDocument& doc, QDomElement& filter_el,
     PageId const& page_id, int numeric_id) const
 {
-    std::auto_ptr<Params> const params(m_ptrSettings->getPageParams(page_id));
+    std::unique_ptr<Params> const params(m_ptrSettings->getPageParams(page_id));
     if (!params.get())
     {
         return;

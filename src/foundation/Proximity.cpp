@@ -20,6 +20,7 @@
 #include <QPointF>
 #include <QLineF>
 #include <algorithm>
+#include "MultipleTargetsSupport.h"
 
 Proximity::Proximity(QPointF const& p1, QPointF const& p2)
 {
@@ -50,7 +51,7 @@ Proximity::pointAndLineSegment(
 
     // Calculate intersection.
     QPointF intersection;
-    segment.intersect(perpendicular, &intersection);
+    QLineIntersect(segment, perpendicular, &intersection);
 
     double const dx1 = segment.p1().x() - intersection.x();
     double const dy1 = segment.p1().y() - intersection.y();

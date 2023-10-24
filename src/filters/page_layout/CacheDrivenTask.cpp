@@ -64,7 +64,7 @@ CacheDrivenTask::process(
         if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
         {
             thumb_col->processThumbnail(
-                std::auto_ptr<QGraphicsItem>(
+                std::unique_ptr<QGraphicsItem>(
                     new IncompleteThumbnail(
                         thumb_col->thumbnailCache(),
                         thumb_col->maxLogicalThumbSize(),
@@ -103,7 +103,7 @@ CacheDrivenTask::process(
     if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
     {
 
-        std::auto_ptr<QGraphicsItem> thumb;
+        std::unique_ptr<QGraphicsItem> thumb;
 
         if (content_box.isValid())
         {

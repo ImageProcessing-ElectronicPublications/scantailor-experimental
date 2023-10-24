@@ -86,7 +86,7 @@ private:
     IntrusivePtr<Filter> m_ptrFilter;
     IntrusivePtr<Settings> m_ptrSettings;
     IntrusivePtr<ThumbnailPixmapCache> m_ptrThumbnailCache;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     PageId m_pageId;
     OutputFileNameGenerator m_outFileNameGen;
     ImageViewTab m_lastTab;

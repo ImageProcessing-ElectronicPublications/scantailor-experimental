@@ -20,6 +20,11 @@
 #include <QFileInfo>
 #include <QString>
 
+bool SmartFilenameOrdering::operator()(QString const& lhs, QString const& rhs) const
+{
+    return SmartFilenameOrdering::operator()(QFileInfo(lhs), QFileInfo(rhs));
+}
+
 bool
 SmartFilenameOrdering::operator()(QFileInfo const& lhs, QFileInfo const& rhs) const
 {

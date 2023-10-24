@@ -69,7 +69,7 @@ public:
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         DebugImages* dbg = nullptr);
 private:
-    static std::auto_ptr<PageLayout> tryCutAtFoldingLine(
+    static std::unique_ptr<PageLayout> tryCutAtFoldingLine(
         LayoutType layout_type, imageproc::AffineTransformedImage const& image,
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         DebugImages* dbg);

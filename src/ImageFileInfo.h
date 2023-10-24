@@ -30,6 +30,9 @@ public:
     ImageFileInfo(QFileInfo const& file_info, std::vector<ImageMetadata> const& image_info)
         : m_fileInfo(file_info), m_imageInfo(image_info) {}
 
+    ImageFileInfo(QString const& file, std::vector<ImageMetadata> const& image_info)
+        : m_fileInfo(file), m_imageInfo(image_info) {}
+
     QFileInfo const& fileInfo() const
     {
         return m_fileInfo;

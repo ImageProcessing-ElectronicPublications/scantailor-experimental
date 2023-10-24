@@ -31,6 +31,14 @@
 namespace dewarping
 {
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+static const QIODevice::OpenMode IODeviceReadOnly = QIODevice::ReadOnly;
+static const QIODevice::OpenMode IODeviceWriteOnly = QIODevice::WriteOnly;
+#else
+static const QIODeviceBase::OpenMode IODeviceReadOnly = QIODeviceBase::ReadOnly;
+static const QIODeviceBase::OpenMode IODeviceWriteOnly = QIODeviceBase::WriteOnly;
+#endif
+
 struct Curve::CloseEnough
 {
     bool operator()(QPointF const& p1, QPointF const& p2)
@@ -96,7 +104,7 @@ std::vector<QPointF>
 Curve::deserializePolyline(QDomElement const& el)
 {
     QByteArray ba(QByteArray::fromBase64(el.text().trimmed().toLatin1()));
-    QDataStream strm(&ba, QIODevice::ReadOnly);
+    QDataStream strm(&ba, IODeviceReadOnly);
     strm.setVersion(QDataStream::Qt_4_4);
     strm.setByteOrder(QDataStream::LittleEndian);
 
@@ -125,7 +133,7 @@ Curve::serializePolyline(
 
     QByteArray ba;
     ba.reserve(8 * polyline.size());
-    QDataStream strm(&ba, QIODevice::WriteOnly);
+    QDataStream strm(&ba, IODeviceWriteOnly);
     strm.setVersion(QDataStream::Qt_4_4);
     strm.setByteOrder(QDataStream::LittleEndian);
 

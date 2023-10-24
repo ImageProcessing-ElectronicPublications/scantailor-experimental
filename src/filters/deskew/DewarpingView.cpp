@@ -31,6 +31,7 @@
 #include "spfit/OptimizationResult.h"
 #include "imageproc/AffineTransformedImage.h"
 #include "imageproc/Constants.h"
+#include "../foundation/MultipleTargetsSupport.h"
 #include <QCursor>
 #include <QLineF>
 #include <QPolygonF>
@@ -309,8 +310,8 @@ DewarpingView::onPaint(QPainter& painter, InteractionState const& interaction)
         dewarping::Curve const& bottom_curve = m_distortionModel.bottomCurve();
         painter.drawLine(top_curve.polyline().front(), bottom_curve.polyline().front());
         painter.drawLine(top_curve.polyline().back(), bottom_curve.polyline().back());
-        painter.drawPolyline(QVector<QPointF>::fromStdVector(top_curve.polyline()));
-        painter.drawPolyline(QVector<QPointF>::fromStdVector(bottom_curve.polyline()));
+        painter.drawPolyline(QVectorFromStdVector<QPointF>(top_curve.polyline()));
+        painter.drawPolyline(QVectorFromStdVector<QPointF>(bottom_curve.polyline()));
     }
 
     paintXSpline(painter, interaction, m_topSpline);

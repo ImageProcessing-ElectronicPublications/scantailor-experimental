@@ -55,7 +55,7 @@ public:
 
     void setPageParams(PageId const& page_id, Params const& params);
 
-    std::auto_ptr<Params> getPageParams(PageId const& page_id) const;
+    std::unique_ptr<Params> getPageParams(PageId const& page_id) const;
 
     DistortionType getDistortionType(PageId const& page_id) const;
 

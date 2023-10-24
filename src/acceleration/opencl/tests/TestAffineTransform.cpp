@@ -155,12 +155,12 @@ BOOST_AUTO_TEST_CASE(test_argb)
         },
         GridAccessor<uint32_t const>
         {
-            (uint32_t const*)output.bits(), output.bytesPerLine()/4,
+            (uint32_t const*)output.bits(), (int)(output.bytesPerLine()/4),
             output.width(), output.height()
         },
         GridAccessor<uint32_t const>
         {
-            (uint32_t const*)control.bits(), control.bytesPerLine()/4,
+            (uint32_t const*)control.bits(), (int)(control.bytesPerLine()/4),
             control.width(), control.height()
         }
         );

@@ -32,7 +32,6 @@
 #include <QFileInfoList>
 #include <QVariant>
 #include <QVector>
-#include <QVectorIterator>
 #include <QMessageBox>
 #include <QTimerEvent>
 #include <QSettings>
@@ -706,13 +705,12 @@ ProjectFilesDialog::FileList::remove(QItemSelection const& selection)
     }
     );
 
-    QVectorIterator<Range> it(sorted_ranges);
     int rows_removed = 0;
-    while (it.hasNext())
+    
+    for (auto it = sorted_ranges.begin(); it != sorted_ranges.end(); it++)
     {
-        Range const& range = it.next();
-        int const first = range.first - rows_removed;
-        int const last = range.second - rows_removed;
+        int const first = it->first - rows_removed;
+        int const last = it->second - rows_removed;
         beginRemoveRows(QModelIndex(), first, last);
         m_items.erase(m_items.begin() + first, m_items.begin() + (last + 1));
         endRemoveRows();

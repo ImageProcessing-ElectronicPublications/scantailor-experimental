@@ -66,7 +66,7 @@ Settings::setPageParams(PageId const& page_id, Params const& params)
     Utils::mapSetValue(m_perPageParams, page_id, params);
 }
 
-std::auto_ptr<Params>
+std::unique_ptr<Params>
 Settings::getPageParams(PageId const& page_id) const
 {
     QMutexLocker locker(&m_mutex);
@@ -74,11 +74,11 @@ Settings::getPageParams(PageId const& page_id) const
     PerPageParams::const_iterator it(m_perPageParams.find(page_id));
     if (it != m_perPageParams.end())
     {
-        return std::auto_ptr<Params>(new Params(it->second));
+        return std::unique_ptr<Params>(new Params(it->second));
     }
     else
     {
-        return std::auto_ptr<Params>();
+        return std::unique_ptr<Params>();
     }
 }
 

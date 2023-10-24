@@ -34,8 +34,8 @@ OrderByWidthProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
-    std::auto_ptr<Params> const lhs_params(m_ptrSettings->getPageParams(lhs_page));
-    std::auto_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
+    std::unique_ptr<Params> const lhs_params(m_ptrSettings->getPageParams(lhs_page));
+    std::unique_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
 
     QSizeF lhs_size;
     if (lhs_params.get())

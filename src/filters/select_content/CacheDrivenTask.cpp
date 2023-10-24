@@ -49,7 +49,7 @@ CacheDrivenTask::process(PageInfo const& page_info,
                          std::shared_ptr<AbstractImageTransform const> const& full_size_image_transform,
                          AbstractFilterDataCollector* collector)
 {
-    std::auto_ptr<Params> params(m_ptrSettings->getPageParams(page_info.id()));
+    std::unique_ptr<Params> params(m_ptrSettings->getPageParams(page_info.id()));
     Dependencies const deps(full_size_image_transform->fingerprint());
 
     if (!params.get() || !params->dependencies().matches(deps))
@@ -58,7 +58,7 @@ CacheDrivenTask::process(PageInfo const& page_info,
         if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
         {
             thumb_col->processThumbnail(
-                std::auto_ptr<QGraphicsItem>(
+                std::unique_ptr<QGraphicsItem>(
                     new IncompleteThumbnail(
                         thumb_col->thumbnailCache(),
                         thumb_col->maxLogicalThumbSize(),
@@ -87,7 +87,7 @@ CacheDrivenTask::process(PageInfo const& page_info,
     if (ThumbnailCollector* thumb_col = dynamic_cast<ThumbnailCollector*>(collector))
     {
         thumb_col->processThumbnail(
-            std::auto_ptr<QGraphicsItem>(
+            std::unique_ptr<QGraphicsItem>(
                 new Thumbnail(
                     thumb_col->thumbnailCache(),
                     thumb_col->maxLogicalThumbSize(),

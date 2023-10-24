@@ -56,7 +56,7 @@ public:
     ObjectSwapper(Obj const& obj, QString const& swap_dir)
         : m_ptrObj(new Obj(obj)), m_ptrImpl(new Impl(swap_dir)) {}
 
-    ObjectSwapper(std::auto_ptr<Obj> obj, QString const& swap_dir)
+    ObjectSwapper(std::unique_ptr<Obj> obj, QString const& swap_dir)
         : m_ptrObj(obj.release()), m_ptrImpl(new Impl(swap_dir))
     {
         assert(m_ptrObj.get());

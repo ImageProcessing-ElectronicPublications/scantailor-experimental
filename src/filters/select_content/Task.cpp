@@ -50,7 +50,7 @@ public:
     UiUpdater(IntrusivePtr<Filter> const& filter,
               std::shared_ptr<AcceleratableOperations> const& accel_ops,
               PageId const& page_id, Params const& params,
-              std::auto_ptr<DebugImagesImpl> dbg,
+              std::unique_ptr<DebugImagesImpl> dbg,
               std::shared_ptr<AbstractImageTransform const> const& orig_transform,
               AffineTransformedImage const& affine_transformed_image,
               bool batch);
@@ -66,7 +66,7 @@ private:
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
     PageId m_pageId;
     Params m_params;
-    std::auto_ptr<DebugImagesImpl> m_ptrDbg;
+    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
     std::shared_ptr<AbstractImageTransform const> m_ptrOrigTransform;
     AffineTransformedImage m_affineTransformedImage;
     QImage m_downscaledImage;
@@ -109,7 +109,7 @@ Task::process(
 
     Dependencies const deps(orig_image_transform->fingerprint());
 
-    std::auto_ptr<Params> params(m_ptrSettings->getPageParams(m_pageId));
+    std::unique_ptr<Params> params(m_ptrSettings->getPageParams(m_pageId));
     if (params.get() && !params->dependencies().matches(deps))
     {
         // Dependency mismatch.
@@ -173,7 +173,7 @@ Task::process(
 
         return FilterResultPtr(
                    new UiUpdater(
-                       m_ptrFilter, accel_ops, m_pageId, *params, m_ptrDbg,
+                       m_ptrFilter, accel_ops, m_pageId, *params, std::move(m_ptrDbg),
                        orig_image_transform, *dewarped, m_batchProcessing
                    )
                );
@@ -187,14 +187,14 @@ Task::UiUpdater::UiUpdater(
     IntrusivePtr<Filter> const& filter,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     PageId const& page_id,
-    Params const& params, std::auto_ptr<DebugImagesImpl> dbg,
+    Params const& params, std::unique_ptr<DebugImagesImpl> dbg,
     std::shared_ptr<AbstractImageTransform const> const& orig_transform,
     AffineTransformedImage const& affine_transformed_image, bool const batch)
     :	m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_pageId(page_id),
       m_params(params),
-      m_ptrDbg(dbg),
+      m_ptrDbg(std::move(dbg)),
       m_ptrOrigTransform(orig_transform),
       m_affineTransformedImage(affine_transformed_image),
       m_downscaledImage(

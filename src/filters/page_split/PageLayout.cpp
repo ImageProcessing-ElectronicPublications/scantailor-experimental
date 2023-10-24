@@ -22,6 +22,7 @@
 #include "XmlUnmarshaller.h"
 #include "ToLineProjector.h"
 #include "imageproc/PolygonUtils.h"
+#include "../../foundation/MultipleTargetsSupport.h"
 #include <QPolygonF>
 #include <QSizeF>
 #include <QPointF>
@@ -251,7 +252,7 @@ PageLayout::inscribedCutterLine(int idx) const
     {
         QLineF const poly_segment(m_uncutOutline[i], m_uncutOutline[(i + 1) & 3]);
         QPointF intersection;
-        if (poly_segment.intersect(raw_line, &intersection) == QLineF::NoIntersection)
+        if (QLineIntersect(poly_segment, raw_line, &intersection) == QLineF::NoIntersection)
         {
             continue;
         }
@@ -540,7 +541,7 @@ PageLayout::maybeAddIntersectionPoint(
     QPolygonF& poly, QLineF const& line1, QLineF const& line2)
 {
     QPointF intersection;
-    if (line1.intersect(line2, &intersection) == QLineF::NoIntersection)
+    if (QLineIntersect(line1, line2, &intersection) == QLineF::NoIntersection)
     {
         return;
     }

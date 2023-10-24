@@ -126,7 +126,7 @@ DespeckleView::DespeckleView(
     if (!visualization.isNull())
     {
         // Create the image view.
-        std::auto_ptr<QWidget> widget(
+        std::unique_ptr<QWidget> widget(
             new BasicImageView(accel_ops, visualization.image(), visualization.downscaledImage())
         );
         setCurrentIndex(addWidget(widget.release()));
@@ -222,7 +222,7 @@ DespeckleView::despeckleDone(
 
     removeImageViewWidget();
 
-    std::auto_ptr<QWidget> widget(
+    std::unique_ptr<QWidget> widget(
         new BasicImageView(
             m_ptrAccelOps, visualization.image(),
             visualization.downscaledImage(), OutputMargins()
@@ -231,7 +231,7 @@ DespeckleView::despeckleDone(
 
     if (dbg && !dbg->empty())
     {
-        std::auto_ptr<TabbedDebugImages> tab_widget(new TabbedDebugImages);
+        std::unique_ptr<TabbedDebugImages> tab_widget(new TabbedDebugImages);
         tab_widget->addTab(widget.release(), "Main");
         IntrusivePtr<DebugViewFactory> factory;
         QString label;
@@ -239,7 +239,7 @@ DespeckleView::despeckleDone(
         {
             tab_widget->addTab(new DebugImageView(factory), label);
         }
-        widget = tab_widget;
+        widget = std::move(tab_widget);
     }
 
     setCurrentIndex(addWidget(widget.release()));
