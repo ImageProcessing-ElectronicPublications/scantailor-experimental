@@ -5,6 +5,7 @@
 !define UNINST_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Scantailor-@ST_FAMILY@"
 !define PRODUCT_FAMILY "@ST_FAMILY@"
 !define PRODUCT_FAMILY_LOWERCASE "@ST_FAMILY_LOWER@"
+!define FULL_ARCH "@ST_FULLARCH@"
 
 !include "@REGISTER_EXTENSION_NSH@"
 !include "x64.nsh"
@@ -15,7 +16,7 @@
 BrandingText " " # To remove the mention of NullSoft.
 #LoadLanguageFile "${NSISDIR}\Contrib\Language files\Russian.nlf"
 
-Name "Scantailor-${PRODUCT_FAMILY} version ${VERSION}"
+Name "Scantailor-${PRODUCT_FAMILY} version ${VERSION} (${FULL_ARCH})"
 
 OutFile "${INSTALLER_FILENAME}"
 
@@ -40,7 +41,7 @@ AllowSkipFiles off
 SetCompressor /SOLID /FINAL lzma
 
 !if "${VERSION}" != ""
-  VIAddVersionKey "ProductName" "Scantailor-${PRODUCT_FAMILY}"
+  VIAddVersionKey "ProductName" "Scantailor-${PRODUCT_FAMILY} (${FULL_ARCH})"
   VIAddVersionKey "ProductVersion" "${VERSION}"
   VIAddVersionKey "Comments" "Interactive post-processing tool for scanned pages."
   VIAddVersionKey "CompanyName" "Joseph Artsimovich and contributors"
@@ -91,10 +92,11 @@ Section
   
   # Write uninstall registry records.
   WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayIcon" "$INSTDIR\scantailor-${PRODUCT_FAMILY_LOWERCASE}.exe"
-  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scantailor-${PRODUCT_FAMILY}"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayName" "Scantailor-${PRODUCT_FAMILY} (${FULL_ARCH})"
   WriteRegStr HKLM "${UNINST_REGKEY}" "DisplayVersion" "${VERSION}"
   WriteRegStr HKLM "${UNINST_REGKEY}" "InstallLocation" "$INSTDIR\"
   WriteRegStr HKLM "${UNINST_REGKEY}" "UninstallString" "$INSTDIR\Uninstaller.exe"
+  WriteRegStr HKLM "${UNINST_REGKEY}" "QuietUninstallString" "$\"$INSTDIR\Uninstaller.exe$\" /S"
   WriteRegStr HKLM "${UNINST_REGKEY}" "Publisher" "ImageProcessing-ElectronicPublications"
   
   # Create menu shortcuts.

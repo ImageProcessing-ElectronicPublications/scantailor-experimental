@@ -36,6 +36,14 @@ SET(
 
 PROJECT("Scan Tailor Experimental")
 
+# This should be defined after project because of CMAKE_SIZEOF_VOID_P
+MATH(EXPR ST_ARCH_BITS "${CMAKE_SIZEOF_VOID_P} * 8")
+IF(ST_ARCH STREQUAL "X86")
+    SET(ST_FULLARCH "${ST_ARCH}-${ST_ARCH_BITS}") 
+ELSE()
+    SET(ST_FULLARCH "${ST_ARCH}${ST_ARCH_BITS}") 
+ENDIF()
+
 include_directories(src)
 
 # Keep the paths outside of the build directory in RPATH
@@ -406,16 +414,32 @@ IF(WIN32)
         "${LIBTIFF_DLL}" "${ZLIB_DLL}"
     )
     
+IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    SET(QtWidgets_LIBRARIES "${Qt5Widgets_LIBRARIES}")
+    SET(QtGui_LIBRARIES "${Qt5Gui_LIBRARIES}")
+    SET(QtCore_LIBRARIES "${Qt5Core_LIBRARIES}")
+    SET(QtXml_LIBRARIES "${Qt5Xml_LIBRARIES}")
+    SET(QtOpenGL_LIBRARIES "${Qt5OpenGL_LIBRARIES}")
+    SET(QtCore_DIR "${Qt5Core_DIR}")
+ELSE()
+    SET(QtWidgets_LIBRARIES "${Qt6Widgets_LIBRARIES}")
+    SET(QtGui_LIBRARIES "${Qt6Gui_LIBRARIES}")
+    SET(QtCore_LIBRARIES "${Qt6Core_LIBRARIES}")
+    SET(QtXml_LIBRARIES "${Qt6Xml_LIBRARIES}")
+    SET(QtOpenGL_LIBRARIES "${Qt6OpenGL_LIBRARIES}")
+    SET(QtCore_DIR "${Qt6Core_DIR}")
+ENDIF()
+    
     # Qt's libs.
     SET(
-        qt5_libs
-        ${Qt5Widgets_LIBRARIES} ${Qt5Gui_LIBRARIES}
-        ${Qt5Core_LIBRARIES} ${Qt5Xml_LIBRARIES}
+        qt_libs
+        ${QtWidgets_LIBRARIES} ${QtGui_LIBRARIES}
+        ${QtCore_LIBRARIES} ${QtXml_LIBRARIES}
     )
     IF(ENABLE_OPENGL)
-        LIST(APPEND qt5_libs ${Qt5OpenGL_LIBRARIES})
+        LIST(APPEND qt_libs ${QtOpenGL_LIBRARIES})
     ENDIF()
-    FOREACH(target ${qt5_libs})
+    FOREACH(target ${qt_libs})
         GET_TARGET_PROPERTY(debug_loc "${target}" LOCATION_DEBUG)
         GET_TARGET_PROPERTY(release_loc "${target}" LOCATION_RELEASE)
         COPY_TO_BUILD_DIR("${debug_loc}" CONFIGURATIONS Debug)
@@ -423,8 +447,8 @@ IF(WIN32)
     ENDFOREACH()
 
     # Qt's plugins.
-    cmake_path(SET Qt5_DIR NORMALIZE "${Qt5Core_DIR}/../../..")
-    cmake_path(APPEND Qt5_DIR "plugins" OUTPUT_VARIABLE PLUGINS_DIR)
+    cmake_path(SET Qt_DIR NORMALIZE "${QtCore_DIR}/../../..")
+    cmake_path(APPEND Qt_DIR "plugins" OUTPUT_VARIABLE PLUGINS_DIR)
 
     IF(EXISTS "${PLUGINS_DIR}/imageformats/qjpeg.dll")
         COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qjpeg.dll" SUBDIR imageformats)
