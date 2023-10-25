@@ -589,6 +589,8 @@ D:\
 
 Нажать "Add Entry", добавить "CMAKE_PREFIX_PATH", типа "PATH", указать пути ко всем библиотекам через точку с запятой "D:/Prog/boost_1_83_0;D:/Prog/eigen-3.4.0;D:/Prog/libjpeg-turbo-3.0.0;D:/Prog/libpng-1.6.40;D:/Prog/qt-5.12.12;D:/Prog/tiff-4.6.0;D:/Prog/zlib-1.3;D:/Prog/OpenCL-2023.04.17".
 
+Чтобы добавить лицензии зависимостей (используемых библиотек), создайте папку "D:/Prog/deps_licenses" (например) и скопируйте туда файлы лицензий из каталогов библиотек. Переименуйте файлы в формате "libsomename-version.txt". Нажмите в CMake Gui кнопку "Add Entry", добавьте "ST_LICENSE_DEPS_DIR" типа PATH и укажите путь к "D:/Prog/deps_licenses".
+
 Выполнить "Configure".
 
 Выполнить "Generate".

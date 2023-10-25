@@ -154,6 +154,7 @@ ENDIF()
 
 FIND_PACKAGE(Eigen3 REQUIRED)
 INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+add_compile_options(-DEIGEN_MPL2_ONLY)
 
 # Once Eigen starts using C++11 alignas() feature, this can be removed.
 ADD_DEFINITIONS(-DEIGEN_DONT_ALIGN_STATICALLY)
@@ -249,6 +250,34 @@ IF(NOT ST_NO_TESTS STREQUAL "ON")
     ADD_DEFINITIONS(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
 ENDIF()
 # End of Boost
+
+# Generate license file
+## Read plain text ScanTailor license
+FILE(READ "LICENSE" ST_LICENSE)
+## Read HTML ScanTailor license
+FILE(READ "src/resources/GPLv3.html" ST_LICENSE_HTML)
+SET(ST_LICENSE_HTML "<h1>Scantailor-${ST_FAMILY}-${ST_VERSION}</h1>${ST_LICENSE_HTML}")
+## Add additional licenses for dependencies
+IF(ST_LICENSE_DEPS_DIR)
+    SET(ST_LICENSE_SEPARATOR "\n====================\n")
+    SET(ST_LICENSE_SEARCH "${ST_LICENSE_DEPS_DIR}/*.txt")
+    FILE(GLOB ST_LICENSE_DEPS_FILES LIST_DIRECTORIES FALSE "${ST_LICENSE_SEARCH}")
+    FOREACH(ST_LICENSE_DEPS_FILE ${ST_LICENSE_DEPS_FILES})
+        FILE(READ "${ST_LICENSE_DEPS_FILE}" ST_LICENSE_TEMP)
+        GET_FILENAME_COMPONENT(ST_LICENSE_DEPS_FILE_SHORTNAME "${ST_LICENSE_DEPS_FILE}" NAME_WLE)
+        ### Append to plain text license
+        SET(
+        ST_LICENSE
+        "${ST_LICENSE}${ST_LICENSE_SEPARATOR}${ST_LICENSE_DEPS_FILE_SHORTNAME}${ST_LICENSE_SEPARATOR}${ST_LICENSE_TEMP}"
+        )
+        ### Append to HTML license
+        STRING(REGEX REPLACE "\n" "<br>\n" ST_LICENSE_TEMP "${ST_LICENSE_TEMP}")
+        SET(ST_LICENSE_HTML "${ST_LICENSE_HTML}<h1>${ST_LICENSE_DEPS_FILE_SHORTNAME}</h1><p>${ST_LICENSE_TEMP}</p>")
+    ENDFOREACH()
+ENDIF()
+## Build new license files
+CONFIGURE_FILE("LICENSE_COMPLETE.in" "LICENSE_COMPLETE" NEWLINE_STYLE CRLF)
+CONFIGURE_FILE("src/resources/license.html.in" "src/resources/license.html" NEWLINE_STYLE CRLF)
 
 IF(WIN32)
     LIST(APPEND EXTRA_LIBS winmm imm32 ws2_32 ole32 oleaut32 uuid gdi32 comdlg32 winspool)

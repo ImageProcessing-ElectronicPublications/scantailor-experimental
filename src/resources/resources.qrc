@@ -57,6 +57,5 @@
     <file>icons/single_page_uncut.png</file>
     <file>icons/left_page_plus_offcut.png</file>
     <file>icons/right_page_plus_offcut.png</file>
-    <file>GPLv3.html</file>
   </qresource>
 </RCC>

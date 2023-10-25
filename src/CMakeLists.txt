@@ -31,10 +31,11 @@ IF(WIN32)
 ENDIF()
 SOURCE_GROUP("Resources" FILES ${resource_files})
 
+FILE(WRITE "${CMAKE_BINARY_DIR}/src/resources/license.qrc" "<RCC><qresource prefix=\"/\"><file>license.html</file></qresource></RCC>")
 IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
-    QT5_ADD_RESOURCES(resource_sources resources/resources.qrc)
+    QT5_ADD_RESOURCES(resource_sources resources/resources.qrc "${CMAKE_BINARY_DIR}/src/resources/license.qrc")
 ELSE()
-    QT6_ADD_RESOURCES(resource_sources resources/resources.qrc)
+    QT6_ADD_RESOURCES(resource_sources resources/resources.qrc "${CMAKE_BINARY_DIR}/src/resources/license.qrc")
 ENDIF()
 SOURCE_GROUP("Generated" FILES ${resource_sources})
 
