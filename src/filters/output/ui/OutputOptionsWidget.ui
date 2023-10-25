@@ -612,7 +612,21 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="thresholdMethodSelector"/>
+            <widget class="QComboBox" name="thresholdMethodSelector">
+             <property name="toolTip">
+              <string>Select threshold method.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="morphologyCB">
+             <property name="text">
+              <string>M</string>
+             </property>
+             <property name="toolTip">
+              <string>Morphology ON/OFF.</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

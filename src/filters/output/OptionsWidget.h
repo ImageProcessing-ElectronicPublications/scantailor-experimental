@@ -103,6 +103,8 @@ private slots:
 
     void thresholdMethodChanged(int idx);
 
+    void morphologyToggled(bool checked);
+
     void dimmingColoredCoefChanged(double value);
 
     void bwThresholdChanged();
