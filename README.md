@@ -57,6 +57,16 @@ Scan Tailor is being used not just by enthusiasts, but also by libraries and oth
   (via the [installer](https://github.com/scantailor/scantailor/wiki/User-Guide#installation-and-first-start) or 
   [building from from source](https://github.com/scantailor/scantailor/wiki/Building-from-Source-Code-on-Linux-and-Mac-OS-X))
   can be found in the [wiki](https://github.com/scantailor/scantailor/wiki/)!
+  
+### Installation on Windows
+
+On Windows 10 1809 or higher to install Scantailor-Experimental just use command:
+
+``` cmd
+winget install "Scantailor-Experimental"
+```
+
+You can also download binaries from [Release page](https://github.com/ImageProcessing-ElectronicPublications/scantailor-experimental/releases).
 
 ## Additional Links 
 
