@@ -627,6 +627,12 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::maybeAddExtraVerticalSegmen
         return;
     }
 
+    double const delta_crv_x = segment1_crv_x - segment2_crv_x;
+    if ((delta_crv_x > -1e-8) && (delta_crv_x < 1e-8))
+    {
+        return;
+    }
+
     double const mid_crv_x = 0.5 * (segment1_crv_x + segment2_crv_x);
     auto const segment_it = processGeneratrix(
                                 mid_crv_x, m_dewarper.mapGeneratrix(mid_crv_x, m_dewarpingState)
