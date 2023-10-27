@@ -166,7 +166,7 @@ TextLineSegmenter::process(
         }
     }
 
-    return std::move(result);
+    return result;
 }
 
 TextLineSegmenter::Result
@@ -353,7 +353,7 @@ TextLineSegmenter::processDownscaled(
     result.tracedCurves = refineSegmentation(image, crop_area, cmap, status, dbg);
     result.flowDirectionMap = std::move(direction_map);
 
-    return std::move(result);
+    return result;
 }
 
 double

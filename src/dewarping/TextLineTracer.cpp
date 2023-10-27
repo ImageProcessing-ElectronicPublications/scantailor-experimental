@@ -306,7 +306,7 @@ TextLineTracer::calcGradient(
     }
     );
 
-    return std::move(grad);
+    return grad;
 }
 
 Grid<float>
@@ -338,7 +338,7 @@ TextLineTracer::calcDirectionalDerivative(
     gradient, dir_deriv
     );
 
-    return std::move(dir_deriv);
+    return dir_deriv;
 }
 
 void
