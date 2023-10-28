@@ -31,7 +31,6 @@
 #include <Qt>
 #include <QtGlobal>
 #include <math.h>
-#include <boost/foreach.hpp>
 
 namespace deskew
 {
@@ -145,7 +144,7 @@ OptionsWidget::distortionTypeAppliedTo(std::set<PageId> const& pages)
 
     m_ptrSettings->setDistortionType(pages, m_pageParams.distortionType());
 
-    BOOST_FOREACH(PageId const& page_id, pages)
+    for(PageId const& page_id : pages)
     {
         emit invalidateThumbnail(page_id);
     }

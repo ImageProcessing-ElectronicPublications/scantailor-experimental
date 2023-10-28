@@ -29,7 +29,6 @@
 #include <QTransform>
 #include <QDomElement>
 #include <QDomDocument>
-#include <boost/foreach.hpp>
 #include <algorithm>
 #include <math.h>
 #include <assert.h>
@@ -494,7 +493,7 @@ PageLayout::extendToCover(QLineF const& line, QPolygonF const& poly)
     double max = NumericTraits<double>::min();
     ToLineProjector const projector(line);
 
-    BOOST_FOREACH(QPointF const& pt, poly)
+    for(QPointF const& pt : poly)
     {
         double const scalar = projector.projectionScalar(pt);
         if (scalar < min)

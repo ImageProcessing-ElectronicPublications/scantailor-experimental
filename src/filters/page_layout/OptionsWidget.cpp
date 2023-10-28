@@ -24,7 +24,6 @@
 #include "PageInfo.h"
 #include "PageId.h"
 #include "imageproc/Constants.h"
-#include <boost/foreach.hpp>
 #include <QApplication>
 #include <QStyle>
 #include <QIcon>
@@ -154,7 +153,7 @@ OptionsWidget::OptionsWidget(
     );
 
     typedef AlignmentByButton::value_type KeyVal;
-    BOOST_FOREACH (KeyVal const& kv, m_alignmentByButton)
+    for(KeyVal const& kv : m_alignmentByButton)
     {
         connect(
             kv.first, SIGNAL(clicked()),
@@ -390,7 +389,7 @@ OptionsWidget::applyMargins(std::set<PageId> const& pages)
         return;
     }
 
-    BOOST_FOREACH(PageId const& page_id, pages)
+    for(PageId const& page_id : pages)
     {
         m_ptrSettings->setHardMargins(page_id, m_margins);
     }

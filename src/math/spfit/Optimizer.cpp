@@ -19,7 +19,6 @@
 #include "Optimizer.h"
 #include <Eigen/Core>
 #include <Eigen/QR>
-#include <boost/foreach.hpp>
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>

@@ -20,7 +20,6 @@
 #include "BinaryImage.h"
 #include "InfluenceMap.h"
 #include "ColorForId.h"
-#include <boost/foreach.hpp>
 #include <QImage>
 #include <QColor>
 #include <QDebug>
@@ -612,7 +611,7 @@ ConnectivityMap::markUsedIds(std::vector<uint32_t>& used_map) const
 void
 ConnectivityMap::remapIds(std::vector<uint32_t> const& map)
 {
-    BOOST_FOREACH(uint32_t& label, m_data)
+    for(uint32_t& label : m_data)
     {
         if (label == BACKGROUND)
         {

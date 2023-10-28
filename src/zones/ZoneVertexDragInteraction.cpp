@@ -27,7 +27,6 @@
 #include <QLinearGradient>
 #include <Qt>
 #include <QLineF>
-#include <boost/foreach.hpp>
 
 ZoneVertexDragInteraction::ZoneVertexDragInteraction(
     ZoneInteractionContext& context, InteractionState& interaction,
@@ -54,7 +53,7 @@ ZoneVertexDragInteraction::onPaint(QPainter& painter, InteractionState const& in
 
     QTransform const to_screen(m_rContext.imageView().imageToWidget());
 
-    BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_rContext.zones())
+    for(EditableZoneSet::Zone const& zone : m_rContext.zones())
     {
         EditableSpline::Ptr const& spline = zone.spline();
 

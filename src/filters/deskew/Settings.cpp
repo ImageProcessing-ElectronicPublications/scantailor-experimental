@@ -22,7 +22,6 @@
 #include "DistortionType.h"
 #include "../../Utils.h"
 #include <QMutexLocker>
-#include <boost/foreach.hpp>
 
 namespace deskew
 {
@@ -48,7 +47,7 @@ Settings::performRelinking(AbstractRelinker const& relinker)
     QMutexLocker locker(&m_mutex);
     PerPageParams new_params;
 
-    BOOST_FOREACH(PerPageParams::value_type const& kv, m_perPageParams)
+    for(PerPageParams::value_type const& kv : m_perPageParams)
     {
         RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
         PageId new_page_id(kv.first);

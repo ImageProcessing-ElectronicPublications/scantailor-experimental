@@ -33,7 +33,6 @@
 #include <QPen>
 #include <QColor>
 #include <QDebug>
-#include <boost/foreach.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <algorithm>
@@ -166,9 +165,9 @@ DistortionModelBuilder::transform(QTransform const& xform)
     m_bound1 = xform.map(m_bound1);
     m_bound2 = xform.map(m_bound2);
 
-    BOOST_FOREACH(std::vector<QPointF>& polyline, m_ltrPolylines)
+    for(std::vector<QPointF>& polyline : m_ltrPolylines)
     {
-        BOOST_FOREACH(QPointF& pt, polyline)
+        for(QPointF& pt : polyline)
         {
             pt = xform.map(pt);
         }
@@ -188,7 +187,7 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
     std::vector<TracedCurve> ordered_curves;
     ordered_curves.reserve(num_curves);
 
-    BOOST_FOREACH(std::vector<QPointF> const& polyline, m_ltrPolylines)
+    for(std::vector<QPointF> const& polyline : m_ltrPolylines)
     {
         try
         {
@@ -573,7 +572,7 @@ DistortionModelBuilder::visualizeTrimmedPolylines(
     painter.drawLine(bound1);
     painter.drawLine(bound2);
 
-    BOOST_FOREACH(TracedCurve const& curve, curves)
+    for(TracedCurve const& curve : curves)
     {
         if (!curve.trimmedPolyline.empty())
         {
@@ -585,10 +584,10 @@ DistortionModelBuilder::visualizeTrimmedPolylines(
     QBrush knot_brush(Qt::magenta);
     painter.setBrush(knot_brush);
     painter.setPen(Qt::NoPen);
-    BOOST_FOREACH(TracedCurve const& curve, curves)
+    for(TracedCurve const& curve : curves)
     {
         QRectF rect(0, 0, stroke_width, stroke_width);
-        BOOST_FOREACH(QPointF const& knot, curve.trimmedPolyline)
+        for(QPointF const& knot : curve.trimmedPolyline)
         {
             rect.moveCenter(knot);
             painter.drawEllipse(rect);
@@ -639,7 +638,7 @@ DistortionModelBuilder::visualizeModel(
 
     QBrush polyline_knot_brush(QColor(0xff, 0x00, 0xff, 180));
 
-    BOOST_FOREACH(TracedCurve const& curve, curves)
+    for(TracedCurve const& curve : curves)
     {
         if (curve.extendedPolyline.empty())
         {
@@ -689,11 +688,11 @@ DistortionModelBuilder::visualizeModel(
         if (!reverse_segments.empty())
         {
             painter.setPen(reverse_segments_pen);
-            BOOST_FOREACH(std::vector<int> const& sequence, reverse_segments)
+            for(std::vector<int> const& sequence : reverse_segments)
             {
                 assert(!sequence.empty());
                 polyline.clear();
-                BOOST_FOREACH(int idx, sequence)
+                for(int idx : sequence)
                 {
                     polyline << curve.extendedPolyline[idx];
                 }

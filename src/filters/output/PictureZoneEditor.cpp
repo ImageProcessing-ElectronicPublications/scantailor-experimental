@@ -41,7 +41,6 @@
 #include <Qt>
 #include <QDebug>
 #include <functional>
-#include <boost/foreach.hpp>
 #include <assert.h>
 
 namespace output
@@ -168,7 +167,7 @@ PictureZoneEditor::PictureZoneEditor(
     m_pictureMaskRebuildTimer.setSingleShot(true);
     m_pictureMaskRebuildTimer.setInterval(150);
 
-    BOOST_FOREACH(Zone const& zone, m_ptrSettings->pictureZonesForPage(page_id))
+    for(Zone const& zone : m_ptrSettings->pictureZonesForPage(page_id))
     {
         EditableSpline::Ptr spline(new EditableSpline(zone.spline().transformed(m_origToOutput)));
         m_zones.addZone(spline, zone.properties());
@@ -298,7 +297,7 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
     // Pass 1: ZONEERASER
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-    BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEERASER)
         {
@@ -309,7 +308,7 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
     // Pass 2: ZONEFG
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-    BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEFG)
         {
@@ -320,7 +319,7 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
     // Pass 3: ZONEBG
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-    BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEBG)
         {
@@ -331,7 +330,7 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
     // Pass 4: ZONEMASK
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-    BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEMASK)
         {
@@ -342,7 +341,7 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
     // Pass 5: ZONEPAINTER
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-    BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONEPAINTER)
         {
@@ -353,7 +352,7 @@ PictureZoneEditor::paintOverPictureMask(QPainter& painter)
     // Pass 6: ZONECLEAN
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-    BOOST_FOREACH (EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         if (zone.properties()->locateOrDefault<PLP>()->layer() == PLP::ZONECLEAN)
         {
@@ -397,7 +396,7 @@ PictureZoneEditor::commitZones()
 {
     ZoneSet zones;
 
-    BOOST_FOREACH(EditableZoneSet::Zone const& zone, m_zones)
+    for(EditableZoneSet::Zone const& zone : m_zones)
     {
         SerializableSpline const spline(
             SerializableSpline(*zone.spline()).transformed(m_outputToOrig)

@@ -19,7 +19,6 @@
 #include "XmlMarshaller.h"
 #include "RelativeMargins.h"
 #include "Utils.h"
-#include <boost/foreach.hpp>
 #include <QPointF>
 #include <QLineF>
 #include <QRect>
