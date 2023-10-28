@@ -36,7 +36,6 @@
 #include <QColor>
 #include <QPainter>
 #include <QDebug>
-#include <boost/foreach.hpp>
 #include <algorithm>
 #include <new>
 #include <math.h>
@@ -80,7 +79,7 @@ HoughLineDetector::HoughLineDetector(
         angle *= constants::DEG2RAD;
 
         QPointF const uv(cos(angle), sin(angle));
-        BOOST_FOREACH (QPoint const& p, checkpoints)
+        for(QPoint const& p : checkpoints)
         {
             double const distance = uv.x() * p.x() + uv.y() * p.y();
             max_distance = std::max(max_distance, distance);
@@ -108,7 +107,7 @@ HoughLineDetector::process(int x, int y, unsigned weight)
 {
     unsigned* hist_line = &m_histogram[0];
 
-    BOOST_FOREACH (QPointF const& uv, m_angleUnitVectors)
+    for(QPointF const& uv : m_angleUnitVectors)
     {
         double const distance = uv.x() * x + uv.y() * y;
         double const biased_distance = distance + m_distanceBias;

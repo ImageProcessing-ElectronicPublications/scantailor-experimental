@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/foreach.hpp>
 #include <Qt>
 #include <QColor>
 #include <QMutexLocker>
@@ -66,7 +65,7 @@ Settings::performRelinking(AbstractRelinker const& relinker)
     PerPageZones new_picture_zones;
     PerPageZones new_fill_zones;
 
-    BOOST_FOREACH(PerPageParams::value_type const& kv, m_perPageParams)
+    for(PerPageParams::value_type const& kv : m_perPageParams)
     {
         RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
         PageId new_page_id(kv.first);
@@ -74,7 +73,7 @@ Settings::performRelinking(AbstractRelinker const& relinker)
         new_params.insert(PerPageParams::value_type(new_page_id, kv.second));
     }
 
-    BOOST_FOREACH(PerPageOutputParams::value_type const& kv, m_perPageOutputParams)
+    for(PerPageOutputParams::value_type const& kv : m_perPageOutputParams)
     {
         RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
         PageId new_page_id(kv.first);
@@ -82,7 +81,7 @@ Settings::performRelinking(AbstractRelinker const& relinker)
         new_output_params.insert(PerPageOutputParams::value_type(new_page_id, kv.second));
     }
 
-    BOOST_FOREACH(PerPageZones::value_type const& kv, m_perPagePictureZones)
+    for(PerPageZones::value_type const& kv : m_perPagePictureZones)
     {
         RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
         PageId new_page_id(kv.first);
@@ -90,7 +89,7 @@ Settings::performRelinking(AbstractRelinker const& relinker)
         new_picture_zones.insert(PerPageZones::value_type(new_page_id, kv.second));
     }
 
-    BOOST_FOREACH(PerPageZones::value_type const& kv, m_perPageFillZones)
+    for(PerPageZones::value_type const& kv : m_perPageFillZones)
     {
         RelinkablePath const old_path(kv.first.imageId().filePath(), RelinkablePath::File);
         PageId new_page_id(kv.first);

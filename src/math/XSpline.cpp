@@ -24,7 +24,6 @@
 #include "adiff/Function.h"
 #include <QLineF>
 #include <QDebug>
-#include <boost/foreach.hpp>
 #include <string>
 #include <stdexcept>
 #include <algorithm>
@@ -726,7 +725,7 @@ XSpline::junctionPointsAttractionForce(int seg_begin, int seg_end) const
             Function<2> next_y(sparse_map);
 
             linearCombinationAt(controlPointIndexToT(i), coeffs);
-            BOOST_FOREACH(LinearCoefficient const& coeff, coeffs)
+            for(LinearCoefficient const& coeff : coeffs)
             {
                 QPointF const cp(m_controlPoints[coeff.controlPointIdx].pos);
                 Function<2> x(coeff.controlPointIdx * 2, cp.x(), sparse_map);

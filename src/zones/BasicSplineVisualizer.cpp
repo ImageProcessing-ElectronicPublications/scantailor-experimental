@@ -21,7 +21,6 @@
 #include <QPainter>
 #include <QBrush>
 #include <Qt>
-#include <boost/foreach.hpp>
 
 BasicSplineVisualizer::BasicSplineVisualizer()
     :	m_solidColor(0xcc1420),
@@ -38,7 +37,7 @@ BasicSplineVisualizer::drawSplines(
     QPainter& painter, QTransform const& to_screen,
     EditableZoneSet const& zones)
 {
-    BOOST_FOREACH(EditableZoneSet::Zone const& zone, zones)
+    for(EditableZoneSet::Zone const& zone : zones)
     {
         drawSpline(painter, to_screen, zone.spline());
     }

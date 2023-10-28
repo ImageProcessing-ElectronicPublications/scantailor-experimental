@@ -30,7 +30,6 @@
 #include <QtGlobal>
 #include <QDebug>
 #include <functional>
-#include <boost/foreach.hpp>
 #include <algorithm>
 
 namespace page_split

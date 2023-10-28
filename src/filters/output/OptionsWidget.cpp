@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/foreach.hpp>
 #include <QtGlobal>
 #include <QVariant>
 #include <QColorDialog>
@@ -634,7 +633,7 @@ void
 OptionsWidget::applyColorsFiltersConfirmed(std::set<PageId> const& pages)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    BOOST_FOREACH(PageId const& page_id, pages)
+    for(PageId const& page_id : pages)
     {
 //        m_ptrSettings->setColorParams(page_id, m_colorParams);
         m_ptrSettings->setColorGrayscaleOptions(page_id, color_options);
@@ -830,7 +829,7 @@ OptionsWidget::applyColorsModeConfirmed(std::set<PageId> const& pages)
 {
     ColorParams::ColorMode mode(m_colorParams.colorMode());
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    BOOST_FOREACH(PageId const& page_id, pages)
+    for(PageId const& page_id : pages)
     {
 //        m_ptrSettings->setColorParams(page_id, m_colorParams);
         m_ptrSettings->setColorMode(page_id, mode);
@@ -1039,7 +1038,7 @@ OptionsWidget::applyDespeckleButtonClicked()
 void
 OptionsWidget::applyDespeckleConfirmed(std::set<PageId> const& pages)
 {
-    BOOST_FOREACH(PageId const& page_id, pages)
+    for(PageId const& page_id : pages)
     {
         m_ptrSettings->setDespeckleLevel(page_id, m_despeckleLevel);
         m_ptrSettings->setDespeckleFactor(page_id, m_despeckleFactor);

@@ -21,7 +21,6 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
-#include <boost/foreach.hpp>
 
 ZoneSet::ZoneSet(QDomElement const& el, PropertyFactory const& prop_factory)
 {
@@ -53,7 +52,7 @@ ZoneSet::toXml(QDomDocument& doc, QString const& name) const
     QString const zone_str("zone");
 
     QDomElement el(doc.createElement(name));
-    BOOST_FOREACH(Zone const& zone, m_zones)
+    for(Zone const& zone : m_zones)
     {
         el.appendChild(zone.toXml(doc, zone_str));
     }

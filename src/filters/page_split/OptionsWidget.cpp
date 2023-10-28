@@ -26,7 +26,6 @@
 #include "ProjectPages.h"
 #include "ScopedIncDec.h"
 #include <QPixmap>
-#include <boost/foreach.hpp>
 #include <assert.h>
 
 namespace page_split
@@ -308,7 +307,7 @@ OptionsWidget::layoutTypeSet(
         m_ptrSettings->setLayoutTypeFor(layout_type, pages);
         if (layout_type != AUTO_LAYOUT_TYPE)
         {
-            BOOST_FOREACH(PageId const& page_id, pages)
+            for(PageId const& page_id : pages)
             {
                 m_ptrPages->setLayoutTypeFor(page_id.imageId(), plt);
             }
@@ -321,7 +320,7 @@ OptionsWidget::layoutTypeSet(
     }
     else
     {
-        BOOST_FOREACH(PageId const& page_id, pages)
+        for(PageId const& page_id : pages)
         {
             emit invalidateThumbnail(page_id);
         }

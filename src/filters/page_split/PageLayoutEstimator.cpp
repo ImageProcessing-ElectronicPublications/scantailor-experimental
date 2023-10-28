@@ -45,7 +45,6 @@
 #include "imageproc/SlicedHistogram.h"
 #include "imageproc/Grayscale.h"
 #include "imageproc/PolygonRasterizer.h"
-#include <boost/foreach.hpp>
 #include <QRect>
 #include <QRectF>
 #include <QSizeF>
@@ -210,7 +209,7 @@ std::unique_ptr<PageLayout> autoDetectTwoPageLayout(
     double const image_center = virtual_image_rect.center().x();
     double min_distance = std::numeric_limits<double>::max();
     QLineF const* best_line = 0;
-    BOOST_FOREACH (QLineF const& line, ltr_lines)
+    for(QLineF const& line : ltr_lines)
     {
         double const line_center = lineCenterX(line);
         double const distance = fabs(line_center - image_center);
@@ -684,7 +683,7 @@ PageLayoutEstimator::visualizeSpans(
     {
         QPainter painter(&spans_img);
         QBrush const brush(QColor(0xff, 0x00, 0x00, 0x50));
-        BOOST_FOREACH(Span const& span, spans)
+        for(Span const& span : spans)
         {
             QRect const rect(span.begin(), 0, span.width(), height);
             painter.fillRect(rect, brush);

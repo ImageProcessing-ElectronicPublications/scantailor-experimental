@@ -20,7 +20,6 @@
 #include "XmlMarshaller.h"
 #include "XmlUnmarshaller.h"
 #include "VecNT.h"
-#include <boost/foreach.hpp>
 #include <QByteArray>
 #include <QDataStream>
 #include <QDomDocument>
@@ -137,7 +136,7 @@ Curve::serializePolyline(
     strm.setVersion(QDataStream::Qt_4_4);
     strm.setByteOrder(QDataStream::LittleEndian);
 
-    BOOST_FOREACH(QPointF const& pt, polyline)
+    for(QPointF const& pt : polyline)
     {
         strm << (float)pt.x() << (float)pt.y();
     }

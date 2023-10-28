@@ -24,7 +24,6 @@
 #include "imageproc/GaussBlur.h"
 #include "imageproc/Sobel.h"
 #include <boost/scoped_array.hpp>
-#include <boost/foreach.hpp>
 #include <QImage>
 #include <QPainter>
 #include <QPen>
@@ -339,7 +338,7 @@ TextLineRefiner::calcFrenetFrames(
     }
 
     // Calculate normals and make sure they point down.
-    BOOST_FOREACH(FrenetFrame& frame, frenet_frames)
+    for(FrenetFrame& frame : frenet_frames)
     {
         frame.unitDownNormal = Vec2f(frame.unitTangent[1], -frame.unitTangent[0]);
         if (frame.unitDownNormal.dot(unit_down_vec) < 0)
@@ -546,7 +545,7 @@ TextLineRefiner::Optimizer::tangentMovement(Snake& snake,
             }
 
             // Now find the best step for the previous node to combine with.
-            BOOST_FOREACH(uint32_t prev_step_idx, paths)
+            for(uint32_t prev_step_idx : paths)
             {
                 Step const& prev_step = step_storage[prev_step_idx];
                 float const cost = base_cost + prev_step.pathCost +
@@ -570,7 +569,7 @@ TextLineRefiner::Optimizer::tangentMovement(Snake& snake,
     // Find the best overall path.
     uint32_t best_path_idx = ~uint32_t(0);
     float best_cost = NumericTraits<float>::max();
-    BOOST_FOREACH(uint32_t last_step_idx, paths)
+    for(uint32_t last_step_idx : paths)
     {
         Step const& step = step_storage[last_step_idx];
         if (step.pathCost < best_cost)
@@ -676,7 +675,7 @@ TextLineRefiner::Optimizer::normalMovement(Snake& snake,
                                     );
 
             // Now find the best step for the previous node to combine with.
-            BOOST_FOREACH(uint32_t prev_step_idx, paths)
+            for(uint32_t prev_step_idx : paths)
             {
                 Step const& prev_step = step_storage[prev_step_idx];
                 Step const& prev_prev_step = step_storage[prev_step.prevStepIdx];
@@ -702,7 +701,7 @@ TextLineRefiner::Optimizer::normalMovement(Snake& snake,
     // Find the best overall path.
     uint32_t best_path_idx = ~uint32_t(0);
     float best_cost = NumericTraits<float>::max();
-    BOOST_FOREACH(uint32_t last_step_idx, paths)
+    for(uint32_t last_step_idx : paths)
     {
         Step const& step = step_storage[last_step_idx];
         if (step.pathCost < best_cost)

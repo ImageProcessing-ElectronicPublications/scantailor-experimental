@@ -24,7 +24,6 @@
 #include <cmath>
 #include <limits>
 #include <algorithm>
-#include <boost/foreach.hpp>
 #include <QtGlobal>
 #include <QImage>
 #include <QSize>
@@ -901,7 +900,7 @@ Despeckle::despeckleInPlace(
     status.throwIfCancelled();
 
     // Tag connected components with ANCHORED_TO_BIG or ANCHORED_TO_SMALL.
-    BOOST_FOREACH(Connections::value_type const& pair, conns)
+    for(Connections::value_type const& pair : conns)
     {
         Connection const conn(pair.first);
         uint32_t const sqdist = pair.second;
@@ -916,7 +915,7 @@ Despeckle::despeckleInPlace(
     components[unified_big_component].setAnchoredToBig();
 
     bool have_anchored_to_small_but_not_big = false;
-    BOOST_FOREACH(Component const& comp, components)
+    for(Component const& comp : components)
     {
         // have_anchored_to_small_but_not_big = comp.anchoredToSmallButNotBig();
         // fix @trufanov-nok
@@ -990,7 +989,7 @@ Despeckle::despeckleInPlace(
     std::vector<Distance>().swap(distance_matrix);
 
     // Remove tags from components.
-    BOOST_FOREACH(Component& comp, components)
+    for(Component& comp : components)
     {
         comp.clearTags();
     }

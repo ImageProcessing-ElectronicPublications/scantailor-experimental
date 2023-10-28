@@ -32,7 +32,6 @@
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 #include <functional>
-#include <boost/foreach.hpp>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QGraphicsItemGroup>
@@ -607,7 +606,7 @@ ThumbnailSequence::Impl::toPageSequence() const
 {
     PageSequence pages;
 
-    BOOST_FOREACH(Item const& item, m_itemsInOrder)
+    for(Item const& item : m_itemsInOrder)
     {
         pages.append(item.pageInfo);
     }
@@ -1108,7 +1107,7 @@ std::set<PageId>
 ThumbnailSequence::Impl::selectedItems() const
 {
     std::set<PageId> selection;
-    BOOST_FOREACH(Item const& item, m_selectedThenUnselected)
+    for(Item const& item : m_selectedThenUnselected)
     {
         if (!item.isSelected())
         {
@@ -1389,7 +1388,7 @@ ThumbnailSequence::Impl::clearSelection()
 {
     m_pSelectionLeader = 0;
 
-    BOOST_FOREACH(Item const& item, m_selectedThenUnselected)
+    for(Item const& item : m_selectedThenUnselected)
     {
         if (!item.isSelected())
         {

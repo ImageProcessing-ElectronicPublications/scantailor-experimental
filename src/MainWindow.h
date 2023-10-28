@@ -65,7 +65,6 @@
 #include <math.h>
 #include <assert.h>
 #include <functional>
-#include <boost/foreach.hpp>
 #include "ui_MainWindow.h"
 #include "FilterUiInterface.h"
 #include "NonCopyable.h"

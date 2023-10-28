@@ -27,7 +27,6 @@
 #include "imageproc/MorphGradientDetect.h"
 #include "imageproc/HoughLineDetector.h"
 #include "imageproc/Constants.h"
-#include <boost/foreach.hpp>
 #include <QLineF>
 #include <QSizeF>
 #include <QColor>
@@ -176,7 +175,7 @@ VertLineFinder::findLines(
 
     typedef std::list<LineGroup> LineGroups;
     LineGroups line_groups;
-    BOOST_FOREACH (HoughLine const& hough_line, hough_lines)
+    for(HoughLine const& hough_line : hough_lines)
     {
         QualityLine const new_line(
             hough_line.pointAtY(0.0),
@@ -214,7 +213,7 @@ VertLineFinder::findLines(
     }
 
     std::vector<QLineF> lines;
-    BOOST_FOREACH (LineGroup const& group, line_groups)
+    for(LineGroup const& group : line_groups)
     {
         lines.push_back(group.leader().toQLine());
         if ((int)lines.size() == max_lines)
@@ -238,7 +237,7 @@ VertLineFinder::findLines(
             pen.setWidthF(3.0);
             painter.setPen(pen);
 
-            BOOST_FOREACH (QLineF const& line, lines)
+            for(QLineF const& line : lines)
             {
                 painter.drawLine(line);
             }
@@ -247,7 +246,7 @@ VertLineFinder::findLines(
     }
 
     // Transform lines back into original coordinates.
-    BOOST_FOREACH (QLineF& line, lines)
+    for(QLineF& line : lines)
     {
         line = transform_back.map(line);
     }

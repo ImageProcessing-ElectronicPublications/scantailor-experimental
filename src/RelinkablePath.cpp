@@ -18,7 +18,6 @@
 
 #include "RelinkablePath.h"
 #include <QStringList>
-#include <boost/foreach.hpp>
 
 RelinkablePath::RelinkablePath(QString const& path, Type type)
     :	m_normalizedPath(normalize(path))
@@ -38,7 +37,7 @@ RelinkablePath::normalize(QString const& path)
 #else
     Qt::SplitBehavior behavior = Qt::KeepEmptyParts;
 #endif
-    BOOST_FOREACH(QString const& comp, front_slashes.split(QChar('/'), behavior))
+    for(QString const& comp : front_slashes.split(QChar('/'), behavior))
     {
         if (comp.isEmpty())
         {

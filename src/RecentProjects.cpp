@@ -17,7 +17,6 @@
 */
 
 #include "RecentProjects.h"
-#include <boost/foreach.hpp>
 #include <QSettings>
 #include <QFile>
 #include <algorithm>
@@ -46,7 +45,7 @@ RecentProjects::write(int const max_items) const
     QSettings settings;
     settings.beginWriteArray("project/recent");
     int idx = 0;
-    BOOST_FOREACH(QString const& path, m_projectFiles)
+    for(QString const& path : m_projectFiles)
     {
         if (idx >= max_items)
         {
