@@ -19,7 +19,7 @@
 #include "ConnCompEraserExt.h"
 #include "RasterOp.h"
 #include <QRect>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <string.h>
 #include <stddef.h>
 #include <assert.h>
