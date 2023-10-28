@@ -31,7 +31,7 @@
 #include <QColor>
 #include <QtGlobal> // For Q_OS_*
 #include <QPainterPath>
-#include <boost/function.hpp>
+#include <functional>
 #include <map>
 #include <memory>
 #include <vector>
@@ -54,7 +54,7 @@ public:
             ZoneContextMenuItem const& delete_item);
     };
 
-    typedef boost::function<
+    typedef std::function<
     std::vector<ZoneContextMenuItem>(
         EditableZoneSet::Zone const&, StandardMenuItems const&
     )

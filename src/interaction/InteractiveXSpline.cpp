@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCursor>
 #include <QMouseEvent>
 #include <Qt>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <stdexcept>
 #include <string>
 
@@ -70,13 +70,13 @@ InteractiveXSpline::setSpline(
     for (int i = 0; i < num_control_points; ++i)
     {
         new_control_points[i].point.setPositionCallback(
-            boost::bind(&InteractiveXSpline::controlPointPosition, this, i)
+            std::bind(std::mem_fn(&InteractiveXSpline::controlPointPosition), this, i)
         );
         new_control_points[i].point.setMoveRequestCallback(
-            boost::bind(&InteractiveXSpline::controlPointMoveRequest, this, i, boost::placeholders::_1)
+            std::bind(std::mem_fn(&InteractiveXSpline::controlPointMoveRequest), this, i, std::placeholders::_1)
         );
         new_control_points[i].point.setDragFinishedCallback(
-            boost::bind(&InteractiveXSpline::dragFinished, this)
+            std::bind(std::mem_fn(&InteractiveXSpline::dragFinished), this)
         );
 
         if (i == 0 || i == num_control_points - 1 || fixed_number_of_control_points)
