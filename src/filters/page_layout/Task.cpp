@@ -100,7 +100,7 @@ Task::process(
     QImage const& orig_image,
     CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
     std::shared_ptr<AbstractImageTransform const> const& orig_image_transform,
-    boost::optional<AffineTransformedImage> pre_transformed_image,
+    std::optional<AffineTransformedImage> pre_transformed_image,
     ContentBox const& content_box)
 {
     status.throwIfCancelled();

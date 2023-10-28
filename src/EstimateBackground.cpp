@@ -207,7 +207,7 @@ static void morphologicalPreprocessingInPlace(GrayImage& image,
 
 imageproc::PolynomialSurface estimateBackground(
     GrayImage const& downscaled_input,
-    boost::optional<QPolygonF> const& region_of_intereset,
+    std::optional<QPolygonF> const& region_of_intereset,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     TaskStatus const& status, DebugImages* dbg)
 {

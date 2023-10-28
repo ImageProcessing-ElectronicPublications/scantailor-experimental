@@ -36,7 +36,7 @@
 #include <QObject>
 #include <QTransform>
 #include <QDebug>
-#include <boost/optional.hpp>
+#include <optional>
 #include <assert.h>
 
 using namespace imageproc;
@@ -131,7 +131,7 @@ Task::process(
 
     }
 
-    boost::optional<AffineTransformedImage> dewarped;
+    std::optional<AffineTransformedImage> dewarped;
 
     if (!params.get())
     {

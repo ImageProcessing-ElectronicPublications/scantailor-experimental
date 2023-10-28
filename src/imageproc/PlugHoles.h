@@ -26,7 +26,7 @@
 #include "RasterOpGeneric.h"
 #include <QPoint>
 #include <QRect>
-#include <boost/optional.hpp>
+#include <optional>
 #include <vector>
 #include <limits>
 #include <algorithm>
@@ -56,7 +56,7 @@ namespace imageproc
  */
 template<typename T>
 void plugHoles(GridAccessor<T> const grid,
-               Connectivity conn, boost::optional<T> const max_label = boost::none)
+               Connectivity conn, std::optional<T> const max_label = std::nullopt)
 {
     static_assert(std::is_integral<T>::value, "plugHoles() only works with integral labels");
 

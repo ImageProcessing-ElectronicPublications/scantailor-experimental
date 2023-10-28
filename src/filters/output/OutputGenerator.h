@@ -24,7 +24,7 @@
 #include <vector>
 #include <utility>
 #include <stdint.h>
-#include <boost/optional.hpp>
+#include <optional>
 #include <QSize>
 #include <QRect>
 #include <QTransform>
@@ -134,7 +134,7 @@ private:
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         imageproc::GrayImage const& input_for_estimation,
         imageproc::GrayImage const& input_for_normalisation, double norm_coef,
-        boost::optional<QPolygonF> const& estimation_region_of_intereset,
+        std::optional<QPolygonF> const& estimation_region_of_intereset,
         DebugImages* dbg);
 
     static imageproc::GrayImage detectPictures(

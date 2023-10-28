@@ -21,7 +21,7 @@
 
 #include "imageproc/AffineImageTransform.h"
 #include <QPixmap>
-#include <boost/optional.hpp>
+#include <optional>
 #include <assert.h>
 
 class ThumbnailLoadResult
@@ -71,7 +71,7 @@ public:
     }
 
     ThumbnailLoadResult(Status status, QPixmap const& pixmap,
-                        boost::optional<imageproc::AffineImageTransform> const& pixmap_transform)
+                        std::optional<imageproc::AffineImageTransform> const& pixmap_transform)
         : m_pixmap(pixmap), m_pixmapTransform(pixmap_transform), m_status(status) {}
 
     Status status() const
@@ -88,13 +88,13 @@ public:
      * @see ThumbnailPixmapCache::Item::pixmapTransform
      * @note Guaranteed to be set if status() is LOADED.
      */
-    boost::optional<imageproc::AffineImageTransform> const& pixmapTransform() const
+    std::optional<imageproc::AffineImageTransform> const& pixmapTransform() const
     {
         return m_pixmapTransform;
     }
 private:
     QPixmap m_pixmap;
-    boost::optional<imageproc::AffineImageTransform> m_pixmapTransform;
+    std::optional<imageproc::AffineImageTransform> m_pixmapTransform;
     Status m_status;
 };
 

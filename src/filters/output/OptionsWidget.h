@@ -20,7 +20,7 @@
 #define OUTPUT_OPTIONSWIDGET_H_
 
 #include <set>
-#include <boost/optional.hpp>
+#include <optional>
 #include <QSize>
 #include "ui_OutputOptionsWidget.h"
 #include "FilterOptionsWidget.h"
@@ -153,7 +153,7 @@ private:
     ColorParams m_colorParams;
     DespeckleLevel m_despeckleLevel;
     double m_despeckleFactor;
-    boost::optional<QSize> m_thisPageOutputSize;
+    std::optional<QSize> m_thisPageOutputSize;
     ImageViewTab m_lastTab;
     int m_ignoreThresholdChanges;
     int m_ignoreDespeckleLevelChanges;

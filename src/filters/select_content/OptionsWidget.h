@@ -28,7 +28,7 @@
 #include "PageId.h"
 #include "PageSelectionAccessor.h"
 #include "Params.h"
-#include <boost/optional.hpp>
+#include <optional>
 #include <QSizeF>
 #include <QRectF>
 #include <memory>
@@ -66,7 +66,7 @@ private:
     void commitCurrentParams();
 
     IntrusivePtr<Settings> m_ptrSettings;
-    boost::optional<Params> m_params;
+    std::optional<Params> m_params;
     PageSelectionAccessor m_pageSelectionAccessor;
     PageId m_pageId;
     int m_ignoreAutoManualToggle;

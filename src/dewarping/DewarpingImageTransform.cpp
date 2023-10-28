@@ -36,7 +36,7 @@
 #include <QTransform>
 #include <QColor>
 #include <QString>
-#include <boost/optional.hpp>
+#include <optional>
 #include <boost/range/adaptor/reversed.hpp>
 #include <algorithm>
 #include <iterator>
@@ -482,7 +482,7 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::sampleCrvXRange(
         double length;
     };
 
-    boost::optional<LastSegment> last_segment;
+    std::optional<LastSegment> last_segment;
 
     for (double crv_x = from;
             (crv_x - to) * (from - to) > -std::numeric_limits<double>::epsilon()
@@ -539,7 +539,7 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::processGeneratrix(
 {
     // A pair of lower and upper bounds for y coordinate in a unit square
     // corresponding to the curved quadrilateral.
-    std::pair<boost::optional<double>, boost::optional<double>> valid_range;
+    std::pair<std::optional<double>, std::optional<double>> valid_range;
 
     // Called for points where pixel density reaches the lower or upper threshold.
     auto const processCriticalPoint = [&generatrix, &valid_range]
