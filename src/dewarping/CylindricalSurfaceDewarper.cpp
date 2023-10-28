@@ -132,7 +132,7 @@ CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
     QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12f_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
-    boost::array<std::pair<double, double>, 3> pairs;
+    std::array<std::pair<double, double>, 3> pairs;
     pairs[0] = std::make_pair(0.0, img_directrix1_proj);
     pairs[1] = std::make_pair(1.0, img_directrix2_proj);
     pairs[2] = std::make_pair(pln_straight_line_y, img_straight_line_proj);
@@ -175,7 +175,7 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12f_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
-    boost::array<std::pair<double, double>, 3> pairs;
+    std::array<std::pair<double, double>, 3> pairs;
     pairs[0] = std::make_pair(img_directrix1_proj, 0.0);
     pairs[1] = std::make_pair(img_directrix2_proj, 1.0);
     pairs[2] = std::make_pair(img_straight_line_proj, pln_straight_line_y);
@@ -201,7 +201,7 @@ CylindricalSurfaceDewarper::calcPlnToImgHomography(
     std::vector<QPointF> const& img_directrix1,
     std::vector<QPointF> const& img_directrix2)
 {
-    boost::array<std::pair<QPointF, QPointF>, 4> pairs;
+    std::array<std::pair<QPointF, QPointF>, 4> pairs;
     pairs[0] = std::make_pair(QPointF(0, 0), img_directrix1.front());
     pairs[1] = std::make_pair(QPointF(1, 0), img_directrix1.back());
     pairs[2] = std::make_pair(QPointF(0, 1), img_directrix2.front());
@@ -253,7 +253,7 @@ CylindricalSurfaceDewarper::calcPlnStraightLineY(
 
 HomographicTransform<2, double>
 CylindricalSurfaceDewarper::fourPoint2DHomography(
-    boost::array<std::pair<QPointF, QPointF>, 4> const& pairs)
+    std::array<std::pair<QPointF, QPointF>, 4> const& pairs)
 {
     Matrix<double, 8, 8> A;
     Matrix<double, 8, 1> b;
@@ -289,7 +289,7 @@ CylindricalSurfaceDewarper::fourPoint2DHomography(
 
 HomographicTransform<1, double>
 CylindricalSurfaceDewarper::threePoint1DHomography(
-    boost::array<std::pair<double, double>, 3> const& pairs)
+    std::array<std::pair<double, double>, 3> const& pairs)
 {
     Matrix<double, 3, 3> A;
     Matrix<double, 3, 1> b;

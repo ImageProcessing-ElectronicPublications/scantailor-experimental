@@ -42,7 +42,6 @@
 #include <QColor>
 #include <Qt>
 #include <QDebug>
-#include <boost/array.hpp>
 #include <functional>
 #include <boost/foreach.hpp>
 #include <vector>
