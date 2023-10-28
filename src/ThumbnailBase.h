@@ -27,7 +27,6 @@
 #include "imageproc/AbstractImageTransform.h"
 #include "imageproc/AffineImageTransform.h"
 #include <optional>
-#include <boost/shared_ptr.hpp>
 #include <QTransform>
 #include <QGraphicsItem>
 #include <QSize>
@@ -134,7 +133,7 @@ private:
      */
     QTransform m_postTransform;
 
-    boost::shared_ptr<LoadCompletionHandler> m_ptrCompletionHandler;
+    std::shared_ptr<LoadCompletionHandler> m_ptrCompletionHandler;
     bool m_extendedClipArea;
 };
 

@@ -50,15 +50,12 @@
 #include <boost/multi_index/member.hpp>
 #include <boost/foreach.hpp>
 #include <optional>
-#include <boost/tuple/tuple.hpp>
 #include <algorithm>
 #include <memory>
 #include <vector>
 #include <new>
 #include <cstdint>
 
-using namespace ::boost;
-using namespace ::boost::multi_index;
 using namespace imageproc;
 
 /** For QImageReader::text() and QImage::setText() */
@@ -196,7 +193,7 @@ public:
      */
     mutable std::optional<AffineImageTransform> pixmapTransform;
 
-    mutable std::vector<boost::weak_ptr<CompletionHandler>> completionHandlers;
+    mutable std::vector<std::weak_ptr<CompletionHandler>> completionHandlers;
 
     /**
      * The total image loading attempts (of any images) by
@@ -231,7 +228,7 @@ public:
 
     ThumbnailLoadResult request(ThumbId const& thumb_id,
                                 AbstractImageTransform const& full_size_image_transform,
-                                boost::weak_ptr<CompletionHandler> const& completion_handler);
+                                std::weak_ptr<CompletionHandler> const& completion_handler);
 
     void ensureThumbnailExists(
         ThumbId const& thumb_id, QImage const& full_size_image,
@@ -249,12 +246,12 @@ private:
     class LoadQueueTag;
     class RemoveQueueTag;
 
-    typedef multi_index_container<
+    typedef boost::multi_index::multi_index_container<
     Item,
-    indexed_by<
-    ordered_unique<tag<ItemsByKeyTag>, member<Item, ThumbId, &Item::thumbId>>,
-    sequenced<tag<LoadQueueTag> >,
-    sequenced<tag<RemoveQueueTag> >
+    boost::multi_index::indexed_by<
+    boost::multi_index::ordered_unique<boost::multi_index::tag<ItemsByKeyTag>, boost::multi_index::member<Item, ThumbId, &Item::thumbId>>,
+    boost::multi_index::sequenced<boost::multi_index::tag<LoadQueueTag> >,
+    boost::multi_index:: sequenced<boost::multi_index::tag<RemoveQueueTag> >
     >
     > Container;
 
@@ -447,7 +444,7 @@ ThumbnailPixmapCache::setAccelOps(std::shared_ptr<AcceleratableOperations> const
 ThumbnailLoadResult
 ThumbnailPixmapCache::loadRequest(PageId const& page_id,
                                   AbstractImageTransform const& full_size_image_transform,
-                                  boost::weak_ptr<CompletionHandler> const& completion_handler)
+                                  std::weak_ptr<CompletionHandler> const& completion_handler)
 {
     return m_ptrImpl->request(
                ThumbId(page_id, full_size_image_transform.isAffine()),
@@ -561,7 +558,7 @@ ThumbnailPixmapCache::Impl::setAccelOps(std::shared_ptr<AcceleratableOperations>
 ThumbnailLoadResult
 ThumbnailPixmapCache::Impl::request(ThumbId const& thumb_id,
                                     AbstractImageTransform const& full_size_image_transform,
-                                    boost::weak_ptr<CompletionHandler> const& completion_handler)
+                                    std::weak_ptr<CompletionHandler> const& completion_handler)
 {
     assert(QCoreApplication::instance()->thread() == QThread::currentThread());
 
@@ -1151,7 +1148,7 @@ ThumbnailPixmapCache::Impl::processLoadResult(LoadResultEvent* result)
         pixmap = QPixmap::fromImage(result->thumb->origImage());
     }
 
-    std::vector<boost::weak_ptr<CompletionHandler> > completion_handlers;
+    std::vector<std::weak_ptr<CompletionHandler> > completion_handlers;
 
     {
         QMutexLocker const locker(&m_mutex);
@@ -1188,9 +1185,9 @@ ThumbnailPixmapCache::Impl::processLoadResult(LoadResultEvent* result)
     } // mutex scope
 
     // Notify listeners.
-    for (boost::weak_ptr<CompletionHandler> const& wh : completion_handlers)
+    for (std::weak_ptr<CompletionHandler> const& wh : completion_handlers)
     {
-        boost::shared_ptr<CompletionHandler> const sh(wh.lock());
+        std::shared_ptr<CompletionHandler> const sh(wh.lock());
         if (sh.get())
         {
             (*sh)(result->status);

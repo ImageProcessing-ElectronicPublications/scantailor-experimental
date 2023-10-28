@@ -21,7 +21,6 @@
 
 #include "foundation_config.h"
 #include "ObjectSwapperImpl.h"
-#include <boost/shared_ptr.hpp>
 #include <memory>
 #include <assert.h>
 
@@ -101,10 +100,10 @@ public:
     }
 private:
     /** A null m_ptrObj indicates the object has been swapped out. */
-    boost::shared_ptr<Obj> m_ptrObj;
+    std::shared_ptr<Obj> m_ptrObj;
 
     /** m_ptrImpl is always set. */
-    boost::shared_ptr<Impl> m_ptrImpl;
+    std::shared_ptr<Impl> m_ptrImpl;
 };
 
 #endif

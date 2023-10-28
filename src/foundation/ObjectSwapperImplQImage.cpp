@@ -27,14 +27,14 @@ ObjectSwapperImpl<QImage>::ObjectSwapperImpl(QString const& swap_dir)
 {
 }
 
-boost::shared_ptr<QImage>
+std::shared_ptr<QImage>
 ObjectSwapperImpl<QImage>::swapIn()
 {
-    return boost::shared_ptr<QImage>(new QImage(m_file.get()));
+    return std::shared_ptr<QImage>(new QImage(m_file.get()));
 }
 
 void
-ObjectSwapperImpl<QImage>::swapOut(boost::shared_ptr<QImage> const& obj)
+ObjectSwapperImpl<QImage>::swapOut(std::shared_ptr<QImage> const& obj)
 {
     assert(obj.get());
 

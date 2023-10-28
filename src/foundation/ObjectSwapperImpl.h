@@ -20,7 +20,7 @@
 #define OBJECT_SWAPPER_IMPL_H_
 
 #include "foundation_config.h"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 class QString;
 
@@ -35,9 +35,9 @@ class ObjectSwapperImpl
 public:
     ObjectSwapperImpl(QString const& swap_dir);
 
-    boost::shared_ptr<Obj> swapIn();
+    std::shared_ptr<Obj> swapIn();
 
-    void swapOut(boost::shared_ptr<Obj> const& obj);
+    void swapOut(std::shared_ptr<Obj> const& obj);
 };
 
 #endif

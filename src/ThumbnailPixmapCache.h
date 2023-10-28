@@ -24,7 +24,6 @@
 #include "ThumbnailLoadResult.h"
 #include "AbstractCommand.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <boost/weak_ptr.hpp>
 #include <memory>
 
 class PageId;
@@ -105,7 +104,7 @@ public:
      */
     ThumbnailLoadResult loadRequest(PageId const& page_id,
                                     imageproc::AbstractImageTransform const& full_size_image_transform,
-                                    boost::weak_ptr<CompletionHandler> const& completion_handler);
+                                    std::weak_ptr<CompletionHandler> const& completion_handler);
 
     /**
      * \brief If no thumbnail exists for this image, create it.

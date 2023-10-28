@@ -17,8 +17,6 @@
 */
 
 #include <functional>
-#include <boost/bind/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <QImage>
 #include <QString>
 #include <QObject>
