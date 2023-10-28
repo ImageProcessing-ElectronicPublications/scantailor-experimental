@@ -24,7 +24,7 @@
 #include <QPoint>
 #include <QRect>
 #include <QSize>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <stdexcept>
 #include <assert.h>
 
