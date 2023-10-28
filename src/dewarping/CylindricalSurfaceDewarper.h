@@ -23,7 +23,7 @@
 #include "HomographicTransform.h"
 #include "PolylineIntersector.h"
 #include "ArcLengthMapper.h"
-#include <boost/array.hpp>
+#include <array>
 #include <vector>
 #include <utility>
 #include <QPointF>
@@ -117,10 +117,10 @@ private:
         HomographicTransform<2, double> img2pln);
 
     static HomographicTransform<2, double> fourPoint2DHomography(
-        boost::array<std::pair<QPointF, QPointF>, 4> const& pairs);
+        std::array<std::pair<QPointF, QPointF>, 4> const& pairs);
 
     static HomographicTransform<1, double> threePoint1DHomography(
-        boost::array<std::pair<double, double>, 3> const& pairs);
+        std::array<std::pair<double, double>, 3> const& pairs);
 
     void initArcLengthMapper(
         std::vector<QPointF> const& img_directrix1,
