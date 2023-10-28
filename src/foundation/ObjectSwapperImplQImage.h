@@ -24,7 +24,7 @@
 #include "AutoRemovingFile.h"
 #include <QString>
 #include <QImage>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 template<>
 class FOUNDATION_EXPORT ObjectSwapperImpl<QImage>
@@ -32,9 +32,9 @@ class FOUNDATION_EXPORT ObjectSwapperImpl<QImage>
 public:
     ObjectSwapperImpl(QString const& swap_dir);
 
-    boost::shared_ptr<QImage> swapIn();
+    std::shared_ptr<QImage> swapIn();
 
-    void swapOut(boost::shared_ptr<QImage> const& obj);
+    void swapOut(std::shared_ptr<QImage> const& obj);
 private:
     QString m_swapDir;
     AutoRemovingFile m_file;

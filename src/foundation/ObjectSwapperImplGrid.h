@@ -28,7 +28,6 @@
 #include <QFile>
 #include <QTemporaryFile>
 #include <QDebug>
-#include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <stddef.h>
 
@@ -39,9 +38,9 @@ class ObjectSwapperImpl<Grid<Node> >
 public:
     ObjectSwapperImpl(QString const& swap_dir);
 
-    boost::shared_ptr<Grid<Node> > swapIn();
+    std::shared_ptr<Grid<Node> > swapIn();
 
-    void swapOut(boost::shared_ptr<Grid<Node> > const& obj);
+    void swapOut(std::shared_ptr<Grid<Node> > const& obj);
 private:
     QString m_swapDir;
     AutoRemovingFile m_file;
@@ -61,10 +60,10 @@ ObjectSwapperImpl<Grid<Node> >::ObjectSwapperImpl(QString const& swap_dir)
 
 
 template<typename Node>
-boost::shared_ptr<Grid<Node> >
+std::shared_ptr<Grid<Node> >
 ObjectSwapperImpl<Grid<Node> >::swapIn()
 {
-    boost::shared_ptr<Grid<Node> > grid(new Grid<Node>(m_width, m_height, m_padding));
+    std::shared_ptr<Grid<Node> > grid(new Grid<Node>(m_width, m_height, m_padding));
 
     QFile file(m_file.get());
     if (!file.open(file.ReadOnly))
@@ -87,7 +86,7 @@ ObjectSwapperImpl<Grid<Node> >::swapIn()
 
 template<typename Node>
 void
-ObjectSwapperImpl<Grid<Node> >::swapOut(boost::shared_ptr<Grid<Node> > const& obj)
+ObjectSwapperImpl<Grid<Node> >::swapOut(std::shared_ptr<Grid<Node> > const& obj)
 {
     assert(obj.get());
     m_width = obj->width();

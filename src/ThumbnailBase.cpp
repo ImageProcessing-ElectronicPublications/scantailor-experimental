@@ -23,7 +23,6 @@
 #include "AbstractCommand.h"
 #include "PixmapRenderer.h"
 #include "imageproc/PolygonUtils.h"
-#include <boost/weak_ptr.hpp>
 #include <QPixmap>
 #include <QPixmapCache>
 #include <QPainter>
@@ -89,7 +88,7 @@ ThumbnailBase::paint(QPainter* painter,
 
     if (!m_ptrCompletionHandler.get())
     {
-        boost::shared_ptr<LoadCompletionHandler> handler(
+        std::shared_ptr<LoadCompletionHandler> handler(
             new LoadCompletionHandler(this)
         );
         res = m_ptrThumbnailCache->loadRequest(
