@@ -26,7 +26,7 @@
 #include "Utils.h"
 #include "Grid.h"
 #include "VecNT.h"
-#include <boost/function.hpp>
+#include <functional>
 #include <QString>
 #include <deque>
 #include <utility>
@@ -81,9 +81,9 @@ public:
      * \endcode
      */
     virtual void add(QString const& label,
-                     boost::function<QWidget*()> const& image_view_factory,
-                     boost::function<void()> const& swap_in_action,
-                     boost::function<void()> const& swap_out_action, bool swap_out_now = true);
+                     std::function<QWidget*()> const& image_view_factory,
+                     std::function<void()> const& swap_in_action,
+                     std::function<void()> const& swap_out_action, bool swap_out_now = true);
 
     bool empty() const
     {

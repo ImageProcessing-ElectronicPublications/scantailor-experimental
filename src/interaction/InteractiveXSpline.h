@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Eigen/Core>
 #include <QPointF>
 #include <QCoreApplication>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/scoped_array.hpp>
 #include <stddef.h>
 
@@ -34,9 +34,9 @@ class InteractiveXSpline : public InteractionHandler
 {
     Q_DECLARE_TR_FUNCTIONS(InteractiveXSpline)
 public:
-    typedef boost::function<QPointF (QPointF const&)> Transform;
-    typedef boost::function<void()> ModifiedCallback;
-    typedef boost::function<void()> DragFinishedCallback;
+    typedef std::function<QPointF (QPointF const&)> Transform;
+    typedef std::function<void()> ModifiedCallback;
+    typedef std::function<void()> DragFinishedCallback;
 
     InteractiveXSpline();
 

@@ -32,7 +32,7 @@
 #include "ZoomHandler.h"
 #include "DragHandler.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <boost/function.hpp>
+#include <functional>
 #include <QPoint>
 #include <QPointF>
 #include <QColor>
@@ -54,8 +54,8 @@ public:
     FillZoneEditor(
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         QImage const& image, ImagePixmapUnion const& downscaled_version,
-        boost::function<QPointF(QPointF const&)> const& orig_to_image,
-        boost::function<QPointF(QPointF const&)> const& image_to_orig,
+        std::function<QPointF(QPointF const&)> const& orig_to_image,
+        std::function<QPointF(QPointF const&)> const& image_to_orig,
         PageId const& page_id, IntrusivePtr<Settings> const& settings);
 
     virtual ~FillZoneEditor();
@@ -96,8 +96,8 @@ private:
     DragHandler m_dragHandler;
     ZoomHandler m_zoomHandler;
 
-    boost::function<QPointF(QPointF const&)> m_origToImage;
-    boost::function<QPointF(QPointF const&)> m_imageToOrig;
+    std::function<QPointF(QPointF const&)> m_origToImage;
+    std::function<QPointF(QPointF const&)> m_imageToOrig;
     PageId m_pageId;
     IntrusivePtr<Settings> m_ptrSettings;
 };

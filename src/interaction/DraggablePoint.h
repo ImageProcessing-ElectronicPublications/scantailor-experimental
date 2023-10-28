@@ -21,16 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "DraggableObject.h"
 #include <QPointF>
-#include <boost/function.hpp>
+#include <functional>
 
 class DraggablePoint : public DraggableObject
 {
 public:
-    typedef boost::function<
+    typedef std::function<
     QPointF ()
     > PositionCallback;
 
-    typedef boost::function<
+    typedef std::function<
     void (QPointF const&)
     > MoveRequestCallback;
 

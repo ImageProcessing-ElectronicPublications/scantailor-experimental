@@ -31,7 +31,7 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/mem_fun.hpp>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
@@ -105,7 +105,7 @@ private:
 class ThumbnailSequence::GraphicsScene : public QGraphicsScene
 {
 public:
-    typedef boost::function<void (QGraphicsSceneContextMenuEvent*)> ContextMenuEventCallback;
+    typedef std::function<void (QGraphicsSceneContextMenuEvent*)> ContextMenuEventCallback;
 
     void setContextMenuEventCallback(ContextMenuEventCallback callback)
     {

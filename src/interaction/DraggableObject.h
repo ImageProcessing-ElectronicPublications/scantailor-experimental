@@ -21,7 +21,7 @@
 
 #include "InteractionState.h"
 #include "Proximity.h"
-#include <boost/function.hpp>
+#include <functional>
 
 class ObjectDragHandler;
 class QPoint;
@@ -31,31 +31,31 @@ class QPainter;
 class DraggableObject
 {
 public:
-    typedef boost::function<
+    typedef std::function<
     void (QPainter& painter, InteractionState const& interaction)
     > PaintCallback;
 
-    typedef boost::function<
+    typedef std::function<
     Proximity (InteractionState const& interaction)
     > ProximityThresholdCallback;
 
-    typedef boost::function<
+    typedef std::function<
     int ()
     > ProximityPriorityCallback;
 
-    typedef boost::function<
+    typedef std::function<
     Proximity (QPointF const& mouse_pos)
     > ProximityCallback;
 
-    typedef boost::function<
+    typedef std::function<
     void (QPointF const& mouse_pos)
     > DragInitiatedCallback;
 
-    typedef boost::function<
+    typedef std::function<
     void (QPointF const& mouse_pos)
     > DragContinuationCallback;
 
-    typedef boost::function<
+    typedef std::function<
     void (QPointF const& mouse_pos)
     > DragFinishedCallback;
 

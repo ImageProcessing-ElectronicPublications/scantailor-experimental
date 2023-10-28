@@ -22,18 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "DraggableObject.h"
 #include <QPointF>
 #include <QLineF>
-#include <boost/function.hpp>
+#include <functional>
 
 class ObjectDragHandler;
 
 class DraggableLineSegment : public DraggableObject
 {
 public:
-    typedef boost::function<
+    typedef std::function<
     QLineF ()
     > PositionCallback;
 
-    typedef boost::function<
+    typedef std::function<
     void (QLineF const& line)
     > MoveRequestCallback;
 
