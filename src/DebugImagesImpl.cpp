@@ -127,17 +127,17 @@ DebugImagesImpl::addVectorFieldView(
 
 void
 DebugImagesImpl::add(QString const& label,
-                     boost::function<QWidget* ()> const& image_view_factory,
-                     boost::function<void()> const& swap_in_action,
-                     boost::function<void()> const& swap_out_action, bool swap_out_now)
+                     std::function<QWidget* ()> const& image_view_factory,
+                     std::function<void()> const& swap_in_action,
+                     std::function<void()> const& swap_out_action, bool swap_out_now)
 {
     class Factory : public DebugViewFactory
     {
     public:
         Factory(
-            boost::function<QWidget* ()> const& image_view_factory,
-            boost::function<void()> const& swap_in_action,
-            boost::function<void()> const& swap_out_action)
+            std::function<QWidget* ()> const& image_view_factory,
+            std::function<void()> const& swap_in_action,
+            std::function<void()> const& swap_out_action)
             :	m_imageViewFactory(image_view_factory)
             ,	m_swapInAction(swap_in_action)
             ,	m_swapOutAction(swap_out_action)
@@ -159,9 +159,9 @@ DebugImagesImpl::add(QString const& label,
             return std::unique_ptr<QWidget>(m_imageViewFactory());
         }
     private:
-        boost::function<QWidget*()> m_imageViewFactory;
-        boost::function<void()> m_swapInAction;
-        boost::function<void()> m_swapOutAction;
+        std::function<QWidget*()> m_imageViewFactory;
+        std::function<void()> m_swapInAction;
+        std::function<void()> m_swapOutAction;
     };
 
     IntrusivePtr<DebugViewFactory> factory(

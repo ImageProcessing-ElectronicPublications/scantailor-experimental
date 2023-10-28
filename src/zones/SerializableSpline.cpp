@@ -87,7 +87,7 @@ SerializableSpline::transformed(QTransform const& xform) const
 
 SerializableSpline
 SerializableSpline::transformed(
-    boost::function<QPointF(QPointF const&)> const& xform) const
+    std::function<QPointF(QPointF const&)> const& xform) const
 {
     SerializableSpline transformed(*this);
 

@@ -25,7 +25,7 @@
 #include "InteractionState.h"
 #include <QPoint>
 #include <QCoreApplication>
-#include <boost/function.hpp>
+#include <functional>
 
 class ImageViewBase;
 
@@ -36,7 +36,7 @@ public:
     DragHandler(ImageViewBase& image_view);
 
     DragHandler(ImageViewBase& image_view,
-                boost::function<bool(InteractionState const&)> const& explicit_interaction_permitter);
+                std::function<bool(InteractionState const&)> const& explicit_interaction_permitter);
 
     bool isActive() const;
 protected:
@@ -51,7 +51,7 @@ private:
     ImageViewBase& m_rImageView;
     InteractionState::Captor m_interaction;
     QPoint m_lastMousePos;
-    boost::function<bool(InteractionState const&)> m_interactionPermitter;
+    std::function<bool(InteractionState const&)> m_interactionPermitter;
 };
 
 #endif

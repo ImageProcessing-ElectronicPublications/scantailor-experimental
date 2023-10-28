@@ -22,7 +22,7 @@
 #include <QVector>
 #include <QPointF>
 #include <QPolygonF>
-#include <boost/function.hpp>
+#include <functional>
 
 class EditableSpline;
 class QTransform;
@@ -42,7 +42,7 @@ public:
     SerializableSpline transformed(QTransform const& xform) const;
 
     SerializableSpline transformed(
-        boost::function<QPointF(QPointF const&)> const& xform) const;
+        std::function<QPointF(QPointF const&)> const& xform) const;
 
     QPolygonF toPolygon() const
     {

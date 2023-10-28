@@ -21,7 +21,7 @@
 
 #include "NonCopyable.h"
 #include "RefCountable.h"
-#include <boost/function.hpp>
+#include <functional>
 #include <memory>
 #include <set>
 
@@ -57,7 +57,7 @@ public:
      * the record will be skipped.
      */
     FileNameDisambiguator(QDomElement const& disambiguator_el,
-                          boost::function<QString(QString const&)> const& file_path_unpacker);
+                          std::function<QString(QString const&)> const& file_path_unpacker);
 
     /**
      * \brief Serialize disambiguation information to XML.
@@ -75,7 +75,7 @@ public:
      */
     QDomElement toXml(
         QDomDocument& doc, QString const& name,
-        boost::function<QString(QString const&)> const& file_path_packer) const;
+        std::function<QString(QString const&)> const& file_path_packer) const;
 
     int getLabel(QString const& file_path) const;
 

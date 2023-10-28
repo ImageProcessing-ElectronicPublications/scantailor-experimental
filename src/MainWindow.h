@@ -64,7 +64,7 @@
 #include <stddef.h>
 #include <math.h>
 #include <assert.h>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include "ui_MainWindow.h"
 #include "FilterUiInterface.h"
@@ -327,7 +327,7 @@ private:
     std::unique_ptr<PageOrientationPropagator> m_ptrPageOrientationPropagator;
     std::unique_ptr<QWidget> m_ptrBatchProcessingWidget;
     std::unique_ptr<ProcessingIndicationWidget> m_ptrProcessingIndicationWidget;
-    boost::function<bool()> m_checkBeepWhenFinished;
+    std::function<bool()> m_checkBeepWhenFinished;
     SelectedPage m_selectedPage;
     QObjectCleanupHandler m_optionsWidgetCleanup;
     QObjectCleanupHandler m_imageWidgetCleanup;

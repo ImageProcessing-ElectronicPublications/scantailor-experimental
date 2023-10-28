@@ -62,8 +62,8 @@ private:
 FillZoneEditor::FillZoneEditor(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     QImage const& image, ImagePixmapUnion const& downscaled_version,
-    boost::function<QPointF(QPointF const&)> const& orig_to_image,
-    boost::function<QPointF(QPointF const&)> const& image_to_orig,
+    std::function<QPointF(QPointF const&)> const& orig_to_image,
+    std::function<QPointF(QPointF const&)> const& image_to_orig,
     PageId const& page_id, IntrusivePtr<Settings> const& settings)
     :	ImageViewBase(
           accel_ops, image, downscaled_version,
