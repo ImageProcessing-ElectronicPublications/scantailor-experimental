@@ -25,7 +25,7 @@
 #include <QDir>
 #include <QDomElement>
 #include <QDomNode>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <set>
 
 ProjectReader::ProjectReader(QDomDocument const& doc)
@@ -75,7 +75,7 @@ ProjectReader::ProjectReader(QDomDocument const& doc)
     );
     m_ptrDisambiguator.reset(
         new FileNameDisambiguator(
-            disambig_el, boost::bind(&ProjectReader::expandFilePath, this, boost::placeholders::_1)
+            disambig_el, std::bind(std::mem_fn(&ProjectReader::expandFilePath), this, std::placeholders::_1)
         )
     );
 }

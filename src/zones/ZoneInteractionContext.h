@@ -22,7 +22,7 @@
 #include "EditableSpline.h"
 #include "SplineVertex.h"
 #include "EditableZoneSet.h"
-#include <boost/function.hpp>
+#include <functional>
 
 class InteractionHandler;
 class InteractionState;
@@ -32,26 +32,26 @@ class EditableZoneSet;
 class ZoneInteractionContext
 {
 public:
-    typedef boost::function<
+    typedef std::function<
     InteractionHandler* ()
     > DefaultInteractionCreator;
 
-    typedef boost::function<
+    typedef std::function<
     InteractionHandler* (InteractionState& interaction)
     > ZoneCreationInteractionCreator;
 
-    typedef boost::function<
+    typedef std::function<
     InteractionHandler* (
         InteractionState& interaction,
         EditableSpline::Ptr const& spline, SplineVertex::Ptr const& vertex
     )
     > VertexDragInteractionCreator;
 
-    typedef boost::function<
+    typedef std::function<
     InteractionHandler* (InteractionState& interaction)
     > ContextMenuInteractionCreator;
 
-    typedef boost::function<
+    typedef std::function<
     void (EditableZoneSet::Zone const& zone)
     > ShowPropertiesCommand;
 

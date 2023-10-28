@@ -33,7 +33,6 @@
 #include <QDebug>
 #include <QtGlobal> // For Q_OS_*
 #include <boost/foreach.hpp>
-#include <boost/bind/bind.hpp>
 #include <vector>
 #include <assert.h>
 
@@ -56,7 +55,7 @@ ZoneContextMenuInteraction::create(
 {
     return create(
                context, interaction,
-               boost::bind(&ZoneContextMenuInteraction::defaultMenuCustomizer, boost::placeholders::_1, boost::placeholders::_2)
+               std::bind(&ZoneContextMenuInteraction::defaultMenuCustomizer, std::placeholders::_1, std::placeholders::_2)
            );
 }
 
@@ -274,7 +273,7 @@ ZoneContextMenuInteraction::deleteMenuItemFor(
 {
     return ZoneContextMenuItem(
                tr("Delete"),
-               boost::bind(&ZoneContextMenuInteraction::deleteRequest, this, zone)
+               std::bind(std::mem_fn(&ZoneContextMenuInteraction::deleteRequest), this, zone)
            );
 }
 
@@ -284,7 +283,7 @@ ZoneContextMenuInteraction::propertiesMenuItemFor(
 {
     return ZoneContextMenuItem(
                tr("Properties"),
-               boost::bind(&ZoneContextMenuInteraction::propertiesRequest, this, zone)
+               std::bind(std::mem_fn(&ZoneContextMenuInteraction::propertiesRequest), this, zone)
            );
 }
 

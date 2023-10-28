@@ -29,7 +29,7 @@
 #include <QColor>
 #include <QtGlobal>
 #include <QDebug>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include <algorithm>
 
@@ -51,8 +51,8 @@ ImageView::ImageView(
       ),
       m_ptrPages(pages),
       m_imageId(image_id),
-      m_leftUnremoveButton(boost::bind(&ImageView::leftPageCenter, this)),
-      m_rightUnremoveButton(boost::bind(&ImageView::rightPageCenter, this)),
+      m_leftUnremoveButton(std::bind(std::mem_fn(&ImageView::leftPageCenter), this)),
+      m_rightUnremoveButton(std::bind(std::mem_fn(&ImageView::rightPageCenter), this)),
       m_dragHandler(*this),
       m_zoomHandler(*this),
       m_handlePixmap(":/icons/aqua-sphere.png"),
@@ -62,8 +62,8 @@ ImageView::ImageView(
 {
     setMouseTracking(true);
 
-    m_leftUnremoveButton.setClickCallback(boost::bind(&ImageView::unremoveLeftPage, this));
-    m_rightUnremoveButton.setClickCallback(boost::bind(&ImageView::unremoveRightPage, this));
+    m_leftUnremoveButton.setClickCallback(std::bind(std::mem_fn(&ImageView::unremoveLeftPage), this));
+    m_rightUnremoveButton.setClickCallback(std::bind(std::mem_fn(&ImageView::unremoveRightPage), this));
 
     if (m_leftPageRemoved)
     {
@@ -99,13 +99,13 @@ ImageView::setupCuttersInteraction()
         {
             m_handles[i][j].setHitRadius(hit_radius);
             m_handles[i][j].setPositionCallback(
-                boost::bind(&ImageView::handlePosition, this, i, j)
+                std::bind(std::mem_fn(&ImageView::handlePosition), this, i, j)
             );
             m_handles[i][j].setMoveRequestCallback(
-                boost::bind(&ImageView::handleMoveRequest, this, i, j, boost::placeholders::_1)
+                std::bind(std::mem_fn(&ImageView::handleMoveRequest), this, i, j, std::placeholders::_1)
             );
             m_handles[i][j].setDragFinishedCallback(
-                boost::bind(&ImageView::dragFinished, this)
+                std::bind(std::mem_fn(&ImageView::dragFinished), this)
             );
 
             m_handleInteractors[i][j].setObject(&m_handles[i][j]);
@@ -114,13 +114,13 @@ ImageView::setupCuttersInteraction()
         }
 
         m_lineSegments[i].setPositionCallback(
-            boost::bind(&ImageView::linePosition, this, i)
+            std::bind(std::mem_fn(&ImageView::linePosition), this, i)
         );
         m_lineSegments[i].setMoveRequestCallback(
-            boost::bind(&ImageView::lineMoveRequest, this, i, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::lineMoveRequest), this, i, std::placeholders::_1)
         );
         m_lineSegments[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
 
         m_lineInteractors[i].setObject(&m_lineSegments[i]);

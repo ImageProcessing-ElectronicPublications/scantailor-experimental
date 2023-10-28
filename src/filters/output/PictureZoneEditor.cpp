@@ -40,7 +40,7 @@
 #include <QBrush>
 #include <Qt>
 #include <QDebug>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include <assert.h>
 
@@ -145,7 +145,7 @@ PictureZoneEditor::PictureZoneEditor(
     setMouseTracking(true);
 
     m_context.setShowPropertiesCommand(
-        boost::bind(&PictureZoneEditor::showPropertiesDialog, this, boost::placeholders::_1)
+        std::bind(std::mem_fn(&PictureZoneEditor::showPropertiesDialog), this, std::placeholders::_1)
     );
 
     connect(&m_zones, SIGNAL(committed()), SLOT(commitZones()));

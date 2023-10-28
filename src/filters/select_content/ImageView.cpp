@@ -33,7 +33,7 @@
 #include <QCursor>
 #include <QDebug>
 #include <Qt>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <algorithm>
 #include <assert.h>
 
@@ -78,13 +78,13 @@ ImageView::ImageView(
     for (int i = 0; i < 4; ++i)
     {
         m_corners[i].setPositionCallback(
-            boost::bind(&ImageView::cornerPosition, this, masks_by_corner[i])
+            std::bind(std::mem_fn(&ImageView::cornerPosition), this, masks_by_corner[i])
         );
         m_corners[i].setMoveRequestCallback(
-            boost::bind(&ImageView::cornerMoveRequest, this, masks_by_corner[i], boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::cornerMoveRequest), this, masks_by_corner[i], std::placeholders::_1)
         );
         m_corners[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
         m_cornerHandlers[i].setObject(&m_corners[i]);
         m_cornerHandlers[i].setProximityStatusTip(drag_tip);
@@ -99,13 +99,13 @@ ImageView::ImageView(
     for (int i = 0; i < 4; ++i)
     {
         m_edges[i].setPositionCallback(
-            boost::bind(&ImageView::edgePosition, this, masks_by_edge[i])
+            std::bind(std::mem_fn(&ImageView::edgePosition), this, masks_by_edge[i])
         );
         m_edges[i].setMoveRequestCallback(
-            boost::bind(&ImageView::edgeMoveRequest, this, masks_by_edge[i], boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::edgeMoveRequest), this, masks_by_edge[i], std::placeholders::_1)
         );
         m_edges[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
         m_edgeHandlers[i].setObject(&m_edges[i]);
         m_edgeHandlers[i].setProximityStatusTip(drag_tip);

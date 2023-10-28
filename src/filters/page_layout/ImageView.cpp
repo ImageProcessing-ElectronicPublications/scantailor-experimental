@@ -38,7 +38,7 @@
 #include <QColor>
 #include <QDebug>
 #include <Qt>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <algorithm>
 #include <math.h>
 #include <assert.h>
@@ -113,58 +113,58 @@ ImageView::ImageView(
 
         // Proximity.
         m_innerCorners[i].setProximityCallback(
-            boost::bind(&ImageView::cornerProximity, this, masks_by_corner[i], &m_innerRect, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::cornerProximity), this, masks_by_corner[i], &m_innerRect, std::placeholders::_1)
         );
         m_middleCorners[i].setProximityCallback(
-            boost::bind(&ImageView::cornerProximity, this, masks_by_corner[i], &m_middleRect, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::cornerProximity), this, masks_by_corner[i], &m_middleRect, std::placeholders::_1)
         );
         m_innerEdges[i].setProximityCallback(
-            boost::bind(&ImageView::edgeProximity, this, masks_by_edge[i], &m_innerRect, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::edgeProximity), this, masks_by_edge[i], &m_innerRect, std::placeholders::_1)
         );
         m_middleEdges[i].setProximityCallback(
-            boost::bind(&ImageView::edgeProximity, this, masks_by_edge[i], &m_middleRect, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::edgeProximity), this, masks_by_edge[i], &m_middleRect, std::placeholders::_1)
         );
 
         // Drag initiation.
         m_innerCorners[i].setDragInitiatedCallback(
-            boost::bind(&ImageView::dragInitiated, this, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::dragInitiated), this, std::placeholders::_1)
         );
         m_middleCorners[i].setDragInitiatedCallback(
-            boost::bind(&ImageView::dragInitiated, this, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::dragInitiated), this, std::placeholders::_1)
         );
         m_innerEdges[i].setDragInitiatedCallback(
-            boost::bind(&ImageView::dragInitiated, this, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::dragInitiated), this, std::placeholders::_1)
         );
         m_middleEdges[i].setDragInitiatedCallback(
-            boost::bind(&ImageView::dragInitiated, this, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::dragInitiated), this, std::placeholders::_1)
         );
 
         // Drag continuation.
         m_innerCorners[i].setDragContinuationCallback(
-            boost::bind(&ImageView::innerRectDragContinuation, this, masks_by_corner[i], boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::innerRectDragContinuation), this, masks_by_corner[i], std::placeholders::_1)
         );
         m_middleCorners[i].setDragContinuationCallback(
-            boost::bind(&ImageView::middleRectDragContinuation, this, masks_by_corner[i], boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::middleRectDragContinuation), this, masks_by_corner[i], std::placeholders::_1)
         );
         m_innerEdges[i].setDragContinuationCallback(
-            boost::bind(&ImageView::innerRectDragContinuation, this, masks_by_edge[i], boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::innerRectDragContinuation), this, masks_by_edge[i], std::placeholders::_1)
         );
         m_middleEdges[i].setDragContinuationCallback(
-            boost::bind(&ImageView::middleRectDragContinuation, this, masks_by_edge[i], boost::placeholders::_1)
+            std::bind(std::mem_fn(&ImageView::middleRectDragContinuation), this, masks_by_edge[i], std::placeholders::_1)
         );
 
         // Drag finishing.
         m_innerCorners[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
         m_middleCorners[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
         m_innerEdges[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
         m_middleEdges[i].setDragFinishedCallback(
-            boost::bind(&ImageView::dragFinished, this)
+            std::bind(std::mem_fn(&ImageView::dragFinished), this)
         );
 
         m_innerCornerHandlers[i].setObject(&m_innerCorners[i]);

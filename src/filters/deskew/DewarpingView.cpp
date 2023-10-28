@@ -43,7 +43,7 @@
 #include <Qt>
 #include <QDebug>
 #include <boost/array.hpp>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include <vector>
 #include <stdexcept>
@@ -128,11 +128,11 @@ DewarpingView::DewarpingView(
     BOOST_FOREACH(InteractiveXSpline* spline, splines)
     {
         ++curve_idx;
-        spline->setModifiedCallback(boost::bind(&DewarpingView::curveModified, this, curve_idx));
-        spline->setDragFinishedCallback(boost::bind(&DewarpingView::dragFinished, this));
+        spline->setModifiedCallback(std::bind(std::mem_fn(&DewarpingView::curveModified), this, curve_idx));
+        spline->setDragFinishedCallback(std::bind(std::mem_fn(&DewarpingView::dragFinished), this));
         spline->setStorageTransform(
-            boost::bind(&DewarpingView::sourceToWidget, this, boost::placeholders::_1),
-            boost::bind(&DewarpingView::widgetToSource, this, boost::placeholders::_1)
+            std::bind(std::mem_fn(&DewarpingView::sourceToWidget), this, std::placeholders::_1),
+            std::bind(std::mem_fn(&DewarpingView::widgetToSource), this, std::placeholders::_1)
         );
         makeLastFollower(*spline);
     }

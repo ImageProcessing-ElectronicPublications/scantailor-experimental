@@ -29,7 +29,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include <stddef.h>
 #include <assert.h>
@@ -101,7 +101,7 @@ ProjectWriter::write(QString const& file_path, std::vector<FilterPtr> const& fil
     root_el.appendChild(
         m_outFileNameGen.disambiguator()->toXml(
             doc, "file-name-disambiguation",
-            boost::bind(&ProjectWriter::packFilePath, this, boost::placeholders::_1)
+            std::bind(std::mem_fn(&ProjectWriter::packFilePath), this, std::placeholders::_1)
         )
     );
 

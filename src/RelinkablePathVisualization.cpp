@@ -32,7 +32,7 @@
 #include <QStyleOptionButton>
 #include <QFile>
 #include <QVariant>
-#include <boost/bind/bind.hpp>
+#include <functional>
 #include <boost/foreach.hpp>
 #include <vector>
 
@@ -152,8 +152,8 @@ RelinkablePathVisualization::setPath(RelinkablePath const& path, bool clickable)
         stylePathComponentButton(btn, path_component.exists);
 
         connect(
-            btn, &QAbstractButton::clicked, boost::bind(
-                &RelinkablePathVisualization::onClicked, this,
+            btn, &QAbstractButton::clicked, std::bind(
+                std::mem_fn(&RelinkablePathVisualization::onClicked), this,
                 component_idx, path_component.prefixPath,
                 path_component.suffixPath, path_component.type
             )
