@@ -31,7 +31,7 @@
 #include "PageSelectionAccessor.h"
 #include "Dependencies.h"
 #include "AutoManualMode.h"
-#include <boost/optional.hpp>
+#include <optional>
 #include <set>
 
 class ProjectPages;
@@ -76,7 +76,7 @@ private:
     IntrusivePtr<ProjectPages> m_ptrPages;
     PageSelectionAccessor m_pageSelectionAccessor;
     PageId m_pageId;
-    boost::optional<Params> m_params;
+    std::optional<Params> m_params;
     int m_ignoreAutoManualToggle;
     int m_ignoreLayoutTypeToggle;
     bool m_layoutTypeAutoDetected;

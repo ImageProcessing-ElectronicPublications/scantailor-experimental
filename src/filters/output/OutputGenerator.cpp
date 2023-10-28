@@ -740,7 +740,7 @@ OutputGenerator::normalizeIlluminationGray(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     GrayImage const& input_for_normalisation,
     GrayImage const& input_for_estimation, double norm_coef,
-    boost::optional<QPolygonF> const& estimation_region_of_intereset,
+    std::optional<QPolygonF> const& estimation_region_of_intereset,
     DebugImages* const dbg)
 {
     PolynomialSurface const bg_ps(

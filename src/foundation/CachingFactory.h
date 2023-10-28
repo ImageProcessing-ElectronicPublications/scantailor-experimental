@@ -20,7 +20,7 @@
 #define CACHING_FACTORY_H_
 
 #include "foundation_config.h"
-#include <boost/optional.hpp>
+#include <optional>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -40,7 +40,7 @@ private:
     {
         std::mutex mutex;
         std::function<T()> factory;
-        boost::optional<T> cached;
+        std::optional<T> cached;
 
         SharedState(std::function<T()> factory) : factory(factory) {}
     };
@@ -65,7 +65,7 @@ public:
     {
         SharedState& s = *m_ptrState;
         std::lock_guard<std::mutex> const lock(s.mutex);
-        return s.cached.is_initialized();
+        return s.cached.has_value();
     }
 
     void clearCache()

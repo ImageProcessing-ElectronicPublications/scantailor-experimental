@@ -26,7 +26,7 @@
 #include "ThumbnailLoadResult.h"
 #include "imageproc/AbstractImageTransform.h"
 #include "imageproc/AffineImageTransform.h"
-#include <boost/optional.hpp>
+#include <optional>
 #include <boost/shared_ptr.hpp>
 #include <QTransform>
 #include <QGraphicsItem>
@@ -54,7 +54,7 @@ public:
         IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
         QSizeF const& max_display_size, PageId const& page_id,
         imageproc::AbstractImageTransform const& full_size_image_transform,
-        boost::optional<QRectF> const& transformed_viewport = boost::none);
+        std::optional<QRectF> const& transformed_viewport = std::nullopt);
 
     virtual ~ThumbnailBase();
 
@@ -115,7 +115,7 @@ private:
      */
     void setFullSizeToVirtualTransform(
         imageproc::AbstractImageTransform const& transform,
-        boost::optional<QRectF> const& transformed_viewport);
+        std::optional<QRectF> const& transformed_viewport);
 
     void handleLoadResult(ThumbnailLoadResult::Status status);
 

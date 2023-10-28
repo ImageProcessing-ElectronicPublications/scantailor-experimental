@@ -49,7 +49,7 @@
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/foreach.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 #include <boost/tuple/tuple.hpp>
 #include <algorithm>
 #include <memory>
@@ -194,7 +194,7 @@ public:
      *
      * @note Guaranteed to be set if status is LOADED and clear otherwise.
      */
-    mutable boost::optional<AffineImageTransform> pixmapTransform;
+    mutable std::optional<AffineImageTransform> pixmapTransform;
 
     mutable std::vector<boost::weak_ptr<CompletionHandler>> completionHandlers;
 
@@ -281,7 +281,7 @@ private:
         QString const& thumb_file_path,
         AbstractImageTransform const& full_size_image_transform);
 
-    static boost::optional<AffineTransformedImage>
+    static std::optional<AffineTransformedImage>
     loadSaveThumbnail(ThumbId const& thumb_id,
                       AbstractImageTransform const& full_size_image_transform,
                       std::shared_ptr<AcceleratableOperations> const& accel_ops,
@@ -289,7 +289,7 @@ private:
 
     static void saveThumbnail(QImage const& thumb, QString const& thumb_file_path);
 
-    static boost::optional<AffineTransformedImage> makeThumbnail(
+    static std::optional<AffineTransformedImage> makeThumbnail(
         QSize const& max_thumb_size, QImage const& full_size_image,
         AbstractImageTransform const& full_size_image_transform,
         std::shared_ptr<AcceleratableOperations> const& accel_ops);
@@ -397,7 +397,7 @@ class ThumbnailPixmapCache::Impl::LoadResultEvent : public QEvent
 {
 public:
     std::weak_ptr<Item const*> item;
-    boost::optional<AffineTransformedImage> thumb;
+    std::optional<AffineTransformedImage> thumb;
     ThumbnailLoadResult::Status status;
 
     LoadResultEvent(
@@ -748,7 +748,7 @@ ThumbnailPixmapCache::Impl::ensureThumbnailExists(
         }
     }
 
-    boost::optional<AffineTransformedImage> const thumb(
+    std::optional<AffineTransformedImage> const thumb(
         makeThumbnail(max_thumb_size, full_size_image, full_size_image_transform, accel_ops)
     );
     if (!thumb)
@@ -866,7 +866,7 @@ ThumbnailPixmapCache::Impl::backgroundProcessing()
 
             assert(full_size_image_transform);
 
-            boost::optional<AffineTransformedImage> const thumb(
+            std::optional<AffineTransformedImage> const thumb(
                 loadSaveThumbnail(
                     thumb_id, *full_size_image_transform, accel_ops,
                     thumb_dir, max_thumb_size
@@ -968,7 +968,7 @@ ThumbnailPixmapCache::Impl::validateThumbnailOnDisk(
     return thumb_reader;
 }
 
-boost::optional<AffineTransformedImage>
+std::optional<AffineTransformedImage>
 ThumbnailPixmapCache::Impl::loadSaveThumbnail(ThumbId const& thumb_id,
         AbstractImageTransform const& full_size_image_transform,
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
@@ -983,7 +983,7 @@ ThumbnailPixmapCache::Impl::loadSaveThumbnail(ThumbId const& thumb_id,
         QImage thumb_image(thumb_reader->read());
         if (thumb_image.isNull())
         {
-            return boost::optional<AffineTransformedImage>();
+            return std::optional<AffineTransformedImage>();
         }
 
         AffineImageTransform thumb_transform(full_size_image_transform.toAffine());
@@ -995,10 +995,10 @@ ThumbnailPixmapCache::Impl::loadSaveThumbnail(ThumbId const& thumb_id,
     QImage full_size_image(ImageLoader::load(thumb_id.pageId.imageId()));
     if (full_size_image.isNull())
     {
-        return boost::optional<AffineTransformedImage>();
+        return std::optional<AffineTransformedImage>();
     }
 
-    boost::optional<AffineTransformedImage> const thumb(
+    std::optional<AffineTransformedImage> const thumb(
         makeThumbnail(max_thumb_size, full_size_image, full_size_image_transform, accel_ops)
     );
 
@@ -1011,7 +1011,7 @@ ThumbnailPixmapCache::Impl::loadSaveThumbnail(ThumbId const& thumb_id,
     return thumb;
 }
 
-boost::optional<AffineTransformedImage>
+std::optional<AffineTransformedImage>
 ThumbnailPixmapCache::Impl::makeThumbnail(
     QSize const& max_thumb_size, QImage const& full_size_image,
     AbstractImageTransform const& full_size_image_transform,

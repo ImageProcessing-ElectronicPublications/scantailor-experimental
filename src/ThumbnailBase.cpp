@@ -62,7 +62,7 @@ ThumbnailBase::ThumbnailBase(
     IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
     QSizeF const& max_display_size, PageId const& page_id,
     AbstractImageTransform const& full_size_image_transform,
-    boost::optional<QRectF> const& transformed_viewport)
+    std::optional<QRectF> const& transformed_viewport)
     :   m_ptrThumbnailCache(thumbnail_cache),
       m_maxDisplaySize(max_display_size),
       m_pageId(page_id),
@@ -222,7 +222,7 @@ ThumbnailBase::paint(QPainter* painter,
 void
 ThumbnailBase::setFullSizeToVirtualTransform(
     AbstractImageTransform const& transform,
-    boost::optional<QRectF> const& transformed_viewport)
+    std::optional<QRectF> const& transformed_viewport)
 {
     m_ptrFullSizeImageTransform = transform.clone();
 
