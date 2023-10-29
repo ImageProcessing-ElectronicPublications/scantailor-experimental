@@ -20,7 +20,6 @@
 #define ZONE_SET_H_
 
 #include "Zone.h"
-#include <boost/iterator/iterator_facade.hpp>
 #include <list>
 
 class PropertyFactory;
@@ -31,28 +30,39 @@ class QString;
 class ZoneSet
 {
 public:
-    class const_iterator : public boost::iterator_facade<
-        const_iterator, Zone const, boost::forward_traversal_tag
-        >
+    class const_iterator
     {
         friend class ZoneSet;
-        friend class boost::iterator_core_access;
     public:
         const_iterator() {}
-
-        void increment()
+        
+        const_iterator& operator++()
         {
             ++m_it;
+            
+            return *this;
         }
-
-        bool equal(const_iterator const& other) const
+        
+        const_iterator& operator--()
+        {
+	    --m_it;
+	    
+	    return *this;
+        }
+        
+        const Zone& operator*()
+        {
+		return *m_it;
+        }
+        
+        bool operator==(const const_iterator & other) const
         {
             return m_it == other.m_it;
         }
-
-        Zone const& dereference() const
+        
+        bool operator!=(const const_iterator & other) const
         {
-            return *m_it;
+            return m_it != other.m_it;
         }
     private:
         explicit const_iterator(std::list<Zone>::const_iterator it) : m_it(it) {}
