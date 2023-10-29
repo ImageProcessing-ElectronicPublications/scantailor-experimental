@@ -21,9 +21,9 @@
 
 #include "foundation_config.h"
 #include "GridAccessor.h"
-#include <boost/scoped_array.hpp>
 #include <utility>
 #include <cstddef>
+#include <memory>
 
 template<typename Node>
 class Grid
@@ -161,7 +161,7 @@ public:
 
     void swap(Grid& other);
 private:
-    boost::scoped_array<Node> m_storage;
+    std::shared_ptr<Node[]> m_storage;
     Node* m_pData;
     int m_width;
     int m_height;

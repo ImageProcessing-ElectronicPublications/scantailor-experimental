@@ -43,7 +43,7 @@
 #include "GridAccessor.h"
 #include "RasterOpGeneric.h"
 #include <QSize>
-#include <boost/scoped_array.hpp>
+#include <memory>
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -236,7 +236,7 @@ void gaussBlurGeneric(QSize const size, float const h_sigma, float const v_sigma
     int const height = size.height();
     int const width_height_max = width > height ? width : height;
 
-    boost::scoped_array<float> const w(new float[3 + width_height_max + 3]);
+    std::shared_ptr<float[]> const w(new float[3 + width_height_max + 3]);
     Grid<float> intermediate_image(width, height, /*padding=*/0);
     int const intermediate_stride = intermediate_image.stride();
 
@@ -367,8 +367,8 @@ void anisotropicGaussBlurGeneric(
         }
     };
 
-    boost::scoped_array<float> const w(new float[3 + width_height_max + 3]);
-    boost::scoped_array<InterpolatedCoord> skewed_line(new InterpolatedCoord[width_height_max]);
+    std::shared_ptr<float[]> const w(new float[3 + width_height_max + 3]);
+    std::shared_ptr<InterpolatedCoord[]> skewed_line(new InterpolatedCoord[width_height_max]);
 
     // We add 2 extra pixels on each side. The inner 1px layer is necessary to
     // be able to interpolate pixels at a boundary. The outer layer is necessary

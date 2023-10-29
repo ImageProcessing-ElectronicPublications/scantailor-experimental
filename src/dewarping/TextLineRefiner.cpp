@@ -23,7 +23,6 @@
 #include "imageproc/GrayImage.h"
 #include "imageproc/GaussBlur.h"
 #include "imageproc/Sobel.h"
-#include <boost/scoped_array.hpp>
 #include <QImage>
 #include <QPainter>
 #include <QPen>

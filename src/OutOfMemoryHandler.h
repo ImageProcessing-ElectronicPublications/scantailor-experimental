@@ -22,7 +22,7 @@
 #include "NonCopyable.h"
 #include <QObject>
 #include <QMutex>
-#include <boost/scoped_array.hpp>
+#include <memory>
 #include <stddef.h>
 
 class OutOfMemoryHandler : public QObject
@@ -48,7 +48,7 @@ private:
     OutOfMemoryHandler();
 
     mutable QMutex m_mutex;
-    boost::scoped_array<char> m_emergencyBuffer;
+    std::shared_ptr<char[]> m_emergencyBuffer;
     bool m_hadOOM;
 };
 
