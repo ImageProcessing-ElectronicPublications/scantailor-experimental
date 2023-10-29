@@ -23,7 +23,6 @@
 #include "TiffMetadataLoader.h"
 #include "JpegMetadataLoader.h"
 #include "foundation/MultipleTargetsSupport.h"
-#include <boost/range/adaptor/reversed.hpp>
 #include <QMetaType>
 #include <QtPlugin>
 #include <QLocale>
@@ -198,8 +197,17 @@ int main(int argc, char** argv)
         QString::fromUtf8(PLUGIN_DIRS).split(QChar(':'), QStringSkipEmptyParts)
     );
     // Reversing, as QCoreApplication::addLibraryPath() prepends the new path to the list.
-    for (QString const& path : boost::adaptors::reverse(plugin_dirs))
+    // TODO: Replace with std::ranges::reverse_view in near future when c++20 will be everywhere
+#if 0
+    for (QString const& path : std::ranges::reverse_view(plugin_dirs))
     {
+#else
+    auto plugin_dirs_begin = plugin_dirs.crbegin();
+    auto plugin_dirs_end = plugin_dirs.crend();
+    for (auto it = plugin_dirs_begin; it != plugin_dirs_end; it++)
+    {
+        QString const& path = *it;
+#endif
         QString absolute_path;
         if (QDir::isAbsolutePath(path))
         {
