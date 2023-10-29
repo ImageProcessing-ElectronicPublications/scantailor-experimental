@@ -22,7 +22,7 @@
 #include "foundation_config.h"
 #include "NonCopyable.h"
 #include <boost/intrusive/list.hpp>
-#include <boost/type_traits/alignment_of.hpp>
+#include <stdalign.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <assert.h>
@@ -70,7 +70,7 @@ private:
         Chunk(size_t capacity)
         {
             uintptr_t const p = (uintptr_t)(this + 1);
-            size_t const alignment = boost::alignment_of<T>::value;
+            size_t const alignment = alignof(T);
             pBegin = (T*)(((p + alignment - 1) / alignment) * alignment);
             pEnd = pBegin;
             pBufferEnd = pBegin + capacity;
@@ -87,7 +87,7 @@ private:
 
         static size_t storageRequirement(size_t capacity)
         {
-            return sizeof(Chunk) + boost::alignment_of<T>::value - 1 + capacity * sizeof(T);
+            return sizeof(Chunk) + alignof(T) - 1 + capacity * sizeof(T);
         }
 
         T* pBegin;
