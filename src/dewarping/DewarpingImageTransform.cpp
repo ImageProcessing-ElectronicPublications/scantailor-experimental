@@ -37,7 +37,6 @@
 #include <QColor>
 #include <QString>
 #include <optional>
-#include <boost/range/adaptor/reversed.hpp>
 #include <algorithm>
 #include <iterator>
 #include <utility>
@@ -390,14 +389,22 @@ DewarpingImageTransform::setupIntrinsicScale()
     double area = 0.0;
     QPointF prev_pt = m_bottomPolyline.front();
 
-    for (QPointF const pt : m_topPolyline)
+    for (QPointF const &pt : m_topPolyline)
     {
         area += prev_pt.x() * pt.y() - pt.x() * prev_pt.y();
         prev_pt = pt;
     }
 
-    for (QPointF const pt : boost::adaptors::reverse(m_bottomPolyline))
+    // TODO: Replace with std::ranges::reverse_view in near future when c++20 will be everywhere
+#if 0
+    for (QPointF const &pt : std::ranges::reverse_view(m_bottomPolyline))
+#else
+    auto bottomPolyline_begin = m_bottomPolyline.crbegin();
+    auto bottomPolyline_end = m_bottomPolyline.crend();
+    for (auto it = bottomPolyline_begin; it != bottomPolyline_end; it++)
+#endif
     {
+        QPointF const &pt = *it;
         area += prev_pt.x() * pt.y() - pt.x() * prev_pt.y();
         prev_pt = pt;
     }
