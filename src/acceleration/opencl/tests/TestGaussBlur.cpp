@@ -26,8 +26,7 @@
 #include "imageproc/GaussBlur.h"
 #include "imageproc/Constants.h"
 #include <CL/cl2.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <vector>
@@ -59,8 +58,8 @@ BOOST_AUTO_TEST_CASE(test_axis_aligned_gauss_blur)
     float const h_sigma = 15.f;
     float const v_sigma = 7.f;
 
-    boost::random::mt19937 rng;
-    boost::random::uniform_int_distribution<> dist(-1000, 1000);
+    std::mt19937 rng;
+    std::uniform_int_distribution<> dist(-1000, 1000);
     Grid<float> input(1001, 999);
     for (int y = 0; y < input.height(); ++y)
     {
@@ -184,8 +183,8 @@ BOOST_AUTO_TEST_CASE(test_oriented_gauss_blur)
         directions.emplace_back(std::cos(angle_rad), std::sin(angle_rad));
     }
 
-    boost::random::mt19937 rng;
-    boost::random::uniform_int_distribution<> dist(-1000, 1000);
+    std::mt19937 rng;
+    std::uniform_int_distribution<> dist(-1000, 1000);
     Grid<float> input(1001, 999);
     for (int y = 0; y < input.height(); ++y)
     {

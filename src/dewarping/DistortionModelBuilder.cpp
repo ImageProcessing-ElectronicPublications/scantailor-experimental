@@ -33,8 +33,7 @@
 #include <QPen>
 #include <QColor>
 #include <QDebug>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <algorithm>
 #include <exception>
 #include <iterator>
@@ -228,8 +227,8 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
     // Continue by throwing in some random pairs of lines.
 
     // Repeatablity is important, so don't seed the RNG.
-    boost::random::mt19937 rng;
-    boost::random::uniform_int_distribution<> rng_dist(0, num_curves - 1);
+    std::mt19937 rng;
+    std::uniform_int_distribution<> rng_dist(0, num_curves - 1);
     int random_pairs_remaining = num_curves <= exhaustive_search_threshold
                                  ? 0 : exhaustive_search_threshold * exhaustive_search_threshold;
     while (random_pairs_remaining-- > 0)
