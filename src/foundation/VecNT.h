@@ -23,7 +23,7 @@
 #include "CopyableByMemcpy.h"
 #include <Eigen/Core>
 #include <QPointF>
-#include <boost/type_traits/is_arithmetic.hpp>
+#include <type_traits>
 #include <cmath>
 #include <stddef.h>
 
@@ -40,7 +40,7 @@ typedef VecNT<4, double> Vec4d;
 template<size_t N, typename T>
 struct CopyableByMemcpy<VecNT<N, T> >
 {
-    static bool const value = boost::is_arithmetic<T>::value;
+    static bool const value = std::is_arithmetic<T>::value;
 };
 
 template<size_t N, typename T>
