@@ -24,7 +24,6 @@
 #include "PropertySet.h"
 #include "IntrusivePtr.h"
 #include <QObject>
-#include <boost/iterator/iterator_facade.hpp>
 #include <map>
 
 class EditableZoneSet : public QObject
@@ -56,29 +55,41 @@ public:
         Map::const_iterator m_iter;
     };
 
-    class const_iterator : public boost::iterator_facade<
-        const_iterator, Zone const, boost::forward_traversal_tag
-        >
+    class const_iterator
     {
         friend class EditableZoneSet;
-        friend class boost::iterator_core_access;
     public:
         const_iterator() : m_zone() {}
 
-        void increment()
+        const_iterator& operator++()
         {
             ++m_zone.m_iter;
+            
+            return *this;
+        }
+        
+        const_iterator& operator--()
+        {
+	    --m_zone.m_iter;
+	    
+	    return *this;
+        }
+        
+        const Zone& operator*()
+        {
+		return m_zone;
         }
 
-        bool equal(const_iterator const& other) const
+        bool operator==(const const_iterator & other) const
         {
             return m_zone.m_iter == other.m_zone.m_iter;
         }
-
-        Zone const& dereference() const
+        
+        bool operator!=(const const_iterator & other) const
         {
-            return m_zone;
+            return m_zone.m_iter != other.m_zone.m_iter;
         }
+        
     private:
         explicit const_iterator(Map::const_iterator it) : m_zone(it) {}
 
