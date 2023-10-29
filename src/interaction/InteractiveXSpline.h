@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPointF>
 #include <QCoreApplication>
 #include <functional>
-#include <boost/scoped_array.hpp>
+#include <memory>
 #include <stddef.h>
 
 class InteractiveXSpline : public InteractionHandler
@@ -108,7 +108,7 @@ private:
     Transform m_fromStorage;
     Transform m_toStorage;
     XSpline m_spline;
-    boost::scoped_array<ControlPoint> m_controlPoints;
+    std::shared_ptr<ControlPoint[]> m_controlPoints;
     InteractionState::Captor m_curveProximity;
     QPointF m_curveProximityPointStorage;
     QPointF m_curveProximityPointScreen;

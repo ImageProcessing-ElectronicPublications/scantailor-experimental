@@ -63,7 +63,7 @@ InteractiveXSpline::setSpline(
     int const num_control_points = spline.numControlPoints();
 
     XSpline new_spline(spline);
-    boost::scoped_array<ControlPoint> new_control_points(
+    std::shared_ptr<ControlPoint[]> new_control_points(
         new ControlPoint[num_control_points]
     );
 
