@@ -25,8 +25,7 @@
 #include <QRect>
 #include <QPoint>
 #include <CL/cl2.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <vector>
@@ -63,9 +62,9 @@ BOOST_AUTO_TEST_CASE(test_fill_rect_correctness)
 
         std::vector<cl::Event> events;
 
-        boost::random::mt19937 rng;
-        boost::random::uniform_int_distribution<> dist4(0, 4);
-        boost::random::uniform_int_distribution<> dist31(0, 31);
+        std::mt19937 rng;
+        std::uniform_int_distribution<> dist4(0, 4);
+        std::uniform_int_distribution<> dist31(0, 31);
 
         for (int iteration = 0; iteration < 1000; ++iteration)
         {
@@ -150,9 +149,9 @@ BOOST_AUTO_TEST_CASE(test_fill_frame_correctness)
 
         std::vector<cl::Event> events;
 
-        boost::random::mt19937 rng;
-        boost::random::uniform_int_distribution<> dist4(0, 4);
-        boost::random::uniform_int_distribution<> dist31(0, 31);
+        std::mt19937 rng;
+        std::uniform_int_distribution<> dist4(0, 4);
+        std::uniform_int_distribution<> dist31(0, 31);
 
         for (int iteration = 0; iteration < 1000; ++iteration)
         {

@@ -21,8 +21,7 @@
 #include "ToLineProjector.h"
 #include "LineIntersectionScalar.h"
 #include "imageproc/Constants.h"
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <cmath>
 #include <utility>
 #include <cassert>
@@ -60,8 +59,8 @@ QLineF findVerticalBound(std::vector<QLineF> const& chords,
     double best_score = NumericTraits<double>::min();
 
     // Repeatablity is important, so don't seed the RNG.
-    boost::random::mt19937 rng;
-    boost::random::uniform_int_distribution<> rng_dist(0, chords.size() - 1);
+    std::mt19937 rng;
+    std::uniform_int_distribution<> rng_dist(0, chords.size() - 1);
     for (int ransac_iteration = 0; ransac_iteration < 2000; ++ransac_iteration)
     {
         int const i1 = rng_dist(rng);

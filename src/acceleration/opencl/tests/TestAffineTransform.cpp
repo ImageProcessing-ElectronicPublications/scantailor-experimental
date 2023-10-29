@@ -30,8 +30,7 @@
 #include <Qt>
 #include <QDebug>
 #include <CL/cl2.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <boost/test/unit_test.hpp>
 #include <cstdint>
 #include <cmath>
@@ -61,8 +60,8 @@ BOOST_FIXTURE_TEST_SUITE(AffineTransformTestSuite, AffineTransformFixture);
 
 BOOST_AUTO_TEST_CASE(test_argb)
 {
-    boost::random::mt19937 rng;
-    boost::random::uniform_int_distribution<> dist(0, 255);
+    std::mt19937 rng;
+    std::uniform_int_distribution<> dist(0, 255);
     QImage input(1000, 1000, QImage::Format_ARGB32);
     for (int y = 0; y < input.height(); ++y)
     {

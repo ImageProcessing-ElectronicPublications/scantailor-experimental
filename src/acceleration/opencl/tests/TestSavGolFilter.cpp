@@ -25,8 +25,7 @@
 #include <QSize>
 #include <QDebug>
 #include <CL/cl2.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <boost/test/unit_test.hpp>
 #include <cstdint>
 #include <cstdlib>
@@ -54,8 +53,8 @@ BOOST_FIXTURE_TEST_SUITE(SavGolFilterTestSuite, SavGolFilterFixture);
 
 BOOST_AUTO_TEST_CASE(test1)
 {
-    boost::random::mt19937 rng;
-    boost::random::uniform_int_distribution<> dist(0, 255);
+    std::mt19937 rng;
+    std::uniform_int_distribution<> dist(0, 255);
     GrayImage input(QSize(1000, 1000));
     rasterOpGeneric([&dist, &rng](uint8_t& px)
     {
