@@ -154,7 +154,11 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
     uint8_t const* gray_line = src.data();
     unsigned int const gray_bpl = src.stride();
     unsigned int const histsize = 256;
-    size_t histogram[histsize] = {0};
+    unsigned long int im, iw, ib, histogram[histsize] = {0};
+    unsigned int k, Tn;
+    double Tw, Tb;
+    double const part = 0.5 + (double) delta / 256.0;
+    double const partval = part * (double) histsize;
 
     for (unsigned int y = 0; y < h; ++y)
     {
@@ -163,38 +167,38 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
             uint8_t const pixel = gray_line[x];
             histogram[pixel]++;
         }
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            uint8_t const pixel = gray_line[x];
+            histogram[pixel]++;
+        }
         gray_line += gray_bpl;
     }
 
-    unsigned int k, Tn;
-    size_t im, iw, ib, Tw, Tb;
-
-    double const part = 0.5 + (double) delta / 256.0;
-    double const partval = part * (double) histsize;
     threshold = (unsigned int) (partval + 0.5);
     Tn = 0;
     while (threshold != Tn)
     {
         Tn = threshold;
-        Tb = Tw = ib = iw = 0;
+        Tb = Tw = 0.0;
+        ib = iw = 0;
         for (k = 0; k < histsize; k++)
         {
+            im = histogram[k];
             if (k < threshold)
             {
-                im = histogram[k];
-                Tb += (im * k);
+                Tb += (double) (im * k);
                 ib += im;
             }
             else
             {
-                im = histogram[k];
-                Tw += (im * k);
+                Tw += (double) (im * k);
                 iw += im;
             }
         }
-        Tb = (ib > 0) ? (Tb / ib) : 0;
-        Tw = (iw > 0) ? (Tw / iw) : histsize;
-        threshold = (unsigned int) (part * (double) Tw + (1.0 - part) * (double) Tb + 0.5);
+        Tb = (ib > 0) ? (Tb / ib) : 0.0;
+        Tw = (iw > 0) ? (Tw / iw) : (double) histsize;
+        threshold = (unsigned int) (part * Tw + (1.0 - part) * Tb + 0.5);
     }
 
     return threshold;

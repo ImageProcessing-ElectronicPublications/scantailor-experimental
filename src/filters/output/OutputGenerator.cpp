@@ -428,18 +428,21 @@ OutputGenerator::process(
 
     QImage maybe_smoothed;
     // We only do smoothing if we are going to do binarization later.
-    if ((render_params.needBinarization()) && (black_white_options.morphology()))
+    if (render_params.needBinarization())
     {
-        maybe_smoothed = smoothToGrayscale(transformed_image, accel_ops);
-        coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
-        if (dbg)
+        if (black_white_options.morphology())
         {
-            dbg->add(maybe_smoothed, "smoothed");
+            maybe_smoothed = smoothToGrayscale(transformed_image, accel_ops);
+            if (dbg)
+            {
+                dbg->add(maybe_smoothed, "smoothed");
+            }
         }
-    }
-    else
-    {
-        maybe_smoothed = transformed_image;
+        else
+        {
+            maybe_smoothed = QImage(transformed_image);
+        }
+        coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
     }
 
     BinaryImage colored_mask;
