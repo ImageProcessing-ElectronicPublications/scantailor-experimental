@@ -28,13 +28,12 @@
 #include <QFile>
 #include <QTemporaryFile>
 #include <QDebug>
-#include <boost/static_assert.hpp>
 #include <stddef.h>
 
 template<typename Node>
 class ObjectSwapperImpl<Grid<Node> >
 {
-    BOOST_STATIC_ASSERT(CopyableByMemcpy<Node>::value == true);
+    static_assert(CopyableByMemcpy<Node>::value == true);
 public:
     ObjectSwapperImpl(QString const& swap_dir);
 
