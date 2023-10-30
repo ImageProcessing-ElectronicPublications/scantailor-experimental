@@ -432,8 +432,8 @@ void screenFilterInPlace(
         int const window_left_half = window_size.width() >> 1;
         int const window_right_half = window_size.width() - window_left_half;
 
-        size_t histogram[256] = {0};
-        size_t szi = (h * w) >> 8;
+        unsigned long int histogram[256] = {0};
+        unsigned long int szi = (h * w) >> 8;
         gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
@@ -540,7 +540,7 @@ void colorCurveFilterInPlace(
             pix_replace[j] = (uint8_t) val;
         }
 
-        for (size_t i = 0; i < (h * image_bpl); i++)
+        for (unsigned long int i = 0; i < (h * image_bpl); i++)
         {
             uint8_t val = image_line[i];
             image_line[i] = pix_replace[val];
@@ -587,7 +587,7 @@ void colorSqrFilterInPlace(
             pix_replace[j] = (uint8_t) val;
         }
 
-        for (size_t i = 0; i < (h * image_bpl); i++)
+        for (unsigned long int i = 0; i < (h * image_bpl); i++)
         {
             uint8_t val = image_line[i];
             image_line[i] = pix_replace[val];

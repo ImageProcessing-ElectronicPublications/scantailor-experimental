@@ -228,50 +228,57 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     unsigned int const h = src.height();
     uint8_t const* src_line = src.data();
     unsigned int const src_bpl = src.stride();
-    size_t mean = 0, count = 0, meanw = 0, countw = 0, dist_mean = 0, countb = 0;
-    unsigned int dist, threshold = 128;
+    unsigned long int count = 0, countb = 0;
+    double meanl = 0, mean = 0.0, meanw = 0.0, countw = 0.0;
+    double dist, dist_mean = 0, threshold = 128;
 
     for (unsigned int y = 0; y < h; ++y)
     {
+        meanl = 0.0;
         for (unsigned int x = 0; x < w; ++x)
         {
-            unsigned int const pixel = src_line[x];
-            mean += pixel;
+            double const pixel = src_line[x];
+            meanl += pixel;
             count++;
         }
+        mean += meanl;
         src_line += src_bpl;
     }
-    mean = (count > 0) ? ((mean + count / 2) / count) : 128;
+    mean = (count > 0) ? (mean / count) : 128.0;
 
     src_line = src.data();
     for (unsigned int y = 0; y < h; ++y)
     {
+        meanl = 0.0;
         for (unsigned int x = 0; x < w; ++x)
         {
-            size_t const pixel = src_line[x];
+            double const pixel = src_line[x];
             dist = (pixel > mean) ? (pixel - mean) : (mean - pixel);
             dist++;
-            dist = 256 / dist;
-            meanw += (pixel * dist);
+            dist = 256.0 / dist;
+            meanl += (pixel * dist);
             countw += dist;
         }
+        meanw += meanl;
         src_line += src_bpl;
     }
-    meanw = (countw > 0) ? ((meanw + countw / 2) / countw) : 128;
+    meanw = (countw > 0.0) ? (meanw / countw) : 128.0;
 
     src_line = src.data();
     for (unsigned int y = 0; y < h; ++y)
     {
+        meanl = 0.0;
         for (unsigned int x = 0; x < w; ++x)
         {
-            unsigned int const pixel = src_line[x];
+            double const pixel = src_line[x];
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             dist *= dist;
-            dist_mean += dist;
+            meanl += dist;
         }
+        dist_mean += meanl;
         src_line += src_bpl;
     }
-    dist_mean = (count > 0) ? ((dist_mean + count / 2) / count) : 64 * 64;
+    dist_mean = (count > 0) ? (dist_mean / count) : 64.0 * 64.0;
     threshold = sqrt(dist_mean);
 
     src_line = src.data();
@@ -279,7 +286,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            unsigned int const pixel = src_line[x];
+            double const pixel = src_line[x];
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             if (dist < threshold)
             {
@@ -301,7 +308,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            unsigned int const pixel = src_line[x];
+            double const pixel = src_line[x];
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             binarySetBW(bw_line, x, ((dist < threshold) ^ (count < countb)));
         }
@@ -1010,7 +1017,7 @@ GrayImage binarizeMScaleMap(
     double immean, kover, sensitivity, sensdiv, senspos, sensinv;
     unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
     unsigned int maskbl, maskover, tim, threshold = 0;
-    size_t idx;
+    unsigned long int idx;
 
     radius = (window_size.height() + window_size.width()) >> 1;
     whcp = (h + w) >> 1;
