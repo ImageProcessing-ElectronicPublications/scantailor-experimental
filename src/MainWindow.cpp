@@ -502,7 +502,7 @@ MainWindow::setupThumbView()
     int const delta_x = thumbView->size().width() - inner_width;
     thumbView->setFixedWidth((int)ceil(m_maxLogicalThumbSize.width() + delta_x));
 
-    thumbView->setBackgroundBrush(palette().color(QPalette::Window));
+    thumbView->setStyleSheet("background-color: transparent");
     m_ptrThumbSequence->attachView(thumbView);
 }
 
