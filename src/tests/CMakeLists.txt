@@ -21,7 +21,7 @@ ELSE()
     LIST(APPEND libs Qt6::Widgets)
 ENDIF()
 LIST(APPEND libs ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
-    ${Boost_PRG_EXECUTION_MONITOR_LIBRARY} ${EXTRA_LIBS}
+    ${EXTRA_LIBS}
 )
 
 ADD_EXECUTABLE(generic_tests ${sources})

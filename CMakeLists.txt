@@ -5,14 +5,9 @@ IF(NOT DEFINED ST_ARCH)
 ENDIF()
 IF(ST_ARCH STREQUAL "ARM")
     # Because OpenGL is always software here
-    SET(ENABLE_OPENCL OFF)
-ENDIF()
-
-IF(ST_ARCH STREQUAL "ARM")
-    SET(ST_NO_TESTS ON)
+    SET(ENABLE_OPENGL OFF)
     SET(ST_USE_QT6 ON)
 ENDIF()
-
 
 IF(POLICY CMP0003)
     # Allow linking with full library path instead of -L/path -llibrary
@@ -212,7 +207,7 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 SET(Boost_USE_MULTITHREADED ON)
-FIND_PACKAGE(Boost 1.35.0 COMPONENTS unit_test_framework prg_exec_monitor)
+FIND_PACKAGE(Boost 1.35.0 COMPONENTS unit_test_framework)
 IF(NOT Boost_FOUND)
     MESSAGE(
         FATAL_ERROR
