@@ -12,6 +12,12 @@ FOREACH(file ${QM_FILES})
 	CONFIGURE_FILE("${file}" "${STAGING_DIR}/translations/${fname}" COPYONLY)
 ENDFOREACH()
 
+# Stylesheets
+EXECUTE_PROCESS(
+	COMMAND "${CMAKE_COMMAND}" -E copy_directory
+	"@CMAKE_SOURCE_DIR@/src/stylesheets" "${STAGING_DIR}/stylesheets"
+)
+
 # Imageformat plugins for Qt
 #FILE(GLOB imageformat_plugins "${CONF_BUILD_DIR}/imageformats/*.dll")
 #FOREACH(file ${imageformat_plugins})
