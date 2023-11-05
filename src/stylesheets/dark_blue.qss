@@ -274,7 +274,8 @@ QToolButton:focus
     color: #FFFFFF;
 }
 
-QSlider:groove:focus
+QSlider:groove:focus,
+QToolButton:checked
 {
     background-color: #40A0F0;
 }
