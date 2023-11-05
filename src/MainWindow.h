@@ -202,6 +202,8 @@ private slots:
     void showAboutDialog();
 
     void handleOutOfMemorySituation();
+
+    void stylesheetChanged(const QString stylesheetFilePath);
 private:
     class PageSelectionProviderImpl;
     enum SavePromptResult { SAVE, DONT_SAVE, CANCEL };

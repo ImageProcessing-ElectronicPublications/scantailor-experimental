@@ -305,11 +305,11 @@ ENDIF(MSVC)
 # Prepare config.h
 IF(WIN32)
     SET(TRANSLATION_DIRS ".:translations")
-    SET(STYLESHEETS_DIRS ".:stylesheets")
+    SET(STYLESHEETS_DIR "stylesheets")
     SET(PLUGIN_DIRS ".")
 ELSE()
     SET(TRANSLATION_DIRS ".:${CMAKE_INSTALL_PREFIX}/share/scantailor-experimental/translations")
-    SET(STYLESHEETS_DIRS ".:${CMAKE_INSTALL_PREFIX}/share/scantailor-experimental/stylesheets")
+    SET(STYLESHEETS_DIR "${CMAKE_INSTALL_PREFIX}/share/scantailor-experimental/stylesheets")
     SET(PLUGIN_DIRS ".:${CMAKE_INSTALL_PREFIX}/lib/scantailor-experimental")
 ENDIF()
 

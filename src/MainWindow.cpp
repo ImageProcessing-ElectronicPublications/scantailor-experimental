@@ -266,6 +266,10 @@ MainWindow::MainWindow()
             resize(1014, 689); // A sensible value.
         }
     }
+
+    QString stylesheetFilePath = settings.value("settings/stylesheet", "").toString();
+    if (!stylesheetFilePath.isEmpty())
+        stylesheetChanged(stylesheetFilePath);
 }
 
 
@@ -1597,6 +1601,10 @@ MainWindow::openSettingsDialog()
         }
     });
 
+    connect(
+        dialog,SIGNAL(stylesheetChanged(const QString)),
+        this, SLOT(stylesheetChanged(const QString)));
+
     dialog->show();
 }
 
@@ -1632,6 +1640,26 @@ MainWindow::handleOutOfMemorySituation()
 
     m_ptrOutOfMemoryDialog->setAttribute(Qt::WA_DeleteOnClose);
     m_ptrOutOfMemoryDialog.release()->show();
+}
+
+void
+MainWindow::stylesheetChanged(const QString stylesheetFilePath)
+{
+    QFileInfo stylesheetFileInfo(stylesheetFilePath);
+
+    QString path = stylesheetFileInfo.absolutePath();
+
+    QFile stylesheetFile(stylesheetFilePath);
+
+    stylesheetFile.open(QIODevice::ReadOnly);
+
+    QString stylesheet = stylesheetFile.readAll();
+
+    QRegExp re("@path_to_pics@");
+
+    stylesheet.replace(re, STYLESHEETS_DIR);
+    
+    setStyleSheet(stylesheet);
 }
 
 /**
