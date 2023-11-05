@@ -453,6 +453,48 @@ QGroupBox:indicator:indeterminate:disabled
     image: url(@path_to_pics@/dark_blue/checkbox_indeterminate_disabled.png);
 }
 
+
+QGroupBox#despecklePanel:indicator:checked,
+QGroupBox#filtersPanel:indicator:checked,
+QGroupBox#modePanel:indicator:checked,
+QGroupBox#scalingPanel:indicator:checked
+{
+    width: 1em;
+    height: 1em;
+    image: url(@path_to_pics@/dark_blue/groupbox_opened.png);
+}
+
+
+QCheckBox#despecklePanelEmpty:indicator:unchecked,
+QCheckBox#filtersPanelEmpty:indicator:unchecked,
+QCheckBox#modePanelEmpty:indicator:unchecked,
+QCheckBox#scalingPanelEmpty:indicator:unchecked
+{
+    width: 1em;
+    height: 1em;
+    image: url(@path_to_pics@/dark_blue/groupbox_closed.png);
+}
+
+QGroupBox#despecklePanel:indicator:checked:hover,
+QGroupBox#filtersPanel:indicator:checked:hover,
+QGroupBox#modePanel:indicator:checked:hover,
+QGroupBox#scalingPanel:indicator:checked:hover
+{
+    width: 1em;
+    height: 1em;
+    image: url(@path_to_pics@/dark_blue/groupbox_opened_hover.png);
+}
+
+QCheckBox#despecklePanelEmpty:indicator:unchecked:hover,
+QCheckBox#filtersPanelEmpty:indicator:unchecked:hover,
+QCheckBox#modePanelEmpty:indicator:unchecked:hover,
+QCheckBox#scalingPanelEmpty:indicator:unchecked:hover
+{
+    width: 1em;
+    height: 1em;
+    image: url(@path_to_pics@/dark_blue/groupbox_closed_hover.png);
+}
+
 /** Images - SpinBox **/
 
 QDoubleSpinBox:up-arrow,
