@@ -266,6 +266,8 @@ MainWindow::MainWindow()
             resize(1014, 689); // A sensible value.
         }
     }
+    
+    setDockNestingEnabled(true);
 }
 
 
