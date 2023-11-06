@@ -268,7 +268,8 @@ MainWindow::MainWindow()
     }
 
     filterOptions->installEventFilter(this);
-    
+    thumbView->installEventFilter(this);
+
     setDockNestingEnabled(true);
 }
 
@@ -498,6 +499,10 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* ev)
 {
     if (obj == filterOptions && ev->type() == QEvent::Resize) {
         scrollArea->setMinimumWidth(filterOptions->minimumSizeHint().width());
+    }
+
+    if (obj == thumbView && ev->type() == QEvent::Resize) {
+        dockWidgetThumbnails->setFixedWidth(dockWidgetThumbnails->sizeHint().width());
     }
 
     return false;
