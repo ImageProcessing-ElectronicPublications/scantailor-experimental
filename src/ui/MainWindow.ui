@@ -101,8 +101,8 @@
   <widget class="QDockWidget" name="dockWidgetFilters">
    <property name="minimumSize">
     <size>
-     <width>89</width>
-     <height>314</height>
+     <width>91</width>
+     <height>316</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -169,7 +169,35 @@
       </widget>
      </item>
      <item>
-      <widget class="NonOwningWidget" name="filterOptions" native="true"/>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>256</width>
+          <height>175</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="NonOwningWidget" name="filterOptions" native="true"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </item>
     </layout>
    </widget>
