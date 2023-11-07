@@ -300,9 +300,11 @@ ENDIF(MSVC)
 # Prepare config.h
 IF(WIN32)
     SET(TRANSLATION_DIRS ".:translations")
+    SET(STYLESHEETS_DIR "stylesheets")
     SET(PLUGIN_DIRS ".")
 ELSE()
     SET(TRANSLATION_DIRS ".:${CMAKE_INSTALL_PREFIX}/share/scantailor-experimental/translations")
+    SET(STYLESHEETS_DIR "${CMAKE_INSTALL_PREFIX}/share/scantailor-experimental/stylesheets")
     SET(PLUGIN_DIRS ".:${CMAKE_INSTALL_PREFIX}/lib/scantailor-experimental")
 ENDIF()
 
@@ -375,6 +377,7 @@ ENDIF()
 ADD_CUSTOM_TARGET(compile_translations ALL DEPENDS ${QM_FILES})
 
 INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translations")
+INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/stylesheets" DESTINATION "share/scantailor-experimental")
 
 # Source code packaging
 SET(CPACK_CMAKE_GENERATOR "")

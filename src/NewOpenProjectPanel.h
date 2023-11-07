@@ -39,6 +39,8 @@ protected:
     virtual void paintEvent(QPaintEvent* event);
 private:
     void addRecentProject(QString const& file_path);
+private slots:
+    void recentProjectButtonClicked();
 };
 
 #endif

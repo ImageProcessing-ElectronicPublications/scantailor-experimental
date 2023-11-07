@@ -37,11 +37,22 @@ signals:
      * as settings are actually updated from a slot connected to accepted().
      */
     void settingsUpdated();
+
+    void stylesheetChanged(const QString stylesheetFilePath);
 private slots:
-    void commitChanges();
+    void accept();
+    
+    void reject();
+
+    void on_stylesheetCombo_currentIndexChanged(int index);
+private:
+    void saveOldSettings();
+    
+    void setupStylesheetsCombo();
 private:
     Ui::SettingsDialog ui;
     AccelerationPlugin* m_pOpenCLPlugin;
+    QString m_oldStylesheetFilePath;
 };
 
 #endif

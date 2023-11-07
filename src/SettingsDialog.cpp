@@ -26,6 +26,7 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QString>
+#include <QDir>
 #include <string>
 
 SettingsDialog::SettingsDialog(QWidget* parent)
@@ -111,7 +112,8 @@ SettingsDialog::SettingsDialog(QWidget* parent)
     }
 #endif
 
-    connect(ui.buttonBox, SIGNAL(accepted()), SLOT(commitChanges()));
+    saveOldSettings();
+    setupStylesheetsCombo();
 }
 
 SettingsDialog::~SettingsDialog()
@@ -119,7 +121,7 @@ SettingsDialog::~SettingsDialog()
 }
 
 void
-SettingsDialog::commitChanges()
+SettingsDialog::accept()
 {
     {
         QSettings settings;
@@ -136,7 +138,72 @@ SettingsDialog::commitChanges()
             m_pOpenCLPlugin->selectDevice(std::string(device.data(), device.size()));
         }
 #endif
+    
+        QString stylesheetFilePath = ui.stylesheetCombo->currentData().toString();
+        if (stylesheetFilePath != m_oldStylesheetFilePath) {
+            settings.setValue("settings/stylesheet", stylesheetFilePath);
+        }
     }
 
     emit settingsUpdated();
+
+    QDialog::accept();
+}
+
+void
+SettingsDialog::reject()
+{
+    QString stylesheetFilePath = ui.stylesheetCombo->currentData().toString();
+    if (stylesheetFilePath != m_oldStylesheetFilePath)
+        emit stylesheetChanged(m_oldStylesheetFilePath);
+
+    QDialog::reject();
+}
+
+void
+SettingsDialog::on_stylesheetCombo_currentIndexChanged(int index)
+{
+    QString stylesheetFilePath = ui.stylesheetCombo->itemData(index).toString();
+    emit stylesheetChanged(stylesheetFilePath);
+}
+
+
+void
+SettingsDialog::saveOldSettings()
+{
+    QSettings settings;
+    
+    m_oldStylesheetFilePath = settings.value("settings/stylesheet", "").toString();
+}
+
+void
+SettingsDialog::setupStylesheetsCombo()
+{
+    QStringList stylesheetPaths;
+
+    stylesheetPaths.insert(0, "");
+
+    stylesheetPaths.append(m_oldStylesheetFilePath);
+
+#if defined(_WIN32) || defined(Q_OS_MAC)
+    QDir stylesheetsDir(QCoreApplication::applicationDirPath() + "/" + STYLESHEETS_DIR);
+#else
+    QDir stylesheetsDir(STYLESHEETS_DIR);
+#endif
+    QFileInfoList stylesheetFilesInfoList = stylesheetsDir.entryInfoList(QStringList("*.qss"), QDir::Files | QDir::Readable);
+    for (const QFileInfo& stylesheetFileInfo : stylesheetFilesInfoList)
+        stylesheetPaths.append(stylesheetFileInfo.filePath());
+
+    stylesheetPaths.removeDuplicates();
+    stylesheetPaths.sort();
+
+    for (const QString stylesheetPath : stylesheetPaths) {
+        QFileInfo stylesheetFileInfo(stylesheetPath);
+        ui.stylesheetCombo->addItem(
+            stylesheetFileInfo.baseName(), 
+            stylesheetFileInfo.filePath());
+    }
+
+    int  oldStylesheetIndex = ui.stylesheetCombo->findData(m_oldStylesheetFilePath);
+    ui.stylesheetCombo->setCurrentIndex(oldStylesheetIndex);
 }

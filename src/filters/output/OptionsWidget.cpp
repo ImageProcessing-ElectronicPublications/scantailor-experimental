@@ -75,12 +75,6 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
     thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
 
-    darkerThresholdLink->setText(
-        Utils::richTextForLink(darkerThresholdLink->text())
-    );
-    lighterThresholdLink->setText(
-        Utils::richTextForLink(lighterThresholdLink->text())
-    );
     thresholdSlider->setToolTip(QString::number(thresholdSlider->value()));
 
     updateColorsDisplay();
@@ -214,11 +208,11 @@ OptionsWidget::OptionsWidget(
         this, SLOT(dimmingColoredCoefChanged(double))
     );
     connect(
-        lighterThresholdLink, SIGNAL(linkActivated(QString const&)),
+        lighterThresholdButton, SIGNAL(clicked(bool)),
         this, SLOT(setLighterThreshold())
     );
     connect(
-        darkerThresholdLink, SIGNAL(linkActivated(QString const&)),
+        darkerThresholdButton, SIGNAL(clicked(bool)),
         this, SLOT(setDarkerThreshold())
     );
     connect(

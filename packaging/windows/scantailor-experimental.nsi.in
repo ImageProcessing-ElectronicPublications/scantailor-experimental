@@ -163,7 +163,10 @@ Section "Uninstall"
   # Remove translations.
   Delete "$INSTDIR\translations\*.qm"
   RMDir "$INSTDIR\translations"
-  
+
+  # Remove stylesheets.
+  RMDir /r "$INSTDIR\stylesheets"
+
   # Remove imageformats plugins.
   # We no longer ship any, but it's a good idea to cleanup after previous version.
   Delete "$INSTDIR\imageformats\*.dll"

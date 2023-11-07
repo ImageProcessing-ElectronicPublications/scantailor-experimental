@@ -271,6 +271,10 @@ MainWindow::MainWindow()
     thumbView->installEventFilter(this);
 
     setDockNestingEnabled(true);
+
+    QString stylesheetFilePath = settings.value("settings/stylesheet", "").toString();
+    if (!stylesheetFilePath.isEmpty())
+        stylesheetChanged(stylesheetFilePath);
 }
 
 
@@ -520,7 +524,7 @@ MainWindow::setupThumbView()
     int const delta_x = thumbView->size().width() - inner_width;
     thumbView->setFixedWidth((int)ceil(m_maxLogicalThumbSize.width() + delta_x));
 
-    thumbView->setBackgroundBrush(palette().color(QPalette::Window));
+    thumbView->setStyleSheet("background-color: transparent");
     m_ptrThumbSequence->attachView(thumbView);
 }
 
@@ -1615,6 +1619,10 @@ MainWindow::openSettingsDialog()
         }
     });
 
+    connect(
+        dialog,SIGNAL(stylesheetChanged(const QString)),
+        this, SLOT(stylesheetChanged(const QString)));
+
     dialog->show();
 }
 
@@ -1650,6 +1658,26 @@ MainWindow::handleOutOfMemorySituation()
 
     m_ptrOutOfMemoryDialog->setAttribute(Qt::WA_DeleteOnClose);
     m_ptrOutOfMemoryDialog.release()->show();
+}
+
+void
+MainWindow::stylesheetChanged(const QString stylesheetFilePath)
+{
+    QFileInfo stylesheetFileInfo(stylesheetFilePath);
+
+    QString path = stylesheetFileInfo.absolutePath();
+
+    QFile stylesheetFile(stylesheetFilePath);
+
+    stylesheetFile.open(QIODevice::ReadOnly);
+
+    QString stylesheet = stylesheetFile.readAll();
+
+    QRegExp re("@path_to_pics@");
+
+    stylesheet.replace(re, STYLESHEETS_DIR);
+    
+    setStyleSheet(stylesheet);
 }
 
 /**
