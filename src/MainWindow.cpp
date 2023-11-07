@@ -266,6 +266,11 @@ MainWindow::MainWindow()
             resize(1014, 689); // A sensible value.
         }
     }
+
+    filterOptions->installEventFilter(this);
+    thumbView->installEventFilter(this);
+
+    setDockNestingEnabled(true);
 }
 
 
@@ -488,6 +493,19 @@ MainWindow::createBatchProcessingWidget()
     layout->setRowStretch(row, 1);
 
     connect(stop_btn, SIGNAL(clicked()), SLOT(stopBatchProcessing()));
+}
+
+bool MainWindow::eventFilter(QObject* obj, QEvent* ev)
+{
+    if (obj == filterOptions && ev->type() == QEvent::Resize) {
+        scrollArea->setMinimumWidth(filterOptions->minimumSizeHint().width());
+    }
+
+    if (obj == thumbView && ev->type() == QEvent::Resize) {
+        dockWidgetThumbnails->setFixedWidth(dockWidgetThumbnails->sizeHint().width());
+    }
+
+    return false;
 }
 
 void

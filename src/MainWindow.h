@@ -225,6 +225,8 @@ private:
 
     IntrusivePtr<ThumbnailPixmapCache> createThumbnailCache();
 
+    bool eventFilter(QObject* obj, QEvent* ev);
+
     void setupThumbView();
 
     void showNewOpenProjectPanel();
