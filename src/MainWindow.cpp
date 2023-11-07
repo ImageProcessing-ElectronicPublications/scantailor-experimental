@@ -1673,9 +1673,7 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
 
     QString stylesheet = stylesheetFile.readAll();
 
-    QRegExp re("@path_to_pics@");
-
-    stylesheet.replace(re, STYLESHEETS_DIR);
+    stylesheet.replace("@path_to_pics@", STYLESHEETS_DIR);
     
     setStyleSheet(stylesheet);
 }
