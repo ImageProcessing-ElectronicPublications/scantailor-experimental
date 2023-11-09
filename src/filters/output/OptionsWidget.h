@@ -69,6 +69,10 @@ private slots:
 
     void knndCoefChanged(double value);
 
+    void cdespeckleRadiusChanged(int value);
+
+    void cdespeckleCoefChanged(double value);
+
     void knndRadiusChanged(int value);
 
     void blurCoefChanged(double value);

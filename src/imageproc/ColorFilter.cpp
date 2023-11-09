@@ -120,7 +120,9 @@ void wienerFilterInPlace(
                 {
                     dst_pixel += delta_pixel * delta_variance / variance;
                 }
-                image_line[x] = (uint8_t) (dst_pixel + 0.5f);
+                int val = (int) (dst_pixel + 0.5f);
+                val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                image_line[x] = (uint8_t) val;
             }
             image_line += image_stride;
         }
@@ -176,9 +178,9 @@ void wienerColorFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    float val = origcol * colscale + coldelta;
-                    val = (val < 0.0f) ? 0.0f : (val < 255.0f) ? val : 255.0f;
-                    image_line[indx] = (uint8_t) (val + 0.5f);
+                    int val = (int) (origcol * colscale + coldelta + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
                 }
             }
             image_line += image_bpl;
@@ -289,13 +291,136 @@ void knnDenoiserFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    float val = origcol * colscale + coldelta;
-                    val = (val < 0.0f) ? 0.0f : (val < 255.0f) ? val : 255.0f;
-                    image_line[indx] = (uint8_t) (val + 0.5f);
+                    int val = (int) (origcol * colscale + coldelta + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
                 }
             }
             image_line += image_bpl;
             gray_line += gray_bpl;
+        }
+    }
+}
+
+QImage colorDespeckleFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    colorDespeckleFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void colorDespeckleFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_bpl = image.bytesPerLine();
+        unsigned int const cnum = image_bpl / w;
+
+        GrayImage gray = GrayImage(image);
+        uint8_t* gray_line = gray.data();
+        int const gray_bpl = gray.stride();
+
+        GrayImage temp = GrayImage(image);
+        uint8_t* temp_line = temp.data();
+        int const temp_bpl = temp.stride();
+
+        for (int j = 0; j < radius; j++)
+        {
+            gray_line = gray.data();
+            temp_line = temp.data();
+            for (int y = 0; y < h; y++)
+            {
+                uint8_t* gray_line1 = (y > 0) ? (gray_line - gray_bpl) : gray_line;
+                uint8_t* gray_line2 = (y < (h - 1)) ? (gray_line + gray_bpl) : gray_line;
+                for (int x = 0; x < w; x++)
+                {
+                    int x1 = (x > 0) ? (x - 1) : x;
+                    int x2 = (x < (w - 1)) ? (x + 1) : x;
+
+                    int pA = gray_line1[x1];
+                    int pB = gray_line1[x];
+                    int pC = gray_line1[x2];
+                    int pD = gray_line[x1];
+                    int pE = gray_line[x];
+                    int pF = gray_line[x2];
+                    int pH = gray_line2[x1];
+                    int pG = gray_line2[x];
+                    int pI = gray_line2[x2];
+
+                    int dIy = (pH - pB) * (pH - pB);
+                    int dIx = (pF - pD) * (pF - pD);
+                    int dIxy = (pH - pB) * (pF - pD);
+                    int dI = dIy + dIx;
+                    int pR = pE;
+                    int pM = (pA + pB + pC + pD + pE + pF + pG + pH + pI + 4) / 9;
+
+                    if (dI > 0)
+                    {
+                        float gy = pH + pB - pE - pE;
+                        float gx = pF + pD - pE - pE;
+                        float gxy = pG + pC - pI - pA;
+                        float gd2 = (gy * dIx + gx * dIy - 0.5f * gxy * dIxy);
+                        if((pM > 128 && gd2 < 0.0f) || (pM <= 128 && gd2 >= 0.0f))
+                        {
+                            pR = pE + (int) (coef * gd2 / dI + 0.5f);
+                            pR = (pR < 0) ? 0 : (pR < 255) ? pR : 255;
+                        }
+                    }
+                    else
+                    {
+                        pR = pM;
+                    }
+                    temp_line[x] = pR;
+
+                }
+                gray_line += gray_bpl;
+                temp_line += temp_bpl;
+            }
+            gray_line = gray.data();
+            temp_line = temp.data();
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    gray_line[x] = temp_line[x];
+                }
+                gray_line += gray_bpl;
+                temp_line += temp_bpl;
+            }
+        }
+        temp = GrayImage(image);
+        gray_line = gray.data();
+        temp_line = temp.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = temp_line[x];
+                float color = gray_line[x];
+                float const colscale = (color + 1.0f) / (origin + 1.0f);
+                float const coldelta = color - origin * colscale;
+                for (unsigned int c = 0; c < cnum; c++)
+                {
+                    int const indx = x * cnum + c;
+                    float origcol = image_line[indx];
+                    int val = (int) (origcol * colscale + coldelta + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
+                }
+            }
+            image_line += image_bpl;
+            gray_line += gray_bpl;
+            temp_line += temp_bpl;
         }
     }
 }
@@ -371,9 +496,9 @@ void blurFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    float val = origcol * colscale + coldelta;
-                    val = (val < 0.0f) ? 0.0f : (val < 255.0f) ? val : 255.0f;
-                    image_line[indx] = (uint8_t) (val + 0.5f);
+                    int val = (origcol * colscale + coldelta + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
                 }
             }
             image_line += image_bpl;
@@ -487,8 +612,9 @@ void screenFilterInPlace(
                     retval /= 255.0f;
                     retval += valpos;
                     retval = coef * retval + (1.0f - coef) * origcol;
-                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                    image_line[indx] = (uint8_t) retval;
+                    int val = (int) (retval + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
                 }
             }
             image_line += image_bpl;
@@ -644,8 +770,9 @@ void coloredSignificanceFilterInPlace(
                 hsv_s = max - min;
                 hsv_si = 255 - hsv_s;
                 float retval = coef * (float) hsv_si + (1.0f - coef) * 255.0f;
-                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gray_line[x] = (uint8_t) retval;
+                int val = (int) (retval + 0.5f);
+                val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                gray_line[x] = (uint8_t) val;
             }
             gray_line += gray_bpl;
         }
@@ -704,8 +831,9 @@ void coloredDimmingFilterInPlace(
                     float retval = origin;
                     retval *= (ycbcr + 1.0f);
                     retval /= 256.0f;
-                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                    image_line[indx] = (uint8_t) retval;
+                    int val = (int) (retval + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
                 }
             }
             image_line += image_bpl;

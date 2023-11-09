@@ -34,6 +34,8 @@ public:
           m_wienerWindowSize(5),
           m_knndCoef(0.0),
           m_knndRadius(5),
+          m_cdespeckleCoef(0.0),
+          m_cdespeckleRadius(5),
           m_blurCoef(0.0),
           m_blurWindowSize(5),
           m_screenCoef(0.0),
@@ -79,6 +81,23 @@ public:
     void setKnndRadius(int val)
     {
         m_knndRadius = val;
+    }
+
+    double cdespeckleCoef() const
+    {
+        return m_cdespeckleCoef;
+    }
+    void setCdespeckleCoef(double val)
+    {
+        m_cdespeckleCoef = val;
+    }
+    int cdespeckleRadius() const
+    {
+        return m_cdespeckleRadius;
+    }
+    void setCdespeckleRadius(int val)
+    {
+        m_cdespeckleRadius = val;
     }
 
     double blurCoef() const
@@ -159,6 +178,8 @@ private:
     int m_wienerWindowSize;
     double m_knndCoef;
     int m_knndRadius;
+    double m_cdespeckleCoef;
+    int m_cdespeckleRadius;
     double m_blurCoef;
     int m_blurWindowSize;
     double m_screenCoef;

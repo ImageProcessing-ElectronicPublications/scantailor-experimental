@@ -29,6 +29,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_wienerWindowSize(el.attribute("wienerWinSize").toInt()),
        m_knndCoef(el.attribute("knnDenoiser").toDouble()),
        m_knndRadius(el.attribute("knnDRadius").toInt()),
+       m_cdespeckleCoef(el.attribute("cdespeckle").toDouble()),
+       m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt()),
        m_blurCoef(el.attribute("blurCoef").toDouble()),
        m_blurWindowSize(el.attribute("blurWinSize").toInt()),
        m_screenCoef(el.attribute("screenCoef").toDouble()),
@@ -53,6 +55,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_knndRadius < 1)
     {
         m_knndRadius = 5;
+    }
+    if (m_cdespeckleCoef < -1.0 || m_cdespeckleCoef > 1.0)
+    {
+        m_cdespeckleCoef = 0.0;
+    }
+    if (m_cdespeckleRadius < 1)
+    {
+        m_cdespeckleRadius = 5;
     }
     if (m_blurCoef < -2.0 || m_blurCoef > 1.0)
     {
@@ -92,6 +102,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("wienerWinSize", m_wienerWindowSize);
     el.setAttribute("knnDenoiser", m_knndCoef);
     el.setAttribute("knnDRadius", m_knndRadius);
+    el.setAttribute("cdespeckle", m_cdespeckleCoef);
+    el.setAttribute("cdespeckleRadius", m_cdespeckleRadius);
     el.setAttribute("blurCoef", m_blurCoef);
     el.setAttribute("blurWinSize", m_blurWindowSize);
     el.setAttribute("screenCoef", m_screenCoef);
@@ -111,6 +123,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_knndCoef != other.m_knndCoef) || (m_knndRadius != other.m_knndRadius))
+    {
+        return false;
+    }
+    if ((m_cdespeckleCoef != other.m_cdespeckleCoef) || (m_cdespeckleRadius != other.m_cdespeckleRadius))
     {
         return false;
     }

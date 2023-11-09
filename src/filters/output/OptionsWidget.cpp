@@ -148,6 +148,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(knndRadiusChanged(int))
     );
     connect(
+        cdespeckleCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(cdespeckleCoefChanged(double))
+    );
+    connect(
+        cdespeckleRadius, SIGNAL(valueChanged(int)),
+        this, SLOT(cdespeckleRadiusChanged(int))
+    );
+    connect(
         blurCoef, SIGNAL(valueChanged(double)),
         this, SLOT(blurCoefChanged(double))
     );
@@ -420,6 +428,26 @@ OptionsWidget::knndRadiusChanged(int value)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     color_options.setKnndRadius(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::cdespeckleCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setCdespeckleCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::cdespeckleRadiusChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setCdespeckleRadius(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -915,6 +943,8 @@ OptionsWidget::updateColorsDisplay()
     wienerWindowSize->setValue(color_options.wienerWindowSize());
     knndCoef->setValue(color_options.knndCoef());
     knndRadius->setValue(color_options.knndRadius());
+    cdespeckleCoef->setValue(color_options.cdespeckleCoef());
+    cdespeckleRadius->setValue(color_options.cdespeckleRadius());
     blurCoef->setValue(color_options.blurCoef());
     blurWindowSize->setValue(color_options.blurWindowSize());
     screenCoef->setValue(color_options.screenCoef());

@@ -59,6 +59,12 @@ IMAGEPROC_EXPORT QImage knnDenoiserFilter(
 IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
     QImage& image, int radius = 1, float coef = 0.0f);
 
+IMAGEPROC_EXPORT QImage colorDespeckleFilter(
+    QImage const& image, int radius = 1, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
+    QImage& image, int radius = 1, float coef = 0.0f);
+
 IMAGEPROC_EXPORT QImage blurFilter(
     QImage const& image, QSize const& window_size, float coef = 0.0f);
 
