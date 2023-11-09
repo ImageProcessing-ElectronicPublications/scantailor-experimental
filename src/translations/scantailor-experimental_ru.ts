@@ -531,6 +531,11 @@ First you need to process all of them with the &quot;Page Layout&quot; filter.</
         <translation>Главное окно</translation>
     </message>
     <message>
+        <location filename="../ui/MainWindow.ui" line="118"/>
+        <source>Stages</source>
+        <translation>Этапы</translation>
+    </message>
+    <message>
         <location filename="../ui/MainWindow.ui" line="130"/>
         <source>Keep current page in view.</source>
         <translation>Держать текущую страницу в поле зрения.</translation>
@@ -1450,17 +1455,32 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выравнивание</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="275"/>
+        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="274"/>
+        <source>None</source>
+        <translation>Не выравнивать</translation>
+    </message>
+    <message>
+        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="277"/>
         <source>Don&apos;t match size</source>
         <translation>Не соответствует размеру</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="285"/>
+        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="287"/>
+        <source>Growing</source>
+        <translation>Расширить</translation>
+    </message>
+    <message>
+        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="290"/>
         <source>Match size by growing margins</source>
         <translation>Соответствие размера за счет увеличения поля</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="295"/>
+        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
+        <source>Scaling</source>
+        <translation>Масштабировать</translation>
+    </message>
+    <message>
+        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="303"/>
         <source>Match size by scaling</source>
         <translation>Выровнить размер путем масштабирования</translation>
     </message>

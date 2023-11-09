@@ -115,7 +115,7 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Filters</string>
+    <string>Stages</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
