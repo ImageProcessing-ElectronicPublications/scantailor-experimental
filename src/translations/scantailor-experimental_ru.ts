@@ -538,7 +538,7 @@ First you need to process all of them with the &quot;Page Layout&quot; filter.</
     <message>
         <location filename="../ui/MainWindow.ui" line="222"/>
         <source>Thumbnails</source>
-        <translation type="unfinished"></translation>
+        <translation>Эскизы</translation>
     </message>
     <message>
         <location filename="../ui/MainWindow.ui" line="238"/>
@@ -577,7 +577,7 @@ First you need to process all of them with the &quot;Page Layout&quot; filter.</
     <message>
         <location filename="../ui/MainWindow.ui" line="305"/>
         <source>Ctrl+Shift+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/MainWindow.ui" line="310"/>
@@ -1005,7 +1005,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../ui/OutOfMemoryDialog.ui" line="118"/>
         <source>Use a smaller resolution enhancement factor at the Output stage.</source>
-        <translation type="unfinished"></translation>
+        <translation>Используйте меньший коэффициент повышения разрешения на этапе вывода.</translation>
     </message>
     <message>
         <location filename="../ui/OutOfMemoryDialog.ui" line="138"/>
@@ -1035,7 +1035,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../ui/OutOfMemoryDialog.ui" line="268"/>
         <source>If your input or output images are over 2GB, even going 64-bit won&apos;t help. It&apos;s a &lt;a href=&quot;https://bugreports.qt.io/browse/QTBUG-50912&quot;&gt;limitation of Qt framework&lt;/a&gt;. Keep in mind color images in Scan Tailor are always 4 bytes per pixel, even when they don&apos;t carry an alpha channel.</source>
-        <translation type="unfinished"></translation>
+        <translation>Если размер входных или выходных изображений превышает 2 ГБ, даже переход на 64-битную версию не поможет. Это &lt;a href=&quot;https://bugreports.qt.io/browse/QTBUG-50912&quot;&gt;ограничение платформы Qt&lt;/a&gt;. Имейте в виду, что цветные изображения в Scan Tailor всегда имеют размер 4 байта на пиксель, даже если они не содержат альфа-канала.</translation>
     </message>
     <message>
         <location filename="../ui/OutOfMemoryDialog.ui" line="301"/>
@@ -1332,29 +1332,29 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="123"/>
         <source>3x</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="142"/>
         <source>4x</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="183"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="196"/>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Фильтры</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="213"/>
         <source>Wiener denoiser</source>
-        <translation type="unfinished"></translation>
+        <translation>Шумодав Винера</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="220"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="256"/>
         <source>Value is 0.0 .. 1.0..</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение 0,0 .. 1,0 ..</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="236"/>
@@ -1362,59 +1362,59 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="380"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="681"/>
         <source>The dimensions of a pixel neighborhood to consider.</source>
-        <translation type="unfinished"></translation>
+        <translation>Размеры учитываемой окрестности пикселя</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="249"/>
         <source>KNN denoiser</source>
-        <translation type="unfinished"></translation>
+        <translation>Шумодав KNN</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="272"/>
         <source>The radius of a pixel neighborhood to consider.</source>
-        <translation type="unfinished"></translation>
+        <translation>Радиус окрестности пикселя, который следует учитывать.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="292"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="364"/>
         <source>Value is -1.0 .. 1.0..</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение -1,0 .. 1,0 ..</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="308"/>
         <source>The radius of a color despeckle.</source>
-        <translation type="unfinished"></translation>
+        <translation>Радиус цветного пятна.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="321"/>
         <source>Blur/Sharpen</source>
-        <translation type="unfinished"></translation>
+        <translation>Размытие/Резкость</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="328"/>
         <source>Value is -2.0 .. 1.0..</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение -2,0 .. 1,0 ..</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="357"/>
         <source>Screen filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Экранный фильтр</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="393"/>
         <source>Curve/Sqr color</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвет по S/C-кривой</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="400"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="416"/>
         <source>Value is -1.0 .. 1.0.</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение -1,0 .. 1,0.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="443"/>
         <source>Value is 0.0 .. 1.0.</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение 0,0 .. 1,0.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="491"/>
@@ -1424,22 +1424,22 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="863"/>
         <source>KMeans:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="870"/>
         <source>Number of KMeans colors.</source>
-        <translation type="unfinished"></translation>
+        <translation>Количество цветов KMeans.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="883"/>
         <source>Morphology of KMeans.</source>
-        <translation type="unfinished"></translation>
+        <translation>Морфология KMeans.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="896"/>
         <source> - sat, norm:</source>
-        <translation type="unfinished"></translation>
+        <translation> - нас, норм:</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="903"/>
@@ -1447,27 +1447,27 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="942"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="958"/>
         <source>Default value is 0.0.</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение по умолчанию 0,0.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="935"/>
         <source> - bg, mask:</source>
-        <translation type="unfinished"></translation>
+        <translation> - фон, маска:</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1165"/>
         <source>Custom despeckling</source>
-        <translation type="unfinished"></translation>
+        <translation>Настраиваемое удаление пятен</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1208"/>
         <source>Despeckle factor:</source>
-        <translation type="unfinished"></translation>
+        <translation>Фактор удаления пятен:</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1215"/>
         <source>Value is 0.0 .. 9.99.</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение 0,0 .. 9,99.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="436"/>
@@ -1477,47 +1477,47 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="285"/>
         <source>Despeckle</source>
-        <translation type="unfinished">Удалять пятна</translation>
+        <translation>Удалять пятна</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="619"/>
         <source>Dimming Colored</source>
-        <translation type="unfinished"></translation>
+        <translation>Затемнение цветов</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="626"/>
         <source>Value is -1.0 .. 2.0.</source>
-        <translation type="unfinished"></translation>
+        <translation>Значение -1,0 .. 2,0.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="646"/>
         <source>Threshold</source>
-        <translation type="unfinished"></translation>
+        <translation>Порог</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="653"/>
         <source>Select threshold method.</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите пороговый метод.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="660"/>
         <source>M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="663"/>
         <source>Morphology ON/OFF.</source>
-        <translation type="unfinished"></translation>
+        <translation>Морфология ВКЛ/ВЫКЛ.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - w.size, coef.:</source>
-        <translation type="unfinished"></translation>
+        <translation> - окно, коэф.:</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="694"/>
         <source>Default value is 0.34.</source>
-        <translation type="unfinished"></translation>
+        <translation>Знач. по умол. 0,34.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="788"/>
@@ -1852,22 +1852,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="41"/>
         <source>Add to foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить по маске</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="48"/>
         <source>Add to background</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить вне маски</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="55"/>
         <source>Add to mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить в маску</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="62"/>
         <source>Subtract from k-means</source>
-        <translation type="unfinished"></translation>
+        <translation>Вычесть из k-means</translation>
     </message>
 </context>
 <context>
@@ -2207,7 +2207,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/SettingsDialog.ui" line="26"/>
         <source>Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>Ускорение</translation>
     </message>
     <message>
         <location filename="../ui/SettingsDialog.ui" line="32"/>
@@ -2227,12 +2227,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/SettingsDialog.ui" line="125"/>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Интерфейс</translation>
     </message>
     <message>
         <location filename="../ui/SettingsDialog.ui" line="133"/>
         <source>Stylesheet:</source>
-        <translation type="unfinished"></translation>
+        <translation>Таблица стилей:</translation>
     </message>
     <message>
         <source>Use 3D acceleration for user interface</source>
@@ -2557,57 +2557,57 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="66"/>
         <source>Otsu</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="67"/>
         <source>Mean</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="68"/>
         <source>Niblack</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="69"/>
         <source>Gatos</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="70"/>
         <source>Sauvola</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="71"/>
         <source>Wolf</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="72"/>
         <source>Bradley</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="73"/>
         <source>EdgePlus</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="74"/>
         <source>BlurDiv</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="75"/>
         <source>EdgeDiv</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="76"/>
         <source>MultiScale</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="856"/>
