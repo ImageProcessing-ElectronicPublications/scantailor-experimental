@@ -860,14 +860,14 @@
            <item row="0" column="0">
             <widget class="QLabel" name="kmeansCountLabel">
              <property name="text">
-              <string>KMeans:</string>
+              <string>K-means:</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
             <widget class="QSpinBox" name="kmeansCount">
              <property name="toolTip">
-              <string>Number of KMeans colors.</string>
+              <string>Number of K-means colors.</string>
              </property>
              <property name="minimum">
               <number>0</number>
@@ -880,7 +880,7 @@
            <item row="0" column="2">
             <widget class="QSpinBox" name="kmeansMorphology">
              <property name="toolTip">
-              <string>Morphology of KMeans.</string>
+              <string>Morphology of K-means.</string>
              </property>
              <property name="minimum">
               <number>-16</number>

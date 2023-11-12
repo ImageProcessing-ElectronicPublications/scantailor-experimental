@@ -1180,17 +1180,17 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="863"/>
-        <source>KMeans:</source>
+        <source>K-means:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="870"/>
-        <source>Number of KMeans colors.</source>
+        <source>Number of K-means colors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="883"/>
-        <source>Morphology of KMeans.</source>
+        <source>Morphology of K-means.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

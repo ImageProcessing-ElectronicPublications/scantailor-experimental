@@ -1423,23 +1423,23 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="863"/>
-        <source>KMeans:</source>
-        <translation></translation>
+        <source>K-means:</source>
+        <translation>К-средних</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="870"/>
-        <source>Number of KMeans colors.</source>
-        <translation>Количество цветов KMeans.</translation>
+        <source>Number of K-means colors.</source>
+        <translation>Количество цветов К-средних.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="883"/>
-        <source>Morphology of KMeans.</source>
-        <translation>Морфология KMeans.</translation>
+        <source>Morphology of K-means.</source>
+        <translation>Морфология К-средних.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="896"/>
         <source> - sat, norm:</source>
-        <translation> - нас, норм:</translation>
+        <translation> - насыщ, норм:</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="903"/>

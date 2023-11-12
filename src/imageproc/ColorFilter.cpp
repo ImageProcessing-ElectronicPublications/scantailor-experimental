@@ -930,6 +930,7 @@ void hsvKMeansInPlace(
         unsigned long mean_len[256] = {0};
         double mean_h0[256] = {0.0};
         double mean_s0[256] = {0.0};
+        double mean_v0[256] = {0.0};
         double mean_h[256] = {0.0};
         double mean_s[256] = {0.0};
         double mean_v[256] = {0.0};
@@ -1015,9 +1016,38 @@ void hsvKMeansInPlace(
             float const hsv_h = ((float) i - 0.5f) * fk;
             mean_h0[i] = 128.0 * (1.0 + cos(hsv_h * ctorad));
             mean_s0[i] = 128.0 * (1.0 + sin(hsv_h * ctorad));
-            mean_h[i] = mean_h0[i];
-            mean_s[i] = mean_s0[i];
-            mean_v[i] = 255.0;
+            mean_v0[i] = 255.0;
+
+            mask_line = mask.data();
+            float dist_min = 196608.0f;
+            for (unsigned int y = 0; y < h; y++)
+            {
+                QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+                for (unsigned int x = 0; x < w; x++)
+                {
+                    if (mask_line[x >> 5] & (msb >> (x & 31)))
+                    {
+                        float const hsv_h = qRed(rowh[x]);
+                        float const hsv_s = qGreen(rowh[x]);
+                        float const hsv_v = qBlue(rowh[x]);
+                        float const delta_h = hsv_h - mean_h0[i];
+                        float const delta_s = hsv_s - mean_s0[i];
+                        float const delta_v = hsv_v - mean_v0[i];
+                        float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
+                        if (dist < dist_min)
+                        {
+                            mean_h[i] = hsv_h;
+                            mean_s[i] = hsv_s;
+                            mean_v[i] = hsv_v;
+                            dist_min = dist;
+                        }
+                    }
+                }
+                mask_line += mask_wpl;
+            }
+            mean_h0[i] = mean_h[i];
+            mean_s0[i] = mean_s[i];
+            mean_v0[i] = mean_v[i];
         }
 
         mask_line = mask.data();
@@ -1098,9 +1128,10 @@ void hsvKMeansInPlace(
                 {
                     float const hsv_hmc = mean_h0[i];
                     float const hsv_hms = mean_s0[i];
+                    float const hsv_vv = mean_v0[i];
                     mean_h[i] = hsv_hmc;
                     mean_s[i] = hsv_hms;
-                    mean_v[i] = 255.0;
+                    mean_v[i] = hsv_vv;
 
                     mask_line = mask.data();
                     float dist_min = 196608.0f;
@@ -1116,7 +1147,7 @@ void hsvKMeansInPlace(
                                 float const hsv_v = qBlue(rowh[x]);
                                 float const delta_h = hsv_h - hsv_hmc;
                                 float const delta_s = hsv_s - hsv_hms;
-                                float const delta_v = 255.0f - hsv_v;
+                                float const delta_v = hsv_v - hsv_vv;
                                 float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
                                 if (dist < dist_min)
                                 {
