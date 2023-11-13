@@ -891,6 +891,77 @@ void coloredMaskInPlace(
     }
 }
 
+QImage imageHSVcylinder(QImage const& image)
+{
+    if (image.isNull())
+    {
+        return image;
+    }
+
+    unsigned int const w = image.width();
+    unsigned int const h = image.height();
+
+    QImage hsv_img(w, h, QImage::Format_RGB32);
+    uint8_t* hsv_line = (uint8_t*) hsv_img.bits();
+
+    float ctorad = (float)(2.0 * M_PI / 256.0);
+    uint32_t const msb = uint32_t(1) << 31;
+
+    for (unsigned int y = 0; y < h; y++)
+    {
+        QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+        for (unsigned int x = 0; x < w; x++)
+        {
+            QRgb pixel = image.pixel(x, y);
+            int r = qRed(pixel);
+            int g = qGreen(pixel);
+            int b = qBlue(pixel);
+            float hsv_h, hsv_s, hsv_v;
+            int max = 0, min = 255;
+            max = (r < g) ? g : r;
+            max = (max < b) ? b : max;
+            min = (r > g) ? g : r;
+            min = (min > b) ? b : min;
+            hsv_h = max - min;
+            if (hsv_h > 0.0f)
+            {
+                if (max == r)
+                {
+                    hsv_h = (256.0f * (g - b) / hsv_h) / 6.0f;
+                    if (hsv_h < 0.0f)
+                    {
+                        hsv_h += 256.0f;
+                    }
+                }
+                else if (max == g)
+                {
+                    hsv_h = (256.0f * (2.0f + (float) (b - r) / hsv_h)) / 6.0f;
+                }
+                else
+                {
+                    hsv_h = (256.0f * (4.0f + (float) (r - g) / hsv_h)) / 6.0f;
+                }
+            }
+            hsv_s = max - min;
+            if (max > 0)
+            {
+                hsv_s *= 256.0f;
+                hsv_s /= max;
+            }
+            hsv_v = max;
+            r = (int) (128.0f + 0.5f * hsv_s * cos(hsv_h * ctorad)); // +0.5f for round
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (int) (128.0f + 0.5f * hsv_s * sin(hsv_h * ctorad)); // +0.5f for round
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (int) (0.5f + hsv_v); // +0.5f for round
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
+            rowh[x] = qRgb(r, g, b);
+        }
+    }
+    
+    return hsv_img;
+}
+
 void hsvKMeansInPlace(
     QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount, float const coef_sat, float const coef_norm, float const coef_bg)
 {
@@ -913,19 +984,15 @@ void hsvKMeansInPlace(
             return;
         }
 
-        uint8_t* dst_line = (uint8_t*) dst.bits();
-        int const dst_bpl = dst.bytesPerLine();
-        unsigned int const dnum = dst_bpl / w;
-        uint8_t const* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const inum = image_bpl / w;
         uint32_t const* mask_line = mask.data();
         int const mask_wpl = mask.wordsPerLine();
 
-        QImage hsv_img(w, h, QImage::Format_RGB32);
-        uint8_t* hsv_line = (uint8_t*) hsv_img.bits();
-        int const hsv_bpl = hsv_img.bytesPerLine();
-        unsigned int const hnum = hsv_bpl / w;
+        QImage hsv_img = imageHSVcylinder(image);
+
+        if (hsv_img.isNull())
+        {
+            return;
+        }
 
         unsigned long mean_len[256] = {0};
         double mean_h0[256] = {0.0};
@@ -943,57 +1010,16 @@ void hsvKMeansInPlace(
             QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
             for (unsigned int x = 0; x < w; x++)
             {
-                QRgb pixel = image.pixel(x, y);
-                int r = qRed(pixel);
-                int g = qGreen(pixel);
-                int b = qBlue(pixel);
-                float hsv_h, hsv_s, hsv_v;
-                int max = 0, min = 255;
-                max = (r < g) ? g : r;
-                max = (max < b) ? b : max;
-                min = (r > g) ? g : r;
-                min = (min > b) ? b : min;
-                hsv_h = max - min;
-                if (hsv_h > 0.0f)
-                {
-                    if (max == r)
-                    {
-                        hsv_h = (256.0f * (g - b) / hsv_h) / 6.0f;
-                        if (hsv_h < 0.0f)
-                        {
-                            hsv_h += 256.0f;
-                        }
-                    }
-                    else if (max == g)
-                    {
-                        hsv_h = (256.0f * (2.0f + (float) (b - r) / hsv_h)) / 6.0f;
-                    }
-                    else
-                    {
-                        hsv_h = (256.0f * (4.0f + (float) (r - g) / hsv_h)) / 6.0f;
-                    }
-                }
-                hsv_s = max - min;
-                if (max > 0)
-                {
-                    hsv_s *= 256.0f;
-                    hsv_s /= max;
-                }
-                hsv_v = max;
-                r = (int) (128.0f + 0.5f * hsv_s * cos(hsv_h * ctorad)); // +0.5f for round
-                r = (r < 0) ? 0 : (r < 255) ? r : 255;
-                g = (int) (128.0f + 0.5f * hsv_s * sin(hsv_h * ctorad)); // +0.5f for round
-                g = (g < 0) ? 0 : (g < 255) ? g : 255;
-                b = (int) (0.5f + hsv_v); // +0.5f for round
-                b = (b < 0) ? 0 : (b < 255) ? b : 255;
                 if (!(mask_line[x >> 5] & (msb >> (x & 31))))
                 {
+                    float const r = qRed(rowh[x]);
+                    float const g = qGreen(rowh[x]);
+                    float const b = qBlue(rowh[x]);
                     mean_h[0] += r;
                     mean_s[0] += g;
                     mean_v[0] += b;
                     mean_len[0]++;
                 }
-                rowh[x] = qRgb(r, g, b);
             }
             mask_line += mask_wpl;
         }
