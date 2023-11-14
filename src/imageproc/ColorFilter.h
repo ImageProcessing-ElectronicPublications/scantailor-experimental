@@ -118,6 +118,23 @@ IMAGEPROC_EXPORT void coloredMaskInPlace(
 
 static QImage imageHSVcylinder(QImage const& image);
 
+static float pixelDistance(
+    float const h0, float const s0, float const v0,
+    float const h1, float const s1, float const v1);
+
+static void paletteHSVcylinderGenerate(
+    double* mean_h0, double* mean_s0, double* mean_v0, int const ncount);
+
+static void paletteHSVcylinderToHSV(
+    double* mean_h, double* mean_s, int const ncount);
+
+static void paletteHSVnorm(
+    double* mean_h, double* mean_s, double* mean_v,
+    float const coef_sat, float const coef_norm, int const ncount);
+
+static void paletteHSVtoRGB(
+    double* mean_h, double* mean_s, double* mean_v, int const ncount);
+
 IMAGEPROC_EXPORT void hsvKMeansInPlace(
     QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount,
     float coef_sat = 0.0f, float coef_norm = 0.0f, float coef_bg = 0.0f);

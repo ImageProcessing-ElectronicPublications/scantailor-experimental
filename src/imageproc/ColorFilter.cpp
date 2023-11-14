@@ -905,7 +905,6 @@ QImage imageHSVcylinder(QImage const& image)
     uint8_t* hsv_line = (uint8_t*) hsv_img.bits();
 
     float ctorad = (float)(2.0 * M_PI / 256.0);
-    uint32_t const msb = uint32_t(1) << 31;
 
     for (unsigned int y = 0; y < h; y++)
     {
@@ -958,8 +957,146 @@ QImage imageHSVcylinder(QImage const& image)
             rowh[x] = qRgb(r, g, b);
         }
     }
-    
+
     return hsv_img;
+}
+
+float pixelDistance(
+    float const h0, float const s0, float const v0,
+    float const h1, float const s1, float const v1)
+{
+    float const delta_h = h0 - h1;
+    float const delta_s = s0 - s1;
+    float const delta_v = v0 - v1;
+    float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
+
+    return dist;
+}
+
+void paletteHSVcylinderGenerate(
+    double* mean_h0, double* mean_s0, double* mean_v0, int const ncount)
+{
+    if (ncount > 0)
+    {
+        float ctorad = (float)(2.0 * M_PI / 256.0);
+        float const fk = 256.0f / (float) ncount;
+
+        for (int i = 1; i <= ncount; i++)
+        {
+            float const hsv_h = ((float) i - 0.5f) * fk;
+            mean_h0[i] = 128.0 * (1.0 + cos(hsv_h * ctorad));
+            mean_s0[i] = 128.0 * (1.0 + sin(hsv_h * ctorad));
+            mean_v0[i] = 255.0;
+        }
+    }
+}
+
+void paletteHSVcylinderToHSV(double* mean_h, double* mean_s, int const ncount)
+{
+    if (ncount > 0)
+    {
+        float ctorad = (float)(2.0 * M_PI / 256.0);
+
+        for (int k = 0; k <= ncount; k++)
+        {
+            float const hsv_hsc = (mean_h[k] - 128.0f) * 2.0f;
+            float const hsv_hss = (mean_s[k] - 128.0f) * 2.0f;
+            float hsv_h = atan2(hsv_hss, hsv_hsc) / ctorad;
+            hsv_h = (hsv_h < 0.0f) ? (hsv_h + 256.0f) : hsv_h;
+            float const hsv_s = sqrt(hsv_hsc * hsv_hsc + hsv_hss * hsv_hss);
+            mean_h[k] = hsv_h;
+            mean_s[k] = hsv_s;
+        }
+    }
+}
+
+void paletteHSVnorm(
+    double* mean_h, double* mean_s, double* mean_v,
+    float const coef_sat, float const coef_norm, int const ncount)
+{
+    if (ncount > 0)
+    {
+        float min_sat = 512.0f;
+        float max_sat = 0.0f;
+        float min_vol = 512.0f;
+        float max_vol = 0.0f;
+        for (int k = 0; k <= ncount; k++)
+        {
+            min_sat = (mean_s[k] < min_sat) ? mean_s[k] : min_sat;
+            max_sat = (mean_s[k] > max_sat) ? mean_s[k] : max_sat;
+            min_vol = (mean_v[k] < min_vol) ? mean_v[k] : min_vol;
+            max_vol = (mean_v[k] > max_vol) ? mean_v[k] : max_vol;
+        }
+        float d_sat = max_sat - min_sat;
+        float d_vol = max_vol - min_vol;
+        for (int k = 0; k <= ncount; k++)
+        {
+            double sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0f / d_sat) : 255.0f;
+            sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
+            double vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0f / d_vol) : 0.0f;
+            vol_new = vol_new * coef_norm + mean_v[k] * (1.0f - coef_norm);
+            mean_s[k] = sat_new;
+            mean_v[k] = vol_new;
+        }
+    }
+}
+
+void paletteHSVtoRGB(
+    double* mean_h, double* mean_s, double* mean_v, int const ncount)
+{
+    if (ncount > 0)
+    {
+        for (int k = 0; k <= ncount; k++)
+        {
+            int r, g, b;
+            float const hsv_h = mean_h[k];
+            float const hsv_s = mean_s[k];
+            float const hsv_v = mean_v[k];
+            r = g = b = (int) (hsv_v + 0.5f);
+            int const i = (int) (hsv_h * 6.0f / 256.0f) % 6;
+            int const vm = (int) ((256.0f - hsv_s) * hsv_v + 127)/ 256;
+            int const va = (int) ((hsv_v - vm) * (6.0f * hsv_h - i * 256.0f) + 127)/ 256;
+            int const vi = vm + va;
+            int const vd = hsv_v - va;
+            if (hsv_s > 0.0f)
+            {
+                switch (i)
+                {
+                default:
+                case 0:
+                    g = vi;
+                    b = vm;
+                    break;
+                case 1:
+                    r = vd;
+                    b = vm;
+                    break;
+                case 2:
+                    r = vm;
+                    b = vi;
+                    break;
+                case 3:
+                    r = vm;
+                    g = vd;
+                    break;
+                case 4:
+                    r = vi;
+                    g = vm;
+                    break;
+                case 5:
+                    g = vm;
+                    b = vd;
+                    break;
+                }
+            }
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
+            mean_h[k] = r;
+            mean_s[k] = g;
+            mean_v[k] = b;
+        }
+    }
 }
 
 void hsvKMeansInPlace(
@@ -1002,7 +1139,6 @@ void hsvKMeansInPlace(
         double mean_s[256] = {0.0};
         double mean_v[256] = {0.0};
 
-        float ctorad = (float)(2.0 * M_PI / 256.0);
         uint32_t const msb = uint32_t(1) << 31;
 
         for (unsigned int y = 0; y < h; y++)
@@ -1036,16 +1172,12 @@ void hsvKMeansInPlace(
         uint8_t* clusters_line = clusters.data();
         int const clusters_bpl = clusters.stride();
 
-        float const fk = (ncount > 0) ? (256.0f / (float) ncount) : 0.0f;
+        paletteHSVcylinderGenerate(mean_h0, mean_s0, mean_v0, ncount);
+
         for (int i = 1; i <= ncount; i++)
         {
-            float const hsv_h = ((float) i - 0.5f) * fk;
-            mean_h0[i] = 128.0 * (1.0 + cos(hsv_h * ctorad));
-            mean_s0[i] = 128.0 * (1.0 + sin(hsv_h * ctorad));
-            mean_v0[i] = 255.0;
-
             mask_line = mask.data();
-            float dist_min = 196608.0f;
+            float dist_min = -1.0f;
             for (unsigned int y = 0; y < h; y++)
             {
                 QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
@@ -1056,11 +1188,8 @@ void hsvKMeansInPlace(
                         float const hsv_h = qRed(rowh[x]);
                         float const hsv_s = qGreen(rowh[x]);
                         float const hsv_v = qBlue(rowh[x]);
-                        float const delta_h = hsv_h - mean_h0[i];
-                        float const delta_s = hsv_s - mean_s0[i];
-                        float const delta_v = hsv_v - mean_v0[i];
-                        float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
-                        if (dist < dist_min)
+                        float const dist = pixelDistance(hsv_h, hsv_s, hsv_v, mean_h0[i], mean_s0[i], mean_v0[i]);
+                        if ((dist_min < 0.0f) || (dist < dist_min))
                         {
                             mean_h[i] = hsv_h;
                             mean_s[i] = hsv_s;
@@ -1087,15 +1216,12 @@ void hsvKMeansInPlace(
                     float const hsv_h = qRed(rowh[x]);
                     float const hsv_s = qGreen(rowh[x]);
                     float const hsv_v = qBlue(rowh[x]);
-                    float dist_min = 196608.0f;
+                    float dist_min = -1.0f;
                     int indx_min = 0;
                     for (int k = 1; k <= ncount; k++)
                     {
-                        float const delta_h = hsv_h - mean_h[k];
-                        float const delta_s = hsv_s - mean_s[k];
-                        float const delta_v = hsv_v - mean_v[k];
-                        float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
-                        if (dist < dist_min)
+                        float const dist = pixelDistance(hsv_h, hsv_s, hsv_v, mean_h[k], mean_s[k], mean_v[k]);
+                        if ((dist_min < 0.0f) || (dist < dist_min))
                         {
                             indx_min = k;
                             dist_min = dist;
@@ -1152,15 +1278,12 @@ void hsvKMeansInPlace(
                 }
                 else
                 {
-                    float const hsv_hmc = mean_h0[i];
-                    float const hsv_hms = mean_s0[i];
-                    float const hsv_vv = mean_v0[i];
-                    mean_h[i] = hsv_hmc;
-                    mean_s[i] = hsv_hms;
-                    mean_v[i] = hsv_vv;
+                    mean_h[i] = mean_h0[i];
+                    mean_s[i] = mean_s0[i];
+                    mean_v[i] = mean_v0[i];
 
                     mask_line = mask.data();
-                    float dist_min = 196608.0f;
+                    float dist_min = -1.0f;
                     for (unsigned int y = 0; y < h; y++)
                     {
                         QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
@@ -1171,11 +1294,8 @@ void hsvKMeansInPlace(
                                 float const hsv_h = qRed(rowh[x]);
                                 float const hsv_s = qGreen(rowh[x]);
                                 float const hsv_v = qBlue(rowh[x]);
-                                float const delta_h = hsv_h - hsv_hmc;
-                                float const delta_s = hsv_s - hsv_hms;
-                                float const delta_v = hsv_v - hsv_vv;
-                                float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
-                                if (dist < dist_min)
+                                float const dist = pixelDistance(hsv_h, hsv_s, hsv_v, mean_h0[i], mean_s0[i], mean_v0[i]);
+                                if ((dist_min < 0.0f) || (dist < dist_min))
                                 {
                                     mean_h[i] = hsv_h;
                                     mean_s[i] = hsv_s;
@@ -1203,15 +1323,12 @@ void hsvKMeansInPlace(
                         float const hsv_h = qRed(rowh[x]);
                         float const hsv_s = qGreen(rowh[x]);
                         float const hsv_v = qBlue(rowh[x]);
-                        float dist_min = 196608.0f;
+                        float dist_min = -1.0f;
                         int indx_min = 0;
                         for (int k = 1; k <= ncount; k++)
                         {
-                            float const delta_h = hsv_h - mean_h[k];
-                            float const delta_s = hsv_s - mean_s[k];
-                            float const delta_v = hsv_v - mean_v[k];
-                            float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
-                            if (dist < dist_min)
+                            float const dist = pixelDistance(hsv_h, hsv_s, hsv_v, mean_h[k], mean_s[k], mean_v[k]);
+                            if ((dist_min < 0.0f) || (dist < dist_min))
                             {
                                 indx_min = k;
                                 dist_min = dist;
@@ -1234,89 +1351,12 @@ void hsvKMeansInPlace(
             }
         }
 
-        for (int k = 0; k <= ncount; k++)
-        {
-            float const hsv_hsc = (mean_h[k] - 128.0f) * 2.0f;
-            float const hsv_hss = (mean_s[k] - 128.0f) * 2.0f;
-            float const hsv_v = mean_v[k];
-            float hsv_h = atan2(hsv_hss, hsv_hsc) / ctorad;
-            hsv_h = (hsv_h < 0.0f) ? (hsv_h + 256.0f) : hsv_h;
-            float const hsv_s = sqrt(hsv_hsc * hsv_hsc + hsv_hss * hsv_hss);
-            mean_h[k] = hsv_h;
-            mean_s[k] = hsv_s;
-        }
-        float min_sat = 512.0f;
-        float max_sat = 0.0f;
-        float min_vol = 512.0f;
-        float max_vol = 0.0f;
-        for (int k = 0; k <= ncount; k++)
-        {
-            min_sat = (mean_s[k] < min_sat) ? mean_s[k] : min_sat;
-            max_sat = (mean_s[k] > max_sat) ? mean_s[k] : max_sat;
-            min_vol = (mean_v[k] < min_vol) ? mean_v[k] : min_vol;
-            max_vol = (mean_v[k] > max_vol) ? mean_v[k] : max_vol;
-        }
-        float d_sat = max_sat - min_sat;
-        float d_vol = max_vol - min_vol;
-        for (int k = 0; k <= ncount; k++)
-        {
-            double sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0f / d_sat) : 255.0f;
-            sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
-            double vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0f / d_vol) : 0.0f;
-            vol_new = vol_new * coef_norm + mean_v[k] * (1.0f - coef_norm);
-            mean_s[k] = sat_new;
-            mean_v[k] = vol_new;
-        }
-        for (int k = 0; k <= ncount; k++)
-        {
-            int r, g, b;
-            float const hsv_h = mean_h[k];
-            float const hsv_s = mean_s[k];
-            float const hsv_v = mean_v[k];
-            r = g = b = (int) (hsv_v + 0.5f);
-            int const i = (int) (hsv_h * 6.0f / 256.0f) % 6;
-            int const vm = (int) ((256.0f - hsv_s) * hsv_v + 127)/ 256;
-            int const va = (int) ((hsv_v - vm) * (6.0f * hsv_h - i * 256.0f) + 127)/ 256;
-            int const vi = vm + va;
-            int const vd = hsv_v - va;
-            if (hsv_s > 0.0f)
-            {
-                switch (i)
-                {
-                default:
-                case 0:
-                    g = vi;
-                    b = vm;
-                    break;
-                case 1:
-                    r = vd;
-                    b = vm;
-                    break;
-                case 2:
-                    r = vm;
-                    b = vi;
-                    break;
-                case 3:
-                    r = vm;
-                    g = vd;
-                    break;
-                case 4:
-                    r = vi;
-                    g = vm;
-                    break;
-                case 5:
-                    g = vm;
-                    b = vd;
-                    break;
-                }
-            }
-            r = (r < 0) ? 0 : (r < 255) ? r : 255;
-            g = (g < 0) ? 0 : (g < 255) ? g : 255;
-            b = (b < 0) ? 0 : (b < 255) ? b : 255;
-            mean_h[k] = r;
-            mean_s[k] = g;
-            mean_v[k] = b;
-        }
+        paletteHSVcylinderToHSV(mean_h, mean_s, ncount);
+
+        paletteHSVnorm(mean_h, mean_s, mean_v, coef_sat, coef_norm, ncount);
+
+        paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+
         mean_h[0] *= coef_bg;
         mean_s[0] *= coef_bg;
         mean_v[0] *= coef_bg;
