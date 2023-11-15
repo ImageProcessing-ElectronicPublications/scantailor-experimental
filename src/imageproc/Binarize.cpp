@@ -319,6 +319,71 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     return bw_img;
 }  // binarizeMean
 
+GrayImage binarizeDotsMap (GrayImage const& src, int const delta)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+
+    int y, x, yb, xb, k, wwidth = 8;
+    int threshold, part;
+    // Dots dither matrix
+    int ddith[64] = {13,  9,  5, 12, 18, 22, 26, 19,  6,  1,  0,  8, 25, 30, 31, 23, 10,  2,  3,  4, 21, 29, 28, 27, 14,  7, 11, 15, 17, 24, 20, 16, 18, 22, 26, 19, 13,  9,  5, 12, 25, 30, 31, 23,  6,  1,  0,  8, 21, 29, 28, 27, 10,  2,  3,  4, 17, 24, 20, 16, 14,  7, 11, 15};
+    int thres[32];
+
+    for (k = 0; k < 32; k++)
+    {
+        part = k * 8 + delta - 128;
+        part = (part < -128) ? -128 : (part < 128) ? part : 128;
+        thres[k] = binarizeBiModalValue(src, part);
+        thres[k] = (thres[k] < 1) ? 1 : ((thres[k] < 255) ? thres[k] : 255);
+    }
+
+    k = 0;
+    for (y = 0; y < wwidth; y++)
+    {
+        for (x = 0; x < wwidth; x++)
+        {
+            ddith[k] = thres[ddith[k]];
+            k++;
+        }
+    }
+
+    for (y = 0; y < h; ++y)
+    {
+        yb = y % wwidth;
+        for (x = 0; x < w; ++x)
+        {
+            xb = x % wwidth;
+            threshold = ddith[yb * wwidth + xb];
+            gray_line[x] = (uint8_t) threshold;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+}
+
+BinaryImage binarizeDots(GrayImage const& src, int const delta)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(binarizeDotsMap(src, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, 0));
+
+    return bw_img;
+}  // binarizeDots
+
 GrayImage binarizeNiblackMap(
     GrayImage const& src, QSize const window_size, double const k)
 {
@@ -361,7 +426,6 @@ GrayImage binarizeNiblackMap(
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
 
-    src_line = src.data();
     for (int y = 0; y < h; ++y)
     {
         int const top = std::max(0, y - window_lower_half);
@@ -390,7 +454,6 @@ GrayImage binarizeNiblackMap(
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_stride;
         gray_line += gray_stride;
     }
 
@@ -619,7 +682,6 @@ GrayImage binarizeSauvolaMap(
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
 
-    src_line = src.data();
     for (int y = 0; y < h; ++y)
     {
         int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
@@ -648,7 +710,6 @@ GrayImage binarizeSauvolaMap(
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_stride;
         gray_line += gray_stride;
     }
 
@@ -754,7 +815,6 @@ GrayImage binarizeWolfMap(
         }
     }
 
-    src_line = src.data();
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
@@ -767,7 +827,6 @@ GrayImage binarizeWolfMap(
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_stride;
         gray_line += gray_stride;
     }
 
@@ -834,7 +893,6 @@ GrayImage binarizeBradleyMap(
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
 
-    src_line = src.data();
     for (int y = 0; y < h; ++y)
     {
         int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
@@ -857,7 +915,6 @@ GrayImage binarizeBradleyMap(
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
-        src_line += src_stride;
         gray_line += gray_stride;
     }
 

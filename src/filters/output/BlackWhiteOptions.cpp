@@ -175,6 +175,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return MEANDELTA;
     }
+    else if (str == "dots8")
+    {
+        return DOTS8;
+    }
     else if (str == "niblack")
     {
         return NIBLACK;
@@ -228,6 +232,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case MEANDELTA:
         str = "mean";
+        break;
+    case DOTS8:
+        str = "dots8";
         break;
     case NIBLACK:
         str = "niblack";

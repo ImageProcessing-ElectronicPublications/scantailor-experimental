@@ -75,7 +75,12 @@ IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
  * \see Help -> About -> References -> [7]
  */
 IMAGEPROC_EXPORT BinaryImage binarizeMean(
-    GrayImage const& src, int const delta = 0);
+    GrayImage const& src, int delta = 0);
+
+IMAGEPROC_EXPORT GrayImage binarizeDotsMap (
+    GrayImage const& src, int delta = 0);
+IMAGEPROC_EXPORT BinaryImage binarizeDots(
+    GrayImage const& src, int delta = 0);
 
 /**
   * \brief Image binarization using Niblack's local thresholding method.

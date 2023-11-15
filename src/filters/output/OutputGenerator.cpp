@@ -1114,6 +1114,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeMean(gray, threshold_delta);
             break;
         }
+        case DOTS8:
+        {
+            binarized = binarizeDots(gray, threshold_delta);
+            break;
+        }
         case NIBLACK:
         {
             binarized = binarizeNiblack(gray, window_size, threshold_coef, threshold_delta);

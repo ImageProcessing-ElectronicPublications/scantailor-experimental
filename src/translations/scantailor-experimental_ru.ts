@@ -1424,7 +1424,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="863"/>
         <source>K-means:</source>
-        <translation>К-средних</translation>
+        <translation>К-средних:</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="870"/>
@@ -2617,7 +2617,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../filters/output/OptionsWidget.cpp" line="1077"/>
         <source>This page: %1 x %2 px</source>
-        <translation>Эта страница:</translation>
+        <translation>Эта страница: %1 x %2 px</translation>
     </message>
     <message>
         <source>Apply Depth Perception</source>
