@@ -154,15 +154,15 @@ void wienerColorFilterInPlace(
         int const w = image.width();
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
         GrayImage wiener(wienerFilter(gray, window_size, 255.0f * coef));
         uint8_t* wiener_line = wiener.data();
-        int const wiener_bpl = wiener.stride();
+        int const wiener_stride = wiener.stride();
 
         for (int y = 0; y < h; ++y)
         {
@@ -183,9 +183,9 @@ void wienerColorFilterInPlace(
                     image_line[indx] = (uint8_t) val;
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
-            wiener_line += wiener_bpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
+            wiener_line += wiener_stride;
         }
     }
 }
@@ -216,12 +216,12 @@ void knnDenoiserFilterInPlace(
         int const w = image.width();
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         IntegralImage<uint32_t> integral_image(w, h);
 
@@ -233,7 +233,7 @@ void knnDenoiserFilterInPlace(
                 uint32_t const pixel = gray_line[x];
                 integral_image.push(pixel);
             }
-            gray_line += gray_bpl;
+            gray_line += gray_stride;
         }
 
         int const noise_area = ((2 * radius + 1) * (2 * radius + 1));
@@ -296,8 +296,8 @@ void knnDenoiserFilterInPlace(
                     image_line[indx] = (uint8_t) val;
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
         }
     }
 }
@@ -323,16 +323,16 @@ void colorDespeckleFilterInPlace(
         int const w = image.width();
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         GrayImage temp = GrayImage(image);
         uint8_t* temp_line = temp.data();
-        int const temp_bpl = temp.stride();
+        int const temp_stride = temp.stride();
 
         for (int j = 0; j < radius; j++)
         {
@@ -340,8 +340,8 @@ void colorDespeckleFilterInPlace(
             temp_line = temp.data();
             for (int y = 0; y < h; y++)
             {
-                uint8_t* gray_line1 = (y > 0) ? (gray_line - gray_bpl) : gray_line;
-                uint8_t* gray_line2 = (y < (h - 1)) ? (gray_line + gray_bpl) : gray_line;
+                uint8_t* gray_line1 = (y > 0) ? (gray_line - gray_stride) : gray_line;
+                uint8_t* gray_line2 = (y < (h - 1)) ? (gray_line + gray_stride) : gray_line;
                 for (int x = 0; x < w; x++)
                 {
                     int x1 = (x > 0) ? (x - 1) : x;
@@ -383,8 +383,8 @@ void colorDespeckleFilterInPlace(
                     temp_line[x] = pR;
 
                 }
-                gray_line += gray_bpl;
-                temp_line += temp_bpl;
+                gray_line += gray_stride;
+                temp_line += temp_stride;
             }
             gray_line = gray.data();
             temp_line = temp.data();
@@ -394,8 +394,8 @@ void colorDespeckleFilterInPlace(
                 {
                     gray_line[x] = temp_line[x];
                 }
-                gray_line += gray_bpl;
-                temp_line += temp_bpl;
+                gray_line += gray_stride;
+                temp_line += temp_stride;
             }
         }
         temp = GrayImage(image);
@@ -418,9 +418,9 @@ void colorDespeckleFilterInPlace(
                     image_line[indx] = (uint8_t) val;
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
-            temp_line += temp_bpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
+            temp_line += temp_stride;
         }
     }
 }
@@ -446,12 +446,12 @@ void blurFilterInPlace(
         int const w = image.width();
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         IntegralImage<uint32_t> integral_image(w, h);
 
@@ -463,7 +463,7 @@ void blurFilterInPlace(
                 uint32_t const pixel = gray_line[x];
                 integral_image.push(pixel);
             }
-            gray_line += gray_bpl;
+            gray_line += gray_stride;
         }
 
         int const window_lower_half = window_size.height() >> 1;
@@ -501,8 +501,8 @@ void blurFilterInPlace(
                     image_line[indx] = (uint8_t) val;
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
         }
     }
 }
@@ -532,12 +532,12 @@ void screenFilterInPlace(
         int const w = image.width();
         int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         IntegralImage<uint32_t> integral_image(w, h);
 
@@ -549,7 +549,7 @@ void screenFilterInPlace(
                 uint32_t const pixel = gray_line[x];
                 integral_image.push(pixel);
             }
-            gray_line += gray_bpl;
+            gray_line += gray_stride;
         }
 
         int const window_lower_half = window_size.height() >> 1;
@@ -579,7 +579,7 @@ void screenFilterInPlace(
                 unsigned int indx = (unsigned int) (mean + 0.5f);
                 histogram[indx]++;
             }
-            gray_line += gray_bpl;
+            gray_line += gray_stride;
         }
 
         for (unsigned int i = 1; i < 256; i++)
@@ -617,8 +617,8 @@ void screenFilterInPlace(
                     image_line[indx] = (uint8_t) val;
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
         }
     }
 }
@@ -645,7 +645,7 @@ void colorCurveFilterInPlace(
         unsigned int const w = image.width();
         unsigned int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
+        int const image_stride = image.bytesPerLine();
         uint8_t pix_replace[256];
 
         int thres = BinaryThreshold::otsuThreshold(image);
@@ -666,7 +666,7 @@ void colorCurveFilterInPlace(
             pix_replace[j] = (uint8_t) val;
         }
 
-        for (unsigned long int i = 0; i < (h * image_bpl); i++)
+        for (unsigned long int i = 0; i < (h * image_stride); i++)
         {
             uint8_t val = image_line[i];
             image_line[i] = pix_replace[val];
@@ -696,7 +696,7 @@ void colorSqrFilterInPlace(
         unsigned int const w = image.width();
         unsigned int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
+        int const image_stride = image.bytesPerLine();
         uint8_t pix_replace[256];
 
         for (unsigned int j = 0; j < 256; j++)
@@ -713,7 +713,7 @@ void colorSqrFilterInPlace(
             pix_replace[j] = (uint8_t) val;
         }
 
-        for (unsigned long int i = 0; i < (h * image_bpl); i++)
+        for (unsigned long int i = 0; i < (h * image_stride); i++)
         {
             uint8_t val = image_line[i];
             image_line[i] = pix_replace[val];
@@ -746,10 +746,10 @@ void coloredSignificanceFilterInPlace(
     unsigned int const wg = gray.width();
     unsigned int const hg = gray.height();
     uint8_t const* image_line = (uint8_t const*) image.bits();
-    int const image_bpl = image.bytesPerLine();
-    unsigned int const cnum = image_bpl / w;
+    int const image_stride = image.bytesPerLine();
+    unsigned int const cnum = image_stride / w;
     uint8_t* gray_line = gray.data();
-    int const gray_bpl = gray.stride();
+    int const gray_stride = gray.stride();
 
     if ((coef != 0.0f) && (w == wg) && (h == hg))
     {
@@ -774,7 +774,7 @@ void coloredSignificanceFilterInPlace(
                 val = (val < 0) ? 0 : (val < 255) ? val : 255;
                 gray_line[x] = (uint8_t) val;
             }
-            gray_line += gray_bpl;
+            gray_line += gray_stride;
         }
     }
     else
@@ -785,7 +785,7 @@ void coloredSignificanceFilterInPlace(
             {
                 gray_line[x] = (uint8_t) 255;
             }
-            gray_line += gray_bpl;
+            gray_line += gray_stride;
         }
     }
 }
@@ -814,10 +814,10 @@ void coloredDimmingFilterInPlace(
     if ((w == wg) && (h == hg))
     {
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
         uint8_t const* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         for (unsigned int y = 0; y < h; ++y)
         {
@@ -836,8 +836,8 @@ void coloredDimmingFilterInPlace(
                     image_line[indx] = (uint8_t) val;
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
         }
     }
 }
@@ -860,12 +860,12 @@ void coloredMaskInPlace(
     if ((w == wc) && (h == hc) && (w == wm) && (h == hm))
     {
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
         uint32_t const* content_line = content.data();
-        int const content_wpl = content.wordsPerLine();
+        int const content_stride = content.wordsPerLine();
         uint32_t const* mask_line = mask.data();
-        int const mask_wpl = mask.wordsPerLine();
+        int const mask_stride = mask.wordsPerLine();
 
         uint32_t const msb = uint32_t(1) << 31;
         for (unsigned int y = 0; y < h; ++y)
@@ -884,9 +884,9 @@ void coloredMaskInPlace(
                     }
                 }
             }
-            image_line += image_bpl;
-            content_line += content_wpl;
-            mask_line += mask_wpl;
+            image_line += image_stride;
+            content_line += content_stride;
+            mask_line += mask_stride;
         }
     }
 }
@@ -1122,7 +1122,7 @@ void hsvKMeansInPlace(
         }
 
         uint32_t const* mask_line = mask.data();
-        int const mask_wpl = mask.wordsPerLine();
+        int const mask_stride = mask.wordsPerLine();
 
         QImage hsv_img = imageHSVcylinder(image);
 
@@ -1157,7 +1157,7 @@ void hsvKMeansInPlace(
                     mean_len[0]++;
                 }
             }
-            mask_line += mask_wpl;
+            mask_line += mask_stride;
         }
 
         if (mean_len[0] > 0)
@@ -1170,7 +1170,7 @@ void hsvKMeansInPlace(
 
         GrayImage clusters(image);
         uint8_t* clusters_line = clusters.data();
-        int const clusters_bpl = clusters.stride();
+        int const clusters_stride = clusters.stride();
 
         paletteHSVcylinderGenerate(mean_h0, mean_s0, mean_v0, ncount);
 
@@ -1198,7 +1198,7 @@ void hsvKMeansInPlace(
                         }
                     }
                 }
-                mask_line += mask_wpl;
+                mask_line += mask_stride;
             }
             mean_h0[i] = mean_h[i];
             mean_s0[i] = mean_s[i];
@@ -1230,8 +1230,8 @@ void hsvKMeansInPlace(
                     clusters_line[x] = indx_min;
                 }
             }
-            mask_line += mask_wpl;
-            clusters_line += clusters_bpl;
+            mask_line += mask_stride;
+            clusters_line += clusters_stride;
         }
 
         for (unsigned int itr = 0; itr < 50; itr++)
@@ -1263,8 +1263,8 @@ void hsvKMeansInPlace(
                         mean_len[cluster]++;
                     }
                 }
-                mask_line += mask_wpl;
-                clusters_line += clusters_bpl;
+                mask_line += mask_stride;
+                clusters_line += clusters_stride;
             }
             unsigned long changes = 0;
             for (int i = 1; i <= ncount; i++)
@@ -1304,7 +1304,7 @@ void hsvKMeansInPlace(
                                 }
                             }
                         }
-                        mask_line += mask_wpl;
+                        mask_line += mask_stride;
                     }
                     mean_len[i] = 1;
                     changes++;
@@ -1341,8 +1341,8 @@ void hsvKMeansInPlace(
                         }
                     }
                 }
-                mask_line += mask_wpl;
-                clusters_line += clusters_bpl;
+                mask_line += mask_stride;
+                clusters_line += clusters_stride;
             }
 
             if (changes == 0)
@@ -1394,8 +1394,8 @@ void hsvKMeansInPlace(
                 }
                 rowh[x] = qRgb(r, g, b);
             }
-            mask_line += mask_wpl;
-            clusters_line += clusters_bpl;
+            mask_line += mask_stride;
+            clusters_line += clusters_stride;
         }
 
         dst = hsv_img;
@@ -1425,13 +1425,13 @@ void maskMorphologicalErode(
     {
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
         uint32_t const* mask_line = mask.data();
-        int const mask_wpl = mask.wordsPerLine();
+        int const mask_stride = mask.wordsPerLine();
         uint32_t const msb = uint32_t(1) << 31;
 
         for (int y = 0; y < h; ++y)
@@ -1446,11 +1446,11 @@ void maskMorphologicalErode(
                         if ((yf >= 0) && (yf < h))
                         {
                             uint32_t const* mask_line_f = mask.data();
-                            mask_line_f += (mask_wpl * yf);
+                            mask_line_f += (mask_stride * yf);
                             uint8_t* gray_line_f = gray.data();
-                            gray_line_f += (gray_bpl * yf);
+                            gray_line_f += (gray_stride * yf);
                             uint8_t* image_line_f = (uint8_t*) image.bits();
-                            image_line_f += (image_bpl * yf);
+                            image_line_f += (image_stride * yf);
                             for (int xf = (x - radius); xf <= (x + radius); xf++)
                             {
                                 if ((xf >= 0) && (xf < w))
@@ -1473,9 +1473,9 @@ void maskMorphologicalErode(
                     }
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
-            mask_line += mask_wpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
+            mask_line += mask_stride;
         }
     }
 }
@@ -1503,13 +1503,13 @@ void maskMorphologicalDilate(
     {
         GrayImage gray = GrayImage(image);
         uint8_t* gray_line = gray.data();
-        int const gray_bpl = gray.stride();
+        int const gray_stride = gray.stride();
 
         uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_bpl = image.bytesPerLine();
-        unsigned int const cnum = image_bpl / w;
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
         uint32_t const* mask_line = mask.data();
-        int const mask_wpl = mask.wordsPerLine();
+        int const mask_stride = mask.wordsPerLine();
         uint32_t const msb = uint32_t(1) << 31;
 
         for (int y = 0; y < h; ++y)
@@ -1524,11 +1524,11 @@ void maskMorphologicalDilate(
                         if ((yf >= 0) && (yf < h))
                         {
                             uint32_t const* mask_line_f = mask.data();
-                            mask_line_f += (mask_wpl * yf);
+                            mask_line_f += (mask_stride * yf);
                             uint8_t* gray_line_f = gray.data();
-                            gray_line_f += (gray_bpl * yf);
+                            gray_line_f += (gray_stride * yf);
                             uint8_t* image_line_f = (uint8_t*) image.bits();
-                            image_line_f += (image_bpl * yf);
+                            image_line_f += (image_stride * yf);
                             for (int xf = (x - radius); xf <= (x + radius); xf++)
                             {
                                 if ((xf >= 0) && (xf < w))
@@ -1551,9 +1551,9 @@ void maskMorphologicalDilate(
                     }
                 }
             }
-            image_line += image_bpl;
-            gray_line += gray_bpl;
-            mask_line += mask_wpl;
+            image_line += image_stride;
+            gray_line += gray_stride;
+            mask_line += mask_stride;
         }
     }
 }

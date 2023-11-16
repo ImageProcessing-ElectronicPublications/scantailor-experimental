@@ -38,6 +38,14 @@
 namespace imageproc
 {
 
+static inline bool binaryGetBW(uint32_t* bw_line, unsigned int x)
+{
+    static uint32_t const msb = uint32_t(1) << 31;
+    uint32_t const mask = msb >> (x & 31);
+
+    return (bw_line[x >> 5] & mask);
+}
+
 static inline void binarySetBW(uint32_t* bw_line, unsigned int x, bool black)
 {
     static uint32_t const msb = uint32_t(1) << 31;
@@ -81,11 +89,11 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
     unsigned int const w = src.width();
     unsigned int const h = src.height();
     uint8_t const* src_line = src.data();
-    unsigned int const src_bpl = src.stride();
+    unsigned int const src_stride = src.stride();
 
     BinaryImage bw_img(w, h);
     uint32_t* bw_line = bw_img.data();
-    unsigned int const bw_wpl = bw_img.wordsPerLine();
+    unsigned int const bw_stride = bw_img.wordsPerLine();
 
     for (unsigned int y = 0; y < h; ++y)
     {
@@ -93,8 +101,8 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
         {
             binarySetBW(bw_line, x, (src_line[x] < threshold));
         }
-        src_line += src_bpl;
-        bw_line += bw_wpl;
+        src_line += src_stride;
+        bw_line += bw_stride;
     }
 
     return bw_img;
@@ -119,13 +127,13 @@ BinaryImage binarizeFromMap(GrayImage const& src, GrayImage const& threshold,
     }
 
     uint8_t const* src_line = src.data();
-    unsigned int const src_bpl = src.stride();
+    unsigned int const src_stride = src.stride();
     uint8_t const* threshold_line = threshold.data();
-    unsigned int const threshold_bpl = threshold.stride();
+    unsigned int const threshold_stride = threshold.stride();
 
     BinaryImage bw_img(w, h);
     uint32_t* bw_line = bw_img.data();
-    unsigned int const bw_wpl = bw_img.wordsPerLine();
+    unsigned int const bw_stride = bw_img.wordsPerLine();
 
     for (unsigned int y = 0; y < h; ++y)
     {
@@ -133,9 +141,9 @@ BinaryImage binarizeFromMap(GrayImage const& src, GrayImage const& threshold,
         {
             binarySetBW(bw_line, x, (src_line[x] < lower_bound || (src_line[x] <= upper_bound && ((int) src_line[x] < ((int) threshold_line[x] + delta)))));
         }
-        src_line += src_bpl;
-        threshold_line += threshold_bpl;
-        bw_line += bw_wpl;
+        src_line += src_stride;
+        threshold_line += threshold_stride;
+        bw_line += bw_stride;
     }
 
     return bw_img;
@@ -152,12 +160,13 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
     unsigned int const w = src.width();
     unsigned int const h = src.height();
     uint8_t const* gray_line = src.data();
-    unsigned int const gray_bpl = src.stride();
+    unsigned int const gray_stride = src.stride();
     unsigned int const histsize = 256;
     unsigned long int im, iw, ib, histogram[histsize] = {0};
     unsigned int k, Tn;
     double Tw, Tb;
-    double const part = 0.5 + (double) delta / 256.0;
+    double part = 0.5 + (double) delta / 256.0;
+    part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
     double const partval = part * (double) histsize;
 
     for (unsigned int y = 0; y < h; ++y)
@@ -167,12 +176,7 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
             uint8_t const pixel = gray_line[x];
             histogram[pixel]++;
         }
-        for (unsigned int x = 0; x < w; ++x)
-        {
-            uint8_t const pixel = gray_line[x];
-            histogram[pixel]++;
-        }
-        gray_line += gray_bpl;
+        gray_line += gray_stride;
     }
 
     threshold = (unsigned int) (partval + 0.5);
@@ -227,7 +231,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     unsigned int const w = src.width();
     unsigned int const h = src.height();
     uint8_t const* src_line = src.data();
-    unsigned int const src_bpl = src.stride();
+    unsigned int const src_stride = src.stride();
     unsigned long int count = 0, countb = 0;
     double meanl = 0, mean = 0.0, meanw = 0.0, countw = 0.0;
     double dist, dist_mean = 0, threshold = 128;
@@ -242,7 +246,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
             count++;
         }
         mean += meanl;
-        src_line += src_bpl;
+        src_line += src_stride;
     }
     mean = (count > 0) ? (mean / count) : 128.0;
 
@@ -260,7 +264,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
             countw += dist;
         }
         meanw += meanl;
-        src_line += src_bpl;
+        src_line += src_stride;
     }
     meanw = (countw > 0.0) ? (meanw / countw) : 128.0;
 
@@ -276,7 +280,7 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
             meanl += dist;
         }
         dist_mean += meanl;
-        src_line += src_bpl;
+        src_line += src_stride;
     }
     dist_mean = (count > 0) ? (dist_mean / count) : 64.0 * 64.0;
     threshold = sqrt(dist_mean);
@@ -294,13 +298,13 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
                 countb++;
             }
         }
-        src_line += src_bpl;
+        src_line += src_stride;
     }
     countb += countb;
 
     BinaryImage bw_img(w, h);
     uint32_t* bw_line = bw_img.data();
-    unsigned int const bw_wpl = bw_img.wordsPerLine();
+    unsigned int const bw_stride = bw_img.wordsPerLine();
 
     src_line = src.data();
     threshold *= (count < countb) ? (1.0 - (double) delta * 0.02) : (1.0 + (double) delta * 0.02);
@@ -312,8 +316,8 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             binarySetBW(bw_line, x, ((dist < threshold) ^ (count < countb)));
         }
-        src_line += src_bpl;
-        bw_line += bw_wpl;
+        src_line += src_stride;
+        bw_line += bw_stride;
     }
 
     return bw_img;
@@ -959,7 +963,7 @@ GrayImage binarizeEdgeDivPrefilter(
     int const w = gray.width();
     int const h = gray.height();
     uint8_t* gray_line = gray.data();
-    int const gray_bpl = gray.stride();
+    int const gray_stride = gray.stride();
 
     IntegralImage<uint32_t> integral_image(w, h);
 
@@ -971,7 +975,7 @@ GrayImage binarizeEdgeDivPrefilter(
             uint32_t const pixel = gray_line[x];
             integral_image.push(pixel);
         }
-        gray_line += gray_bpl;
+        gray_line += gray_stride;
     }
 
     int const window_lower_half = window_size.height() >> 1;
@@ -1023,7 +1027,7 @@ GrayImage binarizeEdgeDivPrefilter(
             retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
             gray_line[x] = (int) retval;
         }
-        gray_line += gray_bpl;
+        gray_line += gray_stride;
     }
 
     return gray;
@@ -1066,9 +1070,9 @@ GrayImage binarizeMScaleMap(
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
-    int const src_bpl = src.stride();
+    int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
-    int const gray_bpl = gray.stride();
+    int const gray_stride = gray.stride();
 
     unsigned int whcp, l, i, j, blsz, rsz, radius;
     double immean, kover, sensitivity, sensdiv, senspos, sensinv;
@@ -1109,7 +1113,7 @@ GrayImage binarizeMScaleMap(
                 immax = pim;
             }
         }
-        gray_line += gray_bpl;
+        gray_line += gray_stride;
     }
     immean = (double) (immax + immin);
     immean *= 0.5;
@@ -1123,7 +1127,7 @@ GrayImage binarizeMScaleMap(
         {
             gray_line[x] = tim;
         }
-        gray_line += gray_bpl;
+        gray_line += gray_stride;
     }
 
     kover = 1.5;
@@ -1164,14 +1168,14 @@ GrayImage binarizeMScaleMap(
                 int x1 = x0 + maskover;
                 x1 = (x1 < w) ? x1 : w;
 
-                idx = y0 * src_bpl + x0;
+                idx = y0 * src_stride + x0;
                 immin = src_line[idx];
                 immax = immin;
                 for (int y = y0; y < y1; y++)
                 {
                     for (int x = x0; x < x1; x++)
                     {
-                        idx = y * src_bpl + x;
+                        idx = y * src_stride + x;
                         pim = src_line[idx];
                         if (pim < immin)
                         {
@@ -1190,7 +1194,7 @@ GrayImage binarizeMScaleMap(
                 {
                     for (int x = x0; x < x1; x++)
                     {
-                        idx = y * gray_bpl + x;
+                        idx = y * gray_stride + x;
                         imt = gray_line[idx];
                         imt *= senspos;
                         imt += immean;
