@@ -27,6 +27,7 @@ namespace output
 BlackWhiteOptions::BlackWhiteOptions()
     :   m_thresholdMethod(OTSU),
         m_morphology(true),
+        m_negate(false),
         m_dimmingColoredCoef(0.0),
         m_thresholdAdjustment(0),
         m_thresholdWindowSize(200),
@@ -43,6 +44,7 @@ BlackWhiteOptions::BlackWhiteOptions()
 BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     :   m_thresholdMethod(parseThresholdMethod(el.attribute("thresholdMethod"))),
         m_morphology(el.attribute("morphology") == "1"),
+        m_negate(el.attribute("negate") == "1"),
         m_dimmingColoredCoef(el.attribute("dimmingColoredCoef").toDouble()),
         m_thresholdAdjustment(el.attribute("thresholdAdj").toInt()),
         m_thresholdWindowSize(el.attribute("thresholdWinSize").toInt()),
@@ -94,6 +96,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.setAttribute("thresholdMethod", formatThresholdMethod(m_thresholdMethod));
     el.setAttribute("morphology", m_morphology ? "1" : "0");
+    el.setAttribute("negate", m_negate ? "1" : "0");
     el.setAttribute("dimmingColoredCoef", m_dimmingColoredCoef);
     el.setAttribute("thresholdAdj", m_thresholdAdjustment);
     el.setAttribute("thresholdWinSize", m_thresholdWindowSize);
@@ -115,6 +118,10 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_morphology != other.m_morphology)
+    {
+        return false;
+    }
+    if (m_negate != other.m_negate)
     {
         return false;
     }

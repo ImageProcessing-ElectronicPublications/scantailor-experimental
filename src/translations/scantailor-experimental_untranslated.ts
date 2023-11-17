@@ -1113,6 +1113,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="673"/>
+        <source>Negate threshold.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - w.size, coef.:</source>
         <translation type="unfinished"></translation>

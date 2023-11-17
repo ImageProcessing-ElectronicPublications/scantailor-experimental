@@ -64,6 +64,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeFromMap(
     unsigned char const lower_bound = 0,
     unsigned char const upper_bound = 255,
     int const delta = 0);
+
+IMAGEPROC_EXPORT void binarizeNegate(BinaryImage& src);
+
 IMAGEPROC_EXPORT unsigned int binarizeBiModalValue(
     GrayImage const& src, int delta = 0);
 IMAGEPROC_EXPORT BinaryImage binarizeBiModal(

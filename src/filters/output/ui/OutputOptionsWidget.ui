@@ -664,6 +664,16 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="3">
+            <widget class="QCheckBox" name="negateCB">
+             <property name="text">
+              <string>N</string>
+             </property>
+             <property name="toolTip">
+              <string>Negate threshold.</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>

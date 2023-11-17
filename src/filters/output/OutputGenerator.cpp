@@ -1085,6 +1085,7 @@ OutputGenerator::adjustThreshold(BinaryThreshold threshold) const
 BinaryImage
 OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
 {
+    BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
     BinaryImage binarized;
     if ((image.format() == QImage::Format_Mono) || (image.format() == QImage::Format_MonoLSB))
     {
@@ -1092,10 +1093,9 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
     }
     else
     {
-        BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
         ThresholdFilter const threshold_method = black_white_options.thresholdMethod();
 
-        int const threshold_delta = black_white_options.thresholdAdjustment();
+        int const threshold_delta = (black_white_options.negate()) ? -black_white_options.thresholdAdjustment() : black_white_options.thresholdAdjustment();
         QSize const window_size = QSize(black_white_options.thresholdWindowSize(), black_white_options.thresholdWindowSize());
         double const threshold_coef = black_white_options.thresholdCoef();
 
@@ -1165,6 +1165,10 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             break;
         }
         }
+    }
+    if (black_white_options.negate())
+    {
+        binarizeNegate(binarized);
     }
 
     // Fill masked out areas with white.

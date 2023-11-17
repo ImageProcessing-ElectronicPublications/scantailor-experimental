@@ -149,6 +149,29 @@ BinaryImage binarizeFromMap(GrayImage const& src, GrayImage const& threshold,
     return bw_img;
 }  // binarizeFromMap
 
+void binarizeNegate(BinaryImage& src)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    uint32_t* src_line = src.data();
+    unsigned int const src_stride = src.wordsPerLine();
+
+    for (unsigned int y = 0; y < h; ++y)
+    {
+        for (unsigned int x = 0; x < w; ++x)
+        {
+            binarySetBW(src_line, x, !(binaryGetBW(src_line, x)));
+        }
+        src_line += src_stride;
+    }
+
+}  // binarizeNegate
+
 unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
 {
     unsigned int threshold = 128;
@@ -179,7 +202,16 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
         gray_line += gray_stride;
     }
 
-    threshold = (unsigned int) (partval + 0.5);
+    Tb = 0.0;
+    for (k = 0; k < histsize; k++)
+    {
+        Tb += histogram[k];
+    }
+    Tb /= w;
+    Tb /= h;
+
+    // threshold = (unsigned int) (partval + 0.5);
+    threshold = (unsigned int) (Tb + 0.5);
     Tn = 0;
     while (threshold != Tn)
     {

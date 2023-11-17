@@ -1306,6 +1306,11 @@ Per determinarla, avvia l&apos;elaborazione automatica a &quot; o &quot; Conform
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="673"/>
+        <source>Negate threshold.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - w.size, coef.:</source>
         <translation type="unfinished"></translation>

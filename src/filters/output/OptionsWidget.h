@@ -109,6 +109,8 @@ private slots:
 
     void morphologyToggled(bool checked);
 
+    void negateToggled(bool checked);
+
     void dimmingColoredCoefChanged(double value);
 
     void bwThresholdChanged();

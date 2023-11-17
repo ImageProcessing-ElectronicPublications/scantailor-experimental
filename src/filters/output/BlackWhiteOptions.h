@@ -55,6 +55,15 @@ public:
         m_morphology = val;
     }
 
+    bool negate() const
+    {
+        return m_negate;
+    }
+    void setNegate(bool val)
+    {
+        m_negate = val;
+    }
+
     double dimmingColoredCoef() const
     {
         return m_dimmingColoredCoef;
@@ -151,6 +160,7 @@ public:
 private:
     ThresholdFilter m_thresholdMethod;
     bool m_morphology;
+    bool m_negate;
     double m_dimmingColoredCoef;
     int m_thresholdAdjustment;
     int m_thresholdWindowSize;
