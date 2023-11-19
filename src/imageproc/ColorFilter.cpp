@@ -866,6 +866,8 @@ void coloredMaskInPlace(
         int const content_stride = content.wordsPerLine();
         uint32_t const* mask_line = mask.data();
         int const mask_stride = mask.wordsPerLine();
+        double fgmean[4] = {0};
+        unsigned long int count = 0;
 
         uint32_t const msb = uint32_t(1) << 31;
         for (unsigned int y = 0; y < h; ++y)
@@ -879,14 +881,47 @@ void coloredMaskInPlace(
                         for (unsigned int c = 0; c < cnum; ++c)
                         {
                             unsigned int const indx = x * cnum + c;
-                            image_line[indx] = (uint8_t) 0;
+                            fgmean[c] += image_line[indx];
                         }
+                        count++;
                     }
                 }
             }
             image_line += image_stride;
             content_line += content_stride;
             mask_line += mask_stride;
+        }
+        if (count > 0)
+        {
+            for (unsigned int c = 0; c < cnum; ++c)
+            {
+                fgmean[c] /= count;
+                fgmean[c] += 0.5;
+            }
+
+            image_line = (uint8_t*) image.bits();
+            content_line = content.data();
+            mask_line = mask.data();
+            for (unsigned int y = 0; y < h; ++y)
+            {
+                for (unsigned int x = 0; x < w; ++x)
+                {
+                    if (content_line[x >> 5] & (msb >> (x & 31)))
+                    {
+                        if (!(mask_line[x >> 5] & (msb >> (x & 31))))
+                        {
+                            for (unsigned int c = 0; c < cnum; ++c)
+                            {
+                                unsigned int const indx = x * cnum + c;
+                                image_line[indx] = (uint8_t) fgmean[c];
+                            }
+                        }
+                    }
+                }
+                image_line += image_stride;
+                content_line += content_stride;
+                mask_line += mask_stride;
+            }
         }
     }
 }
