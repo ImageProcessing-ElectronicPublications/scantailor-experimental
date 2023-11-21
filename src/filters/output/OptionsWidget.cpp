@@ -125,6 +125,10 @@ OptionsWidget::OptionsWidget(
     }
     );
     connect(
+        scaleFactor, SIGNAL(valueChanged(double)),
+        this, SLOT(scaleFactorChanged(double))
+    );
+    connect(
         filtersPanelEmpty, SIGNAL(clicked(bool)),
         this, SLOT(filtersPanelToggled(bool))
     );
@@ -383,6 +387,16 @@ OptionsWidget::scaleChanged(double const scale)
     }
 
     m_ptrSettings->setScalingFactor(scale);
+    updateScaleDisplay();
+
+    emit invalidateAllThumbnails();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::scaleFactorChanged(double const value)
+{
+    m_ptrSettings->setScalingFactor(value);
     updateScaleDisplay();
 
     emit invalidateAllThumbnails();
@@ -1085,6 +1099,7 @@ OptionsWidget::updateScaleDisplay()
     {
         scale4xBtn->setChecked(true);
     }
+    scaleFactor->setValue(scale);
 
     if (m_thisPageOutputSize)
     {

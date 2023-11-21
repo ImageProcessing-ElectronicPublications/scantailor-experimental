@@ -61,6 +61,8 @@ public slots:
 private slots:
     void scalingPanelToggled(bool checked);
 
+    void scaleFactorChanged(double value);
+
     void filtersPanelToggled(bool checked);
 
     void wienerCoefChanged(double value);

@@ -1270,6 +1270,16 @@ Aby go ustalić uruchom przetwarzanie wsadowe w sekcji &quot;Wybierz zawartość
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="172"/>
+        <source>Scale factor:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="179"/>
+        <source>Value is 0.5 .. 9.99.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="183"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="196"/>
         <source>Filters</source>
