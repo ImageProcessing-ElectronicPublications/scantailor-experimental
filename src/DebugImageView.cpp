@@ -111,7 +111,7 @@ DebugImageView::factoryReady()
 
     if (m_isLive && currentWidget() == m_pPlaceholderWidget)
     {
-        QWidget *image_view = new QWidget(m_ptrFactory->newInstance().release());
+        QWidget *image_view = m_ptrFactory->newInstance().release();
         setCurrentIndex(addWidget(image_view));
     }
 
