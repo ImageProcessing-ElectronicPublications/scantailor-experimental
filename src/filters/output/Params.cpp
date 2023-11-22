@@ -23,6 +23,7 @@
 #include "Params.h"
 #include "ColorGrayscaleOptions.h"
 #include "BlackWhiteOptions.h"
+#include "BlackKmeansOptions.h"
 #include "XmlMarshaller.h"
 #include "XmlUnmarshaller.h"
 
@@ -48,6 +49,9 @@ Params::Params(QDomElement const& el)
     m_colorParams.setBlackWhiteOptions(
         BlackWhiteOptions(cp.namedItem("bw").toElement())
     );
+    m_colorParams.setBlackKmeansOptions(
+        BlackKmeansOptions(cp.namedItem("kmeans").toElement())
+    );
 }
 
 QDomElement
@@ -71,6 +75,7 @@ Params::toXml(QDomDocument& doc, QString const& name) const
         )
     );
     cp.appendChild(m_colorParams.blackWhiteOptions().toXml(doc, "bw"));
+    cp.appendChild(m_colorParams.blackKmeansOptions().toXml(doc, "kmeans"));
 
     el.appendChild(cp);
 

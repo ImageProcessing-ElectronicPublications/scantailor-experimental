@@ -253,6 +253,18 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdCoefChanged(double))
     );
     connect(
+        applyColorsModeButton, SIGNAL(clicked()),
+        this, SLOT(applyColorsModeButtonClicked())
+    );
+    connect(
+        kmeansPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(kmeansPanelToggled(bool))
+    );
+    connect(
+        kmeansPanel, SIGNAL(clicked(bool)),
+        this, SLOT(kmeansPanelToggled(bool))
+    );
+    connect(
         kmeansCount, SIGNAL(valueChanged(int)),
         this, SLOT(kmeansCountChanged(int))
     );
@@ -277,8 +289,8 @@ OptionsWidget::OptionsWidget(
         this, SLOT(coloredMaskCoefChanged(double))
     );
     connect(
-        applyColorsModeButton, SIGNAL(clicked()),
-        this, SLOT(applyColorsModeButtonClicked())
+        applyKmeansButton, SIGNAL(clicked()),
+        this, SLOT(applyKmeansButtonClicked())
     );
     connect(
         despecklePanelEmpty, SIGNAL(clicked(bool)),
@@ -728,66 +740,6 @@ OptionsWidget::thresholdCoefChanged(double value)
 }
 
 void
-OptionsWidget::kmeansCountChanged(int value)
-{
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setKmeansCount(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::kmeansMorphologyChanged(int value)
-{
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setKmeansMorphology(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::kmeansSatChanged(double value)
-{
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setKmeansSat(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::kmeansNormChanged(double value)
-{
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setKmeansNorm(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::kmeansBGChanged(double value)
-{
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setKmeansBG(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::coloredMaskCoefChanged(double value)
-{
-    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setColoredMaskCoef(value);
-    m_colorParams.setBlackWhiteOptions(black_white_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
 OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -811,6 +763,107 @@ OptionsWidget::applyColorsModeConfirmed(std::set<PageId> const& pages)
 //        m_ptrSettings->setColorParams(page_id, m_colorParams);
         m_ptrSettings->setColorMode(page_id, mode);
         m_ptrSettings->setBlackWhiteOptions(page_id, black_white_options);
+        emit invalidateThumbnail(page_id);
+    }
+
+    if (pages.find(m_pageId) != pages.end())
+    {
+        emit reloadRequested();
+    }
+}
+
+void
+OptionsWidget::kmeansPanelToggled(bool const checked)
+{
+    kmeansPanelEmpty->setVisible(!checked);
+    kmeansPanelEmpty->setChecked(checked);
+    kmeansPanel->setVisible(checked);
+    kmeansPanel->setChecked(checked);
+}
+
+void
+OptionsWidget::kmeansCountChanged(int value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansCount(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansMorphologyChanged(int value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansMorphology(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansSatChanged(double value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansSat(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansNormChanged(double value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansNorm(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansBGChanged(double value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansBG(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::coloredMaskCoefChanged(double value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setColoredMaskCoef(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::applyKmeansButtonClicked()
+{
+    ApplyColorsDialog* dialog = new ApplyColorsDialog(
+        this, m_pageId, m_pageSelectionAccessor
+    );
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(
+        dialog, SIGNAL(accepted(std::set<PageId> const&)),
+        this, SLOT(applyKmeansConfirmed(std::set<PageId> const&))
+    );
+    dialog->show();
+}
+
+void
+OptionsWidget::applyKmeansConfirmed(std::set<PageId> const& pages)
+{
+    ColorParams::ColorMode mode(m_colorParams.colorMode());
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    BOOST_FOREACH(PageId const& page_id, pages)
+    {
+//        m_ptrSettings->setColorParams(page_id, m_colorParams);
+        m_ptrSettings->setBlackKmeansOptions(page_id, black_kmeans_options);
         emit invalidateThumbnail(page_id);
     }
 
@@ -987,11 +1040,10 @@ OptionsWidget::updateColorsDisplay()
     }
 
     bwOptions->setVisible(bw_options_visible);
-    despecklePanelEmpty->setVisible(bw_options_visible);
-    despecklePanel->setVisible(bw_options_visible);
     if (bw_options_visible)
     {
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+        BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
         thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
         morphologyCB->setChecked(black_white_options.morphology());
         negateCB->setChecked(black_white_options.negate());
@@ -1009,14 +1061,15 @@ OptionsWidget::updateColorsDisplay()
             thresholdWindowSize->setEnabled( true );
             thresholdCoef->setEnabled( true );
         }
-        kmeansCount->setValue(black_white_options.kmeansCount());
-        kmeansMorphology->setValue(black_white_options.kmeansMorphology());
-        kmeansSat->setValue(black_white_options.kmeansSat());
-        kmeansNorm->setValue(black_white_options.kmeansNorm());
-        kmeansBG->setValue(black_white_options.kmeansBG());
-        coloredMaskCoef->setValue(black_white_options.coloredMaskCoef());
+        kmeansPanelToggled(kmeansPanelEmpty->isChecked());
+        kmeansCount->setValue(black_kmeans_options.kmeansCount());
+        kmeansMorphology->setValue(black_kmeans_options.kmeansMorphology());
+        kmeansSat->setValue(black_kmeans_options.kmeansSat());
+        kmeansNorm->setValue(black_kmeans_options.kmeansNorm());
+        kmeansBG->setValue(black_kmeans_options.kmeansBG());
+        coloredMaskCoef->setValue(black_kmeans_options.coloredMaskCoef());
         coloredMaskCoef->setEnabled( false );
-        if (black_white_options.kmeansCount() > 0)
+        if (black_kmeans_options.kmeansCount() > 0)
         {
             kmeansMorphology->setEnabled( true );
             kmeansSat->setEnabled( true );
@@ -1068,6 +1121,13 @@ OptionsWidget::updateColorsDisplay()
         despeckleFactor->setValue(m_despeckleFactor);
 
         ScopedIncDec<int> const threshold_guard(m_ignoreThresholdChanges);
+    }
+    else
+    {
+        kmeansPanelEmpty->setVisible(bw_options_visible);
+        kmeansPanel->setVisible(bw_options_visible);
+        despecklePanelEmpty->setVisible(bw_options_visible);
+        despecklePanel->setVisible(bw_options_visible);
     }
 
     colorModeSelector->blockSignals(false);

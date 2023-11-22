@@ -360,6 +360,7 @@ OutputGenerator::process(
 
     ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
     BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
+    BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
     double norm_coef = color_options.normalizeCoef();
 
     // Color filters begin
@@ -448,9 +449,9 @@ OutputGenerator::process(
     }
 
     BinaryImage colored_mask;
-    if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_white_options.coloredMaskCoef() > 0.0))
+    if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_kmeans_options.coloredMaskCoef() > 0.0))
     {
-        colored_mask = binarizeBiModal(coloredSignificance, (0.5 - black_white_options.coloredMaskCoef()) * 256);
+        colored_mask = binarizeBiModal(coloredSignificance, (0.5 - black_kmeans_options.coloredMaskCoef()) * 256);
     }
     else
     {
@@ -637,15 +638,15 @@ OutputGenerator::process(
     // KMeans based HSV
     if (render_params.binaryOutput() || render_params.mixedOutput())
     {
-        if (!m_contentRect.isEmpty() && (black_white_options.kmeansCount() > 0))
+        if (!m_contentRect.isEmpty() && (black_kmeans_options.kmeansCount() > 0))
         {
             coloredMaskInPlace(transformed_image, bw_content, colored_mask);
             hsvKMeansInPlace(dst, transformed_image, bw_content,
-                             black_white_options.kmeansCount(),
-                             black_white_options.kmeansSat(),
-                             black_white_options.kmeansNorm(),
-                             black_white_options.kmeansBG());
-            maskMorphological(dst, bw_content, black_white_options.kmeansMorphology());
+                             black_kmeans_options.kmeansCount(),
+                             black_kmeans_options.kmeansSat(),
+                             black_kmeans_options.kmeansNorm(),
+                             black_kmeans_options.kmeansBG());
+            maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology());
         }
     }
     bw_content.release(); // Save memory.

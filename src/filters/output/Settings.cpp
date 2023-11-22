@@ -200,6 +200,24 @@ Settings::setBlackWhiteOptions(PageId const& page_id, BlackWhiteOptions const& b
 }
 
 void
+Settings::setBlackKmeansOptions(PageId const& page_id, BlackKmeansOptions const& black_kmeans_options)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    PerPageParams::iterator const it(m_perPageParams.lower_bound(page_id));
+    if (it == m_perPageParams.end() || m_perPageParams.key_comp()(page_id, it->first))
+    {
+        Params params;
+        params.setBlackKmeansOptions(black_kmeans_options);
+        m_perPageParams.insert(it, PerPageParams::value_type(page_id, params));
+    }
+    else
+    {
+        it->second.setBlackKmeansOptions(black_kmeans_options);
+    }
+}
+
+void
 Settings::setDespeckleLevel(PageId const& page_id, DespeckleLevel level)
 {
     QMutexLocker const locker(&m_mutex);

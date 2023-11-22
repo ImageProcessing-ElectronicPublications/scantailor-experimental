@@ -1168,35 +1168,41 @@ Pentru determinarea ei rulați comenzile de procesare în bloc - &quot;Selectare
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="863"/>
-        <source>K-means:</source>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="941"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="954"/>
+        <source>K-means</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="870"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="974"/>
+        <source>K (colors):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="981"/>
         <source>Number of K-means colors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="883"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="994"/>
         <source>Morphology of K-means.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="896"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1007"/>
         <source> - sat, norm:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="903"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="919"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="942"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="958"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1014"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1030"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1053"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1069"/>
         <source>Default value is 0.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="935"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1046"/>
         <source> - bg, mask:</source>
         <translation type="unfinished"></translation>
     </message>

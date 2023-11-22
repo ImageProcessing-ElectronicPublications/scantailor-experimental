@@ -892,12 +892,86 @@
            </item>
           </layout>
          </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <spacer name="horizontalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="applyColorsModeButton">
+          <property name="text">
+           <string>Apply To ...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="kmeansPanelEmpty">
+     <property name="text">
+      <string>K-means</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="kmeansPanel">
+     <property name="title">
+      <string>K-means</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_kmeans4">
+      <item>
+       <widget class="QWidget" name="bwOptions" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_kmeans">
          <item>
           <layout class="QGridLayout" name="kmeansOptions">
            <item row="0" column="0">
             <widget class="QLabel" name="kmeansCountLabel">
              <property name="text">
-              <string>K-means:</string>
+              <string>K (colors):</string>
              </property>
             </widget>
            </item>
@@ -1011,9 +1085,9 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout" name="horizontalLayout_kmeans5">
         <item>
-         <spacer name="horizontalSpacer_9">
+         <spacer name="horizontalSpacer_kmeans9">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1026,14 +1100,14 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="applyColorsModeButton">
+         <widget class="QPushButton" name="applyKmeansButton">
           <property name="text">
            <string>Apply To ...</string>
           </property>
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_10">
+         <spacer name="horizontalSpacer_kmeans10">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>

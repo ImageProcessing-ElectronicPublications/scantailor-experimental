@@ -100,60 +100,6 @@ public:
         m_thresholdCoef = val;
     }
 
-    int kmeansCount() const
-    {
-        return m_kmeansCount;
-    }
-    void setKmeansCount(int val)
-    {
-        m_kmeansCount = val;
-    }
-
-    int kmeansMorphology() const
-    {
-        return m_kmeansMorphology;
-    }
-    void setKmeansMorphology(int val)
-    {
-        m_kmeansMorphology = val;
-    }
-
-    double kmeansSat() const
-    {
-        return m_kmeansSat;
-    }
-    void setKmeansSat(double val)
-    {
-        m_kmeansSat = val;
-    }
-
-    double kmeansNorm() const
-    {
-        return m_kmeansNorm;
-    }
-    void setKmeansNorm(double val)
-    {
-        m_kmeansNorm = val;
-    }
-
-    double kmeansBG() const
-    {
-        return m_kmeansBG;
-    }
-    void setKmeansBG(double val)
-    {
-        m_kmeansBG = val;
-    }
-
-    double coloredMaskCoef() const
-    {
-        return m_coloredMaskCoef;
-    }
-    void setColoredMaskCoef(double val)
-    {
-        m_coloredMaskCoef = val;
-    }
-
     bool operator==(BlackWhiteOptions const& other) const;
 
     bool operator!=(BlackWhiteOptions const& other) const;
@@ -165,12 +111,6 @@ private:
     int m_thresholdAdjustment;
     int m_thresholdWindowSize;
     double m_thresholdCoef;
-    int m_kmeansCount;
-    int m_kmeansMorphology;
-    double m_kmeansSat;
-    double m_kmeansNorm;
-    double m_kmeansBG;
-    double m_coloredMaskCoef;
 
     static ThresholdFilter parseThresholdMethod(QString const& str);
 

@@ -21,6 +21,7 @@
 
 #include "ColorGrayscaleOptions.h"
 #include "BlackWhiteOptions.h"
+#include "BlackKmeansOptions.h"
 
 class QDomDocument;
 class QDomElement;
@@ -67,6 +68,16 @@ public:
         m_bwOptions = opt;
     }
 
+    BlackKmeansOptions const& blackKmeansOptions() const
+    {
+        return m_kmeansOptions;
+    }
+
+    void setBlackKmeansOptions(BlackKmeansOptions const& opt)
+    {
+        m_kmeansOptions = opt;
+    }
+
 private:
     static ColorMode parseColorMode(QString const& str);
 
@@ -75,6 +86,7 @@ private:
     ColorMode m_colorMode;
     ColorGrayscaleOptions m_colorGrayscaleOptions;
     BlackWhiteOptions m_bwOptions;
+    BlackKmeansOptions m_kmeansOptions;
 };
 
 } // namespace output

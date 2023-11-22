@@ -121,6 +121,12 @@ private slots:
 
     void thresholdCoefChanged(double value);
 
+    void applyColorsModeButtonClicked();
+
+    void applyColorsModeConfirmed(std::set<PageId> const& pages);
+
+    void kmeansPanelToggled(bool checked);
+
     void kmeansCountChanged(int value);
 
     void kmeansMorphologyChanged(int value);
@@ -133,9 +139,9 @@ private slots:
 
     void coloredMaskCoefChanged(double value);
 
-    void applyColorsModeButtonClicked();
+    void applyKmeansButtonClicked();
 
-    void applyColorsModeConfirmed(std::set<PageId> const& pages);
+    void applyKmeansConfirmed(std::set<PageId> const& pages);
 
     void despecklePanelToggled(bool checked);
 

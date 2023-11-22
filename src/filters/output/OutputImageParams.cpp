@@ -122,6 +122,10 @@ OutputImageParams::colorParamsMatch(
         {
             return false;
         }
+        if (cp1.blackKmeansOptions() != cp2.blackKmeansOptions())
+        {
+            return false;
+        }
         if (dl1 != dl2)
         {
             return false;

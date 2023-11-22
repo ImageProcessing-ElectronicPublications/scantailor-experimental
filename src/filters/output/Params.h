@@ -71,6 +71,15 @@ public:
         m_colorParams.setBlackWhiteOptions(black_white_options);
     }
 
+    BlackKmeansOptions const& blackKmeansOptions() const
+    {
+        return m_colorParams.blackKmeansOptions();
+    }
+    void setBlackKmeansOptions(BlackKmeansOptions const& black_kmeans_options)
+    {
+        m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    }
+
     DespeckleLevel despeckleLevel() const
     {
         return m_despeckleLevel;
