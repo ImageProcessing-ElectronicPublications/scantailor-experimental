@@ -154,6 +154,12 @@ IMAGEPROC_EXPORT void maskMorphologicalClose(
 IMAGEPROC_EXPORT void maskMorphological(
     QImage& image, BinaryImage const& mask, int radius = 0);
 
+IMAGEPROC_EXPORT QImage unPaperFilter(
+    QImage const& image, unsigned int const iters, float coef = 0.0);
+
+IMAGEPROC_EXPORT void unPaperFilterInPlace(
+    QImage& image, unsigned int const iters, float coef = 0.0);
+
 } // namespace imageproc
 
 #endif

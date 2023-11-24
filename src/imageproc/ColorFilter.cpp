@@ -1634,4 +1634,166 @@ void maskMorphological(
     }
 }
 
+QImage unPaperFilter(
+    QImage const& image, unsigned int const iters, float const coef)
+{
+    QImage dst(image);
+    unPaperFilterInPlace(dst, iters, coef);
+    return dst;
+}
+
+void unPaperFilterInPlace(
+    QImage& image, unsigned int const iters, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((iters > 0) && (coef > 0.0f))
+    {
+        unsigned int const w = image.width();
+        unsigned int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        unsigned int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        uint8_t* gray_line = gray.data();
+        unsigned int const gray_stride = gray.stride();
+
+        unsigned int const histsize = 256;
+        unsigned long int histogram[histsize] = {0};
+        unsigned long int hmax = 0, bgcount = 0;
+        double bgthres, bg[4] = {0.0}, bgsum[4] = {0.0};
+
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                uint8_t const pixel = gray_line[x];
+                histogram[pixel]++;
+            }
+            gray_line += gray_stride;
+        }
+
+        for (unsigned int k = 0; k < histsize; k++)
+        {
+            hmax = (hmax > histogram[k]) ? hmax : histogram[k];
+        }
+        bgthres = (1.0 - coef) * hmax;
+
+        image_line = (uint8_t*) image.bits();
+        gray_line = gray.data();
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned int const origin = gray_line[x];
+                if (histogram[origin] > bgthres)
+                {
+                    unsigned int const indx = x * cnum;
+                    for (unsigned int c = 0; c < cnum; c++)
+                    {
+                        double const origcol = image_line[indx + c];
+                        bgsum[c] += origcol;
+                    }
+                    bgcount++;
+                }
+            }
+            image_line += image_stride;
+            gray_line += gray_stride;
+        }
+        if (bgcount > 0)
+        {
+            for (unsigned int c = 0; c < cnum; c++)
+            {
+                bg[c] = bgsum[c] / bgcount;
+            }
+            for (unsigned int k = 0; k < iters; k++)
+            {
+                bgcount = 0;
+                for (unsigned int c = 0; c < cnum; c++)
+                {
+                    bgsum[c] = 0.0;
+                }
+                double distmax = 0;
+                image_line = (uint8_t*) image.bits();
+                for (unsigned int y = 0; y < h; y++)
+                {
+                    for (unsigned int x = 0; x < w; x++)
+                    {
+                        double dist = 0;
+                        unsigned int const indx = x * cnum;
+                        for (unsigned int c = 0; c < cnum; c++)
+                        {
+                            double const origcol = image_line[indx + c];
+                            double const delta = origcol - bg[c];
+                            dist += delta * delta;
+                        }
+                        distmax = (dist < distmax) ? distmax : dist;
+                    }
+                    image_line += image_stride;
+                }
+                double const distthres = distmax * coef * coef;
+                image_line = (uint8_t*) image.bits();
+                for (unsigned int y = 0; y < h; y++)
+                {
+                    for (unsigned int x = 0; x < w; x++)
+                    {
+                        double dist = 0;
+                        unsigned int const indx = x * cnum;
+                        for (unsigned int c = 0; c < cnum; c++)
+                        {
+                            double const origcol = image_line[indx + c];
+                            double const delta = origcol - bg[c];
+                            dist += delta * delta;
+                        }
+                        if (dist < distthres)
+                        {
+                            for (unsigned int c = 0; c < cnum; c++)
+                            {
+                                double const origcol = image_line[indx + c];
+                                bgsum[c] += origcol;
+                            }
+                            bgcount++;
+                        }
+                    }
+                    image_line += image_stride;
+                }
+                if (bgcount > 0)
+                {
+                    for (unsigned int c = 0; c < cnum; c++)
+                    {
+                        bg[c] = bgsum[c] / bgcount;
+                    }
+                    image_line = (uint8_t*) image.bits();
+                    for (unsigned int y = 0; y < h; y++)
+                    {
+                        for (unsigned int x = 0; x < w; x++)
+                        {
+                            double dist = 0;
+                            unsigned int const indx = x * cnum;
+                            for (unsigned int c = 0; c < cnum; c++)
+                            {
+                                double const origcol = image_line[indx + c];
+                                double const delta = origcol - bg[c];
+                                dist += delta * delta;
+                            }
+                            if (dist < distthres)
+                            {
+                                for (unsigned int c = 0; c < cnum; ++c)
+                                {
+                                    image_line[indx + c] = (uint8_t) (bg[c] + 0.5);
+                                }
+                            }
+                        }
+                        image_line += image_stride;
+                    }
+                }
+            }
+        }
+    }
+}
+
 } // namespace imageproc

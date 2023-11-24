@@ -37,6 +37,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_screenWindowSize(el.attribute("screenWinSize").toInt()),
        m_curveCoef(el.attribute("curveCoef").toDouble()),
        m_sqrCoef(el.attribute("sqrCoef").toDouble()),
+       m_unPaperCoef(el.attribute("unPaper").toDouble()),
+       m_unPaperIters(el.attribute("unPaperIters").toInt()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
        m_whiteMargins(el.attribute("whiteMargins") == "1")
 {
@@ -88,6 +90,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_sqrCoef = 0.0;
     }
+    if (m_unPaperCoef < 0.0 || m_unPaperCoef > 1.0)
+    {
+        m_unPaperCoef = 0.0;
+    }
+    if (m_unPaperIters < 1)
+    {
+        m_unPaperIters = 5;
+    }
     if (m_normalizeCoef < 0.0 || m_normalizeCoef > 1.0)
     {
         m_normalizeCoef = 0.0;
@@ -110,6 +120,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("screenWinSize", m_screenWindowSize);
     el.setAttribute("curveCoef", m_curveCoef);
     el.setAttribute("sqrCoef", m_sqrCoef);
+    el.setAttribute("unPaper", m_unPaperCoef);
+    el.setAttribute("unPaperIters", m_unPaperIters);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
     el.setAttribute("whiteMargins", m_whiteMargins ? "1" : "0");
     return el;
@@ -143,6 +155,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_sqrCoef != other.m_sqrCoef)
+    {
+        return false;
+    }
+    if ((m_unPaperCoef != other.m_unPaperCoef) || (m_unPaperIters != other.m_unPaperIters))
     {
         return false;
     }

@@ -1234,8 +1234,19 @@ Da bi to odredili, pokrenite skupne obrade u &quot;Odredi sadržaja&quot; ili &q
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="459"/>
+        <source>UnPaper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="443"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="506"/>
         <source>Value is 0.0 .. 1.0.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="482"/>
+        <source>The iters of a unPaper.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -71,11 +71,11 @@ private slots:
 
     void knndCoefChanged(double value);
 
-    void cdespeckleRadiusChanged(int value);
+    void knndRadiusChanged(int value);
 
     void cdespeckleCoefChanged(double value);
 
-    void knndRadiusChanged(int value);
+    void cdespeckleRadiusChanged(int value);
 
     void blurCoefChanged(double value);
 
@@ -88,6 +88,10 @@ private slots:
     void curveCoefChanged(double value);
 
     void sqrCoefChanged(double value);
+
+    void unPaperCoefChanged(double value);
+
+    void unPaperItersChanged(int value);
 
     void normalizeCoefChanged(double value);
 

@@ -42,6 +42,8 @@ public:
           m_screenWindowSize(10),
           m_curveCoef(0.5),
           m_sqrCoef(0.0),
+          m_unPaperCoef(0.0),
+          m_unPaperIters(5),
           m_normalizeCoef(0.5),
           m_whiteMargins(false) {}
 
@@ -152,6 +154,23 @@ public:
         m_sqrCoef = val;
     }
 
+    double unPaperCoef() const
+    {
+        return m_unPaperCoef;
+    }
+    void setUnPaperCoef(double val)
+    {
+        m_unPaperCoef = val;
+    }
+    int unPaperIters() const
+    {
+        return m_unPaperIters;
+    }
+    void setUnPaperIters(int val)
+    {
+        m_unPaperIters = val;
+    }
+
     double normalizeCoef() const
     {
         return m_normalizeCoef;
@@ -186,6 +205,8 @@ private:
     int m_screenWindowSize;
     double m_curveCoef;
     double m_sqrCoef;
+    double m_unPaperCoef;
+    int m_unPaperIters;
     double m_normalizeCoef;
     bool m_whiteMargins;
 };

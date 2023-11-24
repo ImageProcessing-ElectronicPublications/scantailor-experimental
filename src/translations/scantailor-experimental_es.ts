@@ -1289,8 +1289,19 @@ Para determinarlo, ejecute el proceso de &quot;Seleccionar Contendio&quot; o &qu
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="459"/>
+        <source>UnPaper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="443"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="506"/>
         <source>Value is 0.0 .. 1.0.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="482"/>
+        <source>The iters of a unPaper.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

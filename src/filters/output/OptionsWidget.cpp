@@ -185,6 +185,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(sqrCoefChanged(double))
     );
     connect(
+        unPaperCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(unPaperCoefChanged(double))
+    );
+    connect(
+        unPaperIters, SIGNAL(valueChanged(int)),
+        this, SLOT(unPaperItersChanged(int))
+    );
+    connect(
         normalizeCoef, SIGNAL(valueChanged(double)),
         this, SLOT(normalizeCoefChanged(double))
     );
@@ -539,6 +547,26 @@ OptionsWidget::sqrCoefChanged(double value)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     color_options.setSqrCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::unPaperCoefChanged(double value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setUnPaperCoef(value);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::unPaperItersChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setUnPaperIters(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -1033,6 +1061,8 @@ OptionsWidget::updateColorsDisplay()
     screenWindowSize->setValue(color_options.screenWindowSize());
     curveCoef->setValue(color_options.curveCoef());
     sqrCoef->setValue(color_options.sqrCoef());
+    unPaperCoef->setValue(color_options.unPaperCoef());
+    unPaperIters->setValue(color_options.unPaperIters());
     normalizeCoef->setValue(color_options.normalizeCoef());
     if (color_grayscale_options_visible)
     {

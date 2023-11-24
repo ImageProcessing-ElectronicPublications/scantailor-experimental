@@ -377,7 +377,6 @@ OutputGenerator::process(
     colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
 
     colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
-    // Color filters end
 
     GrayImage coloredSignificance(transformed_image);
     if (render_params.needBinarization())
@@ -427,7 +426,10 @@ OutputGenerator::process(
         }
     }
 
+    unPaperFilterInPlace(transformed_image, color_options.unPaperIters(), color_options.unPaperCoef());
+
     status.throwIfCancelled();
+    // Color filters end
 
     QImage maybe_smoothed;
     // We only do smoothing if we are going to do binarization later.

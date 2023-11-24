@@ -1422,9 +1422,20 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Значение -1,0 .. 1,0.</translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="459"/>
+        <source>UnPaper</source>
+        <translation>Удалить фон</translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="443"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="506"/>
         <source>Value is 0.0 .. 1.0.</source>
         <translation>Значение 0,0 .. 1,0.</translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="482"/>
+        <source>The iters of a unPaper.</source>
+        <translation>Кол-во итераций поиска фона.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="491"/>
