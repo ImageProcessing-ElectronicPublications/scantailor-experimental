@@ -133,7 +133,7 @@ private slots:
 
     void kmeansCountChanged(int value);
 
-    void kmeansMorphologyChanged(int value);
+    void kmeansValueStartChanged(int value);
 
     void kmeansSatChanged(double value);
 
@@ -142,6 +142,10 @@ private slots:
     void kmeansBGChanged(double value);
 
     void coloredMaskCoefChanged(double value);
+
+    void kmeansColorSpaceChanged(int idx);
+
+    void kmeansMorphologyChanged(int value);
 
     void applyKmeansButtonClicked();
 

@@ -643,8 +643,27 @@ OutputGenerator::process(
         if (!m_contentRect.isEmpty() && (black_kmeans_options.kmeansCount() > 0))
         {
             coloredMaskInPlace(transformed_image, bw_content, colored_mask);
+
+            KmeansColorSpace const color_space = black_kmeans_options.kmeansColorSpace();
+            int color_space_val = 0; // HSV
+            switch (color_space)
+            {
+            case HSV:
+            {
+                color_space_val = 0; // HSV
+                break;
+            }
+            case HSL:
+            {
+                color_space_val = 1; // HSL
+                break;
+            }
+            }
+
             hsvKMeansInPlace(dst, transformed_image, bw_content,
                              black_kmeans_options.kmeansCount(),
+                             black_kmeans_options.kmeansValueStart(),
+                             color_space_val,
                              black_kmeans_options.kmeansSat(),
                              black_kmeans_options.kmeansNorm(),
                              black_kmeans_options.kmeansBG());

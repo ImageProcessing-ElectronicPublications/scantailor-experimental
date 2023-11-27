@@ -26,6 +26,8 @@ class QDomElement;
 namespace output
 {
 
+enum KmeansColorSpace { HSV, HSL };
+
 class BlackKmeansOptions
 {
 public:
@@ -44,13 +46,13 @@ public:
         m_kmeansCount = val;
     }
 
-    int kmeansMorphology() const
+    int kmeansValueStart() const
     {
-        return m_kmeansMorphology;
+        return m_kmeansValueStart;
     }
-    void setKmeansMorphology(int val)
+    void setKmeansValueStart(int val)
     {
-        m_kmeansMorphology = val;
+        m_kmeansValueStart = val;
     }
 
     double kmeansSat() const
@@ -89,16 +91,40 @@ public:
         m_coloredMaskCoef = val;
     }
 
+    KmeansColorSpace kmeansColorSpace() const
+    {
+        return m_kmeansColorSpace;
+    }
+    void setKmeansColorSpace(KmeansColorSpace val)
+    {
+        m_kmeansColorSpace = val;
+    }
+
+    int kmeansMorphology() const
+    {
+        return m_kmeansMorphology;
+    }
+    void setKmeansMorphology(int val)
+    {
+        m_kmeansMorphology = val;
+    }
+
     bool operator==(BlackKmeansOptions const& other) const;
 
     bool operator!=(BlackKmeansOptions const& other) const;
 private:
     int m_kmeansCount;
-    int m_kmeansMorphology;
+    int m_kmeansValueStart;
     double m_kmeansSat;
     double m_kmeansNorm;
     double m_kmeansBG;
     double m_coloredMaskCoef;
+    KmeansColorSpace m_kmeansColorSpace;
+    int m_kmeansMorphology;
+
+    static KmeansColorSpace parseKmeansColorSpace(QString const& str);
+
+    static QString formatKmeansColorSpace(KmeansColorSpace type);
 };
 
 } // namespace output

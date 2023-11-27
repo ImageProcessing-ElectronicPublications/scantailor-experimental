@@ -1443,43 +1443,58 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Белые поля</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="941"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="954"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="977"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="990"/>
         <source>K-means</source>
         <translation>К-средних</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="974"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1010"/>
         <source>K (colors):</source>
         <translation>К (цветов):</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="981"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1017"/>
         <source>Number of K-means colors.</source>
         <translation>Количество цветов К-средних.</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="994"/>
-        <source>Morphology of K-means.</source>
-        <translation>Морфология К-средних.</translation>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1030"/>
+        <source>The starting value of the k-means color.</source>
+        <translation>Начальное значение цвета К-средних.</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1007"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1046"/>
         <source> - sat, norm:</source>
         <translation> - насыщ, норм:</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1014"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1030"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1053"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1069"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1092"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1108"/>
         <source>Default value is 0.0.</source>
         <translation>Значение по умолчанию 0,0.</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1046"/>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1085"/>
         <source> - bg, mask:</source>
         <translation> - фон, маска:</translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1124"/>
+        <source> - colorspace:</source>
+        <translation> - цв. схема:</translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1131"/>
+        <source>Select color space in K-means.</source>
+        <translation>Выберите цветовое пространство в K-средних.</translation>
+    </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1138"/>
+        <source>Morphology of K-means.</source>
+        <translation>Морфология К-средних.</translation>
     </message>
     <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1165"/>

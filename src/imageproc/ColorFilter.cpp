@@ -950,7 +950,7 @@ QImage imageHSVcylinder(QImage const& image)
             int r = qRed(pixel);
             int g = qGreen(pixel);
             int b = qBlue(pixel);
-            float hsv_h, hsv_s, hsv_v;
+            float hsv_h = 0.0f, hsv_s = 0.0f, hsv_v = 0.0f;
             int max = 0, min = 255;
             max = (r < g) ? g : r;
             max = (max < b) ? b : max;
@@ -996,6 +996,71 @@ QImage imageHSVcylinder(QImage const& image)
     return hsv_img;
 }
 
+QImage imageHSLcylinder(QImage const& image)
+{
+    if (image.isNull())
+    {
+        return image;
+    }
+
+    unsigned int const w = image.width();
+    unsigned int const h = image.height();
+
+    QImage hsl_img(w, h, QImage::Format_RGB32);
+    uint8_t* hsl_line = (uint8_t*) hsl_img.bits();
+
+    float ctorad = (float)(2.0 * M_PI / 256.0);
+
+    for (unsigned int y = 0; y < h; y++)
+    {
+        QRgb *rowh = (QRgb*)hsl_img.constScanLine(y);
+        for (unsigned int x = 0; x < w; x++)
+        {
+            QRgb pixel = image.pixel(x, y);
+            int r = qRed(pixel);
+            int g = qGreen(pixel);
+            int b = qBlue(pixel);
+            float hsl_h = 0.0f, hsl_s = 0.0f, hsl_l = 0.0f;
+            float hsl_d, hsl_p;
+            int max = 0, min = 255;
+            max = (r < g) ? g : r;
+            max = (max < b) ? b : max;
+            min = (r > g) ? g : r;
+            min = (min > b) ? b : min;
+            hsl_d = max - min;
+            hsl_p = max + min;
+            if (hsl_d > 0.0f)
+            {
+                if (max == r)
+                {
+                    hsl_h = (g - b) * 256.0f / hsl_d;
+                }
+                else if (max == g)
+                {
+                    hsl_h = (b - r) * 256.0f / hsl_d + 512;
+                }
+                else
+                {
+                    hsl_h = (r - g) * 256.0f / hsl_d + 1024;
+                }
+                hsl_h /= 6.0f;
+                hsl_h = (hsl_h < 0.0f) ? (hsl_h + 256.0f) : hsl_h;
+                hsl_s = 256.0f * hsl_d / (256.0f - fabs(256.0f - hsl_p));
+            }
+            hsl_l = 0.5f * hsl_p;
+            r = (int) (128.0f + 0.5f * hsl_s * cos(hsl_h * ctorad));
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (int) (128.0f + 0.5f * hsl_s * sin(hsl_h * ctorad));
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (int) (0.5f + hsl_l); // +0.5f for round
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
+            rowh[x] = qRgb(r, g, b);
+        }
+    }
+
+    return hsl_img;
+}
+
 float pixelDistance(
     float const h0, float const s0, float const v0,
     float const h1, float const s1, float const v1)
@@ -1009,7 +1074,8 @@ float pixelDistance(
 }
 
 void paletteHSVcylinderGenerate(
-    double* mean_h0, double* mean_s0, double* mean_v0, int const ncount)
+    double* mean_h0, double* mean_s0, double* mean_v0,
+    int const ncount, float const start_value)
 {
     if (ncount > 0)
     {
@@ -1021,7 +1087,7 @@ void paletteHSVcylinderGenerate(
             float const hsv_h = ((float) i - 0.5f) * fk;
             mean_h0[i] = 128.0 * (1.0 + cos(hsv_h * ctorad));
             mean_s0[i] = 128.0 * (1.0 + sin(hsv_h * ctorad));
-            mean_v0[i] = 255.0;
+            mean_v0[i] = start_value;
         }
     }
 }
@@ -1134,8 +1200,51 @@ void paletteHSVtoRGB(
     }
 }
 
+void paletteHSLtoRGB(
+    double* mean_h, double* mean_s, double* mean_l, int const ncount)
+{
+    if (ncount > 0)
+    {
+        float const p1256 = 1.0f / 256.0f;
+        float const p6256 = 6.0f / 256.0f;
+        float const p2562 = 256.0f / 2.0f;
+        float const p2563 = 256.0f / 3.0f;
+        float const p2566 = 256.0f / 6.0f;
+        float const p25623 = 256.0f * 2.0f / 3.0f;
+        for (int k = 0; k <= ncount; k++)
+        {
+            int r, g, b;
+            float const hsl_h = mean_h[k];
+            float const hsl_s = mean_s[k];
+            float const hsl_l = mean_l[k];
+            float const hsl_q = (hsl_l < p2562) ? (hsl_l * (256.0f + hsl_s) * p1256) : (((hsl_l + hsl_s) * 256.0f - hsl_l * hsl_s) * p1256);
+            float const hsl_p = 2.0 * hsl_l - hsl_q;
+            float const hsl_u = hsl_q - hsl_p;
+            float tcr = hsl_h + p2563;
+            tcr = (tcr < 256.0f) ? tcr : (tcr - 256.0f);
+            float tcg = hsl_h;
+            float tcb = hsl_h - p2563;
+            tcb = (tcb < 0.0f) ? (tcb + 256.0f): tcb;
+            tcr = ((tcr < p2566) ? (hsl_p + hsl_u * tcr * p6256) : (tcr < p2562) ? hsl_q : (tcr < p25623) ? (hsl_p + hsl_u * (p25623 - tcr) * p6256) : hsl_p);
+            tcg = ((tcg < p2566) ? (hsl_p + hsl_u * tcg * p6256) : (tcg < p2562) ? hsl_q : (tcg < p25623) ? (hsl_p + hsl_u * (p25623 - tcg) * p6256) : hsl_p);
+            tcb = ((tcb < p2566) ? (hsl_p + hsl_u * tcb * p6256) : (tcb < p2562) ? hsl_q : (tcb < p25623) ? (hsl_p + hsl_u * (p25623 - tcb) * p6256) : hsl_p);
+            r = (int) (tcr + 0.5f);
+            g = (int) (tcg + 0.5f);
+            b = (int) (tcb + 0.5f);
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
+            mean_h[k] = r;
+            mean_s[k] = g;
+            mean_l[k] = b;
+        }
+    }
+}
+
 void hsvKMeansInPlace(
-    QImage& dst, QImage const& image, BinaryImage const& mask, int const ncount, float const coef_sat, float const coef_norm, float const coef_bg)
+    QImage& dst, QImage const& image, BinaryImage const& mask,
+    int const ncount, int const start_value, int const color_space,
+    float const coef_sat, float const coef_norm, float const coef_bg)
 {
     if (dst.isNull() || image.isNull() || mask.isNull())
     {
@@ -1159,7 +1268,15 @@ void hsvKMeansInPlace(
         uint32_t const* mask_line = mask.data();
         int const mask_stride = mask.wordsPerLine();
 
-        QImage hsv_img = imageHSVcylinder(image);
+        QImage hsv_img;
+        if (color_space == 1)
+        {
+            hsv_img = imageHSLcylinder(image);
+        }
+        else
+        {
+            hsv_img = imageHSVcylinder(image);
+        }
 
         if (hsv_img.isNull())
         {
@@ -1207,7 +1324,7 @@ void hsvKMeansInPlace(
         uint8_t* clusters_line = clusters.data();
         int const clusters_stride = clusters.stride();
 
-        paletteHSVcylinderGenerate(mean_h0, mean_s0, mean_v0, ncount);
+        paletteHSVcylinderGenerate(mean_h0, mean_s0, mean_v0, ncount, start_value);
 
         for (int i = 1; i <= ncount; i++)
         {
@@ -1390,7 +1507,14 @@ void hsvKMeansInPlace(
 
         paletteHSVnorm(mean_h, mean_s, mean_v, coef_sat, coef_norm, ncount);
 
-        paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+        if (color_space == 1)
+        {
+            paletteHSLtoRGB(mean_h, mean_s, mean_v, ncount);
+        }
+        else
+        {
+            paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+        }
 
         mean_h[0] *= coef_bg;
         mean_s[0] *= coef_bg;

@@ -26,25 +26,33 @@ namespace output
 
 BlackKmeansOptions::BlackKmeansOptions()
     :   m_kmeansCount(0),
-        m_kmeansMorphology(0),
+        m_kmeansValueStart(128),
         m_kmeansSat(0.0),
         m_kmeansNorm(0.0),
         m_kmeansBG(0.0),
-        m_coloredMaskCoef(0.0)
+        m_coloredMaskCoef(0.0),
+        m_kmeansColorSpace(HSV),
+        m_kmeansMorphology(0)
 {
 }
 
 BlackKmeansOptions::BlackKmeansOptions(QDomElement const& el)
     :   m_kmeansCount(el.attribute("kmeans").toInt()),
-        m_kmeansMorphology(el.attribute("kmeansMorphology").toInt()),
+        m_kmeansValueStart(el.attribute("kmeansVal").toInt()),
         m_kmeansSat(el.attribute("kmeansSat").toDouble()),
         m_kmeansNorm(el.attribute("kmeansNorm").toDouble()),
         m_kmeansBG(el.attribute("kmeansBG").toDouble()),
-        m_coloredMaskCoef(el.attribute("coloredMaskCoef").toDouble())
+        m_coloredMaskCoef(el.attribute("coloredMaskCoef").toDouble()),
+        m_kmeansColorSpace(parseKmeansColorSpace(el.attribute("colorspace"))),
+        m_kmeansMorphology(el.attribute("kmeansMorphology").toInt())
 {
     if (m_kmeansCount < 0)
     {
         m_kmeansCount = 0;
+    }
+    if (m_kmeansValueStart < 0 || m_kmeansValueStart > 255)
+    {
+        m_kmeansValueStart = 255;
     }
     if (m_kmeansSat < 0.0 || m_kmeansSat > 1.0)
     {
@@ -69,11 +77,13 @@ BlackKmeansOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
     el.setAttribute("kmeans", m_kmeansCount);
-    el.setAttribute("kmeansMorphology", m_kmeansMorphology);
+    el.setAttribute("kmeansVal", m_kmeansValueStart);
     el.setAttribute("kmeansSat", m_kmeansSat);
     el.setAttribute("kmeansNorm", m_kmeansNorm);
     el.setAttribute("kmeansBG", m_kmeansBG);
     el.setAttribute("coloredMaskCoef", m_coloredMaskCoef);
+    el.setAttribute("colorspace", formatKmeansColorSpace(m_kmeansColorSpace));
+    el.setAttribute("kmeansMorphology", m_kmeansMorphology);
     return el;
 }
 
@@ -84,7 +94,7 @@ BlackKmeansOptions::operator==(BlackKmeansOptions const& other) const
     {
         return false;
     }
-    if (m_kmeansMorphology != other.m_kmeansMorphology)
+    if (m_kmeansValueStart != other.m_kmeansValueStart)
     {
         return false;
     }
@@ -104,6 +114,14 @@ BlackKmeansOptions::operator==(BlackKmeansOptions const& other) const
     {
         return false;
     }
+    if (m_kmeansColorSpace != other.m_kmeansColorSpace)
+    {
+        return false;
+    }
+    if (m_kmeansMorphology != other.m_kmeansMorphology)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -112,6 +130,35 @@ bool
 BlackKmeansOptions::operator!=(BlackKmeansOptions const& other) const
 {
     return !(*this == other);
+}
+
+KmeansColorSpace
+BlackKmeansOptions::parseKmeansColorSpace(QString const& str)
+{
+    if (str == "HSL")
+    {
+        return HSL;
+    }
+    else
+    {
+        return HSV;
+    }
+}
+
+QString
+BlackKmeansOptions::formatKmeansColorSpace(KmeansColorSpace type)
+{
+    QString str = "";
+    switch (type)
+    {
+    case HSL:
+        str = "HSL";
+        break;
+    case HSV:
+        str = "HSV";
+        break;
+    }
+    return str;
 }
 
 } // namespace output

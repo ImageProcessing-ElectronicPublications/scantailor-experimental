@@ -76,6 +76,9 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
     thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
 
+    kmeansColorSpaceSelector->addItem(tr("HSV"), HSV);
+    kmeansColorSpaceSelector->addItem(tr("HSL"), HSL);
+
     thresholdSlider->setToolTip(QString::number(thresholdSlider->value()));
 
     updateColorsDisplay();
@@ -277,8 +280,12 @@ OptionsWidget::OptionsWidget(
         this, SLOT(kmeansCountChanged(int))
     );
     connect(
-        kmeansMorphology, SIGNAL(valueChanged(int)),
-        this, SLOT(kmeansMorphologyChanged(int))
+        kmeansCount, SIGNAL(valueChanged(int)),
+        this, SLOT(kmeansCountChanged(int))
+    );
+    connect(
+        kmeansValueStart, SIGNAL(valueChanged(int)),
+        this, SLOT(kmeansValueStartChanged(int))
     );
     connect(
         kmeansSat, SIGNAL(valueChanged(double)),
@@ -295,6 +302,14 @@ OptionsWidget::OptionsWidget(
     connect(
         coloredMaskCoef, SIGNAL(valueChanged(double)),
         this, SLOT(coloredMaskCoefChanged(double))
+    );
+    connect(
+        kmeansColorSpaceSelector, SIGNAL(currentIndexChanged(int)),
+        this, SLOT(kmeansColorSpaceChanged(int))
+    );
+    connect(
+        kmeansMorphology, SIGNAL(valueChanged(int)),
+        this, SLOT(kmeansMorphologyChanged(int))
     );
     connect(
         applyKmeansButton, SIGNAL(clicked()),
@@ -650,7 +665,7 @@ OptionsWidget::thresholdMethodChanged(int idx)
     black_white_options.setThresholdMethod(method);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    updateColorsDisplay();
+//    updateColorsDisplay();
     emit reloadRequested();
 }
 
@@ -820,6 +835,16 @@ OptionsWidget::kmeansCountChanged(int value)
 }
 
 void
+OptionsWidget::kmeansValueStartChanged(int value)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansValueStart(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::kmeansMorphologyChanged(int value)
 {
     BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
@@ -864,6 +889,17 @@ OptionsWidget::coloredMaskCoefChanged(double value)
 {
     BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
     black_kmeans_options.setColoredMaskCoef(value);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansColorSpaceChanged(int idx)
+{
+    KmeansColorSpace const color_space = (KmeansColorSpace) kmeansColorSpaceSelector->itemData(idx).toInt();
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setKmeansColorSpace(color_space);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -1081,6 +1117,7 @@ OptionsWidget::updateColorsDisplay()
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
         thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
         thresholdCoef->setValue(black_white_options.thresholdCoef());
+
         if ((black_white_options.thresholdMethod() == OTSU) || (black_white_options.thresholdMethod() == MEANDELTA) || (black_white_options.thresholdMethod() == DOTS8))
         {
             thresholdWindowSize->setEnabled( false );
@@ -1091,17 +1128,21 @@ OptionsWidget::updateColorsDisplay()
             thresholdWindowSize->setEnabled( true );
             thresholdCoef->setEnabled( true );
         }
+
         kmeansPanelToggled(kmeansPanelEmpty->isChecked());
         kmeansCount->setValue(black_kmeans_options.kmeansCount());
-        kmeansMorphology->setValue(black_kmeans_options.kmeansMorphology());
+        kmeansValueStart->setValue(black_kmeans_options.kmeansValueStart());
         kmeansSat->setValue(black_kmeans_options.kmeansSat());
         kmeansNorm->setValue(black_kmeans_options.kmeansNorm());
         kmeansBG->setValue(black_kmeans_options.kmeansBG());
         coloredMaskCoef->setValue(black_kmeans_options.coloredMaskCoef());
+        kmeansColorSpaceSelector->setCurrentIndex((int) black_kmeans_options.kmeansColorSpace());
+        kmeansMorphology->setValue(black_kmeans_options.kmeansMorphology());
+
         coloredMaskCoef->setEnabled( false );
         if (black_kmeans_options.kmeansCount() > 0)
         {
-            kmeansMorphology->setEnabled( true );
+            kmeansValueStart->setEnabled( true );
             kmeansSat->setEnabled( true );
             kmeansNorm->setEnabled( true );
             kmeansBG->setEnabled( true );
@@ -1109,13 +1150,17 @@ OptionsWidget::updateColorsDisplay()
             {
                 coloredMaskCoef->setEnabled( true );
             }
+            kmeansColorSpaceSelector->setEnabled( true );
+            kmeansMorphology->setEnabled( true );
         }
         else
         {
-            kmeansMorphology->setEnabled( false );
+            kmeansValueStart->setEnabled( false );
             kmeansSat->setEnabled( false );
             kmeansNorm->setEnabled( false );
             kmeansBG->setEnabled( false );
+            kmeansColorSpaceSelector->setEnabled( false );
+            kmeansMorphology->setEnabled( false );
         }
 
         despecklePanelToggled(despecklePanelEmpty->isChecked());
