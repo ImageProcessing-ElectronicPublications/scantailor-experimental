@@ -78,6 +78,7 @@ OptionsWidget::OptionsWidget(
 
     kmeansColorSpaceSelector->addItem(tr("HSV"), HSV);
     kmeansColorSpaceSelector->addItem(tr("HSL"), HSL);
+    kmeansColorSpaceSelector->addItem(tr("YCbCr"), YCBCR);
 
     thresholdSlider->setToolTip(QString::number(thresholdSlider->value()));
 

@@ -120,6 +120,8 @@ static QImage imageHSVcylinder(QImage const& image);
 
 static QImage imageHSLcylinder(QImage const& image);
 
+static QImage imageYCbCr(QImage const& image);
+
 static float pixelDistance(
     float const h0, float const s0, float const v0,
     float const h1, float const s1, float const v1);
@@ -140,6 +142,9 @@ static void paletteHSVtoRGB(
 
 static void paletteHSLtoRGB(
     double* mean_h, double* mean_s, double* mean_l, int const ncount);
+
+static void paletteYCbCrtoRGB(
+    double* mean_cb, double* mean_cr, double* mean_cy, int const ncount);
 
 IMAGEPROC_EXPORT void hsvKMeansInPlace(
     QImage& dst, QImage const& image, BinaryImage const& mask,

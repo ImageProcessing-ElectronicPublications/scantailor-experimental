@@ -1061,6 +1061,46 @@ QImage imageHSLcylinder(QImage const& image)
     return hsl_img;
 }
 
+QImage imageYCbCr(QImage const& image)
+{
+    if (image.isNull())
+    {
+        return image;
+    }
+
+    unsigned int const w = image.width();
+    unsigned int const h = image.height();
+
+    QImage ycbcr_img(w, h, QImage::Format_RGB32);
+    uint8_t* ycbcr_line = (uint8_t*) ycbcr_img.bits();
+
+    for (unsigned int y = 0; y < h; y++)
+    {
+        QRgb *rowh = (QRgb*)ycbcr_img.constScanLine(y);
+        for (unsigned int x = 0; x < w; x++)
+        {
+            QRgb pixel = image.pixel(x, y);
+            int r = qRed(pixel);
+            int g = qGreen(pixel);
+            int b = qBlue(pixel);
+
+            float cy = 0.299f  * r + 0.587f * g + 0.114f * b;
+            float cb = 128.0f - 0.168736f * r - 0.331264f * g + 0.5f * b;
+            float cr = 128.0f + 0.5f * r - 0.418688f * g - 0.081312f * b;
+
+            r = (int) (0.5f + cb);
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (int) (0.5f + cr);
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (int) (0.5f + cy);
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
+            rowh[x] = qRgb(r, g, b);
+        }
+    }
+
+    return ycbcr_img;
+}
+
 float pixelDistance(
     float const h0, float const s0, float const v0,
     float const h1, float const s1, float const v1)
@@ -1241,6 +1281,33 @@ void paletteHSLtoRGB(
     }
 }
 
+void paletteYCbCrtoRGB(
+    double* mean_cb, double* mean_cr, double* mean_cy, int const ncount)
+{
+    if (ncount > 0)
+    {
+        for (int k = 0; k <= ncount; k++)
+        {
+            int r, g, b;
+            float const cb = mean_cb[k];
+            float const cr = mean_cr[k];
+            float const cy = mean_cy[k];
+            float fcr = cy + 1.402f * (cr - 128.0f);
+            float fcg = cy - 0.344136f * (cb - 128.0f) - 0.714136f * (cr - 128.0f);
+            float fcb = cy + 1.772f * (cb - 128.0f);
+            r = (int) (fcr + 0.5f);
+            g = (int) (fcg + 0.5f);
+            b = (int) (fcb + 0.5f);
+            r = (r < 0) ? 0 : (r < 255) ? r : 255;
+            g = (g < 0) ? 0 : (g < 255) ? g : 255;
+            b = (b < 0) ? 0 : (b < 255) ? b : 255;
+            mean_cb[k] = r;
+            mean_cr[k] = g;
+            mean_cy[k] = b;
+        }
+    }
+}
+
 void hsvKMeansInPlace(
     QImage& dst, QImage const& image, BinaryImage const& mask,
     int const ncount, int const start_value, int const color_space,
@@ -1269,13 +1336,28 @@ void hsvKMeansInPlace(
         int const mask_stride = mask.wordsPerLine();
 
         QImage hsv_img;
-        if (color_space == 1)
+        switch (color_space)
         {
-            hsv_img = imageHSLcylinder(image);
-        }
-        else
-        {
+        case 0:
+        { // HSV
             hsv_img = imageHSVcylinder(image);
+            break;
+        }
+        case 1:
+        { // HSL
+            hsv_img = imageHSLcylinder(image);
+            break;
+        }
+        case 2:
+        { // YCbCr
+            hsv_img = imageYCbCr(image);
+            break;
+        }
+        default:
+        { // HSV
+            hsv_img = imageHSVcylinder(image);
+            break;
+        }
         }
 
         if (hsv_img.isNull())
@@ -1503,17 +1585,35 @@ void hsvKMeansInPlace(
             }
         }
 
-        paletteHSVcylinderToHSV(mean_h, mean_s, ncount);
+        if (color_space < 2)
+        {
+            paletteHSVcylinderToHSV(mean_h, mean_s, ncount);
+        }
 
         paletteHSVnorm(mean_h, mean_s, mean_v, coef_sat, coef_norm, ncount);
 
-        if (color_space == 1)
+        switch (color_space)
         {
-            paletteHSLtoRGB(mean_h, mean_s, mean_v, ncount);
-        }
-        else
-        {
+        case 0:
+        { // HSV
             paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+            break;
+        }
+        case 1:
+        { // HSL
+            paletteHSLtoRGB(mean_h, mean_s, mean_v, ncount);
+            break;
+        }
+        case 2:
+        { // YCbCr
+            paletteYCbCrtoRGB(mean_h, mean_s, mean_v, ncount);
+            break;
+        }
+        default:
+        { // HSV
+            paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+            break;
+        }
         }
 
         mean_h[0] *= coef_bg;

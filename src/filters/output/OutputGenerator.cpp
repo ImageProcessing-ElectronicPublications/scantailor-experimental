@@ -658,6 +658,16 @@ OutputGenerator::process(
                 color_space_val = 1; // HSL
                 break;
             }
+            case YCBCR:
+            {
+                color_space_val = 2; // YCbCr
+                break;
+            }
+            default:
+            {
+                color_space_val = 0; // HSV
+                break;
+            }
             }
 
             hsvKMeansInPlace(dst, transformed_image, bw_content,

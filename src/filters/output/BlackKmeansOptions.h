@@ -26,7 +26,7 @@ class QDomElement;
 namespace output
 {
 
-enum KmeansColorSpace { HSV, HSL };
+enum KmeansColorSpace { HSV, HSL, YCBCR };
 
 class BlackKmeansOptions
 {

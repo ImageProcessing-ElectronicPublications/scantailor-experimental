@@ -139,6 +139,10 @@ BlackKmeansOptions::parseKmeansColorSpace(QString const& str)
     {
         return HSL;
     }
+    else if (str == "YCbCr")
+    {
+        return YCBCR;
+    }
     else
     {
         return HSV;
@@ -156,6 +160,9 @@ BlackKmeansOptions::formatKmeansColorSpace(KmeansColorSpace type)
         break;
     case HSV:
         str = "HSV";
+        break;
+    case YCBCR:
+        str = "YCbCr";
         break;
     }
     return str;
