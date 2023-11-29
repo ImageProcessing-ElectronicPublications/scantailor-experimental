@@ -133,9 +133,15 @@ static void paletteHSVcylinderGenerate(
 static void paletteHSVcylinderToHSV(
     double* mean_h, double* mean_s, int const ncount);
 
+static void paletteHSVsaturation(
+    double* mean_s, float const coef_sat, int const ncount);
+
+static void paletteYCbCrsaturation(
+    double* mean_cb, double* mean_cr,
+    float const coef_sat, int const ncount);
+
 static void paletteHSVnorm(
-    double* mean_h, double* mean_s, double* mean_v,
-    float const coef_sat, float const coef_norm, int const ncount);
+    double* mean_v, float const coef_norm, int const ncount);
 
 static void paletteHSVtoRGB(
     double* mean_h, double* mean_s, double* mean_v, int const ncount);

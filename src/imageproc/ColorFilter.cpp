@@ -1151,36 +1151,76 @@ void paletteHSVcylinderToHSV(double* mean_h, double* mean_s, int const ncount)
     }
 }
 
-void paletteHSVnorm(
-    double* mean_h, double* mean_s, double* mean_v,
-    float const coef_sat, float const coef_norm, int const ncount)
+void paletteHSVsaturation(
+    double* mean_s, float const coef_sat, int const ncount)
 {
     if (ncount > 0)
     {
         float min_sat = 512.0f;
         float max_sat = 0.0f;
-        float min_vol = 512.0f;
-        float max_vol = 0.0f;
         for (int k = 0; k <= ncount; k++)
         {
             min_sat = (mean_s[k] < min_sat) ? mean_s[k] : min_sat;
             max_sat = (mean_s[k] > max_sat) ? mean_s[k] : max_sat;
+        }
+        float d_sat = max_sat - min_sat;
+        for (int k = 0; k <= ncount; k++)
+        {
+            float sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0f / d_sat) : 255.0f;
+            sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
+            mean_s[k] = sat_new;
+        }
+    }
+}
+
+void paletteYCbCrsaturation(
+    double* mean_cb, double* mean_cr,
+    float const coef_sat, int const ncount)
+{
+    if (ncount > 0)
+    {
+        float max_sat = 0.0f;
+        for (int k = 0; k <= ncount; k++)
+        {
+            float tsat = (mean_cb[k] < 128.0f) ? (128.0f - mean_cb[k]) : (mean_cb[k] - 128.0f);
+            max_sat = (tsat > max_sat) ? tsat : max_sat;
+            tsat = (mean_cr[k] < 128.0f) ? (128.0f - mean_cr[k]) : (mean_cr[k] - 128.0f);
+            max_sat = (tsat > max_sat) ? tsat : max_sat;
+        }
+        for (int k = 0; k <= ncount; k++)
+        {
+            float sat_cb = (max_sat > 0.0f) ? ((mean_cb[k] - 128.0f) * 128.0f / max_sat + 128.0f) : mean_cb[k];
+            float sat_cr = (max_sat > 0.0f) ? ((mean_cr[k] - 128.0f) * 128.0f / max_sat + 128.0f) : mean_cr[k];
+            sat_cb = sat_cb * coef_sat + mean_cb[k] * (1.0f - coef_sat);
+            sat_cr = sat_cr * coef_sat + mean_cr[k] * (1.0f - coef_sat);
+            mean_cb[k] = sat_cb;
+            mean_cr[k] = sat_cr;
+        }
+    }
+}
+
+void paletteHSVnorm(
+    double* mean_v, float const coef_norm, int const ncount)
+{
+    if (ncount > 0)
+    {
+        float min_vol = 512.0f;
+        float max_vol = 0.0f;
+        for (int k = 0; k <= ncount; k++)
+        {
             min_vol = (mean_v[k] < min_vol) ? mean_v[k] : min_vol;
             max_vol = (mean_v[k] > max_vol) ? mean_v[k] : max_vol;
         }
-        float d_sat = max_sat - min_sat;
         float d_vol = max_vol - min_vol;
         for (int k = 0; k <= ncount; k++)
         {
-            double sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0f / d_sat) : 255.0f;
-            sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
-            double vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0f / d_vol) : 0.0f;
+            float vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0f / d_vol) : 0.0f;
             vol_new = vol_new * coef_norm + mean_v[k] * (1.0f - coef_norm);
-            mean_s[k] = sat_new;
             mean_v[k] = vol_new;
         }
     }
 }
+
 
 void paletteHSVtoRGB(
     double* mean_h, double* mean_s, double* mean_v, int const ncount)
@@ -1588,9 +1628,13 @@ void hsvKMeansInPlace(
         if (color_space < 2)
         {
             paletteHSVcylinderToHSV(mean_h, mean_s, ncount);
+            paletteHSVsaturation(mean_s, coef_sat, ncount);
         }
-
-        paletteHSVnorm(mean_h, mean_s, mean_v, coef_sat, coef_norm, ncount);
+        else
+        {
+            paletteYCbCrsaturation(mean_h, mean_s, coef_sat, ncount);
+        }
+        paletteHSVnorm(mean_v, coef_norm, ncount);
 
         switch (color_space)
         {
