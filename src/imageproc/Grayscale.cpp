@@ -1,6 +1,6 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
-	Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -312,15 +312,14 @@ GrayImage createFramedImage(QSize const& size,
     return image;
 }
 
-unsigned char darkestGrayLevel(QImage const& image)
+unsigned char darkestGrayLevel(GrayImage const& image)
 {
-    QImage const gray(toGrayscale(image));
-
+    // fix @trufanov-nok
     int const width = image.width();
     int const height = image.height();
 
-    unsigned char const* line = gray.bits();
-    int const bpl = gray.bytesPerLine();
+    unsigned char const* line = image.data();
+    int const bpl = image.stride();
 
     unsigned char darkest = 0xff;
 

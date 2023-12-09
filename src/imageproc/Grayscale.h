@@ -111,7 +111,7 @@ IMAGEPROC_EXPORT GrayImage createFramedImage(
  *        be returned as the darkest image.  If it's not grayscale,
  *        a grayscale copy will be created.
  */
-IMAGEPROC_EXPORT unsigned char darkestGrayLevel(QImage const& image);
+IMAGEPROC_EXPORT unsigned char darkestGrayLevel(GrayImage const& image);
 
 } // namespace imageproc
 

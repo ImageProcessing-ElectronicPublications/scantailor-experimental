@@ -918,7 +918,13 @@ Despeckle::despeckleInPlace(
     bool have_anchored_to_small_but_not_big = false;
     BOOST_FOREACH(Component const& comp, components)
     {
-        have_anchored_to_small_but_not_big = comp.anchoredToSmallButNotBig();
+        // have_anchored_to_small_but_not_big = comp.anchoredToSmallButNotBig();
+        // fix @trufanov-nok
+        if (comp.anchoredToSmallButNotBig())
+        {
+            have_anchored_to_small_but_not_big = true;
+            break;
+        }
     }
 
     if (have_anchored_to_small_but_not_big)

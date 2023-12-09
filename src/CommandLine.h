@@ -55,6 +55,8 @@ public:
     CommandLine(QStringList const& argv, bool g=true) : m_gui(g), m_global(false)
     {
         CommandLine::parseCli(argv);
+        m_deskewAngle = fetchDeskewAngle();
+        m_threshold = fetchThreshold();
     }
 
     bool isGui() const

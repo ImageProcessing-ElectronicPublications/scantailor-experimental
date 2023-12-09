@@ -63,7 +63,7 @@ ThumbnailBase::ThumbnailBase(
     QSizeF const& max_display_size, PageId const& page_id,
     AbstractImageTransform const& full_size_image_transform,
     boost::optional<QRectF> const& transformed_viewport)
-    :	m_ptrThumbnailCache(thumbnail_cache),
+    :   m_ptrThumbnailCache(thumbnail_cache),
       m_maxDisplaySize(max_display_size),
       m_pageId(page_id),
       m_extendedClipArea(false)
@@ -132,7 +132,7 @@ ThumbnailBase::paint(QPainter* painter,
     QString const cache_key(QString::fromLatin1("ThumbnailBase::temp_pixmap"));
     if (QPixmapCache::find(cache_key, &temp_pixmap)
             && temp_pixmap.width() >= display_rect.width()
-            && temp_pixmap.height() >= display_rect.width())
+            && temp_pixmap.height() >= display_rect.height())
     {
 #if 0
         // Since below we are drawing with QPainter::CompositionMode_Source,
