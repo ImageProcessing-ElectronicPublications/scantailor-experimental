@@ -224,10 +224,13 @@ Filter::scalingFactorFromString(QString const& str)
         return Settings::defaultScalingFactor();
     }
 
+    /*
+     * fixed scaleFactor.
     factor -= Settings::minScalingFactor();
     factor = qRound(factor / Settings::scalingFactorStep()) * Settings::scalingFactorStep();
     factor += Settings::minScalingFactor();
     factor = qBound(Settings::minScalingFactor(), factor, Settings::maxScalingFactor());
+    */
     return factor;
 }
 
