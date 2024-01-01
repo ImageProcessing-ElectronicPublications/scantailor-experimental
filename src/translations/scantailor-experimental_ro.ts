@@ -2251,6 +2251,11 @@ Ar trebui să le eliminați din proiect.</translation>
         <translation type="unfinished">Ordonare crescătoare după înălțime</translation>
     </message>
     <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
         <source>Margins</source>
         <translation type="unfinished">Margini</translation>
@@ -2351,6 +2356,11 @@ Ar trebui să le eliminați din proiect.</translation>
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation type="unfinished">Ordonare crescătoare după înălțime</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

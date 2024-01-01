@@ -1655,12 +1655,12 @@ ContentBoxFinder::filterShadows(
 ContentBoxFinder::Garbage::Garbage(
     Type const type, BinaryImage const& garbage)
     :   m_garbage(garbage),
-      m_sedmBorders(
-          type == VERT
-          ? SEDM::DIST_TO_VERT_BORDERS
-          : SEDM::DIST_TO_HOR_BORDERS
-      ),
-      m_sedmUpdatePending(true)
+        m_sedmBorders(
+            type == VERT
+            ? SEDM::DIST_TO_VERT_BORDERS
+            : SEDM::DIST_TO_HOR_BORDERS
+        ),
+        m_sedmUpdatePending(true)
 {
 }
 

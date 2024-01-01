@@ -2558,6 +2558,11 @@ text-indent:0px;&quot;&gt;Rimuovi i file selezionati dal progetto.&lt;/p&gt;&lt;
         <translation>Ordina per altezza crescente</translation>
     </message>
     <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
         <source>Margins</source>
         <translation>Margini</translation>
@@ -2666,6 +2671,11 @@ text-indent:0px;&quot;&gt;Rimuovi i file selezionati dal progetto.&lt;/p&gt;&lt;
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>Ordina per altezza crescente</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

@@ -28,6 +28,7 @@
 #include "CacheDrivenTask.h"
 #include "OrderByWidthProvider.h"
 #include "OrderByHeightProvider.h"
+#include "OrderByRatioProvider.h"
 #include <QString>
 #include <QObject>
 #include <QDomDocument>
@@ -55,9 +56,11 @@ Filter::Filter(
     ProviderPtr const default_order;
     ProviderPtr const order_by_width(new OrderByWidthProvider(m_ptrSettings));
     ProviderPtr const order_by_height(new OrderByHeightProvider(m_ptrSettings));
+    ProviderPtr const order_by_ratio(new OrderByRatioProvider(m_ptrSettings));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by increasing width"), order_by_width));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by increasing height"), order_by_height));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by width/height ratio"), order_by_ratio));
 }
 
 Filter::~Filter()

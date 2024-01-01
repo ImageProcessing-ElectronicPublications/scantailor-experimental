@@ -2660,19 +2660,24 @@ text-indent:0px;&quot;&gt;Премахване на избраните стра�
         <translation type="obsolete">Оформление на страница</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="67"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
         <source>Natural order</source>
         <translation>Естествено подреждане</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="68"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="70"/>
         <source>Order by increasing width</source>
         <translation>Сортировка по нарастваща ширина</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="71"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по нарастваща височина</translation>
+    </message>
+    <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
@@ -2783,6 +2788,11 @@ text-indent:0px;&quot;&gt;Премахване на избраните стра�
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по нарастваща височина</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

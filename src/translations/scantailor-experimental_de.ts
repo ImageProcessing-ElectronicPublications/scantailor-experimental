@@ -2531,19 +2531,24 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::Filter</name>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="67"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
         <source>Natural order</source>
         <translation>Ursprüngliche Reihenfolge</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="68"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="70"/>
         <source>Order by increasing width</source>
         <translation>Nach Breite aufsteigend sortieren</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="71"/>
         <source>Order by increasing height</source>
         <translation>Nach Höhe aufsteigend sortieren</translation>
+    </message>
+    <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
@@ -2646,6 +2651,11 @@ p, li { white-space: pre-wrap; }
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>Nach Höhe aufsteigend sortieren</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

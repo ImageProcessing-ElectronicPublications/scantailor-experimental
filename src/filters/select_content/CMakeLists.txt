@@ -17,6 +17,7 @@ SET(
     Thumbnail.cpp Thumbnail.h
     OrderByWidthProvider.cpp OrderByWidthProvider.h
     OrderByHeightProvider.cpp OrderByHeightProvider.h
+    OrderByRatioProvider.cpp OrderByRatioProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

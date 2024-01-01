@@ -2505,6 +2505,11 @@ You should remove them from the project.</source>
         <translation>按照高度从小到大排序</translation>
     </message>
     <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
         <source>Margins</source>
         <translation>边距</translation>
@@ -2605,6 +2610,11 @@ You should remove them from the project.</source>
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>按照高度从小到大排序</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

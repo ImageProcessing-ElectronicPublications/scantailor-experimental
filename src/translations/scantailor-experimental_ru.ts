@@ -2795,19 +2795,24 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Макет страницы</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="67"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="68"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="70"/>
         <source>Order by increasing width</source>
         <translation>Сортировка по возрастающей ширине</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
+        <location filename="../filters/page_layout/Filter.cpp" line="71"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по возрастающей высоте</translation>
+    </message>
+    <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation>Сортировка по соотношению ширины/высоты</translation>
     </message>
     <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
@@ -2922,14 +2927,19 @@ p, li { white-space: pre-wrap; }
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="59"/>
+        <location filename="../filters/select_content/Filter.cpp" line="61"/>
         <source>Order by increasing width</source>
         <translation>Сортировка по возрастающей ширине</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="60"/>
+        <location filename="../filters/select_content/Filter.cpp" line="62"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по возрастающей высоте</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation>Сортировка по соотношению ширины/высоты</translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

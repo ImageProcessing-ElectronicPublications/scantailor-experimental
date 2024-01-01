@@ -178,6 +178,9 @@
           <property name="toolTip">
            <string>Value is 0.5 .. 9.99.</string>
           </property>
+          <property name="decimals">
+           <double>4</double>
+          </property>
           <property name="minimum">
            <double>0.5</double>
           </property>
@@ -185,7 +188,7 @@
            <double>9.99</double>
           </property>
           <property name="singleStep">
-           <double>0.1</double>
+           <double>0.001</double>
           </property>
          </widget>
         </item>

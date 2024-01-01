@@ -2457,6 +2457,11 @@ Trebali bi ih uklonili iz projekta.</translation>
         <translation>Poredaj po povećanju visine</translation>
     </message>
     <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
         <source>Margins</source>
         <translation>Margine</translation>
@@ -2557,6 +2562,11 @@ Trebali bi ih uklonili iz projekta.</translation>
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>Poredaj po povećanju visine</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>

@@ -2499,6 +2499,11 @@ Vyraďte ich z projektu.</translation>
         <translation>Zoradiť podľa rastúcej výšky</translation>
     </message>
     <message>
+        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/page_layout/Filter.cpp" line="79"/>
         <source>Margins</source>
         <translation>Okraje</translation>
@@ -2599,6 +2604,11 @@ Vyraďte ich z projektu.</translation>
         <location filename="../filters/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>Zoradiť podľa rastúcej výšky</translation>
+    </message>
+    <message>
+        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <source>Order by width/height ratio</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../filters/select_content/Filter.cpp" line="70"/>
