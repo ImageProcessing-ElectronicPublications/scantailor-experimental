@@ -158,9 +158,20 @@ void wienerColorFilterInPlace(
         unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
+
         GrayImage wiener(wienerFilter(gray, window_size, 255.0f * coef));
+        if (wiener.isNull())
+        {
+            return;
+        }
+
         uint8_t* wiener_line = wiener.data();
         int const wiener_stride = wiener.stride();
 
@@ -220,6 +231,11 @@ void knnDenoiserFilterInPlace(
         unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
@@ -327,10 +343,20 @@ void colorDespeckleFilterInPlace(
         unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
         GrayImage temp = GrayImage(image);
+        if (temp.isNull())
+        {
+            return;
+        }
+
         uint8_t* temp_line = temp.data();
         int const temp_stride = temp.stride();
 
@@ -399,6 +425,11 @@ void colorDespeckleFilterInPlace(
             }
         }
         temp = GrayImage(image);
+        if (temp.isNull())
+        {
+            return;
+        }
+
         gray_line = gray.data();
         temp_line = temp.data();
         for (int y = 0; y < h; y++)
@@ -450,6 +481,11 @@ void blurFilterInPlace(
         unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
@@ -536,6 +572,11 @@ void screenFilterInPlace(
         unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
@@ -740,6 +781,10 @@ void coloredSignificanceFilterInPlace(
     {
         gray = GrayImage(image);
     }
+    if (gray.isNull())
+    {
+        return;
+    }
 
     unsigned int const w = image.width();
     unsigned int const h = image.height();
@@ -937,6 +982,11 @@ QImage imageHSVcylinder(QImage const& image)
     unsigned int const h = image.height();
 
     QImage hsv_img(w, h, QImage::Format_RGB32);
+    if (hsv_img.isNull())
+    {
+        return QImage();
+    }
+
     uint8_t* hsv_line = (uint8_t*) hsv_img.bits();
 
     float ctorad = (float)(2.0 * M_PI / 256.0);
@@ -1007,6 +1057,11 @@ QImage imageHSLcylinder(QImage const& image)
     unsigned int const h = image.height();
 
     QImage hsl_img(w, h, QImage::Format_RGB32);
+    if (hsl_img.isNull())
+    {
+        return QImage();
+    }
+
     uint8_t* hsl_line = (uint8_t*) hsl_img.bits();
 
     float ctorad = (float)(2.0 * M_PI / 256.0);
@@ -1072,6 +1127,11 @@ QImage imageYCbCr(QImage const& image)
     unsigned int const h = image.height();
 
     QImage ycbcr_img(w, h, QImage::Format_RGB32);
+    if (ycbcr_img.isNull())
+    {
+        return QImage();
+    }
+
     uint8_t* ycbcr_line = (uint8_t*) ycbcr_img.bits();
 
     for (unsigned int y = 0; y < h; y++)
@@ -1443,6 +1503,11 @@ void hsvKMeansInPlace(
         }
 
         GrayImage clusters(image);
+        if (clusters.isNull())
+        {
+            return;
+        }
+
         uint8_t* clusters_line = clusters.data();
         int const clusters_stride = clusters.stride();
 
@@ -1727,6 +1792,11 @@ void maskMorphologicalErode(
     if (radius > 0)
     {
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
@@ -1805,6 +1875,11 @@ void maskMorphologicalDilate(
     if (radius > 0)
     {
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
@@ -1927,6 +2002,11 @@ void unPaperFilterInPlace(
         unsigned int const cnum = image_stride / w;
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
         uint8_t* gray_line = gray.data();
         unsigned int const gray_stride = gray.stride();
 

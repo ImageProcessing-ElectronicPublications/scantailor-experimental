@@ -1132,6 +1132,10 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         double const threshold_coef = black_white_options.thresholdCoef();
 
         GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return BinaryImage();
+        }
 
         switch (threshold_method)
         {
