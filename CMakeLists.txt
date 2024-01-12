@@ -478,16 +478,36 @@ ENDIF()
     cmake_path(APPEND Qt_DIR "plugins" OUTPUT_VARIABLE PLUGINS_DIR)
 
     IF(EXISTS "${PLUGINS_DIR}/imageformats/qjpeg.dll")
-        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qjpeg.dll" SUBDIR imageformats)
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qjpeg.dll" SUBDIR imageformats
+        CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    ENDIF()
+
+    IF(EXISTS "${PLUGINS_DIR}/imageformats/qjpegd.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qjpegd.dll" SUBDIR imageformats
+        CONFIGURATIONS Debug)
     ENDIF()
 
     IF(EXISTS "${PLUGINS_DIR}/imageformats/qtiff.dll")
-        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qtiff.dll" SUBDIR imageformats)
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qtiff.dll" SUBDIR imageformats
+        CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    ENDIF()
+
+    IF(EXISTS "${PLUGINS_DIR}/imageformats/qtiffd.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/imageformats/qtiffd.dll" SUBDIR imageformats
+        CONFIGURATIONS Debug)
     ENDIF()
     
-    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindows.dll" SUBDIR platforms)
+    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindows.dll"SUBDIR platforms
+        CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
     
-    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyle.dll" SUBDIR styles)
+    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindowsd.dll"SUBDIR platforms
+        CONFIGURATIONS Debug)
+
+    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyle.dll" SUBDIR styles
+        CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+
+    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyled.dll" SUBDIR styles
+        CONFIGURATIONS Debug)
 
     IF(EXISTS "${PLUGINS_DIR}/accessible/qtaccessiblewidgets.dll")
         COPY_TO_BUILD_DIR(
