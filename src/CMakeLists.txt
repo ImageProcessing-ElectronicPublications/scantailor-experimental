@@ -18,12 +18,7 @@ IF(NOT STE_NO_TESTS STREQUAL "ON")
     ADD_SUBDIRECTORY(tests)
 ENDIF()
 
-ADD_SUBDIRECTORY(filters/fix_orientation)
-ADD_SUBDIRECTORY(filters/page_split)
-ADD_SUBDIRECTORY(filters/deskew)
-ADD_SUBDIRECTORY(filters/select_content)
-ADD_SUBDIRECTORY(filters/page_layout)
-ADD_SUBDIRECTORY(filters/output)
+ADD_SUBDIRECTORY(filters)
 
 SET(resource_files resources/resources.qrc resources/icons/COPYING)
 IF(WIN32)
