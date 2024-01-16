@@ -364,7 +364,7 @@ XSpline::linearCombinationFor(LinearCoefficient* coeffs, int segment, double t) 
 
     TensionDerivedParams const tdp(pts[1].tension, pts[2].tension);
 
-    Vec4d A;
+    volatile double A[4];
 
     if (t <= tdp.T0p)
     {
@@ -387,7 +387,9 @@ XSpline::linearCombinationFor(LinearCoefficient* coeffs, int segment, double t) 
         A[3] = HBlendFunc(tdp.q[3]).value((t - tdp.T3m) / (tdp.t3 - tdp.T3m));
     }
 
-    A /= A.sum();
+    double sum = A[0] + A[1] + A[2] + A[3];
+    for (int i = 0; i < 4; ++i)
+        A[i] /= sum;
 
     int out_idx = 0;
 
