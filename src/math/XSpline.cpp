@@ -364,6 +364,19 @@ XSpline::linearCombinationFor(LinearCoefficient* coeffs, int segment, double t) 
 
     TensionDerivedParams const tdp(pts[1].tension, pts[2].tension);
 
+    /*
+     * fix #17 for GCC 12.3 (https://github.com/ImageProcessing-ElectronicPublications/scantailor-experimental/issues/17)
+     * 
+     * origin:
+     * 
+     * Vec4d A;
+     * 
+     * alternative:
+     * 
+     * static ControlPoint pts[4];
+     * ...
+     * static Vec4d A;
+     */
     volatile double A[4];
 
     if (t <= tdp.T0p)
