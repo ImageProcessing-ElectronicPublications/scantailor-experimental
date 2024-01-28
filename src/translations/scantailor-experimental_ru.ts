@@ -1576,6 +1576,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <source>Thicker</source>
         <translation>Жирнее</translation>
     </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation>Выкл. автозоны</translation>
+    </message>
 </context>
 <context>
     <name>PageLayoutApplyDialog</name>

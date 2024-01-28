@@ -1464,6 +1464,11 @@ Para determinarlo, ejecute el proceso de &quot;Seleccionar Contendio&quot; o &qu
         <source>Thicker</source>
         <translation>Grosso</translation>
     </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PageLayoutApplyDialog</name>

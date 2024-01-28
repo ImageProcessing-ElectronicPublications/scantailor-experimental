@@ -1405,6 +1405,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation>更浓</translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1248"/>

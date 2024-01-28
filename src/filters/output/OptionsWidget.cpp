@@ -265,6 +265,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdCoefChanged(double))
     );
     connect(
+        autoPictureOffCB, SIGNAL(clicked(bool)),
+        this, SLOT(autoPictureOffToggled(bool))
+    );
+    connect(
         applyColorsModeButton, SIGNAL(clicked()),
         this, SLOT(applyColorsModeButtonClicked())
     );
@@ -784,6 +788,16 @@ OptionsWidget::thresholdCoefChanged(double value)
 }
 
 void
+OptionsWidget::autoPictureOffToggled(bool const checked)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setAutoPictureOff(checked);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -1071,6 +1085,7 @@ OptionsWidget::updateColorsDisplay()
 
     bool color_grayscale_options_visible = false;
     bool bw_options_visible = false;
+    bool mixed_options_visible = false;
     switch (color_mode)
     {
     case ColorParams::BLACK_AND_WHITE:
@@ -1081,6 +1096,7 @@ OptionsWidget::updateColorsDisplay()
         break;
     case ColorParams::MIXED:
         bw_options_visible = true;
+        mixed_options_visible = true;
         break;
     }
 
@@ -1109,6 +1125,7 @@ OptionsWidget::updateColorsDisplay()
     bwOptions->setVisible(bw_options_visible);
     if (bw_options_visible)
     {
+        mixedOptions->setVisible(mixed_options_visible);
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
         BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
         thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
@@ -1129,6 +1146,10 @@ OptionsWidget::updateColorsDisplay()
             thresholdWindowSize->setEnabled( true );
             thresholdCoef->setEnabled( true );
         }
+		if (mixed_options_visible)
+		{
+			autoPictureOffCB->setChecked(black_white_options.autoPictureOff());
+		}
 
         kmeansPanelToggled(kmeansPanelEmpty->isChecked());
         kmeansCount->setValue(black_kmeans_options.kmeansCount());

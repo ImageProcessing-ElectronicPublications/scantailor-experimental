@@ -511,7 +511,14 @@ OutputGenerator::process(
                 // adjustBrightnessGrayscale(), which may convert
                 // transformed_image from grayscale to color mode.
 
-                bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg);
+                if (black_white_options.autoPictureOff())
+                {
+                    bw_mask = BinaryImage(transformed_image.size(), BLACK);
+                }
+                else
+                {
+                    bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg);
+                }
 
                 if (dbg)
                 {

@@ -1296,6 +1296,11 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
         <translation>schwächer</translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="20"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="33"/>
         <source>Resolution Enhancement</source>

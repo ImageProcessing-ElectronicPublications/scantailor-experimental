@@ -1402,6 +1402,11 @@ Da bi to odredili, pokrenite skupne obrade u &quot;Odredi sadržaja&quot; ili &q
         <source>Thicker</source>
         <translation>Deblje</translation>
     </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PageLayoutApplyDialog</name>

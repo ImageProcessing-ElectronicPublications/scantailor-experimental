@@ -1525,6 +1525,11 @@ Aby go ustalić uruchom przetwarzanie wsadowe w sekcji &quot;Wybierz zawartość
         <source>Thicker</source>
         <translation>grubsze</translation>
     </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PageLayoutApplyDialog</name>

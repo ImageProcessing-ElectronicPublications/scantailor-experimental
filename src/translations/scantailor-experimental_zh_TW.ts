@@ -1232,6 +1232,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation>較細的</translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="20"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="33"/>
         <source>Resolution Enhancement</source>

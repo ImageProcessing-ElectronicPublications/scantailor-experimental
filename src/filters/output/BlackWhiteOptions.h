@@ -100,6 +100,15 @@ public:
         m_thresholdCoef = val;
     }
 
+    bool autoPictureOff() const
+    {
+        return m_autoPictureOff;
+    }
+    void setAutoPictureOff(bool val)
+    {
+        m_autoPictureOff = val;
+    }
+
     bool operator==(BlackWhiteOptions const& other) const;
 
     bool operator!=(BlackWhiteOptions const& other) const;
@@ -111,6 +120,7 @@ private:
     int m_thresholdAdjustment;
     int m_thresholdWindowSize;
     double m_thresholdCoef;
+    bool m_autoPictureOff;
 
     static ThresholdFilter parseThresholdMethod(QString const& str);
 

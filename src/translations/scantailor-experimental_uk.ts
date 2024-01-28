@@ -1460,6 +1460,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <source>Thicker</source>
         <translation>Товстіше</translation>
     </message>
+    <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PageLayoutApplyDialog</name>

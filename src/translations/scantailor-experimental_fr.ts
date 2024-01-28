@@ -1267,6 +1267,11 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
         <translation>Éclaircir</translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="20"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="33"/>
         <source>Resolution Enhancement</source>

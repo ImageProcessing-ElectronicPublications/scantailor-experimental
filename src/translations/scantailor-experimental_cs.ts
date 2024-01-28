@@ -1415,6 +1415,11 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation>Tlustší</translation>
     </message>
     <message>
+        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <source>Off autozones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1248"/>

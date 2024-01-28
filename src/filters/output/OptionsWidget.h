@@ -125,6 +125,8 @@ private slots:
 
     void thresholdCoefChanged(double value);
 
+    void autoPictureOffToggled(bool checked);
+
     void applyColorsModeButtonClicked();
 
     void applyColorsModeConfirmed(std::set<PageId> const& pages);
