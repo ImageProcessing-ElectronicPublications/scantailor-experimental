@@ -31,7 +31,8 @@ namespace output
 {
 
 Params::Params()
-    :   m_despeckleLevel(DESPECKLE_CAUTIOUS)
+    :   m_despeckleLevel(DESPECKLE_CAUTIOUS),
+        m_despeckleFactor(despeckleLevelToFactor(DESPECKLE_CAUTIOUS))
 {
 }
 

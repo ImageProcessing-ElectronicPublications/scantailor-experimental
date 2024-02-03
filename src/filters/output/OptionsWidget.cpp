@@ -1101,6 +1101,7 @@ OptionsWidget::updateColorsDisplay()
     }
 
     colorMarginOptions->setVisible(color_grayscale_options_visible);
+    mixedOptions->setVisible(mixed_options_visible);
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     wienerCoef->setValue(color_options.wienerCoef());
     wienerWindowSize->setValue(color_options.wienerWindowSize());
@@ -1125,7 +1126,6 @@ OptionsWidget::updateColorsDisplay()
     bwOptions->setVisible(bw_options_visible);
     if (bw_options_visible)
     {
-        mixedOptions->setVisible(mixed_options_visible);
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
         BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
         thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
@@ -1146,10 +1146,10 @@ OptionsWidget::updateColorsDisplay()
             thresholdWindowSize->setEnabled( true );
             thresholdCoef->setEnabled( true );
         }
-		if (mixed_options_visible)
-		{
-			autoPictureOffCB->setChecked(black_white_options.autoPictureOff());
-		}
+        if (mixed_options_visible)
+        {
+            autoPictureOffCB->setChecked(black_white_options.autoPictureOff());
+        }
 
         kmeansPanelToggled(kmeansPanelEmpty->isChecked());
         kmeansCount->setValue(black_kmeans_options.kmeansCount());
