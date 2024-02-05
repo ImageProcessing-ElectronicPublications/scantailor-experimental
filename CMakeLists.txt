@@ -497,17 +497,25 @@ ENDIF()
         CONFIGURATIONS Debug)
     ENDIF()
     
-    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindows.dll"SUBDIR platforms
-        CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    IF(EXISTS "${PLUGINS_DIR}/platforms/qwindows.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindows.dll" SUBDIR platforms
+            CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    ENDIF()
     
-    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindowsd.dll"SUBDIR platforms
-        CONFIGURATIONS Debug)
+    IF(EXISTS "${PLUGINS_DIR}/platforms/qwindowsd.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/platforms/qwindowsd.dll" SUBDIR platforms
+            CONFIGURATIONS Debug)
+    ENDIF()
 
-    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyle.dll" SUBDIR styles
-        CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    IF(EXISTS "${PLUGINS_DIR}/styles/qwindowsvistastyle.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyle.dll" SUBDIR styles
+            CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    ENDIF()
 
-    COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyled.dll" SUBDIR styles
-        CONFIGURATIONS Debug)
+    IF(EXISTS "${PLUGINS_DIR}/styles/qwindowsvistastyled.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qwindowsvistastyled.dll" SUBDIR styles
+            CONFIGURATIONS Debug)
+    ENDIF()
 
     IF(EXISTS "${PLUGINS_DIR}/accessible/qtaccessiblewidgets.dll")
         COPY_TO_BUILD_DIR(
