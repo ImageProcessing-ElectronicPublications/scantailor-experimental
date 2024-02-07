@@ -158,7 +158,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
  */
 IMAGEPROC_EXPORT GrayImage binarizeEdgeDivPrefilter(
     GrayImage const& src, QSize const window_size,
-    double const kep, double const kbd, int const delta);
+    double const kep, double const kbd);
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     GrayImage const& src, QSize window_size,
     double kep = 0.5, double kdb = 0.5, int delta = 0);

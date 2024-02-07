@@ -1024,7 +1024,7 @@ BinaryImage binarizeBradley(
 
 GrayImage binarizeEdgeDivPrefilter(
     GrayImage const& src, QSize const window_size,
-    double const kep, double const kbd, int const delta)
+    double const kep, double const kbd)
 {
     if (window_size.isEmpty())
     {
@@ -1129,7 +1129,7 @@ BinaryImage binarizeEdgeDiv(
         return BinaryImage();
     }
 
-    GrayImage gray(binarizeEdgeDivPrefilter(src, window_size, kep, kbd, delta));
+    GrayImage gray(binarizeEdgeDivPrefilter(src, window_size, kep, kbd));
     BinaryImage bw_img(binarizeBiModal(gray, delta));
 
     return bw_img;
