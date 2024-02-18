@@ -363,6 +363,13 @@ OutputGenerator::process(
     BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
     double norm_coef = color_options.normalizeCoef();
 
+    if (color_options.getflgGrayScale())
+    {
+        GrayImage gray(transformed_image);
+        transformed_image = gray.toQImage();
+        transformed_image = transformed_image.convertToFormat(QImage::Format_ARGB32);
+    }
+    
     // Color filters begin
     wienerColorFilterInPlace(transformed_image, QSize(color_options.wienerWindowSize(), color_options.wienerWindowSize()), color_options.wienerCoef());
 

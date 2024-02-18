@@ -660,6 +660,16 @@
          <widget class="QComboBox" name="colorModeSelector"/>
         </item>
         <item>
+         <widget class="QCheckBox" name="grayScaleCB">
+          <property name="text">
+           <string>G</string>
+          </property>
+          <property name="toolTip">
+           <string>GrayScale</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

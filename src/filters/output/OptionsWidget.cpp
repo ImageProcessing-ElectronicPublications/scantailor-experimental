@@ -221,6 +221,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(colorModeChanged(int))
     );
     connect(
+        grayScaleCB, SIGNAL(clicked(bool)),
+        this, SLOT(grayScaleToggled(bool))
+    );
+    connect(
         thresholdMethodSelector, SIGNAL(currentIndexChanged(int)),
         this, SLOT(thresholdMethodChanged(int))
     );
@@ -659,6 +663,16 @@ OptionsWidget::colorModeChanged(int const idx)
     m_colorParams.setColorMode((ColorParams::ColorMode)mode);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     updateColorsDisplay();
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::grayScaleToggled(bool const checked)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    color_options.setflgGrayScale(checked);
+    m_colorParams.setColorGrayscaleOptions(color_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
 
@@ -1122,6 +1136,7 @@ OptionsWidget::updateColorsDisplay()
     {
         whiteMarginsCB->setChecked(color_options.whiteMargins());
     }
+    grayScaleCB->setChecked(color_options.getflgGrayScale());
 
     bwOptions->setVisible(bw_options_visible);
     if (bw_options_visible)

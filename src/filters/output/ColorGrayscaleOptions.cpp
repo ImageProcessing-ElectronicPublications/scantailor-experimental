@@ -40,7 +40,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_unPaperCoef(el.attribute("unPaper").toDouble()),
        m_unPaperIters(el.attribute("unPaperIters").toInt()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
-       m_whiteMargins(el.attribute("whiteMargins") == "1")
+       m_whiteMargins(el.attribute("whiteMargins") == "1"),
+       m_grayScale(el.attribute("grayScale") == "1")
 {
     if (m_wienerCoef < 0.0 || m_wienerCoef > 1.0)
     {
@@ -124,6 +125,7 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("unPaperIters", m_unPaperIters);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
     el.setAttribute("whiteMargins", m_whiteMargins ? "1" : "0");
+    el.setAttribute("grayScale", m_grayScale ? "1" : "0");
     return el;
 }
 
@@ -167,6 +169,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_whiteMargins != other.m_whiteMargins)
+    {
+        return false;
+    }
+    if (m_grayScale != other.m_grayScale)
     {
         return false;
     }

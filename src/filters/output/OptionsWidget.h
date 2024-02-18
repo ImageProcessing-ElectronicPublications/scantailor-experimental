@@ -103,6 +103,8 @@ private slots:
 
     void modePanelToggled(bool checked);
 
+    void grayScaleToggled(bool checked);
+
     void colorModeChanged(int idx);
 
     void setLighterThreshold();

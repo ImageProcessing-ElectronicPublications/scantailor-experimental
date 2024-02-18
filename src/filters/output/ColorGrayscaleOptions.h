@@ -45,7 +45,8 @@ public:
           m_unPaperCoef(0.0),
           m_unPaperIters(5),
           m_normalizeCoef(0.5),
-          m_whiteMargins(false) {}
+          m_whiteMargins(false),
+          m_grayScale(false) {}
 
     ColorGrayscaleOptions(QDomElement const& el);
 
@@ -189,6 +190,15 @@ public:
         m_whiteMargins = val;
     }
 
+    bool getflgGrayScale() const
+    {
+        return m_grayScale;
+    }
+    void setflgGrayScale(bool val)
+    {
+        m_grayScale = val;
+    }
+
     bool operator==(ColorGrayscaleOptions const& other) const;
 
     bool operator!=(ColorGrayscaleOptions const& other) const;
@@ -209,6 +219,7 @@ private:
     int m_unPaperIters;
     double m_normalizeCoef;
     bool m_whiteMargins;
+    bool m_grayScale;
 };
 
 } // namespace output
