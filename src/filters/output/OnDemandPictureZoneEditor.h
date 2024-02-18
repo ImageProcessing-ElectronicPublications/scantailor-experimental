@@ -48,8 +48,8 @@ public:
      */
     OnDemandPictureZoneEditor(
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
-        CachingFactory<QImage> const& cached_transformed_orig_image,
-        CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
+        CachingFactory<QImage, std::function<QImage()> > const& cached_transformed_orig_image,
+        CachingFactory<QImage, std::function<QImage()> > const& cached_downscaled_transformed_orig_image,
         imageproc::BinaryImage const& output_picture_mask,
         PageId const& page_id, IntrusivePtr<Settings> const& settings,
         std::function<QPointF(QPointF const&)> const& orig_to_output,
@@ -65,8 +65,8 @@ private:
     void buildRealPictureZoneEditor();
 
     std::shared_ptr<AcceleratableOperations> m_ptrAccelOps;
-    CachingFactory<QImage> m_cachedTransformedOrigImage;
-    CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
+    CachingFactory<QImage, std::function<QImage()> > m_cachedTransformedOrigImage;
+    CachingFactory<QImage, std::function<QImage()> > m_cachedDownscaledTransformedOrigImage;
     imageproc::BinaryImage m_outputPictureMask;
     PageId m_pageId;
     IntrusivePtr<Settings> m_ptrSettings;

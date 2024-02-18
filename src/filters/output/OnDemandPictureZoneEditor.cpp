@@ -40,14 +40,14 @@ class OnDemandPictureZoneEditor::ImageTransformationTask :
 public:
     ImageTransformationTask(
         OnDemandPictureZoneEditor* owner,
-        CachingFactory<QImage> const& cached_transformed_orig_image,
-        CachingFactory<QImage> const& cached_downscaled_transformed_orig_image);
+        CachingFactory<QImage, std::function<QImage()> > const& cached_transformed_orig_image,
+        CachingFactory<QImage, std::function<QImage()> > const& cached_downscaled_transformed_orig_image);
 
     virtual BackgroundExecutor::TaskResultPtr operator()();
 private:
     QPointer<OnDemandPictureZoneEditor> m_ptrOwner;
-    CachingFactory<QImage> m_cachedTransformedOrigImage;
-    CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
+    CachingFactory<QImage, std::function<QImage()> > m_cachedTransformedOrigImage;
+    CachingFactory<QImage, std::function<QImage()> > m_cachedDownscaledTransformedOrigImage;
 };
 
 
@@ -66,8 +66,8 @@ private:
 
 OnDemandPictureZoneEditor::OnDemandPictureZoneEditor(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
-    CachingFactory<QImage> const& cached_transformed_orig_image,
-    CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
+    CachingFactory<QImage, std::function<QImage()> > const& cached_transformed_orig_image,
+    CachingFactory<QImage, std::function<QImage()> > const& cached_downscaled_transformed_orig_image,
     imageproc::BinaryImage const& output_picture_mask,
     PageId const& page_id, IntrusivePtr<Settings> const& settings,
     std::function<QPointF(QPointF const&)> const& orig_to_output,
@@ -135,8 +135,8 @@ OnDemandPictureZoneEditor::buildRealPictureZoneEditor()
 
 OnDemandPictureZoneEditor::ImageTransformationTask::ImageTransformationTask(
     OnDemandPictureZoneEditor* owner,
-    CachingFactory<QImage> const& cached_transformed_orig_image,
-    CachingFactory<QImage> const& cached_downscaled_transformed_orig_image)
+    CachingFactory<QImage, std::function<QImage()> > const& cached_transformed_orig_image,
+    CachingFactory<QImage, std::function<QImage()> > const& cached_downscaled_transformed_orig_image)
     :	m_ptrOwner(owner)
     ,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
     ,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)

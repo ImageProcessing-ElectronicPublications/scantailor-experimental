@@ -98,7 +98,7 @@ public:
         TaskStatus const& status,
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         QImage const& orig_image,
-        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        CachingFactory<imageproc::GrayImage, std::function<imageproc::GrayImage()> > const& gray_orig_image_factory,
         ZoneSet const& picture_zones, ZoneSet const& fill_zones,
         imageproc::BinaryImage* out_auto_picture_mask = nullptr,
         imageproc::BinaryImage* out_speckles_image = nullptr,

@@ -101,7 +101,7 @@ LoadFileTask::operator()()
             AffineImageTransform const transform(image.size());
             m_ptrThumbnailCache->ensureThumbnailExists(m_pageId, image, transform);
 
-            CachingFactory<GrayImage> gray_image_factory([image]()
+            CachingFactory<GrayImage, std::function<GrayImage()> > gray_image_factory([image]()
             {
                 return GrayImage(image);
             });

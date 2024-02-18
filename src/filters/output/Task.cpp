@@ -88,8 +88,8 @@ public:
               std::function<QPointF(QPointF const&)> const& orig_to_output,
               std::function<QPointF(QPointF const&)> const& output_to_orig,
               BinaryImage const& picture_mask,
-              CachingFactory<QImage> const& cached_transformed_orig_image,
-              CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
+              CachingFactory<QImage, std::function<QImage()> > const& cached_transformed_orig_image,
+              CachingFactory<QImage, std::function<QImage()> > const& cached_downscaled_transformed_orig_image,
               DespeckleState const& despeckle_state,
               DespeckleVisualization const& despeckle_visualization,
               bool batch, bool debug);
@@ -113,8 +113,8 @@ private:
     std::function<QPointF(QPointF const&)> m_outputToOrig;
     QImage m_downscaledOutputImage;
     BinaryImage m_pictureMask;
-    CachingFactory<QImage> m_cachedTransformedOrigImage;
-    CachingFactory<QImage> m_cachedDownscaledTransformedOrigImage;
+    CachingFactory<QImage, std::function<QImage()> > m_cachedTransformedOrigImage;
+    CachingFactory<QImage, std::function<QImage()> > m_cachedDownscaledTransformedOrigImage;
     DespeckleState m_despeckleState;
     DespeckleVisualization m_despeckleVisualization;
     bool m_batchProcessing;
@@ -151,7 +151,7 @@ Task::process(
     TaskStatus const& status,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     QImage const& orig_image,
-    CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+    CachingFactory<imageproc::GrayImage, std::function<imageproc::GrayImage()> > const& gray_orig_image_factory,
     std::shared_ptr<AbstractImageTransform const> const& orig_image_transform,
     QRectF const& content_rect, QRectF const& outer_rect)
 {
@@ -170,7 +170,7 @@ Task::processScaled(
     TaskStatus const& status,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     QImage const& orig_image,
-    CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+    CachingFactory<imageproc::GrayImage, std::function<imageproc::GrayImage()> > const& gray_orig_image_factory,
     std::shared_ptr<AbstractImageTransform const> const& orig_image_transform,
     QRectF const& content_rect, QRectF const& outer_rect)
 {
@@ -438,13 +438,13 @@ Task::processScaled(
     {
         return orig_image_transform->materialize(orig_image, out_rect, Qt::transparent, accel_ops);
     };
-    auto cached_transform_orig_image = cachingFactory<QImage>(transform_orig_image);
+    auto cached_transform_orig_image = cachingFactory<QImage, std::function<QImage()> >(transform_orig_image);
 
     auto downscaled_transform_orig_image = [cached_transform_orig_image, accel_ops]()
     {
         return ImageViewBase::createDownscaledImage(cached_transform_orig_image(), accel_ops);
     };
-    auto cached_downscaled_transform_orig_image = cachingFactory<QImage>(
+    auto cached_downscaled_transform_orig_image = cachingFactory<QImage, std::function<QImage()> >(
                 downscaled_transform_orig_image
             );
 
@@ -517,8 +517,8 @@ Task::UiUpdater::UiUpdater(
     std::function<QPointF(QPointF const&)> const& orig_to_output,
     std::function<QPointF(QPointF const&)> const& output_to_orig,
     BinaryImage const& picture_mask,
-    CachingFactory<QImage> const& cached_transformed_orig_image,
-    CachingFactory<QImage> const& cached_downscaled_transformed_orig_image,
+    CachingFactory<QImage, std::function<QImage()> > const& cached_transformed_orig_image,
+    CachingFactory<QImage, std::function<QImage()> > const& cached_downscaled_transformed_orig_image,
     DespeckleState const& despeckle_state,
     DespeckleVisualization const& despeckle_visualization,
     bool const batch, bool const debug)

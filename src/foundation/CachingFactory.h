@@ -32,7 +32,7 @@
  * @note Multiple copies of CachingFactory share the same cache.
  * @note This class is thread-safe.
  */
-template<typename T>
+template<typename T, typename F>
 class CachingFactory
 {
 private:
@@ -42,11 +42,9 @@ private:
         std::function<T()> factory;
         boost::optional<T> cached;
 
-        template<typename F>
         SharedState(F&& factory) : factory(std::forward<F>(factory)) {}
     };
 public:
-    template<typename F>
     explicit CachingFactory(F&& factory)
         : m_ptrState(std::make_shared<SharedState>(std::forward<F>(factory))) {}
 
@@ -85,9 +83,9 @@ private:
  * @brief Wraps a factory functor into a CachingFactory.
  */
 template<typename T, typename F>
-CachingFactory<T> cachingFactory(F&& factory)
+CachingFactory<T, F> cachingFactory(F&& factory)
 {
-    return CachingFactory<T>(std::forward<F>(factory));
+    return CachingFactory<T, F>(std::forward<F>(factory));
 }
 
 #endif

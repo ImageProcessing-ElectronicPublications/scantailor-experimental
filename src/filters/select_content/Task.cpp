@@ -99,7 +99,7 @@ Task::process(
     TaskStatus const& status,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     QImage const& orig_image,
-    CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+    CachingFactory<imageproc::GrayImage, std::function<imageproc::GrayImage()> > const& gray_orig_image_factory,
     std::shared_ptr<AbstractImageTransform const> const& orig_image_transform)
 {
     assert(!orig_image.isNull());
