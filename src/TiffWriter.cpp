@@ -34,6 +34,8 @@
 #include <assert.h>
 #include <stdint.h>
 
+#define TIFF_DEFAULT_DPI 96.0f
+
 /**
  * m_reverseBitsLUT[byte] gives the same byte, but with bit order reversed.
  */
@@ -73,7 +75,6 @@ TiffWriter::m_reverseBitsLUT[256] =
     0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
     0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
-
 
 class TiffWriter::TiffHandle
 {
@@ -208,6 +209,8 @@ TiffWriter::writeImage(QIODevice& device, QImage const& image)
     TIFFSetField(tif.handle(), TIFFTAG_IMAGELENGTH, uint32(image.height()));
     TIFFSetField(tif.handle(), TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT);
     TIFFSetField(tif.handle(), TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+    TIFFSetField(tif.handle(), TIFFTAG_XRESOLUTION, TIFF_DEFAULT_DPI);
+    TIFFSetField(tif.handle(), TIFFTAG_YRESOLUTION, TIFF_DEFAULT_DPI);
 
     switch (image.format())
     {
