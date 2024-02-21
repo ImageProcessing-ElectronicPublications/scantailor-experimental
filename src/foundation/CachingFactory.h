@@ -42,13 +42,11 @@ private:
         std::function<T()> factory;
         boost::optional<T> cached;
 
-        template<typename F>
-        SharedState(F&& factory) : factory(std::forward<F>(factory)) {}
+        SharedState(std::function<T()> factory) : factory(factory) {}
     };
 public:
-    template<typename F>
-    explicit CachingFactory(F&& factory)
-        : m_ptrState(std::make_shared<SharedState>(std::forward<F>(factory))) {}
+    explicit CachingFactory(std::function<T()> factory)
+        : m_ptrState(std::make_shared<SharedState>(factory)) {}
 
     T operator()() const
     {

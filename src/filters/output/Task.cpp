@@ -440,7 +440,7 @@ Task::processScaled(
     };
     auto cached_transform_orig_image = cachingFactory<QImage>(transform_orig_image);
 
-    auto downscaled_transform_orig_image = [&cached_transform_orig_image, accel_ops]()
+    auto downscaled_transform_orig_image = [cached_transform_orig_image, accel_ops]()
     {
         return ImageViewBase::createDownscaledImage(cached_transform_orig_image(), accel_ops);
     };
