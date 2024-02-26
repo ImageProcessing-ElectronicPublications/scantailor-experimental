@@ -1168,7 +1168,10 @@ float pixelDistance(
     float const delta_h = h0 - h1;
     float const delta_s = s0 - s1;
     float const delta_v = v0 - v1;
-    float const dist = delta_h * delta_h + delta_s * delta_s + delta_v * delta_v;
+    float const delta_h2 = delta_h * delta_h;
+    float const delta_s2 = delta_s * delta_s;
+    float const delta_v2 = delta_v * delta_v;
+    float const dist = delta_h2 + delta_h2 + delta_s2 + delta_s2 + delta_v2;
 
     return dist;
 }
