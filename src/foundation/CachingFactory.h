@@ -46,6 +46,9 @@ private:
         SharedState(F&& factory) : factory(std::forward<F>(factory)) {}
     };
 public:
+    CachingFactory(CachingFactory const& factory) : m_ptrState(factory.m_ptrState) {}
+    CachingFactory(CachingFactory & factory) : m_ptrState(factory.m_ptrState) {}
+
     template<typename F>
     explicit CachingFactory(F&& factory)
         : m_ptrState(std::make_shared<SharedState>(std::forward<F>(factory))) {}
