@@ -1676,6 +1676,8 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
     stylesheet.replace("@path_to_pics@", STYLESHEETS_DIR);
     
     setStyleSheet(stylesheet);
+
+    adjustSize();
 }
 
 /**
