@@ -197,7 +197,7 @@ SettingsDialog::setupStylesheetsCombo()
     stylesheetPaths.removeDuplicates();
     stylesheetPaths.sort();
 
-    for (const QString stylesheetPath : stylesheetPaths) {
+    for (const QString& stylesheetPath : stylesheetPaths) {
         QFileInfo stylesheetFileInfo(stylesheetPath);
         ui.stylesheetCombo->addItem(
             stylesheetFileInfo.baseName(), 
