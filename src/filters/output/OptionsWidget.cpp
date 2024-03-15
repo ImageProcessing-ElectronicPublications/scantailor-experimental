@@ -952,7 +952,7 @@ OptionsWidget::applyKmeansConfirmed(std::set<PageId> const& pages)
 {
     ColorParams::ColorMode mode(m_colorParams.colorMode());
     BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
-    BOOST_FOREACH(PageId const& page_id, pages)
+    for(PageId const& page_id : pages)
     {
 //        m_ptrSettings->setColorParams(page_id, m_colorParams);
         m_ptrSettings->setBlackKmeansOptions(page_id, black_kmeans_options);
