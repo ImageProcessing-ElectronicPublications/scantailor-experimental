@@ -256,16 +256,17 @@ MainWindow::MainWindow()
     updateMainArea();
 
     QSettings settings;
-    if (settings.value("mainWindow/maximized") == false)
+    QVariant const geom(
+        settings.value("mainWindow/geometry")
+    );
+    if (!restoreGeometry(geom.toByteArray()))
     {
-        QVariant const geom(
-            settings.value("mainWindow/nonMaximizedGeometry")
-        );
-        if (!restoreGeometry(geom.toByteArray()))
-        {
-            resize(1014, 689); // A sensible value.
-        }
+        resize(1014, 689); // A sensible value.
     }
+    QVariant const state(
+        settings.value("mainWindow/windowState")
+    );
+    restoreState(state.toByteArray());
 
     filterOptions->installEventFilter(this);
     thumbView->installEventFilter(this);
@@ -552,13 +553,8 @@ MainWindow::timerEvent(QTimerEvent* const event)
     {
         m_closing = true;
         QSettings settings;
-        settings.setValue("mainWindow/maximized", isMaximized());
-        if (!isMaximized())
-        {
-            settings.setValue(
-                "mainWindow/nonMaximizedGeometry", saveGeometry()
-            );
-        }
+        settings.setValue("mainWindow/geometry", saveGeometry());
+        settings.setValue("mainWindow/windowState", saveState());
         close();
     }
 }
@@ -1676,8 +1672,6 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
     stylesheet.replace("@path_to_pics@", STYLESHEETS_DIR);
     
     setStyleSheet(stylesheet);
-
-    adjustSize();
 }
 
 /**
