@@ -183,7 +183,7 @@
 <context>
     <name>ColorPickupInteraction</name>
     <message>
-        <location filename="../filters/output/ColorPickupInteraction.cpp" line="47"/>
+        <location filename="../stages/output/ColorPickupInteraction.cpp" line="47"/>
         <source>Click on an area to pick up its color, or ESC to cancel.</source>
         <translation>Клацніть на ділянці, щоб взяти колір з неї, або натисніть Esc, щоб скасувати дію.</translation>
     </message>
@@ -195,32 +195,32 @@
         <translation type="vanished">Застосувати до</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewApplyDialog.ui" line="57"/>
+        <location filename="../stages/deskew/ui/DeskewApplyDialog.ui" line="57"/>
         <source>Scope</source>
         <translation type="unfinished">Діапазон</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewApplyDialog.ui" line="63"/>
+        <location filename="../stages/deskew/ui/DeskewApplyDialog.ui" line="63"/>
         <source>This page only (already applied)</source>
         <translation>Цієї сторінки (вже застосовано)</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewApplyDialog.ui" line="73"/>
+        <location filename="../stages/deskew/ui/DeskewApplyDialog.ui" line="73"/>
         <source>All pages</source>
         <translation>Всіх сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewApplyDialog.ui" line="80"/>
+        <location filename="../stages/deskew/ui/DeskewApplyDialog.ui" line="80"/>
         <source>This page and the following ones</source>
         <translation>Цієї сторінки і наступних сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewApplyDialog.ui" line="105"/>
+        <location filename="../stages/deskew/ui/DeskewApplyDialog.ui" line="105"/>
         <source>Selected pages</source>
         <translation>Позначених сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewApplyDialog.ui" line="138"/>
+        <location filename="../stages/deskew/ui/DeskewApplyDialog.ui" line="138"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
@@ -228,7 +228,7 @@
 <context>
     <name>DeskewOptionsWidget</name>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="14"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="14"/>
         <source>Form</source>
         <translation>Форма</translation>
     </message>
@@ -237,58 +237,58 @@
         <translation type="vanished">Виправлення нахилу</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="20"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="20"/>
         <source>Distortion type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="44"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="44"/>
         <source>No distortion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="66"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="66"/>
         <source>Page skew</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="88"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="88"/>
         <source>Keystoning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="110"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="110"/>
         <source>Curved lines</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="187"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="187"/>
         <source>Mode</source>
         <translation type="unfinished">Режим</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="206"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="206"/>
         <source>Auto</source>
         <translation>Автоматично</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="222"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="222"/>
         <source>Manual</source>
         <translation>Вручну</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="251"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="251"/>
         <source>Rotation angle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="296"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="296"/>
         <source>Depth perception</source>
         <translation type="unfinished">Сприйняття глибини</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
-        <location filename="../filters/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
         <source>Apply To ...</source>
         <translation>Застосувати до…</translation>
     </message>
@@ -791,54 +791,54 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>OrientationApplyDialog</name>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="17"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="17"/>
         <source>Fix Orientation</source>
         <translation>Виправлення орієнтації</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="23"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="23"/>
         <source>Apply to</source>
         <translation>Застосувати до</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="29"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="29"/>
         <source>This page only (already applied)</source>
         <translation>Лише цієї сторінки (вже застосовано)</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="39"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="39"/>
         <source>All pages</source>
         <translation>Всіх сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="46"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="46"/>
         <source>This page and the following ones</source>
         <translation>Цієї сторінки і наступних сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="71"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="71"/>
         <source>Every other page</source>
         <extracomment>All odd or even pages, depending on the current page being odd or even.</extracomment>
         <translation>Всіх інших сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="101"/>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="206"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="101"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="206"/>
         <source>The current page will be included.</source>
         <translation>Обробку буде застосовано і до поточної сторінки.</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="125"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="125"/>
         <source>Selected pages</source>
         <translation>Позначених сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="155"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="155"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationApplyDialog.ui" line="176"/>
+        <location filename="../stages/fix_orientation/ui/OrientationApplyDialog.ui" line="176"/>
         <source>Every other selected page</source>
         <translation>Всіх інших позначених сторінок</translation>
     </message>
@@ -846,33 +846,33 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>OrientationOptionsWidget</name>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="13"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="13"/>
         <source>Form</source>
         <translation>Форма</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="19"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="19"/>
         <source>Rotate</source>
         <translation>Поворот</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="40"/>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="56"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="40"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="56"/>
         <source>...</source>
         <translation>…</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="142"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="142"/>
         <source>Reset</source>
         <translation>Відновити</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="167"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="167"/>
         <source>Scope</source>
         <translation>Діапазон</translation>
     </message>
     <message>
-        <location filename="../filters/fix_orientation/ui/OrientationOptionsWidget.ui" line="188"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="188"/>
         <source>Apply to ...</source>
         <translation>Застосувати до…</translation>
     </message>
@@ -994,37 +994,37 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>OutputApplyColorsDialog</name>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="17"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="17"/>
         <source>Apply Mode</source>
         <translation>Режим застосування</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="23"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="23"/>
         <source>Apply to</source>
         <translation>Застосувати до</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="29"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="29"/>
         <source>This page only (already applied)</source>
         <translation>Лише цієї сторінки (вже застосовано)</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="39"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="39"/>
         <source>All pages</source>
         <translation>Всіх сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="46"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="46"/>
         <source>This page and the following ones</source>
         <translation>Цієї сторінки і наступних сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="62"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="62"/>
         <source>Selected pages</source>
         <translation>Позначених сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputApplyColorsDialog.ui" line="95"/>
+        <location filename="../stages/output/ui/OutputApplyColorsDialog.ui" line="95"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
@@ -1032,57 +1032,57 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>OutputChangeDewarpingDialog</name>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="17"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="17"/>
         <source>Apply Dewarping Mode</source>
         <translation>Застосування режиму виправлення рядків</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="23"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="23"/>
         <source>Mode</source>
         <translation>Режим</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="29"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="29"/>
         <source>Off</source>
         <translation>Вимкнути</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="42"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="42"/>
         <source>Auto (experimental)</source>
         <translation>Автоматичний (тестовий)</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="49"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="49"/>
         <source>Manual</source>
         <translation>Вручну</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="59"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="59"/>
         <source>Scope</source>
         <translation>Діапазон</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="65"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="65"/>
         <source>This page only</source>
         <translation>Лише ця сторінка</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="75"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="75"/>
         <source>All pages</source>
         <translation>Всі сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="82"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="82"/>
         <source>This page and the following ones</source>
         <translation>Ця сторінка і наступні сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="98"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="98"/>
         <source>Selected pages</source>
         <translation>Позначені сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputChangeDewarpingDialog.ui" line="131"/>
+        <location filename="../stages/output/ui/OutputChangeDewarpingDialog.ui" line="131"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
@@ -1125,7 +1125,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>OutputOptionsWidget</name>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="14"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="14"/>
         <source>Form</source>
         <translation>Форма</translation>
     </message>
@@ -1138,18 +1138,18 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="vanished">Змінити…</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="556"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="569"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Mode</source>
         <translation>Режим</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="491"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="491"/>
         <source>White margins</source>
         <translation>Білі поля</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="436"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="436"/>
         <source>Equalize illumination</source>
         <translation>Вирівняти освітленість</translation>
     </message>
@@ -1162,306 +1162,306 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="vanished">Сприйняття глибини</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1062"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1062"/>
         <source>No despeckling</source>
         <translation>Без вилучення плям</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="531"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="994"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1248"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
         <source>Apply To ...</source>
         <translation>Застосувати до…</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="20"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="33"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="20"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="33"/>
         <source>Resolution Enhancement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="66"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="66"/>
         <source>1x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="85"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="85"/>
         <source>1.5x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="104"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="104"/>
         <source>2x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="123"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="123"/>
         <source>3x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="142"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="142"/>
         <source>4x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="172"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="172"/>
         <source>Scale factor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="179"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="179"/>
         <source>Value is 0.5 .. 9.99.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="183"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="196"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="183"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="196"/>
         <source>Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="213"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
         <source>Wiener denoiser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="220"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="256"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="220"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="256"/>
         <source>Value is 0.0 .. 1.0..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="236"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="344"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="380"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="681"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="236"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="344"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="380"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="681"/>
         <source>The dimensions of a pixel neighborhood to consider.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="249"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="249"/>
         <source>KNN denoiser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="272"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="272"/>
         <source>The radius of a pixel neighborhood to consider.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="285"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="285"/>
         <source>Despeckle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="292"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="364"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="292"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="364"/>
         <source>Value is -1.0 .. 1.0..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="308"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="308"/>
         <source>The radius of a color despeckle.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="321"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="321"/>
         <source>Blur/Sharpen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="328"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="328"/>
         <source>Value is -2.0 .. 1.0..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="357"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="357"/>
         <source>Screen filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="393"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="393"/>
         <source>Curve/Sqr color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="400"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="416"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="400"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="416"/>
         <source>Value is -1.0 .. 1.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="459"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="443"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="506"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="443"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="506"/>
         <source>Value is 0.0 .. 1.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="482"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="482"/>
         <source>The iters of a unPaper.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="619"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="619"/>
         <source>Dimming Colored</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="626"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="626"/>
         <source>Value is -1.0 .. 2.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="646"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="646"/>
         <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="653"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="653"/>
         <source>Select threshold method.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="660"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="660"/>
         <source>M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="663"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="663"/>
         <source>Morphology ON/OFF.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="673"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="673"/>
         <source>Negate threshold.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="674"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - w.size, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="694"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="694"/>
         <source>Default value is 0.34.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="977"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="990"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="977"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="990"/>
         <source>K-means</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1010"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1010"/>
         <source>K (colors):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1017"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1017"/>
         <source>Number of K-means colors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1030"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1030"/>
         <source>The starting value of the k-means color.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1046"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1046"/>
         <source> - sat, norm:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1053"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1069"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1092"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1108"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1053"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1069"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1092"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1108"/>
         <source>Default value is 0.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1085"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1085"/>
         <source> - bg, mask:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1124"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1124"/>
         <source> - colorspace:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1131"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1131"/>
         <source>Select color space in K-means.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1138"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1138"/>
         <source>Morphology of K-means.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1019"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1032"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1019"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1032"/>
         <source>Despeckling</source>
         <translation>Вилучення плям</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1087"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1087"/>
         <source>Cautious despeckling</source>
         <translation>Обережне вилучення</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1090"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1116"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1142"/>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1168"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1090"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1116"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1142"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1168"/>
         <source>...</source>
         <translation>…</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1113"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1113"/>
         <source>Normal despeckling</source>
         <translation>Звичайне вилучення</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1139"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1139"/>
         <source>Aggressive despeckling</source>
         <translation>Посилене вилучення</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1165"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1165"/>
         <source>Custom despeckling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1208"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1208"/>
         <source>Despeckle factor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="1215"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1215"/>
         <source>Value is 0.0 .. 9.99.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="788"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="788"/>
         <source>Thinner</source>
         <translation>Тонше</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="852"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="852"/>
         <source>Thicker</source>
         <translation>Товстіше</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/OutputOptionsWidget.ui" line="970"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
         <source>Off autozones</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1469,49 +1469,49 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>PageLayoutApplyDialog</name>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="20"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="20"/>
         <source>Apply to</source>
         <translation>Застосувати до</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="26"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="26"/>
         <source>This page only (already applied)</source>
         <translation>Цієї сторінки (вже застосовано)</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="36"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="36"/>
         <source>All pages</source>
         <translation>Всіх сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="43"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="43"/>
         <source>This page and the following ones</source>
         <translation>Цієї сторінки і наступних сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="59"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="59"/>
         <source>Every other page</source>
         <extracomment>All odd or even pages, depending on the current page being odd or even.</extracomment>
         <translation>Всіх інших сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="89"/>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="194"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="89"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="194"/>
         <source>The current page will be included.</source>
         <translation>Обробку буде застосовано і до поточної сторінки.</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="110"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="110"/>
         <source>Selected pages</source>
         <translation>Позначених сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="143"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="143"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutApplyDialog.ui" line="164"/>
+        <location filename="../stages/page_layout/ui/PageLayoutApplyDialog.ui" line="164"/>
         <source>Every other selected page</source>
         <translation>Всіх інших позначених сторінок</translation>
     </message>
@@ -1519,12 +1519,12 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>PageLayoutOptionsWidget</name>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="14"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="14"/>
         <source>Form</source>
         <translation>Форма</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="20"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="20"/>
         <source>Margins</source>
         <translation>Поля</translation>
     </message>
@@ -1537,88 +1537,88 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="vanished">У дюймах (дюйм)</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="43"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="43"/>
         <source>Top</source>
         <translation>Верхнє</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="56"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="135"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="350"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="376"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="402"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="428"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="454"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="483"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="509"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="535"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="561"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="56"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="135"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="350"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="376"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="402"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="428"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="454"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="483"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="509"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="535"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="561"/>
         <source>...</source>
         <translation>…</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="77"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="77"/>
         <source>Bottom</source>
         <translation>Нижнє</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="103"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="103"/>
         <source>Left</source>
         <translation>Ліве</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="159"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="159"/>
         <source>Right</source>
         <translation>Праве</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
         <source>Apply To ...</source>
         <translation>Застосувати до…</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="261"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="261"/>
         <source>Alignment</source>
         <translation>Вирівнювання</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="274"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="274"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="277"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="277"/>
         <source>Don&apos;t match size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="287"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="287"/>
         <source>Growing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="290"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="290"/>
         <source>Match size by growing margins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
         <source>Scaling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="303"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="303"/>
         <source>Match size by scaling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="644"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="644"/>
         <source>Missing content box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/ui/PageLayoutOptionsWidget.ui" line="657"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="657"/>
         <source>As there is no content box, the output will be a blank white page with size matching that of other pages.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1630,52 +1630,52 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>PageSplitModeDialog</name>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="17"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="17"/>
         <source>Split Pages</source>
         <translation>Поділ на сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="63"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="63"/>
         <source>Mode</source>
         <translation>Режим</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="69"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="69"/>
         <source>Auto</source>
         <translation>Автоматичний</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="79"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="79"/>
         <source>Manual</source>
         <translation>Вручну</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="89"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="89"/>
         <source>Scope</source>
         <translation>Діапазон</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="95"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="95"/>
         <source>This page only</source>
         <translation>Лише ця сторінка</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="112"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="112"/>
         <source>This page and the following ones</source>
         <translation>Ця сторінка і наступні сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="128"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="128"/>
         <source>Selected pages</source>
         <translation>Позначені сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="161"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="161"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitModeDialog.ui" line="105"/>
+        <location filename="../stages/page_split/ui/PageSplitModeDialog.ui" line="105"/>
         <source>All pages</source>
         <translation>Всі сторінки</translation>
     </message>
@@ -1683,37 +1683,37 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>PageSplitOptionsWidget</name>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="20"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="20"/>
         <source>Form</source>
         <translation>Форма</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="26"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="26"/>
         <source>Page Layout</source>
         <translation>Компонування сторінки</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="134"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="134"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
         <source>Change ...</source>
         <translation>Змінити…</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>
         <source>Split Line</source>
         <translation>Лінія поділу</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="214"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="214"/>
         <source>Auto</source>
         <translation>Автоматично</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/ui/PageSplitOptionsWidget.ui" line="230"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="230"/>
         <source>Manual</source>
         <translation>Вручну</translation>
     </message>
@@ -1721,42 +1721,42 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
 <context>
     <name>PictureZonePropDialog</name>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="14"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="14"/>
         <source>Zone Properties</source>
         <translation>Властивості ділянки</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="20"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="20"/>
         <source>Subtract from all layers</source>
         <translation>Вилучити з усіх сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="27"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="27"/>
         <source>Add to auto layer</source>
         <translation>Додати до автоматичного шару</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="34"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="34"/>
         <source>Subtract from auto layer</source>
         <translation>Вилучити з автоматичного шару</translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="41"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="41"/>
         <source>Add to foreground</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="48"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="48"/>
         <source>Add to background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="55"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="55"/>
         <source>Add to mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/ui/PictureZonePropDialog.ui" line="62"/>
+        <location filename="../stages/output/ui/PictureZonePropDialog.ui" line="62"/>
         <source>Subtract from k-means</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1965,54 +1965,54 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>SelectContentApplyDialog</name>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="17"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="17"/>
         <source>Select Content</source>
         <translation>Вибір вмісту</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="23"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="23"/>
         <source>Apply to</source>
         <translation>Застосувати до</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="29"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="29"/>
         <source>This page only (already applied)</source>
         <translation>Цієї сторінки (вже застосовано)</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="39"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="39"/>
         <source>All pages</source>
         <translation>Всіх сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="46"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="46"/>
         <source>This page and the following ones</source>
         <translation>Цієї сторінки і наступних сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="71"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="71"/>
         <source>Every other page</source>
         <extracomment>All odd or even pages, depending on the current page being odd or even.</extracomment>
         <translation>Всіх інших сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="101"/>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="206"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="101"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="206"/>
         <source>The current page will be included.</source>
         <translation>Обробку буде застосовано і до поточної сторінки.</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="125"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="125"/>
         <source>Selected pages</source>
         <translation>Позначених сторінок</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="155"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="155"/>
         <source>Use Ctrl+Click / Shift+Click to select multiple pages.</source>
         <translation>Декілька сторінок можна позначити Ctrl+клацанням / Shift+клацанням.</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentApplyDialog.ui" line="176"/>
+        <location filename="../stages/select_content/ui/SelectContentApplyDialog.ui" line="176"/>
         <source>Every other selected page</source>
         <translation>Всіх інших позначених сторінок</translation>
     </message>
@@ -2020,32 +2020,32 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>SelectContentOptionsWidget</name>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentOptionsWidget.ui" line="13"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="13"/>
         <source>Form</source>
         <translation>Форма</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentOptionsWidget.ui" line="19"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="19"/>
         <source>Content Box</source>
         <translation>Поле вмісту</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentOptionsWidget.ui" line="38"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="38"/>
         <source>Auto</source>
         <translation>Автоматично</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentOptionsWidget.ui" line="54"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="54"/>
         <source>Manual</source>
         <translation>Вручну</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentOptionsWidget.ui" line="83"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="83"/>
         <source>Scope</source>
         <translation>Діапазон</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ui/SelectContentOptionsWidget.ui" line="104"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="104"/>
         <source>Apply to ...</source>
         <translation>Застосувати до…</translation>
     </message>
@@ -2265,7 +2265,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Виправлення нахилу</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/Filter.cpp" line="56"/>
+        <location filename="../stages/deskew/Filter.cpp" line="56"/>
         <source>Geometric Distortions</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2273,12 +2273,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>deskew::ImageView</name>
     <message>
-        <location filename="../filters/deskew/ImageView.cpp" line="74"/>
+        <location filename="../stages/deskew/ImageView.cpp" line="74"/>
         <source>Use Ctrl+Wheel to rotate or Ctrl+Shift+Wheel for finer rotation.</source>
         <translation>Скористайтеся Ctrl+коліщатком миші для обертання або Ctrl+Shift+коліщатком миші для точнішого обертання.</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/ImageView.cpp" line="77"/>
+        <location filename="../stages/deskew/ImageView.cpp" line="77"/>
         <source>Drag this handle to rotate the image.</source>
         <translation>Перетягніть цей кружок, щоб повернути зображення.</translation>
     </message>
@@ -2290,12 +2290,12 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Застосувати виправлення нахилу</translation>
     </message>
     <message>
-        <location filename="../filters/deskew/OptionsWidget.cpp" line="124"/>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="124"/>
         <source>Apply Distortion Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/deskew/OptionsWidget.cpp" line="174"/>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="174"/>
         <source>Apply Depth Perception</source>
         <translation type="unfinished">Застосування сприйняття глибини</translation>
     </message>
@@ -2303,7 +2303,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>fix_orientation::ApplyDialog</name>
     <message>
-        <location filename="../filters/fix_orientation/ApplyDialog.cpp" line="55"/>
+        <location filename="../stages/fix_orientation/ApplyDialog.cpp" line="55"/>
         <source>Can&apos;t do: more than one group is selected.</source>
         <translation>Помилка: позначено більше однієї групи.</translation>
     </message>
@@ -2311,7 +2311,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>fix_orientation::Filter</name>
     <message>
-        <location filename="../filters/fix_orientation/Filter.cpp" line="63"/>
+        <location filename="../stages/fix_orientation/Filter.cpp" line="63"/>
         <source>Fix Orientation</source>
         <translation>Виправлення орієнтації</translation>
     </message>
@@ -2342,7 +2342,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>output::FillZoneEditor</name>
     <message>
-        <location filename="../filters/output/FillZoneEditor.cpp" line="231"/>
+        <location filename="../stages/output/FillZoneEditor.cpp" line="231"/>
         <source>Pick color</source>
         <translation>Вибір кольору</translation>
     </message>
@@ -2350,7 +2350,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>output::Filter</name>
     <message>
-        <location filename="../filters/output/Filter.cpp" line="64"/>
+        <location filename="../stages/output/Filter.cpp" line="64"/>
         <source>Output</source>
         <translation>Результат</translation>
     </message>
@@ -2358,82 +2358,82 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>output::OptionsWidget</name>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="62"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="62"/>
         <source>Black and White</source>
         <translation>Чорно-білий</translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="63"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="63"/>
         <source>Color / Grayscale</source>
         <translation>Кольоровий/Сірий</translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="64"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="64"/>
         <source>Mixed</source>
         <translation>Мішаний</translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="66"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="66"/>
         <source>Otsu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="67"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="67"/>
         <source>Mean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="68"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="68"/>
         <source>Niblack</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="69"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="69"/>
         <source>Gatos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="70"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="70"/>
         <source>Sauvola</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="71"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="71"/>
         <source>Wolf</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="72"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="72"/>
         <source>Bradley</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="73"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="73"/>
         <source>EdgePlus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="74"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="74"/>
         <source>BlurDiv</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="75"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="75"/>
         <source>EdgeDiv</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="76"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="76"/>
         <source>MultiScale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="856"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="856"/>
         <source>Apply Despeckling Level</source>
         <translation>Рівень усування плям</translation>
     </message>
     <message>
-        <location filename="../filters/output/OptionsWidget.cpp" line="1077"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1077"/>
         <source>This page: %1 x %2 px</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2457,27 +2457,27 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>output::Task::UiUpdater</name>
     <message>
-        <location filename="../filters/output/Task.cpp" line="573"/>
+        <location filename="../stages/output/Task.cpp" line="573"/>
         <source>Picture zones are only available in Mixed mode.</source>
         <translation>Ділянки зображення можна вибирати лише у режимі «Мішаний».</translation>
     </message>
     <message>
-        <location filename="../filters/output/Task.cpp" line="608"/>
+        <location filename="../stages/output/Task.cpp" line="608"/>
         <source>Despeckling can&apos;t be done in Color / Grayscale mode.</source>
         <translation>У режимі «Кольоровий/Сірий» не можна виконувати усування плям.</translation>
     </message>
     <message>
-        <location filename="../filters/output/Task.cpp" line="627"/>
+        <location filename="../stages/output/Task.cpp" line="627"/>
         <source>Output</source>
         <translation>Результат</translation>
     </message>
     <message>
-        <location filename="../filters/output/Task.cpp" line="628"/>
+        <location filename="../stages/output/Task.cpp" line="628"/>
         <source>Picture Zones</source>
         <translation>Ділянки зображення</translation>
     </message>
     <message>
-        <location filename="../filters/output/Task.cpp" line="629"/>
+        <location filename="../stages/output/Task.cpp" line="629"/>
         <source>Fill Zones</source>
         <translation>Заповнення ділянок</translation>
     </message>
@@ -2486,7 +2486,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Виправлення рядків</translation>
     </message>
     <message>
-        <location filename="../filters/output/Task.cpp" line="630"/>
+        <location filename="../stages/output/Task.cpp" line="630"/>
         <source>Despeckling</source>
         <translation>Вилучення плям</translation>
     </message>
@@ -2494,7 +2494,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::ApplyDialog</name>
     <message>
-        <location filename="../filters/page_layout/ApplyDialog.cpp" line="53"/>
+        <location filename="../stages/page_layout/ApplyDialog.cpp" line="53"/>
         <source>Can&apos;t do: more than one group is selected.</source>
         <translation>Помилка: позначено більше однієї групи.</translation>
     </message>
@@ -2502,27 +2502,27 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::Filter</name>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="67"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="67"/>
         <source>Natural order</source>
         <translation>Природний порядок</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="68"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="68"/>
         <source>Order by increasing width</source>
         <translation>За зростанням ширини</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="69"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="69"/>
         <source>Order by increasing height</source>
         <translation>За зростанням висоти</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="72"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
         <source>Order by width/height ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/Filter.cpp" line="79"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="79"/>
         <source>Margins</source>
         <translation>Поля</translation>
     </message>
@@ -2530,7 +2530,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::ImageView</name>
     <message>
-        <location filename="../filters/page_layout/ImageView.cpp" line="88"/>
+        <location filename="../stages/page_layout/ImageView.cpp" line="88"/>
         <source>Resize margins by dragging any of the solid lines.</source>
         <translation>Змініть розмір полів перетягуванням суцільних ліній.</translation>
     </message>
@@ -2538,12 +2538,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::OptionsWidget</name>
     <message>
-        <location filename="../filters/page_layout/OptionsWidget.cpp" line="362"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="362"/>
         <source>Apply Margins</source>
         <translation>Застосування полів</translation>
     </message>
     <message>
-        <location filename="../filters/page_layout/OptionsWidget.cpp" line="377"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="377"/>
         <source>Apply Alignment</source>
         <translation>Застосування вирівнювання</translation>
     </message>
@@ -2551,17 +2551,17 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../filters/page_split/Filter.cpp" line="64"/>
+        <location filename="../stages/page_split/Filter.cpp" line="64"/>
         <source>Natural order</source>
         <translation>Природний порядок</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/Filter.cpp" line="65"/>
+        <location filename="../stages/page_split/Filter.cpp" line="65"/>
         <source>Order by split type</source>
         <translation>За типом поділу</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/Filter.cpp" line="75"/>
+        <location filename="../stages/page_split/Filter.cpp" line="75"/>
         <source>Split Pages</source>
         <translation>Поділ на сторінки</translation>
     </message>
@@ -2569,7 +2569,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::ImageView</name>
     <message>
-        <location filename="../filters/page_split/ImageView.cpp" line="91"/>
+        <location filename="../stages/page_split/ImageView.cpp" line="91"/>
         <source>Drag the line or the handles.</source>
         <translation>Перетягніть лінію або контрольні точки.</translation>
     </message>
@@ -2577,15 +2577,15 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::OptionsWidget</name>
     <message>
-        <location filename="../filters/page_split/OptionsWidget.cpp" line="120"/>
-        <location filename="../filters/page_split/OptionsWidget.cpp" line="228"/>
-        <location filename="../filters/page_split/OptionsWidget.cpp" line="337"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="120"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="228"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="337"/>
         <source>Set manually</source>
         <translation>Встановити вручну</translation>
     </message>
     <message>
-        <location filename="../filters/page_split/OptionsWidget.cpp" line="175"/>
-        <location filename="../filters/page_split/OptionsWidget.cpp" line="332"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="175"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="332"/>
         <source>Auto detected</source>
         <translation>Визначити автоматично</translation>
     </message>
@@ -2593,7 +2593,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::UnremoveButton</name>
     <message>
-        <location filename="../filters/page_split/UnremoveButton.cpp" line="38"/>
+        <location filename="../stages/page_split/UnremoveButton.cpp" line="38"/>
         <source>Restore removed page.</source>
         <translation>Відновити вилучену сторінку.</translation>
     </message>
@@ -2601,7 +2601,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>select_content::ApplyDialog</name>
     <message>
-        <location filename="../filters/select_content/ApplyDialog.cpp" line="55"/>
+        <location filename="../stages/select_content/ApplyDialog.cpp" line="55"/>
         <source>Can&apos;t do: more than one group is selected.</source>
         <translation>Помилка: позначено більше однієї групи.</translation>
     </message>
@@ -2609,27 +2609,27 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>select_content::Filter</name>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="58"/>
+        <location filename="../stages/select_content/Filter.cpp" line="58"/>
         <source>Natural order</source>
         <translation>Природний порядок</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="59"/>
+        <location filename="../stages/select_content/Filter.cpp" line="59"/>
         <source>Order by increasing width</source>
         <translation>За зростанням ширини</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="60"/>
+        <location filename="../stages/select_content/Filter.cpp" line="60"/>
         <source>Order by increasing height</source>
         <translation>За зростанням висоти</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="63"/>
+        <location filename="../stages/select_content/Filter.cpp" line="63"/>
         <source>Order by width/height ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../filters/select_content/Filter.cpp" line="70"/>
+        <location filename="../stages/select_content/Filter.cpp" line="70"/>
         <source>Select Content</source>
         <translation>Вибір вмісту</translation>
     </message>
@@ -2637,22 +2637,22 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>select_content::ImageView</name>
     <message>
-        <location filename="../filters/select_content/ImageView.cpp" line="71"/>
+        <location filename="../stages/select_content/ImageView.cpp" line="71"/>
         <source>Use the context menu to enable / disable the content box.</source>
         <translation>Скористайтеся контекстним меню для вмикання або вимикання показу поля вмісту.</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ImageView.cpp" line="74"/>
+        <location filename="../stages/select_content/ImageView.cpp" line="74"/>
         <source>Drag lines or corners to resize the content box.</source>
         <translation>Перетягніть межі або кутові точки, щоб змінити розміри поля вмісту.</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ImageView.cpp" line="122"/>
+        <location filename="../stages/select_content/ImageView.cpp" line="122"/>
         <source>Create Content Box</source>
         <translation>Створити поле вмісту</translation>
     </message>
     <message>
-        <location filename="../filters/select_content/ImageView.cpp" line="123"/>
+        <location filename="../stages/select_content/ImageView.cpp" line="123"/>
         <source>Remove Content Box</source>
         <translation>Вилучити поле вмісту</translation>
     </message>

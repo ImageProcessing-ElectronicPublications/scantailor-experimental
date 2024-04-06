@@ -32,7 +32,7 @@
 #include "imageproc/AbstractImageTransform.h"
 #include "imageproc/AffineImageTransform.h"
 #include "imageproc/AffineTransformedImage.h"
-#include "filters/page_layout/Task.h"
+#include "stages/page_layout/Task.h"
 #include <QObject>
 #include <QTransform>
 #include <QDebug>

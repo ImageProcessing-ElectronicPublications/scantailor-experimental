@@ -20,7 +20,7 @@
 #include "Filter.h"
 #include "OptionsWidget.h"
 #include "Settings.h"
-#include "filters/page_split/Task.h"
+#include "stages/page_split/Task.h"
 #include "TaskStatus.h"
 #include "ImageView.h"
 #include "FilterUiInterface.h"

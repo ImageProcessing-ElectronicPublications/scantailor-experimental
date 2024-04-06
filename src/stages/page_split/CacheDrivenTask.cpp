@@ -24,7 +24,7 @@
 #include "imageproc/AffineImageTransform.h"
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
-#include "filters/deskew/CacheDrivenTask.h"
+#include "stages/deskew/CacheDrivenTask.h"
 
 using namespace imageproc;
 

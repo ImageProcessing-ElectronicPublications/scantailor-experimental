@@ -18,7 +18,7 @@ IF(NOT STE_NO_TESTS STREQUAL "ON")
     ADD_SUBDIRECTORY(tests)
 ENDIF()
 
-ADD_SUBDIRECTORY(filters)
+ADD_SUBDIRECTORY(stages)
 
 SET(resource_files resources/resources.qrc resources/icons/COPYING)
 IF(WIN32)

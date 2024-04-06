@@ -23,12 +23,12 @@
 #include "RefCountable.h"
 #include "IntrusivePtr.h"
 #include "AbstractFilter.h"
-#include "filters/fix_orientation/Filter.h"
-#include "filters/page_split/Filter.h"
-#include "filters/deskew/Filter.h"
-#include "filters/select_content/Filter.h"
-#include "filters/page_layout/Filter.h"
-#include "filters/output/Filter.h"
+#include "stages/fix_orientation/Filter.h"
+#include "stages/page_split/Filter.h"
+#include "stages/deskew/Filter.h"
+#include "stages/select_content/Filter.h"
+#include "stages/page_layout/Filter.h"
+#include "stages/output/Filter.h"
 #include <vector>
 
 class PageId;

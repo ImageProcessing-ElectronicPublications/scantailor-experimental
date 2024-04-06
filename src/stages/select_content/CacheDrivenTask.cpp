@@ -25,7 +25,7 @@
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
 #include "filter_dc/ContentBoxCollector.h"
-#include "filters/page_layout/CacheDrivenTask.h"
+#include "stages/page_layout/CacheDrivenTask.h"
 
 using namespace imageproc;
 

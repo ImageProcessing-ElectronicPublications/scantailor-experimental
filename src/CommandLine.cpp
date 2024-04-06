@@ -32,8 +32,8 @@
 #include "CommandLine.h"
 #include "ImageFileInfo.h"
 #include "ImageMetadata.h"
-#include "filters/page_split/LayoutType.h"
-#include "filters/page_layout/Settings.h"
+#include "stages/page_split/LayoutType.h"
+#include "stages/page_layout/Settings.h"
 #include "RelativeMargins.h"
 #include "Despeckle.h"
 

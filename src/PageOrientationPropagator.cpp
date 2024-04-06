@@ -24,7 +24,7 @@
 #include "PageView.h"
 #include "PageInfo.h"
 #include "imageproc/AffineImageTransform.h"
-#include "filters/page_split/Filter.h"
+#include "stages/page_split/Filter.h"
 #include "filter_dc/PageOrientationCollector.h"
 #include <QPointF>
 #include <QSizeF>

@@ -29,7 +29,7 @@
 #include "BasicImageView.h"
 #include "ContentBox.h"
 #include "PageLayout.h"
-#include "filters/output/Task.h"
+#include "stages/output/Task.h"
 #include "imageproc/AffineTransformedImage.h"
 #include <QSizeF>
 #include <QRectF>

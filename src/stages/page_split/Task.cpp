@@ -36,7 +36,7 @@
 #include "DebugImagesImpl.h"
 #include "imageproc/AffineTransformedImage.h"
 #include "imageproc/GrayImage.h"
-#include "filters/deskew/Task.h"
+#include "stages/deskew/Task.h"
 #include <QImage>
 #include <QObject>
 #include <QDebug>

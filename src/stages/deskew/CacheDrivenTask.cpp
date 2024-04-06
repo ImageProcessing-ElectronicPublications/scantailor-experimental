@@ -25,7 +25,7 @@
 #include "PageInfo.h"
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
-#include "filters/select_content/CacheDrivenTask.h"
+#include "stages/select_content/CacheDrivenTask.h"
 #include "imageproc/AbstractImageTransform.h"
 #include "imageproc/AffineImageTransform.h"
 #include "dewarping/DewarpingImageTransform.h"

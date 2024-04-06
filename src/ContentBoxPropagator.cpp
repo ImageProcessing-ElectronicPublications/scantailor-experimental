@@ -24,7 +24,7 @@
 #include "PageInfo.h"
 #include "imageproc/AbstractImageTransform.h"
 #include "imageproc/AffineImageTransform.h"
-#include "filters/page_layout/Filter.h"
+#include "stages/page_layout/Filter.h"
 #include "filter_dc/ContentBoxCollector.h"
 #include <QRectF>
 

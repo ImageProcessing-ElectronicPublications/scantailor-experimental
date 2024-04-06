@@ -25,7 +25,7 @@
 #include "PageInfo.h"
 #include "PageId.h"
 #include "Utils.h"
-#include "filters/output/CacheDrivenTask.h"
+#include "stages/output/CacheDrivenTask.h"
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
 #include <QSizeF>

@@ -24,7 +24,7 @@
 #include "Dependencies.h"
 #include "TaskStatus.h"
 #include "DebugImagesImpl.h"
-#include "filters/select_content/Task.h"
+#include "stages/select_content/Task.h"
 #include "FilterUiInterface.h"
 #include "ImageView.h"
 #include "BasicImageView.h"

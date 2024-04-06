@@ -31,7 +31,7 @@
 #include "imageproc/AffineImageTransform.h"
 #include "imageproc/AffineTransformedImage.h"
 #include "imageproc/GrayImage.h"
-#include "filters/fix_orientation/Task.h"
+#include "stages/fix_orientation/Task.h"
 #include <QCoreApplication>
 #include <QFile>
 #include <QDir>
