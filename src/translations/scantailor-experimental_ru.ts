@@ -1577,6 +1577,21 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Жирнее</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
+        <source>autozones:</source>
+        <translation>автозоны:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
+        <source>Off</source>
+        <translation>Выкл.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
+        <source>Off autozones.</source>
+        <translation>Выключить автозоны.</translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
         <source>Off autozones</source>
         <translation>Выкл. автозоны</translation>

@@ -32,6 +32,7 @@ BlackWhiteOptions::BlackWhiteOptions()
         m_thresholdAdjustment(0),
         m_thresholdWindowSize(200),
         m_thresholdCoef(0.3),
+        m_autoPictureCoef(0.0),
         m_autoPictureOff(false)
 {
 }
@@ -44,6 +45,7 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
         m_thresholdAdjustment(el.attribute("thresholdAdj").toInt()),
         m_thresholdWindowSize(el.attribute("thresholdWinSize").toInt()),
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
+        m_autoPictureCoef(el.attribute("autoPictureCoef").toDouble()),
         m_autoPictureOff(el.attribute("autoPictureOff") == "1")
 {
     if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
@@ -71,6 +73,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("thresholdAdj", m_thresholdAdjustment);
     el.setAttribute("thresholdWinSize", m_thresholdWindowSize);
     el.setAttribute("thresholdCoef", m_thresholdCoef);
+    el.setAttribute("autoPictureCoef", m_autoPictureCoef);
     el.setAttribute("autoPictureOff", m_autoPictureOff ? "1" : "0");
     return el;
 }
@@ -103,6 +106,10 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_thresholdCoef != other.m_thresholdCoef)
+    {
+        return false;
+    }
+    if (m_autoPictureCoef != other.m_autoPictureCoef)
     {
         return false;
     }

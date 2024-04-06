@@ -1296,8 +1296,18 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
         <translation>schwächer</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
-        <source>Off autozones</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
+        <source>autozones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
+        <source>Off autozones.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

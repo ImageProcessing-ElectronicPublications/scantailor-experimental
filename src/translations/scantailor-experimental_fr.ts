@@ -1267,8 +1267,18 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
         <translation>Éclaircir</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
-        <source>Off autozones</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
+        <source>autozones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
+        <source>Off autozones.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

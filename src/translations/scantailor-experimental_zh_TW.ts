@@ -1232,8 +1232,18 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation>較細的</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
-        <source>Off autozones</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
+        <source>autozones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
+        <source>Off autozones.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

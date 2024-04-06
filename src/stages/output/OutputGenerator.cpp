@@ -523,7 +523,7 @@ OutputGenerator::process(
                 }
                 else
                 {
-                    bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg);
+                    bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg, black_white_options.autoPictureCoef());
                 }
 
                 if (dbg)
@@ -811,10 +811,47 @@ OutputGenerator::normalizeIlluminationGray(
 imageproc::BinaryImage
 OutputGenerator::estimateBinarizationMask(
     TaskStatus const& status, GrayImage const& gray_source,
-    DebugImages* const dbg) const
+    DebugImages* const dbg, float const coef) const
 {
     QSize const downscaled_size(gray_source.size().scaled(1600, 1600, Qt::KeepAspectRatio));
     GrayImage downscaled(scaleToGray(gray_source, downscaled_size));
+    
+    if (!downscaled.isNull())
+    {
+        if ((coef < 0.0f) || (coef > 0.0f))
+        {
+            int icoef = (int) (coef * 256.0f + 0.5f);
+            unsigned int const w = downscaled.width();
+            unsigned int const h = downscaled.height();
+            uint8_t* downscaled_line = downscaled.data();
+            int const downscaled_stride = downscaled.stride();
+            uint8_t pix_replace[256];
+
+            for (unsigned int j = 0; j < 256; j++)
+            {
+                unsigned int val = j;
+                val++;
+                val *= val;
+                val += 255;
+                val >>= 8;
+                val--;
+                val = icoef * val + (256 - icoef) * j;
+                val += 128;
+                val >>= 8;
+                pix_replace[j] = (uint8_t) val;
+            }
+
+            for (unsigned int y = 0; y < h; y++)
+            {
+                for (unsigned int x = 0; x < w; x++)
+                {
+                    uint8_t val = downscaled_line[x];
+                    downscaled_line[x] = pix_replace[val];
+                }
+                downscaled_line += downscaled_stride;
+            }
+        }
+    }
 
     status.throwIfCancelled();
 

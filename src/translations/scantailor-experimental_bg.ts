@@ -1371,6 +1371,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="400"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="416"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="960"/>
         <source>Value is -1.0 .. 1.0.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1556,8 +1557,18 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>По-дебело</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
-        <source>Off autozones</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
+        <source>autozones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
+        <source>Off autozones.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

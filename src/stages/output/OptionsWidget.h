@@ -127,6 +127,8 @@ private slots:
 
     void thresholdCoefChanged(double value);
 
+    void autoPictureCoefChanged(double value);
+
     void autoPictureOffToggled(bool checked);
 
     void applyColorsModeButtonClicked();

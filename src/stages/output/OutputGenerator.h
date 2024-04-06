@@ -143,7 +143,7 @@ private:
 
     imageproc::BinaryImage estimateBinarizationMask(
         TaskStatus const& status, imageproc::GrayImage const& gray_source,
-        DebugImages* dbg) const;
+        DebugImages* dbg, float coef = 0.0f) const;
 
     void BinaryImageXOR(
         imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, imageproc::BWColor const color) const;

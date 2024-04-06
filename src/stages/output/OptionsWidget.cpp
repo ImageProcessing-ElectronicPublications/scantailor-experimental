@@ -269,6 +269,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdCoefChanged(double))
     );
     connect(
+        autoPictureCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(autoPictureCoefChanged(double))
+    );
+    connect(
         autoPictureOffCB, SIGNAL(clicked(bool)),
         this, SLOT(autoPictureOffToggled(bool))
     );
@@ -802,6 +806,16 @@ OptionsWidget::thresholdCoefChanged(double value)
 }
 
 void
+OptionsWidget::autoPictureCoefChanged(double value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setAutoPictureCoef(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::autoPictureOffToggled(bool const checked)
 {
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
@@ -1163,6 +1177,7 @@ OptionsWidget::updateColorsDisplay()
         }
         if (mixed_options_visible)
         {
+            autoPictureCoef->setValue(black_white_options.autoPictureCoef());
             autoPictureOffCB->setChecked(black_white_options.autoPictureOff());
         }
 
