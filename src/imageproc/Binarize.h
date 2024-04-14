@@ -159,11 +159,26 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
  * International Journal of Computer Applications, 51, 5-10.
  * https://research.ijcaonline.org/volume51/number6/pxc3881362.pdf
  */
-IMAGEPROC_EXPORT GrayImage binarizeMaxMinMap(
+IMAGEPROC_EXPORT GrayImage binarizeContrastMap(
     GrayImage const& src, QSize window_size);
 IMAGEPROC_EXPORT GrayImage binarizeSinghMap(
     GrayImage const& src, QSize window_size, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeSingh(
+    GrayImage const& src, QSize window_size,
+    double k = 0.2, int delta = 0);
+
+/**
+ * \brief Image binarization using WAN's local thresholding method.
+ *
+ * Wan Azani Mustafa and Mohamed Mydin M. Abdul Kader
+ * "Binarization of Document Image Using Optimum Threshold Modification", 2018.
+ * https://www.researchgate.net/publication/326026836_Binarization_of_Document_Image_Using_Optimum_Threshold_Modification
+ */
+IMAGEPROC_EXPORT GrayImage binarizeMaxMap(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage binarizeWANMap(
+    GrayImage const& src, QSize window_size, double k = 0.2);
+IMAGEPROC_EXPORT BinaryImage binarizeWAN(
     GrayImage const& src, QSize window_size,
     double k = 0.2, int delta = 0);
 

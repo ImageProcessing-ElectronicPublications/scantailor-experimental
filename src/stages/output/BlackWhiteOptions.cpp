@@ -162,6 +162,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return SINGH;
     }
+    else if (str == "WAN")
+    {
+        return WAN;
+    }
     else if (str == "edgeplus")
     {
         return EDGEPLUS;
@@ -216,6 +220,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case SINGH:
         str = "singh";
+        break;
+    case WAN:
+        str = "WAN";
         break;
     case EDGEPLUS:
         str = "edgeplus";

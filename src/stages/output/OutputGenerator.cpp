@@ -1235,6 +1235,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeSingh(gray, window_size, threshold_coef, threshold_delta);
             break;
         }
+        case WAN:
+        {
+            binarized = binarizeWAN(gray, window_size, threshold_coef, threshold_delta);
+            break;
+        }
         case EDGEPLUS:
         {
             binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, 0.0, threshold_delta);

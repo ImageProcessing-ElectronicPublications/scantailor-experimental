@@ -1034,12 +1034,12 @@ BinaryImage binarizeBradley(
     return bw_img;
 }  // binarizeBradley
 
-GrayImage binarizeMaxMinMap(
+GrayImage binarizeContrastMap(
     GrayImage const& src, QSize const window_size)
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeMaxMinMap: invalid window_size");
+        throw std::invalid_argument("binarizeContrastMap: invalid window_size");
     }
 
     if (src.isNull())
@@ -1141,7 +1141,7 @@ GrayImage binarizeMaxMinMap(
     }
 
     return gray;
-}  // binarizeMaxMinMap
+}  // binarizeContrastMap
 
 /*
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
@@ -1164,7 +1164,7 @@ GrayImage binarizeSinghMap(
     {
         return GrayImage();
     }
-    GrayImage graymm = binarizeMaxMinMap(src, window_size);
+    GrayImage graymm = binarizeContrastMap(src, window_size);
     if (graymm.isNull())
     {
         return GrayImage();
@@ -1247,6 +1247,208 @@ BinaryImage binarizeSingh(
 
     return bw_img;
 }  // binarizeSingh
+
+GrayImage binarizeMaxMap(
+    GrayImage const& src, QSize const window_size)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMaxMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmax = GrayImage(src);
+    if (gmax.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+    uint8_t* gmax_line = gmax.data();
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+
+            uint8_t const origin = gray_line[x];
+            uint8_t immax = origin;
+            for (int xf = left; xf < right; xf++)
+            {
+                uint8_t imf = gray_line[xf];
+                if (imf > immax)
+                {
+                    immax = imf;
+                }
+            }
+            gmax_line[x] = immax;
+        }
+        gray_line += gray_stride;
+        gmax_line += gray_stride;
+    }
+
+    gmax_line = gmax.data();
+    gray_line = gray.data();
+    for (int y = 0; y < h; y++)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; x++)
+        {
+            uint8_t const origin = gray_line[x];
+            uint8_t immax = origin;
+            unsigned long int idx = top * gray_stride + x;
+            for (int yf = top; yf < bottom; yf++)
+            {
+                uint8_t immaxf = gmax_line[idx];
+                if (immaxf > immax)
+                {
+                    immax = immaxf;
+                }
+                idx += gray_stride;
+            }
+            gray_line[x] = immax;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+}  // binarizeMaxMap
+
+/*
+ * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ */
+GrayImage binarizeWANMap(
+    GrayImage const& src, QSize const window_size, double const k)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeWANMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage graymm = binarizeMaxMap(src, window_size);
+    if (graymm.isNull())
+    {
+        return GrayImage();
+    }
+
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+    uint8_t* graymm_line = graymm.data();
+    int const graymm_stride = graymm.stride();
+
+    IntegralImage<uint32_t> integral_image(w, h);
+    IntegralImage<uint64_t> integral_sqimage(w, h);
+
+    for (int y = 0; y < h; ++y)
+    {
+        integral_image.beginRow();
+        integral_sqimage.beginRow();
+        for (int x = 0; x < w; ++x)
+        {
+            uint32_t const pixel = src_line[x];
+            integral_image.push(pixel);
+            integral_sqimage.push(pixel * pixel);
+        }
+        src_line += src_stride;
+    }
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    for (int y = 0; y < h; ++y)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; ++x)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const area = (bottom - top) * (right - left);
+            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+            QRect const rect(left, top, right - left, bottom - top);
+            double const window_sum = integral_image.sum(rect);
+            double const window_sqsum = integral_sqimage.sum(rect);
+
+            double const r_area = 1.0 / area;
+            double const mean = window_sum * r_area;
+            double const sqmean = window_sqsum * r_area;
+
+            double const variance = sqmean - mean * mean;
+            double const deviation = sqrt(fabs(variance));
+            
+            double const imax = graymm_line[x];
+
+            double threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
+
+            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+            gray_line[x] = (uint8_t) threshold;
+        }
+        gray_line += gray_stride;
+        graymm_line += graymm_stride;
+    }
+
+    return gray;
+}
+
+BinaryImage binarizeWAN(
+    GrayImage const& src, QSize const window_size,
+    double const k, int const delta)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeWAN: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(binarizeWANMap(src, window_size, k));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+
+    return bw_img;
+}
 
 GrayImage binarizeEdgeDivPrefilter(
     GrayImage const& src, QSize const window_size,
