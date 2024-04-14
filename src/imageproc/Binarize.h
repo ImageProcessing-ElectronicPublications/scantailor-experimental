@@ -152,6 +152,22 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     double k = 0.2, int delta = 0);
 
 /**
+ * \brief Image binarization using Singh's adaptive thresholding method.
+ *
+ * Singh, O. I., Sinam, T., James, O., & Singh, T. R. (2012).
+ * Local contrast and mean based thresholding technique in image binarization.
+ * International Journal of Computer Applications, 51, 5-10.
+ * https://research.ijcaonline.org/volume51/number6/pxc3881362.pdf
+ */
+IMAGEPROC_EXPORT GrayImage binarizeMaxMinMap(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage binarizeSinghMap(
+    GrayImage const& src, QSize window_size, double k = 0.2);
+IMAGEPROC_EXPORT BinaryImage binarizeSingh(
+    GrayImage const& src, QSize window_size,
+    double k = 0.2, int delta = 0);
+
+/**
  * \brief Image binarization using EdgeDiv (EdgePlus & BlurDiv) local/global thresholding method.
  *
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".

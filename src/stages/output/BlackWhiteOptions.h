@@ -26,7 +26,7 @@ class QDomElement;
 namespace output
 {
 
-enum ThresholdFilter { OTSU, MEANDELTA, DOTS8, NIBLACK, GATOS, SAUVOLA, WOLF, BRADLEY, EDGEPLUS, BLURDIV, EDGEDIV, MSCALE };
+enum ThresholdFilter { OTSU, MEANDELTA, DOTS8, NIBLACK, GATOS, SAUVOLA, WOLF, BRADLEY, SINGH, EDGEPLUS, BLURDIV, EDGEDIV, MSCALE };
 
 class BlackWhiteOptions
 {

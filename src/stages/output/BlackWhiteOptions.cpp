@@ -158,6 +158,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return BRADLEY;
     }
+    else if (str == "singh")
+    {
+        return SINGH;
+    }
     else if (str == "edgeplus")
     {
         return EDGEPLUS;
@@ -209,6 +213,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case BRADLEY:
         str = "bradley";
+        break;
+    case SINGH:
+        str = "singh";
         break;
     case EDGEPLUS:
         str = "edgeplus";

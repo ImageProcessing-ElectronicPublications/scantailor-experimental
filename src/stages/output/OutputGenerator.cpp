@@ -1230,6 +1230,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeBradley(gray, window_size, threshold_coef, threshold_delta);
             break;
         }
+        case SINGH:
+        {
+            binarized = binarizeSingh(gray, window_size, threshold_coef, threshold_delta);
+            break;
+        }
         case EDGEPLUS:
         {
             binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, 0.0, threshold_delta);

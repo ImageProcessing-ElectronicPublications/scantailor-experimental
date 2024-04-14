@@ -71,6 +71,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("Sauvola"), SAUVOLA);
     thresholdMethodSelector->addItem(tr("Wolf"), WOLF);
     thresholdMethodSelector->addItem(tr("Bradley"), BRADLEY);
+    thresholdMethodSelector->addItem(tr("Singh"), SINGH);
     thresholdMethodSelector->addItem(tr("EdgePlus"), EDGEPLUS);
     thresholdMethodSelector->addItem(tr("BlurDiv"), BLURDIV);
     thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
