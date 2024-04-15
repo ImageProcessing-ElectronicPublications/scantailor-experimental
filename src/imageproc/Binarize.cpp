@@ -1362,7 +1362,6 @@ GrayImage binarizeWANMap(
         return GrayImage();
     }
 
-
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
@@ -1562,6 +1561,109 @@ BinaryImage binarizeEdgeDiv(
 
     return bw_img;
 }  // binarizeEdgeDiv
+
+/*
+ * Robust = 255.0 - (surround + 255.0) * sc / (surround + sc), k = 0.2
+ * sc = surround - img
+ * surround = blur(img, w), w = 15
+ */
+GrayImage binarizeRobustPrefilter(
+    GrayImage const& src, QSize const window_size, double const k)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeRobustPrefilter: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+
+    IntegralImage<uint32_t> integral_image(w, h);
+
+    for (int y = 0; y < h; ++y)
+    {
+        integral_image.beginRow();
+        for (int x = 0; x < w; ++x)
+        {
+            uint32_t const pixel = src_line[x];
+            integral_image.push(pixel);
+        }
+        src_line += src_stride;
+    }
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    for (int y = 0; y < h; ++y)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; ++x)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const area = (bottom - top) * (right - left);
+            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+            QRect const rect(left, top, right - left, bottom - top);
+            double const window_sum = integral_image.sum(rect);
+
+            double const r_area = 1.0 / area;
+            double const mean = window_sum * r_area;
+            double const origin = gray_line[x];
+            double retval = origin;
+            if (k > 0.0)
+            {
+                double const sc = mean - origin;
+                double const robust = 255.0 - (mean + 255.0) * sc / (mean + sc);
+                retval = k * robust + (1.0 - k) * origin;
+            }
+            retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
+            gray_line[x] = (int) retval;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+}
+
+BinaryImage binarizeRobust(
+    GrayImage const& src, QSize const window_size,
+    double const k, int const delta)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeRobust: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage gray(binarizeRobustPrefilter(src, window_size, k));
+    BinaryImage bw_img(binarizeBiModal(gray, delta));
+
+    return bw_img;
+} // binarizeRobust
 
 GrayImage binarizeMScaleMap(
     GrayImage const& src, QSize const window_size, double const coef)

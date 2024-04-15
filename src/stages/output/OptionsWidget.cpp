@@ -76,6 +76,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgePlus"), EDGEPLUS);
     thresholdMethodSelector->addItem(tr("BlurDiv"), BLURDIV);
     thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
+    thresholdMethodSelector->addItem(tr("Robust"), ROBUST);
     thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
 
     kmeansColorSpaceSelector->addItem(tr("HSV"), HSV);

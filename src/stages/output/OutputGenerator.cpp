@@ -1255,6 +1255,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, threshold_coef, threshold_delta);
             break;
         }
+        case ROBUST:
+        {
+            binarized = binarizeRobust(gray, window_size, threshold_coef, threshold_delta);
+            break;
+        }
         case MSCALE:
         {
             binarized = binarizeMScale(gray, window_size, threshold_coef, threshold_delta);

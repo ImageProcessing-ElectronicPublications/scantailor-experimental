@@ -178,6 +178,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return EDGEDIV;
     }
+    else if (str == "robust")
+    {
+        return ROBUST;
+    }
     else if (str == "multiscale")
     {
         return MSCALE;
@@ -232,6 +236,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case EDGEDIV:
         str = "edgediv";
+        break;
+    case ROBUST:
+        str = "robust";
         break;
     case MSCALE:
         str = "multiscale";

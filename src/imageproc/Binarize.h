@@ -195,6 +195,19 @@ IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     double kep = 0.5, double kdb = 0.5, int delta = 0);
 
 /**
+ * \brief Image binarization using Robust's local thresholding method.
+ *
+ * Tom Liao
+ * "Robust document binarization with OFF center-surround cells", 2017-08-09.
+ * https://www.researchgate.net/publication/226333284_Robust_document_binarization_with_OFF_center-surround_cells
+ */
+IMAGEPROC_EXPORT GrayImage binarizeRobustPrefilter(
+    GrayImage const& src, QSize window_size, double k = 0.2);
+IMAGEPROC_EXPORT BinaryImage binarizeRobust(
+    GrayImage const& src, QSize window_size,
+    double k = 0.2, int delta = 0);
+
+/**
  * \brief Image binarization using MultiScale thresholding method.
  *
  * MultiScale thresholding method.
