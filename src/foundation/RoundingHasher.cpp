@@ -40,7 +40,11 @@ RoundingHasher::RoundingHasher(QCryptographicHash::Algorithm algo)
 RoundingHasher&
 RoundingHasher::operator<<(char const* str)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
     m_hash.addData(str, strlen(str));
+#else
+    m_hash.addData(QByteArrayView(str, strlen(str)));
+#endif
     return *this;
 }
 
