@@ -517,6 +517,16 @@ ENDIF()
             CONFIGURATIONS Debug)
     ENDIF()
 
+    IF(EXISTS "${PLUGINS_DIR}/styles/qmodernwindowsstyle.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qmodernwindowsstyle.dll" SUBDIR styles
+            CONFIGURATIONS Release MinSizeRel RelWithDebInfo)
+    ENDIF()
+
+    IF(EXISTS "${PLUGINS_DIR}/styles/qmodernwindowsstyled.dll")
+        COPY_TO_BUILD_DIR("${PLUGINS_DIR}/styles/qmodernwindowsstyled.dll" SUBDIR styles
+            CONFIGURATIONS Debug)
+    ENDIF()
+
     IF(EXISTS "${PLUGINS_DIR}/accessible/qtaccessiblewidgets.dll")
         COPY_TO_BUILD_DIR(
             "${PLUGINS_DIR}/accessible/qtaccessiblewidgets.dll" SUBDIR accessible
