@@ -62,6 +62,367 @@ static inline void binarySetBW(uint32_t* bw_line, unsigned int x, bool black)
     }
 }
 
+/*
+ * mean, w = 200
+ */
+GrayImage binarizeMapMean(
+    GrayImage const& src, QSize const window_size)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMapMean: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+
+    IntegralImage<uint32_t> integral_image(w, h);
+
+    for (int y = 0; y < h; ++y)
+    {
+        integral_image.beginRow();
+        for (int x = 0; x < w; ++x)
+        {
+            uint32_t const pixel = src_line[x];
+            integral_image.push(pixel);
+        }
+        src_line += src_stride;
+    }
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    for (int y = 0; y < h; ++y)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; ++x)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const area = (bottom - top) * (right - left);
+            assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
+
+            QRect const rect(left, top, right - left, bottom - top);
+            double const window_sum = integral_image.sum(rect);
+
+            double const r_area = 1.0 / area;
+            double mean = window_sum * r_area;
+
+            mean = (mean < 0.0) ? 0.0 : ((mean < 255.0) ? mean : 255.0);
+            gray_line[x] = (uint8_t) mean;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+}  // binarizeMapMean
+
+/*
+ * stdev, w = 200
+ */
+GrayImage binarizeMapDeviation(
+    GrayImage const& src, QSize const window_size)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMapDeviation: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+
+
+    IntegralImage<uint32_t> integral_image(w, h);
+    IntegralImage<uint64_t> integral_sqimage(w, h);
+
+    uint32_t min_gray_level = 255;
+
+    for (int y = 0; y < h; ++y)
+    {
+        integral_image.beginRow();
+        integral_sqimage.beginRow();
+        for (int x = 0; x < w; ++x)
+        {
+            uint32_t const pixel = src_line[x];
+            integral_image.push(pixel);
+            integral_sqimage.push(pixel * pixel);
+            min_gray_level = std::min(min_gray_level, pixel);
+        }
+        src_line += src_stride;
+    }
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    std::vector<float> means(w * h, 0);
+    std::vector<float> deviations(w * h, 0);
+
+    double max_deviation = 0;
+
+    for (int y = 0; y < h; ++y)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; ++x)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const area = (bottom - top) * (right - left);
+            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+            QRect const rect(left, top, right - left, bottom - top);
+            double const window_sum = integral_image.sum(rect);
+            double const window_sqsum = integral_sqimage.sum(rect);
+
+            double const r_area = 1.0 / area;
+            double const mean = window_sum * r_area;
+            double const sqmean = window_sqsum * r_area;
+
+            double const variance = sqmean - mean * mean;
+            double deviation = sqrt(fabs(variance));
+
+            deviation = (deviation < 0.0) ? 0.0 : ((deviation < 255.0) ? deviation : 255.0);
+            gray_line[x] = (uint8_t) deviation;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+} // binarizeMapDeviation
+
+GrayImage binarizeMapMax(
+    GrayImage const& src, QSize const window_size)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMapMax: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmax = GrayImage(src);
+    if (gmax.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+    uint8_t* gmax_line = gmax.data();
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+
+            uint8_t const origin = gray_line[x];
+            uint8_t immax = origin;
+            for (int xf = left; xf < right; xf++)
+            {
+                uint8_t imf = gray_line[xf];
+                if (imf > immax)
+                {
+                    immax = imf;
+                }
+            }
+            gmax_line[x] = immax;
+        }
+        gray_line += gray_stride;
+        gmax_line += gray_stride;
+    }
+
+    gmax_line = gmax.data();
+    gray_line = gray.data();
+    for (int y = 0; y < h; y++)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; x++)
+        {
+            uint8_t const origin = gray_line[x];
+            uint8_t immax = origin;
+            unsigned long int idx = top * gray_stride + x;
+            for (int yf = top; yf < bottom; yf++)
+            {
+                uint8_t immaxf = gmax_line[idx];
+                if (immaxf > immax)
+                {
+                    immax = immaxf;
+                }
+                idx += gray_stride;
+            }
+            gray_line[x] = immax;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+}  // binarizeMapMax
+
+GrayImage binarizeMapContrast(
+    GrayImage const& src, QSize const window_size)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeMapContrast: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmax = GrayImage(src);
+    if (gmax.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmin = GrayImage(src);
+    if (gmin.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+    uint8_t* gmax_line = gmax.data();
+    uint8_t* gmin_line = gmin.data();
+
+    int const window_lower_half = window_size.height() >> 1;
+    int const window_upper_half = window_size.height() - window_lower_half;
+    int const window_left_half = window_size.width() >> 1;
+    int const window_right_half = window_size.width() - window_left_half;
+
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
+            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+
+            uint8_t const origin = gray_line[x];
+            uint8_t immin = origin;
+            uint8_t immax = origin;
+            for (int xf = left; xf < right; xf++)
+            {
+                uint8_t imf = gray_line[xf];
+                if (imf > immax)
+                {
+                    immax = imf;
+                }
+                if (imf < immin)
+                {
+                    immin = imf;
+                }
+            }
+            gmax_line[x] = immax;
+            gmin_line[x] = immin;
+        }
+        gray_line += gray_stride;
+        gmax_line += gray_stride;
+        gmin_line += gray_stride;
+    }
+
+    gmax_line = gmax.data();
+    gmin_line = gmin.data();
+    gray_line = gray.data();
+    for (int y = 0; y < h; y++)
+    {
+        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
+        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+
+        for (int x = 0; x < w; x++)
+        {
+            uint8_t const origin = gray_line[x];
+            uint8_t immin = origin;
+            uint8_t immax = origin;
+            unsigned long int idx = top * gray_stride + x;
+            for (int yf = top; yf < bottom; yf++)
+            {
+                uint8_t immaxf = gmax_line[idx];
+                uint8_t imminf = gmin_line[idx];
+                if (immaxf > immax)
+                {
+                    immax = immaxf;
+                }
+                if (imminf < immin)
+                {
+                    immin = imminf;
+                }
+                idx += gray_stride;
+            }
+            uint8_t threshold = (immax - immin);
+
+            gray_line[x] = threshold;
+        }
+        gray_line += gray_stride;
+    }
+
+    return gray;
+}  // binarizeMapContrast
+
 BinaryImage binarizeOtsu(QImage const& src, int const delta)
 {
     return BinaryImage(src, BinaryThreshold(BinaryThreshold::otsuThreshold(src) + delta));
@@ -462,63 +823,43 @@ GrayImage binarizeNiblackMap(
         return GrayImage();
     }
 
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gdeviation = binarizeMapDeviation(src, window_size);
+    if (gdeviation.isNull())
+    {
+        return GrayImage();
+    }
+
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-
-    IntegralImage<uint32_t> integral_image(w, h);
-    IntegralImage<uint64_t> integral_sqimage(w, h);
-
-    for (int y = 0; y < h; ++y)
-    {
-        integral_image.beginRow();
-        integral_sqimage.beginRow();
-        for (int x = 0; x < w; ++x)
-        {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-            integral_sqimage.push(pixel * pixel);
-        }
-        src_line += src_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+    uint8_t* gdeviation_line = gdeviation.data();
+    int const gdeviation_stride = gdeviation.stride();
 
     for (int y = 0; y < h; ++y)
     {
-        int const top = std::max(0, y - window_lower_half);
-        int const bottom = std::min(h, y + window_upper_half); // exclusive
-
         for (int x = 0; x < w; ++x)
         {
-            int const left = std::max(0, x - window_left_half);
-            int const right = std::min(w, x + window_right_half); // exclusive
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
-
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-            double const window_sqsum = integral_sqimage.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const sqmean = window_sqsum * r_area;
-
-            double const variance = sqmean - mean * mean;
-            double const stddev = sqrt(fabs(variance));
-
-            double threshold = mean - k * stddev;
+            float const mean = gmean_line[x];
+            float const deviation = gdeviation_line[x];
+            float threshold = mean - k * deviation;
 
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
+        gdeviation_line += gdeviation_stride;
     }
 
     return gray;
@@ -731,63 +1072,44 @@ GrayImage binarizeSauvolaMap(
         return GrayImage();
     }
 
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gdeviation = binarizeMapDeviation(src, window_size);
+    if (gdeviation.isNull())
+    {
+        return GrayImage();
+    }
+
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-
-    IntegralImage<uint32_t> integral_image(w, h);
-    IntegralImage<uint64_t> integral_sqimage(w, h);
-
-    for (int y = 0; y < h; ++y)
-    {
-        integral_image.beginRow();
-        integral_sqimage.beginRow();
-        for (int x = 0; x < w; ++x)
-        {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-            integral_sqimage.push(pixel * pixel);
-        }
-        src_line += src_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+    uint8_t* gdeviation_line = gdeviation.data();
+    int const gdeviation_stride = gdeviation.stride();
 
     for (int y = 0; y < h; ++y)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
         for (int x = 0; x < w; ++x)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+            float const mean = gmean_line[x];
+            float const deviation = gdeviation_line[x];
 
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-            double const window_sqsum = integral_sqimage.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const sqmean = window_sqsum * r_area;
-
-            double const variance = sqmean - mean * mean;
-            double const deviation = sqrt(fabs(variance));
-
-            double threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
+            float threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
 
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
+        gdeviation_line += gdeviation_stride;
     }
 
     return gray;
@@ -835,84 +1157,62 @@ GrayImage binarizeWolfMap(
         return GrayImage();
     }
 
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gdeviation = binarizeMapDeviation(src, window_size);
+    if (gdeviation.isNull())
+    {
+        return GrayImage();
+    }
+
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-
-
-    IntegralImage<uint32_t> integral_image(w, h);
-    IntegralImage<uint64_t> integral_sqimage(w, h);
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+    uint8_t* gdeviation_line = gdeviation.data();
+    int const gdeviation_stride = gdeviation.stride();
 
     uint32_t min_gray_level = 255;
+    float max_deviation = 0.0;
 
     for (int y = 0; y < h; ++y)
     {
-        integral_image.beginRow();
-        integral_sqimage.beginRow();
         for (int x = 0; x < w; ++x)
         {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-            integral_sqimage.push(pixel * pixel);
-            min_gray_level = std::min(min_gray_level, pixel);
+            uint32_t origin = gray_line[x];
+            float const deviation = gdeviation_line[x];
+            max_deviation = (max_deviation < deviation) ? deviation : max_deviation;
+            min_gray_level = (min_gray_level < origin) ? min_gray_level : origin;
         }
-        src_line += src_stride;
+        gray_line += gray_stride;
+        gdeviation_line += gdeviation_stride;
     }
 
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
-    std::vector<float> means(w * h, 0);
-    std::vector<float> deviations(w * h, 0);
-
-    double max_deviation = 0;
-
-    for (int y = 0; y < h; ++y)
-    {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
-        for (int x = 0; x < w; ++x)
-        {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
-
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-            double const window_sqsum = integral_sqimage.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const sqmean = window_sqsum * r_area;
-
-            double const variance = sqmean - mean * mean;
-            double const deviation = sqrt(fabs(variance));
-            max_deviation = std::max(max_deviation, deviation);
-            means[w * y + x] = mean;
-            deviations[w * y + x] = deviation;
-        }
-    }
-
+    gray_line = gray.data();
+    gdeviation_line = gdeviation.data();
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
         {
-            double const mean = means[y * w + x];
-            double const deviation = deviations[y * w + x];
-            double const a = 1.0 - deviation / max_deviation;
-            double threshold = mean - k * a * (mean - min_gray_level);
+            float const mean = gmean_line[x];
+            float const deviation = gdeviation_line[x];
+            float const a = 1.0 - deviation / max_deviation;
+            float threshold = mean - k * a * (mean - min_gray_level);
 
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
+        gdeviation_line += gdeviation_stride;
     }
 
     return gray;
@@ -961,54 +1261,33 @@ GrayImage binarizeBradleyMap(
         return GrayImage();
     }
 
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-
-    IntegralImage<uint32_t> integral_image(w, h);
-
-    for (int y = 0; y < h; ++y)
-    {
-        integral_image.beginRow();
-        for (int x = 0; x < w; ++x)
-        {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-        }
-        src_line += src_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
 
     for (int y = 0; y < h; ++y)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
         for (int x = 0; x < w; ++x)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
-
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
+            float const mean = gmean_line[x];
+            float threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
 
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
     }
 
     return gray;
@@ -1034,115 +1313,6 @@ BinaryImage binarizeBradley(
     return bw_img;
 }  // binarizeBradley
 
-GrayImage binarizeContrastMap(
-    GrayImage const& src, QSize const window_size)
-{
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeContrastMap: invalid window_size");
-    }
-
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gmax = GrayImage(src);
-    if (gmax.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gmin = GrayImage(src);
-    if (gmin.isNull())
-    {
-        return GrayImage();
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmax_line = gmax.data();
-    uint8_t* gmin_line = gmin.data();
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-
-            uint8_t const origin = gray_line[x];
-            uint8_t immin = origin;
-            uint8_t immax = origin;
-            for (int xf = left; xf < right; xf++)
-            {
-                uint8_t imf = gray_line[xf];
-                if (imf > immax)
-                {
-                    immax = imf;
-                }
-                if (imf < immin)
-                {
-                    immin = imf;
-                }
-            }
-            gmax_line[x] = immax;
-            gmin_line[x] = immin;
-        }
-        gray_line += gray_stride;
-        gmax_line += gray_stride;
-        gmin_line += gray_stride;
-    }
-
-    gmax_line = gmax.data();
-    gmin_line = gmin.data();
-    gray_line = gray.data();
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
-        for (int x = 0; x < w; x++)
-        {
-            uint8_t const origin = gray_line[x];
-            uint8_t immin = origin;
-            uint8_t immax = origin;
-            unsigned long int idx = top * gray_stride + x;
-            for (int yf = top; yf < bottom; yf++)
-            {
-                uint8_t immaxf = gmax_line[idx];
-                uint8_t imminf = gmin_line[idx];
-                if (immaxf > immax)
-                {
-                    immax = immaxf;
-                }
-                if (imminf < immin)
-                {
-                    immin = imminf;
-                }
-                idx += gray_stride;
-            }
-            uint8_t threshold = (immax - immin);
-
-            gray_line[x] = threshold;
-        }
-        gray_line += gray_stride;
-    }
-
-    return gray;
-}  // binarizeContrastMap
-
 /*
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
@@ -1164,7 +1334,14 @@ GrayImage binarizeSinghMap(
     {
         return GrayImage();
     }
-    GrayImage graymm = binarizeContrastMap(src, window_size);
+
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage graymm = binarizeMapContrast(src, window_size);
     if (graymm.isNull())
     {
         return GrayImage();
@@ -1176,52 +1353,25 @@ GrayImage binarizeSinghMap(
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
     uint8_t* graymm_line = graymm.data();
     int const graymm_stride = graymm.stride();
 
-    IntegralImage<uint32_t> integral_image(w, h);
-
     for (int y = 0; y < h; y++)
     {
-        integral_image.beginRow();
         for (int x = 0; x < w; x++)
         {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-        }
-        src_line += src_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
-        for (int x = 0; x < w; x++)
-        {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
-
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const origin = gray_line[x];
-            double const maxmin = graymm_line[x];
-            double threshold = (1.0 - k) * (mean + maxmin * (1.0 - origin / 255.0));
+            float const mean = gmean_line[x];
+            float const origin = gray_line[x];
+            float const maxmin = graymm_line[x];
+            float threshold = (1.0 - k) * (mean + maxmin * (1.0 - origin / 255.0));
 
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
         graymm_line += graymm_stride;
     }
 
@@ -1248,93 +1398,6 @@ BinaryImage binarizeSingh(
     return bw_img;
 }  // binarizeSingh
 
-GrayImage binarizeMaxMap(
-    GrayImage const& src, QSize const window_size)
-{
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMaxMap: invalid window_size");
-    }
-
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gmax = GrayImage(src);
-    if (gmax.isNull())
-    {
-        return GrayImage();
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmax_line = gmax.data();
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-
-            uint8_t const origin = gray_line[x];
-            uint8_t immax = origin;
-            for (int xf = left; xf < right; xf++)
-            {
-                uint8_t imf = gray_line[xf];
-                if (imf > immax)
-                {
-                    immax = imf;
-                }
-            }
-            gmax_line[x] = immax;
-        }
-        gray_line += gray_stride;
-        gmax_line += gray_stride;
-    }
-
-    gmax_line = gmax.data();
-    gray_line = gray.data();
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
-        for (int x = 0; x < w; x++)
-        {
-            uint8_t const origin = gray_line[x];
-            uint8_t immax = origin;
-            unsigned long int idx = top * gray_stride + x;
-            for (int yf = top; yf < bottom; yf++)
-            {
-                uint8_t immaxf = gmax_line[idx];
-                if (immaxf > immax)
-                {
-                    immax = immaxf;
-                }
-                idx += gray_stride;
-            }
-            gray_line[x] = immax;
-        }
-        gray_line += gray_stride;
-    }
-
-    return gray;
-}  // binarizeMaxMap
-
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
@@ -1356,8 +1419,21 @@ GrayImage binarizeWANMap(
     {
         return GrayImage();
     }
-    GrayImage graymm = binarizeMaxMap(src, window_size);
-    if (graymm.isNull())
+
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gdeviation = binarizeMapDeviation(src, window_size);
+    if (gdeviation.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gmax = binarizeMapMax(src, window_size);
+    if (gmax.isNull())
     {
         return GrayImage();
     }
@@ -1368,62 +1444,29 @@ GrayImage binarizeWANMap(
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-    uint8_t* graymm_line = graymm.data();
-    int const graymm_stride = graymm.stride();
-
-    IntegralImage<uint32_t> integral_image(w, h);
-    IntegralImage<uint64_t> integral_sqimage(w, h);
-
-    for (int y = 0; y < h; ++y)
-    {
-        integral_image.beginRow();
-        integral_sqimage.beginRow();
-        for (int x = 0; x < w; ++x)
-        {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-            integral_sqimage.push(pixel * pixel);
-        }
-        src_line += src_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+    uint8_t* gdeviation_line = gdeviation.data();
+    int const gdeviation_stride = gdeviation.stride();
+    uint8_t* gmax_line = gmax.data();
+    int const gmax_stride = gmax.stride();
 
     for (int y = 0; y < h; ++y)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
         for (int x = 0; x < w; ++x)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+            float const mean = gmean_line[x];
+            float const deviation = gdeviation_line[x];
+            float const imax = gmax_line[x];
 
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-            double const window_sqsum = integral_sqimage.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const sqmean = window_sqsum * r_area;
-
-            double const variance = sqmean - mean * mean;
-            double const deviation = sqrt(fabs(variance));
-            
-            double const imax = graymm_line[x];
-
-            double threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
-
+            float threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
             threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
             gray_line[x] = (uint8_t) threshold;
         }
         gray_line += gray_stride;
-        graymm_line += graymm_stride;
+        gmean_line += gmean_stride;
+        gdeviation_line += gdeviation_stride;
+        gmax_line += gmax_stride;
     }
 
     return gray;
@@ -1469,56 +1512,33 @@ GrayImage binarizeEdgeDivPrefilter(
         return GrayImage();
     }
 
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
     int const w = gray.width();
     int const h = gray.height();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-
-    IntegralImage<uint32_t> integral_image(w, h);
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
 
     for (int y = 0; y < h; ++y)
     {
-        integral_image.beginRow();
         for (int x = 0; x < w; ++x)
         {
-            uint32_t const pixel = gray_line[x];
-            integral_image.push(pixel);
-        }
-        gray_line += gray_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
-    gray_line = gray.data();
-    for (int y = 0; y < h; ++y)
-    {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
-        for (int x = 0; x < w; ++x)
-        {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
-
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const origin = gray_line[x];
-            double retval = origin;
+            float const mean = gmean_line[x];
+            float const origin = gray_line[x];
+            float retval = origin;
             if (kep > 0.0)
             {
                 // EdgePlus
                 // edge = I / blur (shift = -0.5) {0.0 .. >1.0}, mean value = 0.5
-                double const edge = (retval + 1) / (mean + 1) - 0.5;
+                float const edge = (retval + 1) / (mean + 1) - 0.5;
                 // edgeplus = I * edge, mean value = 0.5 * mean(I)
-                double const edgeplus = origin * edge;
+                float const edgeplus = origin * edge;
                 // return k * edgeplus + (1 - k) * I
                 retval = kep * edgeplus + (1.0 - kep) * origin;
             }
@@ -1526,9 +1546,9 @@ GrayImage binarizeEdgeDivPrefilter(
             {
                 // BlurDiv
                 // edge = blur / I (shift = -0.5) {0.0 .. >1.0}, mean value = 0.5
-                double const edgeinv = (mean + 1) / (retval + 1) - 0.5;
+                float const edgeinv = (mean + 1) / (retval + 1) - 0.5;
                 // edgenorm = edge * k + max * (1 - k), mean value = {0.5 .. 1.0} * mean(I)
-                double const edgenorm = kbd * edgeinv + (1.0 - kbd);
+                float const edgenorm = kbd * edgeinv + (1.0 - kbd);
                 // return I / edgenorm
                 retval = (edgenorm > 0.0) ? (origin / edgenorm) : origin;
             }
@@ -1537,6 +1557,7 @@ GrayImage binarizeEdgeDivPrefilter(
             gray_line[x] = (int) retval;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
     }
 
     return gray;
@@ -1586,60 +1607,39 @@ GrayImage binarizeRobustPrefilter(
         return GrayImage();
     }
 
+    GrayImage gmean = binarizeMapMean(src, window_size);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
     int const w = src.width();
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
-
-    IntegralImage<uint32_t> integral_image(w, h);
-
-    for (int y = 0; y < h; ++y)
-    {
-        integral_image.beginRow();
-        for (int x = 0; x < w; ++x)
-        {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-        }
-        src_line += src_stride;
-    }
-
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
 
     for (int y = 0; y < h; ++y)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
-
         for (int x = 0; x < w; ++x)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
-
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const origin = gray_line[x];
-            double retval = origin;
+            float const mean = gmean_line[x];
+            float const origin = gray_line[x];
+            float retval = origin;
             if (k > 0.0)
             {
-                double const sc = mean - origin;
-                double const robust = 255.0 - (mean + 255.0) * sc / (mean + sc);
+                float const sc = mean - origin;
+                float const robust = 255.0 - (mean + 255.0) * sc / (mean + sc);
                 retval = k * robust + (1.0 - k) * origin;
             }
             retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
             gray_line[x] = (int) retval;
         }
         gray_line += gray_stride;
+        gmean_line += gmean_stride;
     }
 
     return gray;

@@ -31,6 +31,19 @@ class BinaryImage;
 class GrayImage;
 
 /**
+ * \brief Statistic Images:
+ * mean, deviation, max, contrast
+ */
+IMAGEPROC_EXPORT GrayImage binarizeMapMean(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage binarizeMapDeviation(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage binarizeMapMax(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage binarizeContrastMap(
+    GrayImage const& src, QSize window_size);
+
+/**
  * \brief Image binarization using Otsu's global thresholding method.
  *
  * \see Help -> About -> References -> [7]
@@ -159,8 +172,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
  * International Journal of Computer Applications, 51, 5-10.
  * https://research.ijcaonline.org/volume51/number6/pxc3881362.pdf
  */
-IMAGEPROC_EXPORT GrayImage binarizeContrastMap(
-    GrayImage const& src, QSize window_size);
 IMAGEPROC_EXPORT GrayImage binarizeSinghMap(
     GrayImage const& src, QSize window_size, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeSingh(
@@ -174,8 +185,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeSingh(
  * "Binarization of Document Image Using Optimum Threshold Modification", 2018.
  * https://www.researchgate.net/publication/326026836_Binarization_of_Document_Image_Using_Optimum_Threshold_Modification
  */
-IMAGEPROC_EXPORT GrayImage binarizeMaxMap(
-    GrayImage const& src, QSize window_size);
 IMAGEPROC_EXPORT GrayImage binarizeWANMap(
     GrayImage const& src, QSize window_size, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeWAN(
