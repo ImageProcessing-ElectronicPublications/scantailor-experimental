@@ -127,6 +127,7 @@ GrayImage binarizeMapMean(
             double const r_area = 1.0 / area;
             double mean = window_sum * r_area;
 
+            mean += 0.5;
             mean = (mean < 0.0) ? 0.0 : ((mean < 255.0) ? mean : 255.0);
             gray_line[x] = (uint8_t) mean;
         }
@@ -165,7 +166,6 @@ GrayImage binarizeMapDeviation(
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
 
-
     IntegralImage<uint32_t> integral_image(w, h);
     IntegralImage<uint64_t> integral_sqimage(w, h);
 
@@ -189,9 +189,6 @@ GrayImage binarizeMapDeviation(
     int const window_upper_half = window_size.height() - window_lower_half;
     int const window_left_half = window_size.width() >> 1;
     int const window_right_half = window_size.width() - window_left_half;
-
-    std::vector<float> means(w * h, 0);
-    std::vector<float> deviations(w * h, 0);
 
     double max_deviation = 0;
 
@@ -218,6 +215,7 @@ GrayImage binarizeMapDeviation(
             double const variance = sqmean - mean * mean;
             double deviation = sqrt(fabs(variance));
 
+            deviation += 0.5;
             deviation = (deviation < 0.0) ? 0.0 : ((deviation < 255.0) ? deviation : 255.0);
             gray_line[x] = (uint8_t) deviation;
         }
