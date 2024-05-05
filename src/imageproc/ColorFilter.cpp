@@ -33,7 +33,6 @@
 #include "Grayscale.h"
 #include "GrayImage.h"
 #include "BinaryImage.h"
-#include "IntegralImage.h"
 #include "BinaryThreshold.h"
 #include "ColorFilter.h"
 
@@ -66,51 +65,34 @@ void wienerFilterInPlace(
         int const h = image.height();
         float const noise_variance = noise_sigma * noise_sigma;
 
-        IntegralImage<uint32_t> integral_image(w, h);
-        IntegralImage<uint64_t> integral_sqimage(w, h);
-
         uint8_t* image_line = image.data();
         int const image_stride = image.stride();
 
-        for (int y = 0; y < h; ++y)
+        GrayImage gmean = grayMapMean(image, window_size);
+        if (gmean.isNull())
         {
-            integral_image.beginRow();
-            integral_sqimage.beginRow();
-            for (int x = 0; x < w; ++x)
-            {
-                uint32_t const pixel = image_line[x];
-                integral_image.push(pixel);
-                integral_sqimage.push(pixel * pixel);
-            }
-            image_line += image_stride;
+            return;
         }
 
-        int const window_lower_half = window_size.height() >> 1;
-        int const window_upper_half = window_size.height() - window_lower_half;
-        int const window_left_half = window_size.width() >> 1;
-        int const window_right_half = window_size.width() - window_left_half;
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
 
-        image_line = image.data();
+        GrayImage gdeviation = grayMapDeviation(image, window_size);
+        if (gdeviation.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+
         for (int y = 0; y < h; ++y)
         {
-            int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-            int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h; // exclusive
-
             for (int x = 0; x < w; ++x)
             {
-                int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-                int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w; // exclusive
-                int const area = (bottom - top) * (right - left);
-                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
-
-                QRect const rect(left, top, right - left, bottom - top);
-                float const window_sum = integral_image.sum(rect);
-                float const window_sqsum = integral_sqimage.sum(rect);
-
-                float const r_area = 1.0f / area;
-                float const mean = window_sum * r_area;
-                float const sqmean = window_sqsum * r_area;
-                float const variance = sqmean - mean * mean;
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+                float const variance = deviation * deviation;
 
                 float const src_pixel = (float) image_line[x];
                 float const delta_pixel = src_pixel - mean;
@@ -125,6 +107,8 @@ void wienerFilterInPlace(
                 image_line[x] = (uint8_t) val;
             }
             image_line += image_stride;
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
         }
     }
 }
@@ -239,70 +223,24 @@ void knnDenoiserFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        IntegralImage<uint32_t> integral_image(w, h);
-
-        for (int y = 0; y < h; ++y)
+        GrayImage gknn = grayKnnDenoiser(gray, radius, coef);
+        if (gknn.isNull())
         {
-            integral_image.beginRow();
-            for (int x = 0; x < w; ++x)
-            {
-                uint32_t const pixel = gray_line[x];
-                integral_image.push(pixel);
-            }
-            gray_line += gray_stride;
+            return;
         }
 
-        int const noise_area = ((2 * radius + 1) * (2 * radius + 1));
-        float const noise_area_inv = (1.0f / (float) noise_area);
-        float const noise_weight = (1.0f / (coef * coef));
-        float const pixel_weight = (1.0f / 255.0f);
+        uint8_t* gknn_line = gknn.data();
+        int const gknn_stride = gknn.stride();
 
-        gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
             for (int x = 0; x < w; ++x)
             {
                 float const origin = gray_line[x];
-                float f_count = noise_area_inv;
-                float sum_weights = 1.0f;
-                float color = origin;
+                float const knn = gknn_line[x];
 
-                for (int r = 1; r <= radius; r++)
-                {
-                    int const top = ((y - r) < 0) ? 0 : (y - r);
-                    int const bottom = ((y + r) < h) ? (y + r) : h;
-                    int const left = ((x - r) < 0) ? 0 : (x - r);
-                    int const right = ((x + r) < w) ? (x + r) : w;
-                    int const area = (bottom - top) * (right - left);
-                    QRect const rect(left, top, right - left, bottom - top);
-                    float const window_sum = integral_image.sum(rect);
-                    float const r_area = 1.0f / area;
-                    float const mean = window_sum * r_area;
-                    float const delta = (origin - mean) * pixel_weight * r;
-                    float const deltasq = delta * delta;
-
-                    // Denoising
-                    float r2 = r * r;
-                    float weight_f = expf(-(r2 * noise_area_inv + deltasq * noise_weight));
-                    float weight_r = (r << 3);
-                    float weight_fr = weight_f * weight_r;
-                    color += mean * weight_fr;
-                    sum_weights += weight_fr;
-                    f_count += (weight_f > threshold_weight) ? (noise_area_inv * weight_r) : 0.0f;
-                }
-
-                // Normalize result color
-                sum_weights = (sum_weights > 0.0f) ? (1.0f / sum_weights) : 1.0f;
-                color *= sum_weights;
-
-                float lerp_q = (f_count > threshold_lerp) ? noise_lerpc : (1.0f - noise_lerpc);
-                color = color + (origin - color) * lerp_q;
-
-                // Result to memory
-                color = (color < 0.0f) ? 0.0f : ((color < 255.0f) ? color : 255.0f);
-
-                float const colscale = (color + 1.0f) / (origin + 1.0f);
-                float const coldelta = color - origin * colscale;
+                float const colscale = (knn + 1.0f) / (origin + 1.0f);
+                float const coldelta = knn - origin * colscale;
                 for (unsigned int c = 0; c < cnum; ++c)
                 {
                     int const indx = x * cnum + c;
@@ -314,6 +252,7 @@ void knnDenoiserFilterInPlace(
             }
             image_line += image_stride;
             gray_line += gray_stride;
+            gknn_line += gknn_stride;
         }
     }
 }
@@ -489,40 +428,20 @@ void blurFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        IntegralImage<uint32_t> integral_image(w, h);
-
-        for (int y = 0; y < h; ++y)
+        GrayImage gmean = grayMapMean(gray, window_size);
+        if (gmean.isNull())
         {
-            integral_image.beginRow();
-            for (int x = 0; x < w; ++x)
-            {
-                uint32_t const pixel = gray_line[x];
-                integral_image.push(pixel);
-            }
-            gray_line += gray_stride;
+            return;
         }
 
-        int const window_lower_half = window_size.height() >> 1;
-        int const window_upper_half = window_size.height() - window_lower_half;
-        int const window_left_half = window_size.width() >> 1;
-        int const window_right_half = window_size.width() - window_left_half;
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
 
-        gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
-            int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-            int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
             for (int x = 0; x < w; ++x)
             {
-                int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-                int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-                int const area = (bottom - top) * (right - left);
-                assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
-                QRect const rect(left, top, right - left, bottom - top);
-                float const window_sum = integral_image.sum(rect);
-
-                float const r_area = 1.0 / area;
-                float const mean = window_sum * r_area;
+                float const mean = gmean_line[x];
 
                 float const origin = gray_line[x];
                 float retval = coef * mean + (1.0 - coef) * origin;
@@ -539,6 +458,7 @@ void blurFilterInPlace(
             }
             image_line += image_stride;
             gray_line += gray_stride;
+            gmean_line += gmean_stride;
         }
     }
 }
@@ -580,47 +500,30 @@ void screenFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        IntegralImage<uint32_t> integral_image(w, h);
-
-        for (int y = 0; y < h; ++y)
+        GrayImage gmean = grayMapMean(gray, window_size);
+        if (gmean.isNull())
         {
-            integral_image.beginRow();
-            for (int x = 0; x < w; ++x)
-            {
-                uint32_t const pixel = gray_line[x];
-                integral_image.push(pixel);
-            }
-            gray_line += gray_stride;
+            return;
         }
 
-        int const window_lower_half = window_size.height() >> 1;
-        int const window_upper_half = window_size.height() - window_lower_half;
-        int const window_left_half = window_size.width() >> 1;
-        int const window_right_half = window_size.width() - window_left_half;
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
 
         unsigned long int histogram[256] = {0};
         unsigned long int szi = (h * w) >> 8;
         gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
-            int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-            int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
             for (int x = 0; x < w; ++x)
             {
-                int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-                int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
-                int const area = (bottom - top) * (right - left);
-                assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
-                QRect const rect(left, top, right - left, bottom - top);
-                float const window_sum = integral_image.sum(rect);
+                unsigned int const mean = gmean_line[x];
 
-                float const r_area = 1.0f / area;
-                float const mean = window_sum * r_area;
                 gray_line[x] = mean;
-                unsigned int indx = (unsigned int) (mean + 0.5f);
+                unsigned int indx = mean;
                 histogram[indx]++;
             }
             gray_line += gray_stride;
+            gmean_line += gmean_stride;
         }
 
         for (unsigned int i = 1; i < 256; i++)

@@ -19,12 +19,14 @@
 #ifndef IMAGEPROC_GRAYIMAGE_H_
 #define IMAGEPROC_GRAYIMAGE_H_
 
-#include "imageproc_config.h"
-#include "GridAccessor.h"
 #include <QImage>
 #include <QSize>
 #include <QRect>
 #include <stdint.h>
+#include <math.h>
+#include "imageproc_config.h"
+#include "GridAccessor.h"
+#include "IntegralImage.h"
 
 namespace imageproc
 {
@@ -138,6 +140,22 @@ inline bool operator!=(GrayImage const& lhs, GrayImage const& rhs)
 {
     return lhs.toQImage() != rhs.toQImage();
 }
+
+/**
+ * \brief Statistic Images:
+ * mean, deviation, max, contrast
+ */
+IMAGEPROC_EXPORT GrayImage grayMapMean(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage grayMapDeviation(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage grayMapMax(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage grayMapContrast(
+    GrayImage const& src, QSize window_size);
+IMAGEPROC_EXPORT GrayImage grayKnnDenoiser(
+    GrayImage const& src, int radius = 1, float coef = 0.0f);
+
 
 } // namespace imageproc
 

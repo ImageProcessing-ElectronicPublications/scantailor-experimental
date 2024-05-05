@@ -31,19 +31,6 @@ class BinaryImage;
 class GrayImage;
 
 /**
- * \brief Statistic Images:
- * mean, deviation, max, contrast
- */
-IMAGEPROC_EXPORT GrayImage binarizeMapMean(
-    GrayImage const& src, QSize window_size);
-IMAGEPROC_EXPORT GrayImage binarizeMapDeviation(
-    GrayImage const& src, QSize window_size);
-IMAGEPROC_EXPORT GrayImage binarizeMapMax(
-    GrayImage const& src, QSize window_size);
-IMAGEPROC_EXPORT GrayImage binarizeContrastMap(
-    GrayImage const& src, QSize window_size);
-
-/**
  * \brief Image binarization using Otsu's global thresholding method.
  *
  * \see Help -> About -> References -> [7]
