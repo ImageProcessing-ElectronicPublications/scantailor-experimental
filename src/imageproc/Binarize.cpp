@@ -194,7 +194,7 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
     uint8_t const* gray_line = src.data();
     unsigned int const gray_stride = src.stride();
     unsigned int const histsize = 256;
-    unsigned long int im, iw, ib, histogram[histsize] = {0};
+    uint64_t im, iw, ib, histogram[histsize] = {0};
     unsigned int k, Tn;
     double Tw, Tb;
     double part = 0.5 + (double) delta / 256.0;
