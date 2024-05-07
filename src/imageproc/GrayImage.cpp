@@ -19,6 +19,7 @@
 #include "GrayImage.h"
 #include "Grayscale.h"
 #include <new>
+#include <stdexcept>
 
 namespace imageproc
 {
