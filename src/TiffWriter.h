@@ -26,6 +26,7 @@ class QIODevice;
 class QString;
 class QImage;
 class Dpm;
+class TiffHandle;
 
 class TiffWriter
 {
@@ -49,7 +50,6 @@ public:
      */
     static bool writeImage(QIODevice& device, QImage const& image);
 private:
-    class TiffHandle;
 
     static bool writeBitonalOrIndexed8Image(
         TiffHandle const& tif, QImage const& image);

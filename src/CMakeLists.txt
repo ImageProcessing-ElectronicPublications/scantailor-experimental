@@ -79,6 +79,7 @@ SET(
     StageSequence.cpp StageSequence.h
     ProjectPages.cpp ProjectPages.h
     ImageMetadataLoader.cpp ImageMetadataLoader.h
+    TiffHandle.h
     TiffReader.cpp TiffReader.h
     TiffWriter.cpp TiffWriter.h
     PngMetadataLoader.cpp PngMetadataLoader.h

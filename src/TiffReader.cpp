@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "TiffHandle.h"
 #include "TiffReader.h"
 #include "ImageMetadata.h"
 #include "NonCopyable.h"
@@ -55,25 +56,6 @@ public:
 private:
     Signature m_signature;
     int m_version;
-};
-
-
-class TiffReader::TiffHandle
-{
-public:
-    TiffHandle(TIFF* handle) : m_pHandle(handle) {}
-
-    ~TiffHandle()
-    {
-        if (m_pHandle) TIFFClose(m_pHandle);
-    }
-
-    TIFF* handle() const
-    {
-        return m_pHandle;
-    }
-private:
-    TIFF* m_pHandle;
 };
 
 

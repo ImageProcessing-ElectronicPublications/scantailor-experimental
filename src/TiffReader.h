@@ -25,6 +25,7 @@
 class QIODevice;
 class QImage;
 class ImageMetadata;
+class TiffHandle;
 
 class TiffReader
 {
@@ -47,7 +48,6 @@ public:
     static QImage readImage(QIODevice& device, int page_num = 0);
 private:
     class TiffHeader;
-    class TiffHandle;
     struct TiffInfo;
     template<typename T> class TiffBuffer;
 

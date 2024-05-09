@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "TiffHandle.h"
 #include "TiffWriter.h"
 #include "imageproc/Constants.h"
 #include <QtGlobal>
@@ -75,25 +76,6 @@ TiffWriter::m_reverseBitsLUT[256] =
     0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
     0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
-
-class TiffWriter::TiffHandle
-{
-public:
-    TiffHandle(TIFF* handle) : m_pHandle(handle) {}
-
-    ~TiffHandle()
-    {
-        if (m_pHandle) TIFFClose(m_pHandle);
-    }
-
-    TIFF* handle() const
-    {
-        return m_pHandle;
-    }
-private:
-    TIFF* m_pHandle;
-};
-
 
 static tsize_t deviceRead(thandle_t context, tdata_t data, tsize_t size)
 {
