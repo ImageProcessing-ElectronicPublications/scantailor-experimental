@@ -1295,6 +1295,11 @@ Para determinarlo, ejecute el proceso de &quot;Seleccionar Contendio&quot; o &qu
         <source>Value is -1.0 .. 1.0.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
+        <source>Engraving</source>
+        <translation type="unfinished"></translation>
+    </message>
      <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>

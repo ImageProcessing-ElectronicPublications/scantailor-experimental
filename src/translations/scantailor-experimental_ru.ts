@@ -1422,6 +1422,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Значение -1,0 .. 1,0.</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
+        <source>Engraving</source>
+        <translation>Гравюра</translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>
         <translation>Удалить фон</translation>

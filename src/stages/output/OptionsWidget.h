@@ -89,6 +89,10 @@ private slots:
 
     void sqrCoefChanged(double value);
 
+    void gravureCoefChanged(double value);
+
+    void gravureWindowSizeChanged(int value);
+
     void unPaperCoefChanged(double value);
 
     void unPaperItersChanged(int value);

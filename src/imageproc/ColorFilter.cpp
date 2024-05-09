@@ -2050,4 +2050,99 @@ void unPaperFilterInPlace(
     }
 }
 
+
+QImage gravureFilter(
+    QImage const& image, QSize const& window_size, float const coef)
+{
+    QImage dst(image);
+    gravureFilterInPlace(dst, window_size, coef);
+    return dst;
+}
+
+void gravureFilterInPlace(
+    QImage& image, QSize const& window_size, float const coef)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("gravureFilter: empty window_size");
+    }
+
+    if (coef != 0.0f)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean = grayMapMean(gray, window_size);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        double mean_delta = 0.0;
+        for (int y = 0; y < h; ++y)
+        {
+            double mean_delta_line = 0.0;
+            for (int x = 0; x < w; ++x)
+            {
+                float const mean = gmean_line[x];
+                float const origin = gray_line[x];
+
+                float const delta = (origin < mean) ? (mean - origin) : (origin - mean);
+                mean_delta_line += delta;
+            }
+            mean_delta += mean_delta_line;
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
+        }
+        mean_delta /= w;
+        mean_delta /= h;
+        if (mean_delta > 0.0)
+        {
+            gray_line = gray.data();
+            gmean_line = gmean.data();
+            for (int y = 0; y < h; ++y)
+            {
+                for (int x = 0; x < w; ++x)
+                {
+                    float const mean = gmean_line[x];
+                    float const origin = gray_line[x];
+
+                    float const tline = mean / mean_delta;
+                    int threshold = (int) tline;
+                    float delta = tline - threshold;
+                    delta = (delta < 0.5f) ? (0.5f - delta) : (delta - 0.5f);
+                    delta += 0.5f;
+                    delta = coef * delta + (1.0f - coef);
+                    for (unsigned int c = 0; c < cnum; ++c)
+                    {
+                        int const indx = x * cnum + c;
+                        float origcol = image_line[indx];
+                        int val = (origcol * delta + 0.5f);
+                        val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                        image_line[indx] = (uint8_t) val;
+                    }
+                }
+                image_line += image_stride;
+                gray_line += gray_stride;
+                gmean_line += gmean_stride;
+            }
+        }
+    }
+}
+
 } // namespace imageproc

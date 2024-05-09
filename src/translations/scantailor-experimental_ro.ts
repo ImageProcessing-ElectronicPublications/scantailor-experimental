@@ -1118,6 +1118,11 @@ Pentru determinarea ei rulați comenzile de procesare în bloc - &quot;Selectare
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
+        <source>Engraving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>
         <translation type="unfinished"></translation>

@@ -1400,6 +1400,11 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
+        <source>Engraving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>
         <translation type="unfinished"></translation>

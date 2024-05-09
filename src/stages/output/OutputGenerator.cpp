@@ -378,6 +378,8 @@ OutputGenerator::process(
 
     colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
 
+    gravureFilterInPlace(transformed_image, QSize(color_options.gravureWindowSize(), color_options.gravureWindowSize()), color_options.gravureCoef());
+
     GrayImage coloredSignificance(transformed_image);
     if (render_params.needBinarization())
     {
@@ -436,7 +438,7 @@ OutputGenerator::process(
         GrayImage gray(transformed_image);
         transformed_image = gray.toQImage();
     }
-    
+
     QImage maybe_smoothed;
     // We only do smoothing if we are going to do binarization later.
     if (render_params.needBinarization())
@@ -815,7 +817,7 @@ OutputGenerator::estimateBinarizationMask(
 {
     QSize const downscaled_size(gray_source.size().scaled(1600, 1600, Qt::KeepAspectRatio));
     GrayImage downscaled(scaleToGray(gray_source, downscaled_size));
-    
+
     if (!downscaled.isNull())
     {
         if ((coef < 0.0f) || (coef > 0.0f))

@@ -37,6 +37,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_screenWindowSize(el.attribute("screenWinSize").toInt()),
        m_curveCoef(el.attribute("curveCoef").toDouble()),
        m_sqrCoef(el.attribute("sqrCoef").toDouble()),
+       m_gravureCoef(el.attribute("gravureCoef").toDouble()),
+       m_gravureWindowSize(el.attribute("gravureWinSize").toInt()),
        m_unPaperCoef(el.attribute("unPaper").toDouble()),
        m_unPaperIters(el.attribute("unPaperIters").toInt()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
@@ -91,6 +93,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_sqrCoef = 0.0;
     }
+    if (m_gravureCoef < -1.0 || m_gravureCoef > 1.0)
+    {
+        m_gravureCoef = 0.0;
+    }
+    if (m_gravureWindowSize < 3)
+    {
+        m_gravureWindowSize = 10;
+    }
     if (m_unPaperCoef < 0.0 || m_unPaperCoef > 1.0)
     {
         m_unPaperCoef = 0.0;
@@ -121,6 +131,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("screenWinSize", m_screenWindowSize);
     el.setAttribute("curveCoef", m_curveCoef);
     el.setAttribute("sqrCoef", m_sqrCoef);
+    el.setAttribute("gravureCoef", m_screenCoef);
+    el.setAttribute("gravureWinSize", m_screenWindowSize);
     el.setAttribute("unPaper", m_unPaperCoef);
     el.setAttribute("unPaperIters", m_unPaperIters);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
@@ -157,6 +169,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_sqrCoef != other.m_sqrCoef)
+    {
+        return false;
+    }
+    if ((m_gravureCoef != other.m_gravureCoef) || (m_gravureWindowSize != other.m_gravureWindowSize))
     {
         return false;
     }

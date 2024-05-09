@@ -1260,6 +1260,11 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
+        <source>Engraving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>
         <translation type="unfinished"></translation>

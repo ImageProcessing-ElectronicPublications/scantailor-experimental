@@ -96,10 +96,10 @@ IMAGEPROC_EXPORT void colorCurveFilterInPlace(
     QImage& image, float coef = 0.5f);
 
 IMAGEPROC_EXPORT QImage colorSqrFilter(
-    QImage& image, float coef = 0.5f);
+    QImage& image, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void colorSqrFilterInPlace(
-    QImage& image, float coef = 0.5f);
+    QImage& image, float coef = 0.0f);
 
 IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
     QImage const& image, float coef = 0.0f);
@@ -173,10 +173,16 @@ IMAGEPROC_EXPORT void maskMorphological(
     QImage& image, BinaryImage const& mask, int radius = 0);
 
 IMAGEPROC_EXPORT QImage unPaperFilter(
-    QImage const& image, unsigned int const iters, float coef = 0.0);
+    QImage const& image, unsigned int const iters, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void unPaperFilterInPlace(
-    QImage& image, unsigned int const iters, float coef = 0.0);
+    QImage& image, unsigned int const iters, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void gravureFilterInPlace(
+    QImage& image, QSize const& window_size, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage gravureFilter(
+    QImage& image, float coef = 0.0f);
 
 } // namespace imageproc
 

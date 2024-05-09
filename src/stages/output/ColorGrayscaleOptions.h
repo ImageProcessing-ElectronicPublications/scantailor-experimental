@@ -42,6 +42,8 @@ public:
           m_screenWindowSize(10),
           m_curveCoef(0.5),
           m_sqrCoef(0.0),
+          m_gravureCoef(0.0),
+          m_gravureWindowSize(10),
           m_unPaperCoef(0.0),
           m_unPaperIters(5),
           m_normalizeCoef(0.5),
@@ -155,6 +157,23 @@ public:
         m_sqrCoef = val;
     }
 
+    double gravureCoef() const
+    {
+        return m_gravureCoef;
+    }
+    void setGravureCoef(double val)
+    {
+        m_gravureCoef = val;
+    }
+    int gravureWindowSize() const
+    {
+        return m_gravureWindowSize;
+    }
+    void setGravureWindowSize(int val)
+    {
+        m_gravureWindowSize = val;
+    }
+
     double unPaperCoef() const
     {
         return m_unPaperCoef;
@@ -202,6 +221,7 @@ public:
     bool operator==(ColorGrayscaleOptions const& other) const;
 
     bool operator!=(ColorGrayscaleOptions const& other) const;
+
 private:
     double m_wienerCoef;
     int m_wienerWindowSize;
@@ -215,6 +235,8 @@ private:
     int m_screenWindowSize;
     double m_curveCoef;
     double m_sqrCoef;
+    double m_gravureCoef;
+    int m_gravureWindowSize;
     double m_unPaperCoef;
     int m_unPaperIters;
     double m_normalizeCoef;
