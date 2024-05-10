@@ -20,6 +20,9 @@
 #include <QCoreApplication>
 #include <QString>
 #include <QStringList>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QImageReader>
+#endif
 #include <iostream>
 
 #include "CommandLine.h"
@@ -33,6 +36,10 @@ int main(int argc, char **argv)
 #ifdef _WIN32
     // Get rid of all references to Qt's installation directory.
     app.setLibraryPaths(QStringList(app.applicationDirPath()));
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QImageReader::setAllocationLimit(0);
 #endif
 
     // parse command line arguments
