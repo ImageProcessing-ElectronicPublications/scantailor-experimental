@@ -139,7 +139,8 @@ static void affineTransformGeneric(
                 {
                     int const src_x = qBound<int>(0, (src_left + src_right) >> 1, sw - 1);
                     int const src_y = qBound<int>(0, (src_top + src_bottom) >> 1, sh - 1);
-                    dst_line[dx] = src_data[src_y * src_stride + src_x];
+                    if ((SIZE_MAX - (size_t)src_x) / (size_t)src_stride < (size_t)src_y) throw std::out_of_range("affineTransformGeneric");
+                    dst_line[dx] = src_data[(size_t)src_y * (size_t)src_stride + (size_t)src_x];
                 }
                 continue;
             }
@@ -229,12 +230,14 @@ static void affineTransformGeneric(
                 {
                     int const src_x = qBound<int>(0, (src_left + src_right) >> 1, sw - 1);
                     int const src_y = qBound<int>(0, (src_top + src_bottom) >> 1, sh - 1);
-                    dst_line[dx] = src_data[src_y * src_stride + src_x];
+                    if ((SIZE_MAX - (size_t)src_x) / (size_t)src_stride < (size_t)src_y) throw std::out_of_range("affineTransformGeneric");
+                    dst_line[dx] = src_data[(size_t)src_y * (size_t)src_stride + (size_t)src_x];
                 }
                 continue;
             }
 
-            StorageUnit const* src_line = &src_data[src_top * src_stride];
+            if (SIZE_MAX / (size_t)src_stride < (size_t)src_top) throw std::out_of_range("affineTransformGeneric");
+            StorageUnit const* src_line = &src_data[(size_t)src_top * (size_t)src_stride];
 
             if (src_top == src_bottom)
             {
