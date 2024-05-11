@@ -1356,6 +1356,21 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Фильтры</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="243"/>
+        <source>Curve/Sqr color</source>
+        <translation>Цвет по S/C-кривой</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="282"/>
+        <source>Select additional filter.</source>
+        <translation>Выбор дополнительного фильтра.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="282"/>
+        <source>The size of a select filters.</source>
+        <translation>Размер выбранного фильтра.</translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
         <source>Wiener denoiser</source>
         <translation>Шумодав Винера</translation>
@@ -1407,13 +1422,8 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="357"/>
-        <source>Screen filter</source>
-        <translation>Экранный фильтр</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="393"/>
-        <source>Curve/Sqr color</source>
-        <translation>Цвет по S/C-кривой</translation>
+        <source>Screen</source>
+        <translation>Экран</translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="400"/>

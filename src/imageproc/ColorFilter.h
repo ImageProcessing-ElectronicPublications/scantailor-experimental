@@ -47,48 +47,6 @@ IMAGEPROC_EXPORT GrayImage wienerFilter(
 IMAGEPROC_EXPORT void wienerFilterInPlace(
     GrayImage& image, QSize const& window_size, float noise_sigma);
 
-IMAGEPROC_EXPORT QImage wienerColorFilter(
-    QImage const& image, QSize const& window_size, float coef = 0.0f);
-
-IMAGEPROC_EXPORT void wienerColorFilterInPlace(
-    QImage& image, QSize const& window_size, float coef = 0.0f);
-
-IMAGEPROC_EXPORT QImage knnDenoiserFilter(
-    QImage const& image, int radius = 1, float coef = 0.0f);
-
-IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
-    QImage& image, int radius = 1, float coef = 0.0f);
-
-IMAGEPROC_EXPORT QImage colorDespeckleFilter(
-    QImage const& image, int radius = 1, float coef = 0.0f);
-
-IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
-    QImage& image, int radius = 1, float coef = 0.0f);
-
-IMAGEPROC_EXPORT QImage blurFilter(
-    QImage const& image, QSize const& window_size, float coef = 0.0f);
-
-IMAGEPROC_EXPORT void blurFilterInPlace(
-    QImage& image, QSize const& window_size, float coef = 0.0f);
-
-/**
- * @brief Applies the Screen filter to a image.
- *
- * @param image The image to apply the filter to. A null image is allowed.
- * @param window_size The local neighbourhood around a pixel to use.
- * @param coef The part of filter in the result.
- * @return The filtered image.
- */
-IMAGEPROC_EXPORT QImage screenFilter(
-    QImage const& image, QSize const& window_size, float coef = 0.0f);
-
-/**
- * @brief An in-place version of screenFilter().
- * @see screenFilter()
- */
-IMAGEPROC_EXPORT void screenFilterInPlace(
-    QImage& image, QSize const& window_size, float coef = 0.0f);
-
 IMAGEPROC_EXPORT QImage colorCurveFilter(
     QImage& image, float coef = 0.5f);
 
@@ -100,6 +58,60 @@ IMAGEPROC_EXPORT QImage colorSqrFilter(
 
 IMAGEPROC_EXPORT void colorSqrFilterInPlace(
     QImage& image, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage wienerColorFilter(
+    QImage const& image, int f_size = 2, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void wienerColorFilterInPlace(
+    QImage& image, int f_size = 2, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage knnDenoiserFilter(
+    QImage const& image, int radius = 2, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
+    QImage& image, int radius = 2, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage colorDespeckleFilter(
+    QImage const& image, int radius = 2, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
+    QImage& image, int radius = 1, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage blurFilter(
+    QImage const& image, int f_size = 2, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void blurFilterInPlace(
+    QImage& image, int f_size = 2, float coef = 0.0f);
+
+/**
+ * @brief Applies the Screen filter to a image.
+ *
+ * @param image The image to apply the filter to. A null image is allowed.
+ * @param window_size The local neighbourhood around a pixel to use.
+ * @param coef The part of filter in the result.
+ * @return The filtered image.
+ */
+IMAGEPROC_EXPORT QImage screenFilter(
+    QImage const& image, int f_size = 5, float coef = 0.0f);
+
+/**
+ * @brief An in-place version of screenFilter().
+ * @see screenFilter()
+ */
+IMAGEPROC_EXPORT void screenFilterInPlace(
+    QImage& image, int f_size = 5, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage unPaperFilter(
+    QImage const& image, unsigned int const iters, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void unPaperFilterInPlace(
+    QImage& image, unsigned int const iters, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void gravureFilterInPlace(
+    QImage& image, int f_size = 5, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage gravureFilter(
+    QImage& image, int f_size = 5, float coef = 0.0f);
 
 IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
     QImage const& image, float coef = 0.0f);
@@ -171,18 +183,6 @@ IMAGEPROC_EXPORT void maskMorphologicalClose(
 
 IMAGEPROC_EXPORT void maskMorphological(
     QImage& image, BinaryImage const& mask, int radius = 0);
-
-IMAGEPROC_EXPORT QImage unPaperFilter(
-    QImage const& image, unsigned int const iters, float coef = 0.0f);
-
-IMAGEPROC_EXPORT void unPaperFilterInPlace(
-    QImage& image, unsigned int const iters, float coef = 0.0f);
-
-IMAGEPROC_EXPORT void gravureFilterInPlace(
-    QImage& image, QSize const& window_size, float coef = 0.0f);
-
-IMAGEPROC_EXPORT QImage gravureFilter(
-    QImage& image, float coef = 0.0f);
 
 } // namespace imageproc
 

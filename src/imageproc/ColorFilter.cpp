@@ -114,20 +114,22 @@ void wienerFilterInPlace(
 }
 
 QImage wienerColorFilter(
-    QImage const& image, QSize const& window_size, float const coef)
+    QImage const& image, int const f_size, float const coef)
 {
     QImage dst(image);
-    wienerColorFilterInPlace(dst, window_size, coef);
+    wienerColorFilterInPlace(dst, f_size, coef);
     return dst;
 }
 
 void wienerColorFilterInPlace(
-    QImage& image, QSize const& window_size, float const coef)
+    QImage& image, int const f_size, float const coef)
 {
     if (image.isNull())
     {
         return;
     }
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
     if (window_size.isEmpty())
     {
         throw std::invalid_argument("wienerFilter: empty window_size");
@@ -396,16 +398,18 @@ void colorDespeckleFilterInPlace(
 }
 
 QImage blurFilter(
-    QImage const& image, QSize const& window_size, float const coef)
+    QImage const& image, int const f_size, float const coef)
 {
     QImage dst(image);
-    blurFilterInPlace(dst, window_size, coef);
+    blurFilterInPlace(dst, f_size, coef);
     return dst;
 }
 
 void blurFilterInPlace(
-    QImage& image, QSize const& window_size, float const coef)
+    QImage& image, int const f_size, float const coef)
 {
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
     if (window_size.isEmpty())
     {
         throw std::invalid_argument("blurFilter: empty window_size");
@@ -464,20 +468,22 @@ void blurFilterInPlace(
 }
 
 QImage screenFilter(
-    QImage const& image, QSize const& window_size, float const coef)
+    QImage const& image, int const f_size, float const coef)
 {
     QImage dst(image);
-    screenFilterInPlace(dst, window_size, coef);
+    screenFilterInPlace(dst, f_size, coef);
     return dst;
 }
 
 void screenFilterInPlace(
-    QImage& image, QSize const& window_size, float const coef)
+    QImage& image, int const f_size, float const coef)
 {
     if (image.isNull())
     {
         return;
     }
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
     if (window_size.isEmpty())
     {
         throw std::invalid_argument("screenFilter: empty window_size");
@@ -2053,16 +2059,18 @@ void unPaperFilterInPlace(
 
 
 QImage gravureFilter(
-    QImage const& image, QSize const& window_size, float const coef)
+    QImage const& image, int const f_size, float const coef)
 {
     QImage dst(image);
-    gravureFilterInPlace(dst, window_size, coef);
+    gravureFilterInPlace(dst, f_size, coef);
     return dst;
 }
 
 void gravureFilterInPlace(
-    QImage& image, QSize const& window_size, float const coef)
+    QImage& image, int const f_size, float const coef)
 {
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
     if (window_size.isEmpty())
     {
         throw std::invalid_argument("gravureFilter: empty window_size");

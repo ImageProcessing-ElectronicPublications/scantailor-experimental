@@ -30,22 +30,22 @@ class ColorGrayscaleOptions
 {
 public:
     ColorGrayscaleOptions()
-        : m_wienerCoef(0.0),
-          m_wienerWindowSize(5),
-          m_knndCoef(0.0),
-          m_knndRadius(5),
-          m_cdespeckleCoef(0.0),
-          m_cdespeckleRadius(5),
-          m_blurCoef(0.0),
-          m_blurWindowSize(5),
-          m_screenCoef(0.0),
-          m_screenWindowSize(10),
-          m_curveCoef(0.5),
+        : m_curveCoef(0.5),
           m_sqrCoef(0.0),
+          m_wienerSize(2),
+          m_wienerCoef(0.0),
+          m_knndRadius(5),
+          m_knndCoef(0.0),
+          m_cdespeckleRadius(5),
+          m_cdespeckleCoef(0.0),
+          m_blurSize(2),
+          m_blurCoef(0.0),
+          m_screenSize(5),
+          m_screenCoef(0.0),
+          m_gravureSize(5),
           m_gravureCoef(0.0),
-          m_gravureWindowSize(10),
-          m_unPaperCoef(0.0),
           m_unPaperIters(5),
+          m_unPaperCoef(0.0),
           m_normalizeCoef(0.5),
           m_whiteMargins(false),
           m_grayScale(false) {}
@@ -54,92 +54,7 @@ public:
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-    double wienerCoef() const
-    {
-        return m_wienerCoef;
-    }
-    void setWienerCoef(double val)
-    {
-        m_wienerCoef = val;
-    }
-    int wienerWindowSize() const
-    {
-        return m_wienerWindowSize;
-    }
-    void setWienerWindowSize(int val)
-    {
-        m_wienerWindowSize = val;
-    }
-
-    double knndCoef() const
-    {
-        return m_knndCoef;
-    }
-    void setKnndCoef(double val)
-    {
-        m_knndCoef = val;
-    }
-    int knndRadius() const
-    {
-        return m_knndRadius;
-    }
-    void setKnndRadius(int val)
-    {
-        m_knndRadius = val;
-    }
-
-    double cdespeckleCoef() const
-    {
-        return m_cdespeckleCoef;
-    }
-    void setCdespeckleCoef(double val)
-    {
-        m_cdespeckleCoef = val;
-    }
-    int cdespeckleRadius() const
-    {
-        return m_cdespeckleRadius;
-    }
-    void setCdespeckleRadius(int val)
-    {
-        m_cdespeckleRadius = val;
-    }
-
-    double blurCoef() const
-    {
-        return m_blurCoef;
-    }
-    void setBlurCoef(double val)
-    {
-        m_blurCoef = val;
-    }
-    int blurWindowSize() const
-    {
-        return m_blurWindowSize;
-    }
-    void setBlurWindowSize(int val)
-    {
-        m_blurWindowSize = val;
-    }
-
-    double screenCoef() const
-    {
-        return m_screenCoef;
-    }
-    void setScreenCoef(double val)
-    {
-        m_screenCoef = val;
-    }
-    int screenWindowSize() const
-    {
-        return m_screenWindowSize;
-    }
-    void setScreenWindowSize(int val)
-    {
-        m_screenWindowSize = val;
-    }
-
-    double curveCoef() const
+     double curveCoef() const
     {
         return m_curveCoef;
     }
@@ -157,6 +72,99 @@ public:
         m_sqrCoef = val;
     }
 
+    int wienerSize() const
+    {
+        return m_wienerSize;
+    }
+    void setWienerSize(int val)
+    {
+        m_wienerSize = val;
+    }
+   double wienerCoef() const
+    {
+        return m_wienerCoef;
+    }
+    void setWienerCoef(double val)
+    {
+        m_wienerCoef = val;
+    }
+
+    int knndRadius() const
+    {
+        return m_knndRadius;
+    }
+    void setKnndRadius(int val)
+    {
+        m_knndRadius = val;
+    }
+    double knndCoef() const
+    {
+        return m_knndCoef;
+    }
+    void setKnndCoef(double val)
+    {
+        m_knndCoef = val;
+    }
+
+    int cdespeckleRadius() const
+    {
+        return m_cdespeckleRadius;
+    }
+    void setCdespeckleRadius(int val)
+    {
+        m_cdespeckleRadius = val;
+    }
+    double cdespeckleCoef() const
+    {
+        return m_cdespeckleCoef;
+    }
+    void setCdespeckleCoef(double val)
+    {
+        m_cdespeckleCoef = val;
+    }
+
+    int blurSize() const
+    {
+        return m_blurSize;
+    }
+    void setBlurSize(int val)
+    {
+        m_blurSize = val;
+    }
+    double blurCoef() const
+    {
+        return m_blurCoef;
+    }
+    void setBlurCoef(double val)
+    {
+        m_blurCoef = val;
+    }
+
+    int screenSize() const
+    {
+        return m_screenSize;
+    }
+    void setScreenSize(int val)
+    {
+        m_screenSize = val;
+    }
+    double screenCoef() const
+    {
+        return m_screenCoef;
+    }
+    void setScreenCoef(double val)
+    {
+        m_screenCoef = val;
+    }
+
+    int gravureSize() const
+    {
+        return m_gravureSize;
+    }
+    void setGravureSize(int val)
+    {
+        m_gravureSize = val;
+    }
     double gravureCoef() const
     {
         return m_gravureCoef;
@@ -165,23 +173,7 @@ public:
     {
         m_gravureCoef = val;
     }
-    int gravureWindowSize() const
-    {
-        return m_gravureWindowSize;
-    }
-    void setGravureWindowSize(int val)
-    {
-        m_gravureWindowSize = val;
-    }
 
-    double unPaperCoef() const
-    {
-        return m_unPaperCoef;
-    }
-    void setUnPaperCoef(double val)
-    {
-        m_unPaperCoef = val;
-    }
     int unPaperIters() const
     {
         return m_unPaperIters;
@@ -189,6 +181,14 @@ public:
     void setUnPaperIters(int val)
     {
         m_unPaperIters = val;
+    }
+    double unPaperCoef() const
+    {
+        return m_unPaperCoef;
+    }
+    void setUnPaperCoef(double val)
+    {
+        m_unPaperCoef = val;
     }
 
     double normalizeCoef() const
@@ -223,22 +223,22 @@ public:
     bool operator!=(ColorGrayscaleOptions const& other) const;
 
 private:
-    double m_wienerCoef;
-    int m_wienerWindowSize;
-    double m_knndCoef;
-    int m_knndRadius;
-    double m_cdespeckleCoef;
-    int m_cdespeckleRadius;
-    double m_blurCoef;
-    int m_blurWindowSize;
-    double m_screenCoef;
-    int m_screenWindowSize;
     double m_curveCoef;
     double m_sqrCoef;
+    int m_wienerSize;
+    double m_wienerCoef;
+    int m_knndRadius;
+    double m_knndCoef;
+    int m_cdespeckleRadius;
+    double m_cdespeckleCoef;
+    int m_blurSize;
+    double m_blurCoef;
+    int m_screenSize;
+    double m_screenCoef;
+    int m_gravureSize;
     double m_gravureCoef;
-    int m_gravureWindowSize;
-    double m_unPaperCoef;
     int m_unPaperIters;
+    double m_unPaperCoef;
     double m_normalizeCoef;
     bool m_whiteMargins;
     bool m_grayScale;

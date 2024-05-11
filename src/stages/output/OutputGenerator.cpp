@@ -364,21 +364,21 @@ OutputGenerator::process(
     double norm_coef = color_options.normalizeCoef();
 
     // Color filters begin
-    wienerColorFilterInPlace(transformed_image, QSize(color_options.wienerWindowSize(), color_options.wienerWindowSize()), color_options.wienerCoef());
+    wienerColorFilterInPlace(transformed_image, color_options.wienerSize(), color_options.wienerCoef());
 
     knnDenoiserFilterInPlace(transformed_image, color_options.knndRadius(), color_options.knndCoef());
 
     colorDespeckleFilterInPlace(transformed_image, color_options.cdespeckleRadius(), color_options.cdespeckleCoef());
 
-    blurFilterInPlace(transformed_image, QSize(color_options.blurWindowSize(), color_options.blurWindowSize()), color_options.blurCoef());
+    blurFilterInPlace(transformed_image, color_options.blurSize(), color_options.blurCoef());
 
-    screenFilterInPlace(transformed_image, QSize(color_options.screenWindowSize(), color_options.screenWindowSize()), color_options.screenCoef());
+    screenFilterInPlace(transformed_image, color_options.screenSize(), color_options.screenCoef());
 
     colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
 
     colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
 
-    gravureFilterInPlace(transformed_image, QSize(color_options.gravureWindowSize(), color_options.gravureWindowSize()), color_options.gravureCoef());
+    gravureFilterInPlace(transformed_image, color_options.gravureSize(), color_options.gravureCoef());
 
     GrayImage coloredSignificance(transformed_image);
     if (render_params.needBinarization())

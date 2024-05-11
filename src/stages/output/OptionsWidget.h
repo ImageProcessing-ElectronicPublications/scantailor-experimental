@@ -34,6 +34,8 @@
 namespace output
 {
 
+enum FilterColorAdditional { F_WIENER, F_KNND, F_DESPECKLE, F_BLUR, F_SCREEN, F_ENGRAVING, F_UNPAPER };
+
 class Settings;
 
 class OptionsWidget
@@ -65,37 +67,17 @@ private slots:
 
     void filtersPanelToggled(bool checked);
 
-    void wienerCoefChanged(double value);
-
-    void wienerWindowSizeChanged(int value);
-
-    void knndCoefChanged(double value);
-
-    void knndRadiusChanged(int value);
-
-    void cdespeckleCoefChanged(double value);
-
-    void cdespeckleRadiusChanged(int value);
-
-    void blurCoefChanged(double value);
-
-    void blurWindowSizeChanged(int value);
-
-    void screenCoefChanged(double value);
-
-    void screenWindowSizeChanged(int value);
-
     void curveCoefChanged(double value);
 
     void sqrCoefChanged(double value);
 
-    void gravureCoefChanged(double value);
+    void colorFilterGet();
+    
+    void colorFilterChanged(int idx);
 
-    void gravureWindowSizeChanged(int value);
+    void colorFilterSizeChanged(int value);
 
-    void unPaperCoefChanged(double value);
-
-    void unPaperItersChanged(int value);
+    void colorFilterCoefChanged(double value);
 
     void normalizeCoefChanged(double value);
 
@@ -190,6 +172,7 @@ private:
     int m_ignoreThresholdChanges;
     int m_ignoreDespeckleLevelChanges;
     int m_ignoreScaleChanges;
+    int m_colorFilterCurrent;
 };
 
 } // namespace output

@@ -55,7 +55,8 @@ OptionsWidget::OptionsWidget(
         m_lastTab(TAB_OUTPUT),
         m_ignoreThresholdChanges(0),
         m_ignoreDespeckleLevelChanges(0),
-        m_ignoreScaleChanges(0)
+        m_ignoreScaleChanges(0),
+        m_colorFilterCurrent(F_WIENER)
 {
     setupUi(this);
 
@@ -78,6 +79,14 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
     thresholdMethodSelector->addItem(tr("Robust"), ROBUST);
     thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
+
+    colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
+    colorFilterSelector->addItem(tr("KNN denoiser"), F_KNND);
+    colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
+    colorFilterSelector->addItem(tr("Blur/Sharpen"), F_BLUR);
+    colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
+    colorFilterSelector->addItem(tr("Engraving"), F_ENGRAVING);
+    colorFilterSelector->addItem(tr("UnPaper"), F_UNPAPER);
 
     kmeansColorSpaceSelector->addItem(tr("HSV"), HSV);
     kmeansColorSpaceSelector->addItem(tr("HSL"), HSL);
@@ -144,46 +153,6 @@ OptionsWidget::OptionsWidget(
         this, SLOT(filtersPanelToggled(bool))
     );
     connect(
-        wienerCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(wienerCoefChanged(double))
-    );
-    connect(
-        wienerWindowSize, SIGNAL(valueChanged(int)),
-        this, SLOT(wienerWindowSizeChanged(int))
-    );
-    connect(
-        knndCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(knndCoefChanged(double))
-    );
-    connect(
-        knndRadius, SIGNAL(valueChanged(int)),
-        this, SLOT(knndRadiusChanged(int))
-    );
-    connect(
-        cdespeckleCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(cdespeckleCoefChanged(double))
-    );
-    connect(
-        cdespeckleRadius, SIGNAL(valueChanged(int)),
-        this, SLOT(cdespeckleRadiusChanged(int))
-    );
-    connect(
-        blurCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(blurCoefChanged(double))
-    );
-    connect(
-        blurWindowSize, SIGNAL(valueChanged(int)),
-        this, SLOT(blurWindowSizeChanged(int))
-    );
-    connect(
-        screenCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(screenCoefChanged(double))
-    );
-    connect(
-        screenWindowSize, SIGNAL(valueChanged(int)),
-        this, SLOT(screenWindowSizeChanged(int))
-    );
-    connect(
         curveCoef, SIGNAL(valueChanged(double)),
         this, SLOT(curveCoefChanged(double))
     );
@@ -192,20 +161,16 @@ OptionsWidget::OptionsWidget(
         this, SLOT(sqrCoefChanged(double))
     );
     connect(
-        gravureCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(gravureCoefChanged(double))
+        colorFilterSelector, SIGNAL(currentIndexChanged(int)),
+        this, SLOT(colorFilterChanged(int))
     );
     connect(
-        gravureWindowSize, SIGNAL(valueChanged(int)),
-        this, SLOT(gravureWindowSizeChanged(int))
+        colorFilterSize, SIGNAL(valueChanged(int)),
+        this, SLOT(colorFilterSizeChanged(int))
     );
     connect(
-        unPaperCoef, SIGNAL(valueChanged(double)),
-        this, SLOT(unPaperCoefChanged(double))
-    );
-    connect(
-        unPaperIters, SIGNAL(valueChanged(int)),
-        this, SLOT(unPaperItersChanged(int))
+        colorFilterCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(colorFilterCoefChanged(double))
     );
     connect(
         normalizeCoef, SIGNAL(valueChanged(double)),
@@ -472,106 +437,6 @@ OptionsWidget::filtersPanelToggled(bool const checked)
 }
 
 void
-OptionsWidget::wienerCoefChanged(double value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setWienerCoef(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::wienerWindowSizeChanged(int value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setWienerWindowSize(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::knndCoefChanged(double value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setKnndCoef(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::knndRadiusChanged(int value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setKnndRadius(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::cdespeckleCoefChanged(double value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setCdespeckleCoef(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::cdespeckleRadiusChanged(int value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setCdespeckleRadius(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::blurCoefChanged(double value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setBlurCoef(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::blurWindowSizeChanged(int value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setBlurWindowSize(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::screenCoefChanged(double value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setScreenCoef(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::screenWindowSizeChanged(int value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setScreenWindowSize(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
 OptionsWidget::curveCoefChanged(double value)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
@@ -592,40 +457,114 @@ OptionsWidget::sqrCoefChanged(double value)
 }
 
 void
-OptionsWidget::gravureCoefChanged(double value)
+OptionsWidget::colorFilterGet()
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setGravureCoef(value);
+    colorFilterSize->blockSignals(true);
+    colorFilterCoef->blockSignals(true);
+    switch (m_colorFilterCurrent)
+    {
+    case F_WIENER:
+        colorFilterSize->setValue(color_options.wienerSize());
+        colorFilterCoef->setValue(color_options.wienerCoef());
+        break;
+    case F_KNND:
+        colorFilterSize->setValue(color_options.knndRadius());
+        colorFilterCoef->setValue(color_options.knndCoef());
+        break;
+    case F_DESPECKLE:
+        colorFilterSize->setValue(color_options.cdespeckleRadius());
+        colorFilterCoef->setValue(color_options.cdespeckleCoef());
+        break;
+    case F_BLUR:
+        colorFilterSize->setValue(color_options.blurSize());
+        colorFilterCoef->setValue(color_options.blurCoef());
+        break;
+    case F_SCREEN:
+        colorFilterSize->setValue(color_options.screenSize());
+        colorFilterCoef->setValue(color_options.screenCoef());
+        break;
+    case F_ENGRAVING:
+        colorFilterSize->setValue(color_options.gravureSize());
+        colorFilterCoef->setValue(color_options.gravureCoef());
+        break;
+    case F_UNPAPER:
+        colorFilterSize->setValue(color_options.unPaperIters());
+        colorFilterCoef->setValue(color_options.unPaperCoef());
+        break;
+    }
+    colorFilterSize->blockSignals(false);
+    colorFilterCoef->blockSignals(false);
+}
+
+void
+OptionsWidget::colorFilterChanged(int const idx)
+{
+    m_colorFilterCurrent = colorFilterSelector->itemData(idx).toInt();
+    colorFilterGet();
+}
+
+void
+OptionsWidget::colorFilterSizeChanged(int value)
+{
+    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
+    switch (m_colorFilterCurrent)
+    {
+    case F_WIENER:
+        color_options.setWienerSize(value);
+        break;
+    case F_KNND:
+        color_options.setKnndRadius(value);
+        break;
+    case F_DESPECKLE:
+        color_options.setCdespeckleRadius(value);
+        break;
+    case F_BLUR:
+        color_options.setBlurSize(value);
+        break;
+    case F_SCREEN:
+        color_options.setScreenSize(value);
+        break;
+    case F_ENGRAVING:
+        color_options.setGravureSize(value);
+        break;
+    case F_UNPAPER:
+        color_options.setUnPaperIters(value);
+        break;
+    }
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
 }
 
 void
-OptionsWidget::gravureWindowSizeChanged(int value)
+OptionsWidget::colorFilterCoefChanged(double value)
 {
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setGravureWindowSize(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::unPaperCoefChanged(double value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setUnPaperCoef(value);
-    m_colorParams.setColorGrayscaleOptions(color_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
-OptionsWidget::unPaperItersChanged(int value)
-{
-    ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    color_options.setUnPaperIters(value);
+    switch (m_colorFilterCurrent)
+    {
+    case F_WIENER:
+        color_options.setWienerCoef(value);
+        break;
+    case F_KNND:
+        color_options.setKnndCoef(value);
+        break;
+    case F_DESPECKLE:
+        color_options.setCdespeckleCoef(value);
+        break;
+    case F_BLUR:
+        color_options.setBlurCoef(value);
+        break;
+    case F_SCREEN:
+        color_options.setScreenCoef(value);
+        break;
+    case F_ENGRAVING:
+        color_options.setGravureCoef(value);
+        break;
+    case F_UNPAPER:
+        color_options.setUnPaperCoef(value);
+        break;
+    }
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -1162,22 +1101,9 @@ OptionsWidget::updateColorsDisplay()
     colorMarginOptions->setVisible(color_grayscale_options_visible);
     mixedOptions->setVisible(mixed_options_visible);
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
-    wienerCoef->setValue(color_options.wienerCoef());
-    wienerWindowSize->setValue(color_options.wienerWindowSize());
-    knndCoef->setValue(color_options.knndCoef());
-    knndRadius->setValue(color_options.knndRadius());
-    cdespeckleCoef->setValue(color_options.cdespeckleCoef());
-    cdespeckleRadius->setValue(color_options.cdespeckleRadius());
-    blurCoef->setValue(color_options.blurCoef());
-    blurWindowSize->setValue(color_options.blurWindowSize());
-    screenCoef->setValue(color_options.screenCoef());
-    screenWindowSize->setValue(color_options.screenWindowSize());
     curveCoef->setValue(color_options.curveCoef());
     sqrCoef->setValue(color_options.sqrCoef());
-    gravureCoef->setValue(color_options.gravureCoef());
-    gravureWindowSize->setValue(color_options.gravureWindowSize());
-    unPaperCoef->setValue(color_options.unPaperCoef());
-    unPaperIters->setValue(color_options.unPaperIters());
+    colorFilterGet();
     normalizeCoef->setValue(color_options.normalizeCoef());
     if (color_grayscale_options_visible)
     {

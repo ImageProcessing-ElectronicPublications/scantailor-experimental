@@ -1329,6 +1329,21 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="243"/>
+        <source>Curve/Sqr color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="282"/>
+        <source>Select additional filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="282"/>
+        <source>The size of a select filters.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
         <source>Wiener denoiser</source>
         <translation type="unfinished"></translation>
@@ -1386,11 +1401,6 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="357"/>
         <source>Screen filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="393"/>
-        <source>Curve/Sqr color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
