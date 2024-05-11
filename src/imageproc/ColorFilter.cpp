@@ -599,7 +599,8 @@ void colorCurveFilterInPlace(
             int val = (j << 8);
             int delta = (val - thres);
             int dsqr = delta * delta;
-            dsqr = (delta < 0) ? -(dsqr  / thres) : (dsqr / (65280 - thres));
+            int ddiv = (delta < 0) ? -thres : (65280 - thres);
+            dsqr = (ddiv == 0) ? 0 : dsqr / ddiv;
             delta -= dsqr;
             delta *= icoef;
             delta += 128;
