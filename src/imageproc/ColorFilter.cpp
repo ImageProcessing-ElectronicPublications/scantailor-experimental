@@ -175,7 +175,8 @@ void wienerColorFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    int val = (int) (origcol * colscale + coldelta + 0.5f);
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (int) (origcol * colscale + coldelta * kcg + 0.5f);
                     val = (val < 0) ? 0 : (val < 255) ? val : 255;
                     image_line[indx] = (uint8_t) val;
                 }
@@ -183,6 +184,94 @@ void wienerColorFilterInPlace(
             image_line += image_stride;
             gray_line += gray_stride;
             wiener_line += wiener_stride;
+        }
+    }
+}
+
+QImage autoLevelFilter(
+    QImage const& image, int const f_size, float const coef)
+{
+    QImage dst(image);
+    autoLevelFilterInPlace(dst, f_size, coef);
+    return dst;
+}
+
+void autoLevelFilterInPlace(
+    QImage& image, int const f_size, float const coef)
+{
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("autoLevelFilter: empty window_size");
+    }
+
+    if (coef != 0.0f)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean = grayMapMean(gray, window_size);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        int gmin = 256, gmax = 0;
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const mean = gmean_line[x];
+                gmin = (gmin < mean) ? gmin : mean;
+                gmax = (gmax < mean) ? mean : gmax;
+            }
+            gmean_line += gmean_stride;
+        }
+
+        float const a1 = 256.0f / (gmax - gmin + 1);
+        float const a0 = -a1 * gmin;
+
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const mean = gmean_line[x];
+
+                float const origin = gray_line[x];
+                float retval = origin * a1 + a0;
+                retval = coef * retval + (1.0 - coef) * origin;
+                float const colscale = (retval + 1.0f) / (origin + 1.0f);
+                float const coldelta = retval - origin * colscale;
+                for (unsigned int c = 0; c < cnum; ++c)
+                {
+                    int const indx = x * cnum + c;
+                    float origcol = image_line[indx];
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (origcol * colscale + coldelta * kcg + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
+                }
+            }
+            image_line += image_stride;
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
         }
     }
 }
@@ -247,7 +336,8 @@ void knnDenoiserFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    int val = (int) (origcol * colscale + coldelta + 0.5f);
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (int) (origcol * colscale + coldelta * kcg + 0.5f);
                     val = (val < 0) ? 0 : (val < 255) ? val : 255;
                     image_line[indx] = (uint8_t) val;
                 }
@@ -385,7 +475,8 @@ void colorDespeckleFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    int val = (int) (origcol * colscale + coldelta + 0.5f);
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (int) (origcol * colscale + coldelta * kcg + 0.5f);
                     val = (val < 0) ? 0 : (val < 255) ? val : 255;
                     image_line[indx] = (uint8_t) val;
                 }
@@ -455,7 +546,8 @@ void blurFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    int val = (origcol * colscale + coldelta + 0.5f);
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (origcol * colscale + coldelta * kcg + 0.5f);
                     val = (val < 0) ? 0 : (val < 255) ? val : 255;
                     image_line[indx] = (uint8_t) val;
                 }
@@ -556,7 +648,8 @@ void screenFilterInPlace(
                 {
                     int const indx = x * cnum + c;
                     float origcol = image_line[indx];
-                    float valpos = origcol * colscale + coldelta;
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    float valpos = origcol * colscale + coldelta * kcg;
                     float valneg = 255.0f - valpos;
                     float retval = origcol * valneg;
                     retval /= 255.0f;

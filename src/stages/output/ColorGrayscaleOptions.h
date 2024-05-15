@@ -34,6 +34,8 @@ public:
           m_sqrCoef(0.0),
           m_wienerSize(2),
           m_wienerCoef(0.0),
+          m_autoLevelSize(10),
+          m_autoLevelCoef(0.0),
           m_knndRadius(5),
           m_knndCoef(0.0),
           m_cdespeckleRadius(5),
@@ -87,6 +89,23 @@ public:
     void setWienerCoef(double val)
     {
         m_wienerCoef = val;
+    }
+
+    int autoLevelSize() const
+    {
+        return m_autoLevelSize;
+    }
+    void setAutoLevelSize(int val)
+    {
+        m_autoLevelSize = val;
+    }
+    double autoLevelCoef() const
+    {
+        return m_autoLevelCoef;
+    }
+    void setAutoLevelCoef(double val)
+    {
+        m_autoLevelCoef = val;
     }
 
     int knndRadius() const
@@ -227,6 +246,8 @@ private:
     double m_sqrCoef;
     int m_wienerSize;
     double m_wienerCoef;
+    int m_autoLevelSize;
+    double m_autoLevelCoef;
     int m_knndRadius;
     double m_knndCoef;
     int m_cdespeckleRadius;

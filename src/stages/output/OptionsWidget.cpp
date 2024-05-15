@@ -56,7 +56,7 @@ OptionsWidget::OptionsWidget(
         m_ignoreThresholdChanges(0),
         m_ignoreDespeckleLevelChanges(0),
         m_ignoreScaleChanges(0),
-        m_colorFilterCurrent(F_WIENER)
+        m_colorFilterCurrent(F_AUTOLEVEL)
 {
     setupUi(this);
 
@@ -80,6 +80,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("Robust"), ROBUST);
     thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
 
+    colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
     colorFilterSelector->addItem(tr("KNN denoiser"), F_KNND);
     colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
@@ -464,6 +465,10 @@ OptionsWidget::colorFilterGet()
     colorFilterCoef->blockSignals(true);
     switch (m_colorFilterCurrent)
     {
+    case F_AUTOLEVEL:
+        colorFilterSize->setValue(color_options.autoLevelSize());
+        colorFilterCoef->setValue(color_options.autoLevelCoef());
+        break;
     case F_WIENER:
         colorFilterSize->setValue(color_options.wienerSize());
         colorFilterCoef->setValue(color_options.wienerCoef());
@@ -510,6 +515,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     switch (m_colorFilterCurrent)
     {
+    case F_AUTOLEVEL:
+        color_options.setAutoLevelSize(value);
+        break;
     case F_WIENER:
         color_options.setWienerSize(value);
         break;
@@ -543,6 +551,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     switch (m_colorFilterCurrent)
     {
+    case F_AUTOLEVEL:
+        color_options.setAutoLevelCoef(value);
+        break;
     case F_WIENER:
         color_options.setWienerCoef(value);
         break;

@@ -29,6 +29,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_sqrCoef(el.attribute("sqrCoef").toDouble()),
        m_wienerSize(el.attribute("wienerSize").toInt()),
        m_wienerCoef(el.attribute("wienerCoef").toDouble()),
+       m_autoLevelSize(el.attribute("autoLevelSize").toInt()),
+       m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble()),
        m_knndRadius(el.attribute("knnDRadius").toInt()),
        m_knndCoef(el.attribute("knnDenoiser").toDouble()),
        m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt()),
@@ -60,6 +62,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_wienerCoef < 0.0 || m_wienerCoef > 1.0)
     {
         m_wienerCoef = 0.0;
+    }
+    if (m_autoLevelSize < 1)
+    {
+        m_autoLevelSize = 10;
+    }
+    if (m_autoLevelCoef < -1.0 || m_autoLevelCoef > 1.0)
+    {
+        m_autoLevelCoef = 0.0;
     }
     if (m_knndRadius < 1)
     {
@@ -123,6 +133,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("sqrCoef", m_sqrCoef);
     el.setAttribute("wienerSize", m_wienerSize);
     el.setAttribute("wienerCoef", m_wienerCoef);
+    el.setAttribute("autoLevelSize", m_autoLevelSize);
+    el.setAttribute("autoLevelCoef", m_autoLevelCoef);
     el.setAttribute("knnDenoiser", m_knndCoef);
     el.setAttribute("knnDRadius", m_knndRadius);
     el.setAttribute("cdespeckle", m_cdespeckleCoef);
@@ -144,7 +156,19 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
 bool
 ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
 {
+    if (m_curveCoef != other.m_curveCoef)
+    {
+        return false;
+    }
+    if (m_sqrCoef != other.m_sqrCoef)
+    {
+        return false;
+    }
     if ((m_wienerCoef != other.m_wienerCoef) || (m_wienerSize != other.m_wienerSize))
+    {
+        return false;
+    }
+    if ((m_autoLevelCoef != other.m_autoLevelCoef) || (m_autoLevelSize != other.m_autoLevelSize))
     {
         return false;
     }
@@ -161,14 +185,6 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_screenCoef != other.m_screenCoef) || (m_screenSize != other.m_screenSize))
-    {
-        return false;
-    }
-    if (m_curveCoef != other.m_curveCoef)
-    {
-        return false;
-    }
-    if (m_sqrCoef != other.m_sqrCoef)
     {
         return false;
     }

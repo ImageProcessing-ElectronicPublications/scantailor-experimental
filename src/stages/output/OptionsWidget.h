@@ -34,7 +34,7 @@
 namespace output
 {
 
-enum FilterColorAdditional { F_WIENER, F_KNND, F_DESPECKLE, F_BLUR, F_SCREEN, F_ENGRAVING, F_UNPAPER };
+enum FilterColorAdditional { F_AUTOLEVEL, F_WIENER, F_KNND, F_DESPECKLE, F_BLUR, F_SCREEN, F_ENGRAVING, F_UNPAPER };
 
 class Settings;
 

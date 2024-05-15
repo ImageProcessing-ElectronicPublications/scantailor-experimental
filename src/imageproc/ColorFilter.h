@@ -65,6 +65,19 @@ IMAGEPROC_EXPORT QImage wienerColorFilter(
 IMAGEPROC_EXPORT void wienerColorFilterInPlace(
     QImage& image, int f_size = 2, float coef = 0.0f);
 
+/**
+ * @brief AutoLevel
+ * Ial = a1 * I + a0
+ * a1 = Max / (Imax - Imin + 1), Max = 256
+ * a0 = -a1 * Imin
+ * Modification: The values ​​of Imin and Imax are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 10.
+ */
+IMAGEPROC_EXPORT QImage autoLevelFilter(
+    QImage const& image, int f_size = 10, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void autoLevelFilterInPlace(
+    QImage& image, int f_size = 10, float coef = 0.0f);
+
 IMAGEPROC_EXPORT QImage knnDenoiserFilter(
     QImage const& image, int radius = 2, float coef = 0.0f);
 
