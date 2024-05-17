@@ -153,10 +153,10 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("blurCoef", m_blurCoef);
     el.setAttribute("screenSize", m_screenSize);
     el.setAttribute("screenCoef", m_screenCoef);
-    el.setAttribute("gravureSize", m_screenSize);
-    el.setAttribute("gravureCoef", m_screenCoef);
-    el.setAttribute("dots8Size", m_screenSize);
-    el.setAttribute("dots8Coef", m_screenCoef);
+    el.setAttribute("gravureSize", m_gravureSize);
+    el.setAttribute("gravureCoef", m_gravureCoef);
+    el.setAttribute("dots8Size", m_dots8Size);
+    el.setAttribute("dots8Coef", m_dots8Coef);
     el.setAttribute("unPaper", m_unPaperCoef);
     el.setAttribute("unPaperIters", m_unPaperIters);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
