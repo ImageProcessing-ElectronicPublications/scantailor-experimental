@@ -40,6 +40,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_screenSize(el.attribute("screenSize").toInt()),
        m_screenCoef(el.attribute("screenCoef").toDouble()),
        m_gravureSize(el.attribute("gravureSize").toInt()),
+       m_dots8Coef(el.attribute("dots8Coef").toDouble()),
+       m_dots8Size(el.attribute("dots8Size").toInt()),
        m_gravureCoef(el.attribute("gravureCoef").toDouble()),
        m_unPaperIters(el.attribute("unPaperIters").toInt()),
        m_unPaperCoef(el.attribute("unPaper").toDouble()),
@@ -57,7 +59,7 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     }
     if (m_wienerSize < 1)
     {
-        m_wienerSize = 2;
+        m_wienerSize = 3;
     }
     if (m_wienerCoef < 0.0 || m_wienerCoef > 1.0)
     {
@@ -73,7 +75,7 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     }
     if (m_knndRadius < 1)
     {
-        m_knndRadius = 5;
+        m_knndRadius = 7;
     }
     if (m_knndCoef < 0.0 || m_knndCoef > 1.0)
     {
@@ -89,7 +91,7 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     }
     if (m_blurSize < 1)
     {
-        m_blurSize = 2;
+        m_blurSize = 1;
     }
     if (m_blurCoef < -2.0 || m_blurCoef > 1.0)
     {
@@ -105,15 +107,23 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     }
     if (m_gravureSize < 1)
     {
-        m_gravureSize = 5;
+        m_gravureSize = 15;
     }
     if (m_gravureCoef < -1.0 || m_gravureCoef > 1.0)
     {
         m_gravureCoef = 0.0;
     }
+    if (m_dots8Size < 1)
+    {
+        m_dots8Size = 17;
+    }
+    if (m_dots8Coef < -1.0 || m_dots8Coef > 1.0)
+    {
+        m_dots8Coef = 0.0;
+    }
     if (m_unPaperIters < 1)
     {
-        m_unPaperIters = 5;
+        m_unPaperIters = 4;
     }
     if (m_unPaperCoef < 0.0 || m_unPaperCoef > 1.0)
     {
@@ -145,6 +155,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("screenCoef", m_screenCoef);
     el.setAttribute("gravureSize", m_screenSize);
     el.setAttribute("gravureCoef", m_screenCoef);
+    el.setAttribute("dots8Size", m_screenSize);
+    el.setAttribute("dots8Coef", m_screenCoef);
     el.setAttribute("unPaper", m_unPaperCoef);
     el.setAttribute("unPaperIters", m_unPaperIters);
     el.setAttribute("normalizeCoef", m_normalizeCoef);
@@ -189,6 +201,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_gravureCoef != other.m_gravureCoef) || (m_gravureSize != other.m_gravureSize))
+    {
+        return false;
+    }
+    if ((m_dots8Coef != other.m_dots8Coef) || (m_dots8Size != other.m_dots8Size))
     {
         return false;
     }

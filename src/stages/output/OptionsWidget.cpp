@@ -87,6 +87,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Blur/Sharpen"), F_BLUR);
     colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
     colorFilterSelector->addItem(tr("Engraving"), F_ENGRAVING);
+    colorFilterSelector->addItem(tr("Dots 8x8"), F_DOTS8);
     colorFilterSelector->addItem(tr("UnPaper"), F_UNPAPER);
 
     kmeansColorSpaceSelector->addItem(tr("HSV"), HSV);
@@ -493,6 +494,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.gravureSize());
         colorFilterCoef->setValue(color_options.gravureCoef());
         break;
+    case F_DOTS8:
+        colorFilterSize->setValue(color_options.dots8Size());
+        colorFilterCoef->setValue(color_options.dots8Coef());
+        break;
     case F_UNPAPER:
         colorFilterSize->setValue(color_options.unPaperIters());
         colorFilterCoef->setValue(color_options.unPaperCoef());
@@ -536,6 +541,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_ENGRAVING:
         color_options.setGravureSize(value);
         break;
+    case F_DOTS8:
+        color_options.setDots8Size(value);
+        break;
     case F_UNPAPER:
         color_options.setUnPaperIters(value);
         break;
@@ -571,6 +579,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_ENGRAVING:
         color_options.setGravureCoef(value);
+        break;
+    case F_DOTS8:
+        color_options.setDots8Coef(value);
         break;
     case F_UNPAPER:
         color_options.setUnPaperCoef(value);

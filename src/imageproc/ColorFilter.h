@@ -47,23 +47,36 @@ IMAGEPROC_EXPORT GrayImage wienerFilter(
 IMAGEPROC_EXPORT void wienerFilterInPlace(
     GrayImage& image, QSize const& window_size, float noise_sigma);
 
+/**
+ * @brief S-curve.
+ *
+ * (0-T)+(T-255), T = Otsu(I)
+  */
 IMAGEPROC_EXPORT QImage colorCurveFilter(
     QImage& image, float coef = 0.5f);
 
 IMAGEPROC_EXPORT void colorCurveFilterInPlace(
     QImage& image, float coef = 0.5f);
 
+/**
+ * @brief C-curve.
+ *
+ * (0-255)
+  */
 IMAGEPROC_EXPORT QImage colorSqrFilter(
     QImage& image, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void colorSqrFilterInPlace(
     QImage& image, float coef = 0.0f);
 
+/**
+ * @brief Applies the Wiener filter to a color image.
+ */
 IMAGEPROC_EXPORT QImage wienerColorFilter(
-    QImage const& image, int f_size = 2, float coef = 0.0f);
+    QImage const& image, int f_size = 3, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void wienerColorFilterInPlace(
-    QImage& image, int f_size = 2, float coef = 0.0f);
+    QImage& image, int f_size = 3, float coef = 0.0f);
 
 /**
  * @brief AutoLevel
@@ -78,23 +91,36 @@ IMAGEPROC_EXPORT QImage autoLevelFilter(
 IMAGEPROC_EXPORT void autoLevelFilterInPlace(
     QImage& image, int f_size = 10, float coef = 0.0f);
 
+/**
+ * @brief Simple version KNN denoiser image.
+ */
 IMAGEPROC_EXPORT QImage knnDenoiserFilter(
-    QImage const& image, int radius = 2, float coef = 0.0f);
+    QImage const& image, int radius = 7, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
-    QImage& image, int radius = 2, float coef = 0.0f);
+    QImage& image, int radius = 7, float coef = 0.0f);
 
+/**
+ * @brief Despeckle image.
+ * 
+ * https://students.mimuw.edu.pl/~pz248275/despeckle.c
+ */
 IMAGEPROC_EXPORT QImage colorDespeckleFilter(
     QImage const& image, int radius = 2, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
-    QImage& image, int radius = 1, float coef = 0.0f);
+    QImage& image, int radius = 2, float coef = 0.0f);
 
+/**
+ * @brief Blur (box) image.
+ * 
+ * Ib = mean(I, w), w = box(2*r+1)
+ */
 IMAGEPROC_EXPORT QImage blurFilter(
-    QImage const& image, int f_size = 2, float coef = 0.0f);
+    QImage const& image, int f_size = 1, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void blurFilterInPlace(
-    QImage& image, int f_size = 2, float coef = 0.0f);
+    QImage& image, int f_size = 1, float coef = 0.0f);
 
 /**
  * @brief Applies the Screen filter to a image.
@@ -107,25 +133,43 @@ IMAGEPROC_EXPORT void blurFilterInPlace(
 IMAGEPROC_EXPORT QImage screenFilter(
     QImage const& image, int f_size = 5, float coef = 0.0f);
 
-/**
- * @brief An in-place version of screenFilter().
- * @see screenFilter()
- */
 IMAGEPROC_EXPORT void screenFilterInPlace(
     QImage& image, int f_size = 5, float coef = 0.0f);
 
+/**
+ * @brief Remove BG.
+ * 
+ * Irbg = ((I - BG) < T) ? BG : (I - BG), BG = mean(I)
+ */
 IMAGEPROC_EXPORT QImage unPaperFilter(
-    QImage const& image, unsigned int const iters, float coef = 0.0f);
+    QImage const& image, unsigned int iters = 4, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void unPaperFilterInPlace(
-    QImage& image, unsigned int const iters, float coef = 0.0f);
+    QImage& image, unsigned int iters = 4, float coef = 0.0f);
 
+/**
+ * @brief Add engraving texture to image.
+ */
 IMAGEPROC_EXPORT void gravureFilterInPlace(
-    QImage& image, int f_size = 5, float coef = 0.0f);
+    QImage& image, int f_size = 15, float coef = 0.0f);
 
 IMAGEPROC_EXPORT QImage gravureFilter(
-    QImage& image, int f_size = 5, float coef = 0.0f);
+    QImage& image, int f_size = 15, float coef = 0.0f);
 
+/**
+ * @brief Add dots8x8 texture to image.
+ * 
+ * Modification: The threshold values are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 17.
+ */
+IMAGEPROC_EXPORT void dots8FilterInPlace(
+    QImage& image, int f_size = 17, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage dots8Filter(
+    QImage& image, int f_size = 17, float coef = 0.0f);
+
+/**
+ * @brief Highlighting and masking colors in image.
+ */
 IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(
     QImage const& image, float coef = 0.0f);
 

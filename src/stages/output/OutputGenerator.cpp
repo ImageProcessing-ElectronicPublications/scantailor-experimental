@@ -382,6 +382,8 @@ OutputGenerator::process(
 
     gravureFilterInPlace(transformed_image, color_options.gravureSize(), color_options.gravureCoef());
 
+    dots8FilterInPlace(transformed_image, color_options.dots8Size(), color_options.dots8Coef());
+
     GrayImage coloredSignificance(transformed_image);
     if (render_params.needBinarization())
     {

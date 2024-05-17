@@ -32,21 +32,23 @@ public:
     ColorGrayscaleOptions()
         : m_curveCoef(0.5),
           m_sqrCoef(0.0),
-          m_wienerSize(2),
+          m_wienerSize(3),
           m_wienerCoef(0.0),
           m_autoLevelSize(10),
           m_autoLevelCoef(0.0),
-          m_knndRadius(5),
+          m_knndRadius(7),
           m_knndCoef(0.0),
-          m_cdespeckleRadius(5),
+          m_cdespeckleRadius(2),
           m_cdespeckleCoef(0.0),
-          m_blurSize(2),
+          m_blurSize(1),
           m_blurCoef(0.0),
           m_screenSize(5),
           m_screenCoef(0.0),
-          m_gravureSize(5),
+          m_gravureSize(15),
           m_gravureCoef(0.0),
-          m_unPaperIters(5),
+          m_dots8Size(17),
+          m_dots8Coef(0.0),
+          m_unPaperIters(4),
           m_unPaperCoef(0.0),
           m_normalizeCoef(0.5),
           m_whiteMargins(false),
@@ -193,6 +195,23 @@ public:
         m_gravureCoef = val;
     }
 
+    int dots8Size() const
+    {
+        return m_dots8Size;
+    }
+    void setDots8Size(int val)
+    {
+        m_dots8Size = val;
+    }
+    double dots8Coef() const
+    {
+        return m_dots8Coef;
+    }
+    void setDots8Coef(double val)
+    {
+        m_dots8Coef = val;
+    }
+
     int unPaperIters() const
     {
         return m_unPaperIters;
@@ -258,6 +277,8 @@ private:
     double m_screenCoef;
     int m_gravureSize;
     double m_gravureCoef;
+    int m_dots8Size;
+    double m_dots8Coef;
     int m_unPaperIters;
     double m_unPaperCoef;
     double m_normalizeCoef;

@@ -34,6 +34,7 @@
 #include "GrayImage.h"
 #include "BinaryImage.h"
 #include "BinaryThreshold.h"
+#include "Binarize.h"
 #include "ColorFilter.h"
 
 namespace imageproc
@@ -243,20 +244,18 @@ void autoLevelFilterInPlace(
             }
             gmean_line += gmean_stride;
         }
+        gmean = GrayImage(); /* free */
 
         float const a1 = 256.0f / (gmax - gmin + 1);
         float const a0 = -a1 * gmin;
 
-        gmean_line = gmean.data();
         for (int y = 0; y < h; ++y)
         {
             for (int x = 0; x < w; ++x)
             {
-                float const mean = gmean_line[x];
-
                 float const origin = gray_line[x];
                 float retval = origin * a1 + a0;
-                retval = coef * retval + (1.0 - coef) * origin;
+                retval = coef * retval + (1.0f - coef) * origin;
                 float const colscale = (retval + 1.0f) / (origin + 1.0f);
                 float const coldelta = retval - origin * colscale;
                 for (unsigned int c = 0; c < cnum; ++c)
@@ -271,7 +270,6 @@ void autoLevelFilterInPlace(
             }
             image_line += image_stride;
             gray_line += gray_stride;
-            gmean_line += gmean_stride;
         }
     }
 }
@@ -2228,13 +2226,29 @@ void gravureFilterInPlace(
                     int threshold = (int) tline;
                     float delta = tline - threshold;
                     delta = (delta < 0.5f) ? (0.5f - delta) : (delta - 0.5f);
-                    delta += 0.5f;
-                    delta = coef * delta + (1.0f - coef);
+                    delta += delta;
+                    /* overlay */
+                    float retval = origin;
+                    if (origin > 127.5f)
+                    {
+                        retval = 255.0f - retval;
+                        delta = 1.0f - delta;
+                    }
+                    retval *= delta;
+                    retval += retval;
+                    if (origin > 127.5f)
+                    {
+                        retval = 255.0f - retval;
+                    }
+                    retval = coef * retval + (1.0f - coef) * origin;
+                    float const colscale = (retval + 1.0f) / (origin + 1.0f);
+                    float const coldelta = retval - origin * colscale;
                     for (unsigned int c = 0; c < cnum; ++c)
                     {
                         int const indx = x * cnum + c;
                         float origcol = image_line[indx];
-                        int val = (origcol * delta + 0.5f);
+                        float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                        int val = (origcol * colscale + coldelta * kcg + 0.5f);
                         val = (val < 0) ? 0 : (val < 255) ? val : 255;
                         image_line[indx] = (uint8_t) val;
                     }
@@ -2243,6 +2257,128 @@ void gravureFilterInPlace(
                 gray_line += gray_stride;
                 gmean_line += gmean_stride;
             }
+        }
+    }
+}
+
+QImage dots8Filter(
+    QImage const& image, int const f_size, float const coef)
+{
+    QImage dst(image);
+    dots8FilterInPlace(dst, f_size, coef);
+    return dst;
+}
+
+void dots8FilterInPlace(
+    QImage& image, int const f_size, float const coef)
+{
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("dots8Filter: empty window_size");
+    }
+
+    if (coef != 0.0f)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean = grayMapMean(gray, window_size);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        int y, x, yb, xb, k, wwidth = 8;
+        int threshold, part;
+        // Dots dither matrix
+        int ddith[64] = {13,  9,  5, 12, 18, 22, 26, 19,  6,  1,  0,  8, 25, 30, 31, 23, 10,  2,  3,  4, 21, 29, 28, 27, 14,  7, 11, 15, 17, 24, 20, 16, 18, 22, 26, 19, 13,  9,  5, 12, 25, 30, 31, 23,  6,  1,  0,  8, 21, 29, 28, 27, 10,  2,  3,  4, 17, 24, 20, 16, 14,  7, 11, 15};
+        int thres[32];
+
+        for (k = 0; k < 32; k++)
+        {
+            part = k * 8 - 128;
+            part = (part < -128) ? -128 : (part < 128) ? part : 128;
+            thres[k] = binarizeBiModalValue(gmean, part);
+        }
+
+        k = 0;
+        for (y = 0; y < wwidth; y++)
+        {
+            for (x = 0; x < wwidth; x++)
+            {
+                ddith[k] = thres[ddith[k]];
+                k++;
+            }
+        }
+
+        for (y = 0; y < h; ++y)
+        {
+            yb = y % wwidth;
+            for (x = 0; x < w; ++x)
+            {
+                xb = x % wwidth;
+                threshold = ddith[yb * wwidth + xb];
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
+        }
+
+        gray_line = gray.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const origin = gray_line[x];
+                float gmul = gmean_line[x];
+
+                /* overlay */
+                float retval = origin;
+                if (origin > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    gmul = 255.0f - gmul;
+                }
+                retval *= gmul;
+                retval += retval;
+                retval /= 255.0f;
+                if (origin > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                }
+                retval = coef * retval + (1.0f - coef) * origin;
+                float const colscale = (retval + 1.0f) / (origin + 1.0f);
+                float const coldelta = retval - origin * colscale;
+                for (unsigned int c = 0; c < cnum; ++c)
+                {
+                    int const indx = x * cnum + c;
+                    float origcol = image_line[indx];
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (origcol * colscale + coldelta * kcg + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
+                }
+            }
+            image_line += image_stride;
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
         }
     }
 }
