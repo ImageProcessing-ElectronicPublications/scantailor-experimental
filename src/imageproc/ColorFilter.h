@@ -168,6 +168,15 @@ IMAGEPROC_EXPORT QImage dots8Filter(
     QImage& image, int f_size = 17, float coef = 0.0f);
 
 /**
+ * @brief EdgeDiv (EdgePlus+BlurDiv) filter image.
+ */
+IMAGEPROC_EXPORT void edgedivFilterInPlace(
+    QImage& image, int f_size = 13, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage edgedivFilter(
+    QImage& image, int f_size = 13, float coef = 0.0f);
+
+/**
  * @brief Highlighting and masking colors in image.
  */
 IMAGEPROC_EXPORT GrayImage coloredSignificanceFilter(

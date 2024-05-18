@@ -39,10 +39,12 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_blurCoef(el.attribute("blurCoef").toDouble()),
        m_screenSize(el.attribute("screenSize").toInt()),
        m_screenCoef(el.attribute("screenCoef").toDouble()),
+       m_edgedivSize(el.attribute("edgedivSize").toInt()),
+       m_edgedivCoef(el.attribute("edgedivCoef").toDouble()),
        m_gravureSize(el.attribute("gravureSize").toInt()),
-       m_dots8Coef(el.attribute("dots8Coef").toDouble()),
-       m_dots8Size(el.attribute("dots8Size").toInt()),
        m_gravureCoef(el.attribute("gravureCoef").toDouble()),
+       m_dots8Size(el.attribute("dots8Size").toInt()),
+       m_dots8Coef(el.attribute("dots8Coef").toDouble()),
        m_unPaperIters(el.attribute("unPaperIters").toInt()),
        m_unPaperCoef(el.attribute("unPaper").toDouble()),
        m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
@@ -105,6 +107,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_screenCoef = 0.0;
     }
+    if (m_edgedivSize < 1)
+    {
+        m_edgedivSize = 13;
+    }
+    if (m_edgedivCoef < 0.0 || m_edgedivCoef > 1.0)
+    {
+        m_edgedivCoef = 0.0;
+    }
     if (m_gravureSize < 1)
     {
         m_gravureSize = 15;
@@ -153,6 +163,8 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("blurCoef", m_blurCoef);
     el.setAttribute("screenSize", m_screenSize);
     el.setAttribute("screenCoef", m_screenCoef);
+    el.setAttribute("edgedivSize", m_edgedivSize);
+    el.setAttribute("edgedivCoef", m_edgedivCoef);
     el.setAttribute("gravureSize", m_gravureSize);
     el.setAttribute("gravureCoef", m_gravureCoef);
     el.setAttribute("dots8Size", m_dots8Size);
@@ -197,6 +209,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_screenCoef != other.m_screenCoef) || (m_screenSize != other.m_screenSize))
+    {
+        return false;
+    }
+    if ((m_edgedivCoef != other.m_edgedivCoef) || (m_edgedivSize != other.m_edgedivSize))
     {
         return false;
     }

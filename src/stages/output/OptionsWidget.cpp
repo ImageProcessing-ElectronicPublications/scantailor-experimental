@@ -86,6 +86,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
     colorFilterSelector->addItem(tr("Blur/Sharpen"), F_BLUR);
     colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
+    colorFilterSelector->addItem(tr("EdgeDiv"), F_EDGEDIV);
     colorFilterSelector->addItem(tr("Engraving"), F_ENGRAVING);
     colorFilterSelector->addItem(tr("Dots 8x8"), F_DOTS8);
     colorFilterSelector->addItem(tr("UnPaper"), F_UNPAPER);
@@ -490,6 +491,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.screenSize());
         colorFilterCoef->setValue(color_options.screenCoef());
         break;
+    case F_EDGEDIV:
+        colorFilterSize->setValue(color_options.edgedivSize());
+        colorFilterCoef->setValue(color_options.edgedivCoef());
+        break;
     case F_ENGRAVING:
         colorFilterSize->setValue(color_options.gravureSize());
         colorFilterCoef->setValue(color_options.gravureCoef());
@@ -538,6 +543,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_SCREEN:
         color_options.setScreenSize(value);
         break;
+    case F_EDGEDIV:
+        color_options.setEdgedivSize(value);
+        break;
     case F_ENGRAVING:
         color_options.setGravureSize(value);
         break;
@@ -576,6 +584,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_SCREEN:
         color_options.setScreenCoef(value);
+        break;
+    case F_EDGEDIV:
+        color_options.setEdgedivCoef(value);
         break;
     case F_ENGRAVING:
         color_options.setGravureCoef(value);

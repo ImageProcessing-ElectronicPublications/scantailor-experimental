@@ -2383,4 +2383,75 @@ void dots8FilterInPlace(
     }
 }
 
+QImage edgedivFilter(
+    QImage const& image, int const f_size, float const coef)
+{
+    QImage dst(image);
+    edgedivFilterInPlace(dst, f_size, coef);
+    return dst;
+}
+
+void edgedivFilterInPlace(
+    QImage& image, int const f_size, float const coef)
+{
+    int const ff_size = f_size + f_size + 1;
+    QSize const& window_size = QSize(ff_size, ff_size);
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("edgedivFilter: empty window_size");
+    }
+
+    if (coef != 0.0f)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean(binarizeEdgeDivPrefilter(gray, window_size, coef, coef));
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        gray_line = gray.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const origin = gray_line[x];
+                float retval = gmean_line[x];
+                float const colscale = (retval + 1.0f) / (origin + 1.0f);
+                float const coldelta = retval - origin * colscale;
+                for (unsigned int c = 0; c < cnum; ++c)
+                {
+                    int const indx = x * cnum + c;
+                    float origcol = image_line[indx];
+                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
+                    int val = (origcol * colscale + coldelta * kcg + 0.5f);
+                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
+                    image_line[indx] = (uint8_t) val;
+                }
+            }
+            image_line += image_stride;
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+}
+
 } // namespace imageproc
