@@ -36,6 +36,7 @@
 #include <stdint.h>
 
 #define TIFF_DEFAULT_DPI 96.0f
+#define TIFF_FILETYPE_MRC 0x10
 
 /**
  * m_reverseBitsLUT[byte] gives the same byte, but with bit order reversed.
@@ -194,6 +195,181 @@ TiffWriter::writeImage(QIODevice& device, QImage const& image)
     TIFFSetField(tif.handle(), TIFFTAG_XRESOLUTION, TIFF_DEFAULT_DPI);
     TIFFSetField(tif.handle(), TIFFTAG_YRESOLUTION, TIFF_DEFAULT_DPI);
 
+    return writeImageData(tif, image);
+}
+
+bool
+TiffWriter::writeMRCImage(QString const& file_path, QImage const& background, QImage const& mask, QImage const& foreground)
+{
+    if (mask.isNull())
+    {
+        return false;
+    }
+
+    QFile file(file_path);
+    if (!file.open(QFile::WriteOnly))
+    {
+        return false;
+    }
+
+    if (!writeMRCImage(file, background, mask, foreground))
+    {
+        file.remove();
+        return false;
+    }
+
+    return true;
+}
+
+bool
+TiffWriter::writeMRCImage(QIODevice& device, QImage const& background, QImage const& mask, QImage const& foreground)
+{
+    uint16_t nof_layers = 0;
+    std::vector<toff_t> sub_ifd;
+    uint32_t image_layer[2] = { 2, 1 };
+    
+    if (mask.isNull())
+    {
+        return false;
+    }
+    
+    if (mask.format() != QImage::Format_Mono && mask.format() != QImage::Format_MonoLSB)
+    {
+        return false;
+    }
+    
+    if (!device.isWritable())
+    {
+        return false;
+    }
+    
+    if (device.isSequential())
+    {
+        // libtiff needs to be able to seek.
+        return false;
+    }
+    
+    if (!background.isNull())
+    {
+        if (background.width() != mask.width() || background.height() != mask.height())
+        {
+            return false;
+        }
+        
+        nof_layers++;
+    }
+
+    if (!foreground.isNull())
+    {
+        if (foreground.width() != mask.width() || foreground.height() != mask.height())
+        {
+            return false;
+        }
+        
+        nof_layers++;
+    }
+
+    TiffHandle tif(
+        TIFFClientOpen(
+            // Libtiff seems to be buggy with L or H flags,
+            // so we use B.
+            "file", "wBm", &device, &deviceRead, &deviceWrite,
+            &deviceSeek, &deviceClose, &deviceSize,
+            &deviceMap, &deviceUnmap
+        )
+    );
+    if (!tif.handle())
+    {
+        return false;
+    }
+
+    TIFFSetField(tif.handle(), TIFFTAG_IMAGEWIDTH, uint32(mask.width()));
+    TIFFSetField(tif.handle(), TIFFTAG_IMAGELENGTH, uint32(mask.height()));
+    TIFFSetField(tif.handle(), TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT);
+    TIFFSetField(tif.handle(), TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+    TIFFSetField(tif.handle(), TIFFTAG_XRESOLUTION, TIFF_DEFAULT_DPI);
+    TIFFSetField(tif.handle(), TIFFTAG_YRESOLUTION, TIFF_DEFAULT_DPI);
+    if(nof_layers > 0)
+    {
+        sub_ifd.resize(nof_layers);
+        
+        TIFFSetField(tif.handle(), TIFFTAG_SUBFILETYPE, 2, image_layer);
+        TIFFSetField(tif.handle(), TIFFTAG_SUBFILETYPE, uint32(FILETYPE_PAGE+TIFF_FILETYPE_MRC));
+        TIFFSetField(tif.handle(), TIFFTAG_SUBIFD, nof_layers, sub_ifd.data());
+    }
+    
+    if (!writeImageData(tif, mask))
+    {
+        return false;
+    }
+    
+    if(nof_layers > 0)
+    {
+        // Dump mask to file, start making SubIFD's for bkg&fgr layers
+        if (!TIFFWriteDirectory(tif.handle()))
+        {
+            return false;
+        }
+    
+        // Dump bkg layer
+        if(!background.isNull())
+        {
+            uint32_t image_layer[2] = { 1, 1 };
+
+            TIFFSetField(tif.handle(), TIFFTAG_IMAGEWIDTH, uint32(background.width()));
+            TIFFSetField(tif.handle(), TIFFTAG_IMAGELENGTH, uint32(background.height()));
+            TIFFSetField(tif.handle(), TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT);
+            TIFFSetField(tif.handle(), TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+            TIFFSetField(tif.handle(), TIFFTAG_XRESOLUTION, TIFF_DEFAULT_DPI);
+            TIFFSetField(tif.handle(), TIFFTAG_YRESOLUTION, TIFF_DEFAULT_DPI);
+            TIFFSetField(tif.handle(), TIFFTAG_SUBFILETYPE, FILETYPE_PAGE+TIFF_FILETYPE_MRC);
+            TIFFSetField(tif.handle(), TIFFTAG_SUBFILETYPE, 2, image_layer);
+            
+            if (!writeImageData(tif, background))
+            {
+                return false;
+            }
+            
+            if (!TIFFWriteDirectory(tif.handle()))
+            {
+                return false;
+            }
+        }
+        
+        // Dump fgr layer
+        if(!foreground.isNull())
+        {
+            uint32_t image_layer[2] = { 3, 1 };
+
+            TIFFSetField(tif.handle(), TIFFTAG_IMAGEWIDTH, uint32(foreground.width()));
+            TIFFSetField(tif.handle(), TIFFTAG_IMAGELENGTH, uint32(foreground.height()));
+            TIFFSetField(tif.handle(), TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT);
+            TIFFSetField(tif.handle(), TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+            TIFFSetField(tif.handle(), TIFFTAG_XRESOLUTION, TIFF_DEFAULT_DPI);
+            TIFFSetField(tif.handle(), TIFFTAG_YRESOLUTION, TIFF_DEFAULT_DPI);
+            TIFFSetField(tif.handle(), TIFFTAG_SUBFILETYPE, uint32(TIFF_FILETYPE_MRC));
+            TIFFSetField(tif.handle(), TIFFTAG_SUBFILETYPE, 2, image_layer);
+            
+            if (!writeImageData(tif, foreground))
+            {
+                return false;
+            }
+            
+            if (!TIFFWriteDirectory(tif.handle()))
+            {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+bool
+TiffWriter::writeImageData(
+    TiffHandle const& tif, QImage const& image)
+{
+    // Just write mask untill we do not have proper code
     switch (image.format())
     {
     case QImage::Format_Mono:

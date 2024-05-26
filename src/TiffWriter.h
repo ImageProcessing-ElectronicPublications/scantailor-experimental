@@ -49,7 +49,33 @@ public:
      * \return True on success, false on failure.
      */
     static bool writeImage(QIODevice& device, QImage const& image);
+    
+    /**
+     * \brief Writes Mixed Raster Content image in TIFF format to an IO device.
+     *
+     * \param file_path The full path to the file.
+     * \param background The background image to write. Default to white colour.
+     * \param mask Black and white mask. Writing a null mask will fail.
+     * \param foreground The foreground image to write. Default to black colour.
+     * \return True on success, false on failure.
+     */
+    static bool writeMRCImage(QString const& file_path, QImage const& background, QImage const& mask, QImage const& foreground);
+    
+    /**
+     * \brief Writes Mixed Raster Content image in TIFF format to an IO device.
+     *
+     * \param device The device to write to. This device must be
+     *        opened for writing and seekable.
+     * \param background The background image to write. Default to white colour.
+     * \param mask Black and white mask. Writing a null mask will fail.
+     * \param foreground The foreground image to write. Default to black colour.
+     * \return True on success, false on failure.
+     */
+    static bool writeMRCImage(QIODevice& device, QImage const& background, QImage const& mask, QImage const& foreground);
 private:
+
+    static bool writeImageData(
+        TiffHandle const& tif, QImage const& image);
 
     static bool writeBitonalOrIndexed8Image(
         TiffHandle const& tif, QImage const& image);
