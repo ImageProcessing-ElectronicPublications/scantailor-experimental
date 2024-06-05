@@ -47,7 +47,7 @@ Utils::buildWarpVisualization(
     out_vertical_lines.reserve(num_vertical_lines);
 
     CylindricalSurfaceDewarper const dewarper(
-        top_curve, bottom_curve, depth_perception.value()
+        top_curve, bottom_curve, depth_perception.value(), depth_perception.value()
     );
     CylindricalSurfaceDewarper::State state;
 

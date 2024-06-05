@@ -69,7 +69,8 @@ public:
     CylindricalSurfaceDewarper(
         std::vector<QPointF> const& img_directrix1,
         std::vector<QPointF> const& img_directrix2,
-        double depth_perception);
+        double depth_perception,
+        double curve_correct);
 
     /**
      * \brief Returns the arc length of a directrix, assuming its
@@ -129,6 +130,7 @@ private:
     HomographicTransform<2, double> m_pln2img;
     HomographicTransform<2, double> m_img2pln;
     double m_depthPerception;
+    double m_curveCorrect;
     double m_plnStraightLineY;
     double m_directrixArcLength;
     ArcLengthMapper m_arcLengthMapper;

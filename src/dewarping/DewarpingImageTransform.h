@@ -58,7 +58,8 @@ public:
         QPolygonF const& orig_crop_area,
         std::vector<QPointF> const& top_curve,
         std::vector<QPointF> const& bottom_curve,
-        DepthPerception const& depth_perception);
+        DepthPerception const& depth_perception,
+        DepthPerception const& curve_correct);
 
     virtual ~DewarpingImageTransform();
 
@@ -116,6 +117,7 @@ private:
     std::vector<QPointF> m_topPolyline;
     std::vector<QPointF> m_bottomPolyline;
     DepthPerception m_depthPerception;
+    DepthPerception m_curveCorrect;
     CylindricalSurfaceDewarper m_dewarper;
 
     /**

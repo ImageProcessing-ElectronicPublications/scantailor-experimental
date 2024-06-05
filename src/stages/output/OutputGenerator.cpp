@@ -366,7 +366,7 @@ OutputGenerator::process(
     // Color filters begin
     autoLevelFilterInPlace(transformed_image, color_options.autoLevelSize(), color_options.autoLevelCoef());
 
-    wienerColorFilterInPlace(transformed_image, color_options.wienerSize(), color_options.wienerCoef());
+    wienerColorFilterInPlace(transformed_image, color_options.wienerSize(), (color_options.wienerCoef() * color_options.wienerCoef()));
 
     knnDenoiserFilterInPlace(transformed_image, color_options.knndRadius(), color_options.knndCoef());
 

@@ -116,7 +116,7 @@ public:
 
 
 DistortionModelBuilder::DistortionModelBuilder(Vec2d const& down_direction)
-    :	m_downDirection(down_direction),
+    :   m_downDirection(down_direction),
       m_rightDirection(down_direction[1], -down_direction[0])
 {
     assert(down_direction.squaredNorm() > 0);
@@ -470,7 +470,7 @@ try
 
     double const depth_perception = 2.0; // Doesn't matter much here.
     CylindricalSurfaceDewarper const dewarper(
-        top_curve->extendedPolyline, bottom_curve->extendedPolyline, depth_perception
+        top_curve->extendedPolyline, bottom_curve->extendedPolyline, depth_perception, depth_perception
     );
 
     // CylindricalSurfaceDewarper maps the curved quadrilateral to a unit

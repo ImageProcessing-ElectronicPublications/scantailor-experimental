@@ -1,6 +1,6 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
-	Copyright (C) Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C) Joseph Artsimovich <joseph.artsimovich@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,14 +27,14 @@ namespace deskew
 {
 
 DewarpingParams::DewarpingParams()
-    :	m_mode(MODE_AUTO)
+    :   m_mode(MODE_AUTO)
 {
 }
 
 DewarpingParams::DewarpingParams(QDomElement const& el)
-    :	m_distortionModel(el.namedItem("distortion-model").toElement())
-    ,	m_depthPerception(el.attribute("depthPerception"))
-    ,	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    :   m_distortionModel(el.namedItem("distortion-model").toElement())
+    ,   m_depthPerception(el.attribute("depthPerception"))
+    ,   m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
 }
 

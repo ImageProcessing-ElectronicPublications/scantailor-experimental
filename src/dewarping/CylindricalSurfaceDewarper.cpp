@@ -93,10 +93,13 @@ private:
 
 CylindricalSurfaceDewarper::CylindricalSurfaceDewarper(
     std::vector<QPointF> const& img_directrix1,
-    std::vector<QPointF> const& img_directrix2, double depth_perception)
+    std::vector<QPointF> const& img_directrix2,
+    double depth_perception,
+    double curve_correct)
     :   m_pln2img(calcPlnToImgHomography(img_directrix1, img_directrix2)),
       m_img2pln(m_pln2img.inv()),
       m_depthPerception(depth_perception),
+      m_curveCorrect(curve_correct),
       m_plnStraightLineY(
           calcPlnStraightLineY(img_directrix1, img_directrix2, m_pln2img, m_img2pln)
       ),
@@ -129,7 +132,11 @@ CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
     double const img_directrix2_proj(projector.projectionScalar(img_directrix2_pt));
     double const img_directrix12f_proj = (1.0 - pln_straight_line_y) * img_directrix1_proj
                                        + pln_straight_line_y * img_directrix2_proj;
-    QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12f_proj))));
+    double const img_directrix12fd_proj = img_directrix12f_proj - m_plnStraightLineY;
+    double const curve_coef = (m_curveCorrect < 2.0) ? (1.0 / (3.0 - m_curveCorrect)) : (m_curveCorrect - 1.0);
+    double const img_directrix12fds_proj = img_directrix12fd_proj * curve_coef;
+    double const img_directrix12fs_proj = img_directrix12fds_proj + m_plnStraightLineY;
+    QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12fs_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
     boost::array<std::pair<double, double>, 3> pairs;
@@ -172,7 +179,11 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     double const img_directrix2_proj(projector.projectionScalar(img_directrix2_pt));
     double const img_directrix12f_proj = (1.0 - pln_straight_line_y) * img_directrix1_proj
                                        + pln_straight_line_y * img_directrix2_proj;
-    QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12f_proj))));
+    double const img_directrix12fd_proj = img_directrix12f_proj - m_plnStraightLineY;
+    double const curve_coef = (m_curveCorrect < 2.0) ? (1.0 / (3.0 - m_curveCorrect)) : (m_curveCorrect - 1.0);
+    double const img_directrix12fds_proj = img_directrix12fd_proj * curve_coef;
+    double const img_directrix12fs_proj = img_directrix12fds_proj + m_plnStraightLineY;
+    QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12fs_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
 
     boost::array<std::pair<double, double>, 3> pairs;

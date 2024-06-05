@@ -115,16 +115,18 @@ DewarpingImageTransform::DewarpingImageTransform(
     QPolygonF const& orig_crop_area,
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
-    DepthPerception const& depth_perception)
-    :	m_origSize(orig_size)
-    ,	m_topPolyline(top_curve)
-    ,	m_bottomPolyline(bottom_curve)
-    ,	m_depthPerception(depth_perception)
-    ,	m_dewarper(top_curve, bottom_curve, depth_perception.value())
-    ,	m_intrinsicScaleX(1.0)
-    ,	m_intrinsicScaleY(1.0)
-    ,	m_userScaleX(1.0)
-    ,	m_userScaleY(1.0)
+    DepthPerception const& depth_perception,
+    DepthPerception const& curve_correct)
+    :   m_origSize(orig_size)
+    ,   m_topPolyline(top_curve)
+    ,   m_bottomPolyline(bottom_curve)
+    ,   m_depthPerception(depth_perception)
+    ,   m_curveCorrect(depth_perception)
+    ,   m_dewarper(top_curve, bottom_curve, depth_perception.value(), depth_perception.value())
+    ,   m_intrinsicScaleX(1.0)
+    ,   m_intrinsicScaleY(1.0)
+    ,   m_userScaleX(1.0)
+    ,   m_userScaleY(1.0)
 {
     // These two lines don't depend on each other and therefore can go in any order.
     m_origCropArea = constrainCropArea(orig_crop_area);

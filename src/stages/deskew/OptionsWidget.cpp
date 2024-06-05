@@ -40,10 +40,10 @@ double const OptionsWidget::MAX_ANGLE = 45.0;
 
 OptionsWidget::OptionsWidget(IntrusivePtr<Settings> const& settings,
                              PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(settings)
-    ,	m_pageParams(Dependencies())
-    ,	m_ignoreSignalsFromUiControls(0)
-    ,	m_pageSelectionAccessor(page_selection_accessor)
+    :   m_ptrSettings(settings)
+    ,   m_pageParams(Dependencies())
+    ,   m_ignoreSignalsFromUiControls(0)
+    ,   m_pageSelectionAccessor(page_selection_accessor)
 {
     using namespace dewarping;
 
