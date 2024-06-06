@@ -40,6 +40,7 @@
 #include "imageproc/AffineTransform.h"
 #include "imageproc/BinaryImage.h"
 #include "imageproc/BinaryThreshold.h"
+#include "imageproc/Binarize.h"
 #include "imageproc/BWColor.h"
 #include "imageproc/GrayImage.h"
 #include "imageproc/OrthogonalRotation.h"
@@ -314,13 +315,27 @@ Task::processRotationDistortion(
 
         if (transformed_crop_rect.isValid())
         {
-            BinaryImage bw_image(
+            /*
+            QImage trim_image(
                 accel_ops->affineTransform(
                     gray_orig_image_factory(), orig_image_transform.transform(),
                     transformed_crop_rect, OutsidePixels::assumeColor(Qt::white)
-                ),
+                )
+            );
+            BinaryImage bw_image(
+                trim_image,
                 BinaryThreshold::otsuThreshold(gray_orig_image_factory())
             );
+            trim_image = QImage();
+            */
+            GrayImage trim_image(
+                accel_ops->affineTransform(
+                    gray_orig_image_factory(), orig_image_transform.transform(),
+                    transformed_crop_rect, OutsidePixels::assumeColor(Qt::white)
+                )
+            );
+            BinaryImage bw_image(binarizeEdgeDiv(trim_image, QSize(15, 15), 0.5, 1.0, 0.0));
+            trim_image = GrayImage();
             if (m_ptrDbg.get())
             {
                 m_ptrDbg->add(bw_image, "bw_image");
