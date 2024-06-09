@@ -25,7 +25,7 @@ namespace select_content
 {
 
 OrderByRatioProvider::OrderByRatioProvider(IntrusivePtr<Settings> const& settings)
-    :	m_ptrSettings(settings)
+    :   m_ptrSettings(settings)
 {
 }
 

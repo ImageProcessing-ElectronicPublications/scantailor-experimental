@@ -26,7 +26,7 @@ namespace page_layout
 {
 
 OrderByHeightProvider::OrderByHeightProvider(IntrusivePtr<Settings> const& settings)
-    :	m_ptrSettings(settings)
+    :   m_ptrSettings(settings)
 {
 }
 

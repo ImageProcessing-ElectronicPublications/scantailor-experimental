@@ -25,7 +25,7 @@ namespace select_content
 {
 
 OrderByHeightProvider::OrderByHeightProvider(IntrusivePtr<Settings> const& settings)
-    :	m_ptrSettings(settings)
+    :   m_ptrSettings(settings)
 {
 }
 

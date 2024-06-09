@@ -2573,27 +2573,32 @@ text-indent:0px;&quot;&gt;Rimuovi i file selezionati dal progetto.&lt;/p&gt;&lt;
         <translation type="obsolete">Conformazione pagina</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="67"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="70"/>
         <source>Natural order</source>
         <translation>Ordine naturale</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="68"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="71"/>
         <source>Order by increasing width</source>
         <translation>Ordina per larghezza crescente</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="69"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
         <source>Order by increasing height</source>
         <translation>Ordina per altezza crescente</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="73"/>
         <source>Order by width/height ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="79"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="74"/>
+        <source>Order by area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/Filter.cpp" line="85"/>
         <source>Margins</source>
         <translation>Margini</translation>
     </message>
@@ -2688,27 +2693,32 @@ text-indent:0px;&quot;&gt;Rimuovi i file selezionati dal progetto.&lt;/p&gt;&lt;
 <context>
     <name>select_content::Filter</name>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="58"/>
+        <location filename="../stages/select_content/Filter.cpp" line="62"/>
         <source>Natural order</source>
         <translation>Ordine naturale</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="59"/>
+        <location filename="../stages/select_content/Filter.cpp" line="63"/>
         <source>Order by increasing width</source>
         <translation>Ordina per larghezza crescente</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="60"/>
+        <location filename="../stages/select_content/Filter.cpp" line="64"/>
         <source>Order by increasing height</source>
         <translation>Ordina per altezza crescente</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="63"/>
+        <location filename="../stages/select_content/Filter.cpp" line="65"/>
         <source>Order by width/height ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="70"/>
+        <location filename="../stages/select_content/Filter.cpp" line="66"/>
+        <source>Order by area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/select_content/Filter.cpp" line="76"/>
         <source>Select Content</source>
         <translation>Seleziona contenuto</translation>
     </message>

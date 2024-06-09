@@ -16,10 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCANTAILOR_VERSION_H_
-#define SCANTAILOR_VERSION_H_
+#ifndef PAGE_LAYOUT_ORDER_BY_AREA_PROVIDER_H_
+#define PAGE_LAYOUT_ORDER_BY_AREA_PROVIDER_H_
 
-#define STFAMILY "experimental"
-#define VERSION "0.2024.06.09" // Must be "x.x.x.x" or an empty string.
+#include "Settings.h"
+#include "IntrusivePtr.h"
+#include "PageOrderProvider.h"
+
+namespace page_layout
+{
+
+class OrderByAreaProvider : public PageOrderProvider
+{
+public:
+    OrderByAreaProvider(IntrusivePtr<Settings> const& settings);
+
+    virtual bool precedes(
+        PageId const& lhs_page, bool lhs_incomplete,
+        PageId const& rhs_page, bool rhs_incomplete) const;
+private:
+    IntrusivePtr<Settings> m_ptrSettings;
+};
+
+} // namespace page_layout
 
 #endif

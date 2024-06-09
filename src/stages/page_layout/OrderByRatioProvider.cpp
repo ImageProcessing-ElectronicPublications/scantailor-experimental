@@ -26,7 +26,7 @@ namespace page_layout
 {
 
 OrderByRatioProvider::OrderByRatioProvider(IntrusivePtr<Settings> const& settings)
-    :	m_ptrSettings(settings)
+    :   m_ptrSettings(settings)
 {
 }
 

@@ -20,6 +20,7 @@ SET(
     OrderByWidthProvider.cpp OrderByWidthProvider.h
     OrderByHeightProvider.cpp OrderByHeightProvider.h
     OrderByRatioProvider.cpp OrderByRatioProvider.h
+    OrderByAreaProvider.cpp OrderByAreaProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

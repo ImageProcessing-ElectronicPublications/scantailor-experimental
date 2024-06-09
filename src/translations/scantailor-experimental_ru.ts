@@ -2830,27 +2830,32 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Макет страницы</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="69"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="70"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="70"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="71"/>
         <source>Order by increasing width</source>
         <translation>Сортировка по возрастающей ширине</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="71"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по возрастающей высоте</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="73"/>
         <source>Order by width/height ratio</source>
         <translation>Сортировка по соотношению ширины/высоты</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="79"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="74"/>
+        <source>Order by area</source>
+        <translation>Сортировка по площади</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/Filter.cpp" line="85"/>
         <source>Margins</source>
         <translation>Поля</translation>
     </message>
@@ -2957,27 +2962,32 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>select_content::Filter</name>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="58"/>
+        <location filename="../stages/select_content/Filter.cpp" line="62"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="61"/>
+        <location filename="../stages/select_content/Filter.cpp" line="63"/>
         <source>Order by increasing width</source>
         <translation>Сортировка по возрастающей ширине</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="62"/>
+        <location filename="../stages/select_content/Filter.cpp" line="64"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по возрастающей высоте</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="63"/>
+        <location filename="../stages/select_content/Filter.cpp" line="65"/>
         <source>Order by width/height ratio</source>
         <translation>Сортировка по соотношению ширины/высоты</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/Filter.cpp" line="70"/>
+        <location filename="../stages/select_content/Filter.cpp" line="66"/>
+        <source>Order by area</source>
+        <translation>Сортировка по площади</translation>
+    </message>
+    <message>
+        <location filename="../stages/select_content/Filter.cpp" line="76"/>
         <source>Select Content</source>
         <translation>Полезная область</translation>
     </message>
