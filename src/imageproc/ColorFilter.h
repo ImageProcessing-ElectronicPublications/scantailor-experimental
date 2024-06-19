@@ -29,6 +29,9 @@ namespace imageproc
 
 class GrayImage;
 
+static void imageReLevel(
+    QImage& image, GrayImage const y_old,  GrayImage const y_new);
+
 /**
  * @brief Applies the Wiener filter to a grayscale image.
  *
@@ -102,7 +105,7 @@ IMAGEPROC_EXPORT void knnDenoiserFilterInPlace(
 
 /**
  * @brief Despeckle image.
- * 
+ *
  * https://students.mimuw.edu.pl/~pz248275/despeckle.c
  */
 IMAGEPROC_EXPORT QImage colorDespeckleFilter(
@@ -113,7 +116,7 @@ IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
 
 /**
  * @brief Blur (box) image.
- * 
+ *
  * Ib = mean(I, w), w = box(2*r+1)
  */
 IMAGEPROC_EXPORT QImage blurFilter(
@@ -138,7 +141,7 @@ IMAGEPROC_EXPORT void screenFilterInPlace(
 
 /**
  * @brief Remove BG.
- * 
+ *
  * Irbg = ((I - BG) < T) ? BG : (I - BG), BG = mean(I)
  */
 IMAGEPROC_EXPORT QImage unPaperFilter(
@@ -158,7 +161,7 @@ IMAGEPROC_EXPORT QImage gravureFilter(
 
 /**
  * @brief Add dots8x8 texture to image.
- * 
+ *
  * Modification: The threshold values are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 17.
  */
 IMAGEPROC_EXPORT void dots8FilterInPlace(
