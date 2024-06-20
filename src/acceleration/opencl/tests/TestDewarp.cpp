@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_argb)
     CylindricalSurfaceDewarper const distortion_model(
         std::vector<QPointF> {QPointF(200, -50), QPointF(1050, 200)},
         std::vector<QPointF> {QPointF(-50, 800), QPointF(800, 1050)},
-        1.5
+        1.5, 1.5
     );
 
 #if LOG_PERFORMANCE
