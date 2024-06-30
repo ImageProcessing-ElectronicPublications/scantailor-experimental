@@ -1,0 +1,60 @@
+id: io.github.ImageProcessing_ElectronicPublications.scantailor-experimental
+runtime: org.kde.Platform
+runtime-version: '5.15-23.08'
+sdk: org.kde.Sdk
+command: scantailor-experimental
+modules:
+  - name: Eigen3
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2
+        sha256: b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626
+    build-commands:
+      - cp -r ./* /app
+  - name: boost
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.bz2
+        sha256: 7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617
+    build-commands:
+      - ./bootstrap.sh --prefix=/app --with-libraries=test,system
+      - ./b2 -j $FLATPAK_BUILDER_N_JOBS install
+  - name: scantailor-experimental
+    buildsystem: cmake-ninja
+    sources:
+      - type: dir
+        path: ../../
+finish-args:
+  - --device=dri
+  - --filesystem=host
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+cleanup:
+  - '/bench'
+  - '/bin/scantailor-experimental-cli'
+  - '/blas'
+  - '/ci'
+  - '/cmake'
+  - '/debug'
+  - '/demos'
+  - '/doc'
+  - '/Eigen'
+  - '/failtest'
+  - '/include'
+  - '/lapack'
+  - '/lib'
+  - '/scripts'
+  - '/test'
+  - '/unsupported'
+  - '/CMakeLists.txt'
+  - '/COPYING.*'
+  - '/CTestConfig.*'
+  - '/CTestCustom.*'
+  - '/eigen3.pc.in'
+  - '/INSTALL'
+  - '/README.md'
+  - '/signature_of_eigen3_matrix_library'
+
