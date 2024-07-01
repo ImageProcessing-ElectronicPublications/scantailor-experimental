@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Scan Tailor Experimental
+Exec=scantailor-experimental %f
+Type=Application
+Icon=io.github.ImageProcessing_ElectronicPublications.scantailor-experimental
+Categories=Graphics;
+MimeType=application/x-scantailor-experimental-project;
