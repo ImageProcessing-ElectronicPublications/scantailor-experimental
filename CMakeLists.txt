@@ -378,7 +378,7 @@ ADD_CUSTOM_TARGET(compile_translations ALL DEPENDS ${QM_FILES})
 
 INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translations")
 INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/stylesheets" DESTINATION "share/scantailor-experimental")
-INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/share" DESTINATION "share")
+INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/share/" DESTINATION "share")
 
 # Source code packaging
 SET(CPACK_CMAKE_GENERATOR "")
