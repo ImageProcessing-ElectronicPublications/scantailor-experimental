@@ -102,6 +102,12 @@ IF("${ST_VERSION}" STREQUAL "${version_h_contents}")
     MESSAGE(FATAL_ERROR "Failed to extract VERSION from version.h")
 ENDIF()
 
+# Generate release date string
+STRING(SUBSTRING "${ST_VERSION}" "2" "4" ST_RELEASE_YEAR)
+STRING(SUBSTRING "${ST_VERSION}" "7" "2" ST_RELEASE_MONTH)
+STRING(SUBSTRING "${ST_VERSION}" "10" "2" ST_RELEASE_DAY)
+STRING(JOIN "-" ST_RELEASE_DATE "${ST_RELEASE_YEAR}" "${ST_RELEASE_MONTH}" "${ST_RELEASE_DAY}")
+
 # This has to go quite early on, as otherwise we risk picking
 # up an identically named header from a system include path.
 INCLUDE_DIRECTORIES(src src/foundation src/math src/interaction src/zones)
@@ -378,6 +384,9 @@ ADD_CUSTOM_TARGET(compile_translations ALL DEPENDS ${QM_FILES})
 
 INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translations")
 INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/stylesheets" DESTINATION "share/scantailor-experimental")
+IF(UNIX)
+    CONFIGURE_FILE("src/io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.metainfo.xml.in" "src/share/metainfo/io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.metainfo.xml")
+ENDIF()
 INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/share/" DESTINATION "share")
 
 # Source code packaging

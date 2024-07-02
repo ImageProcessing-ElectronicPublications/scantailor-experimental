@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.ImageProcessing_ElectronicPublications.scantailor-experimental</id>
+  
+  <name>Scan Tailor Experimental</name>
+  <summary>Scan Tailor Experimental is an interactive post-processing tool for scanned pages</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  
+  <description>
+    <p>
+      Scan Tailor Experimental is an interactive post-processing tool for scanned pages.  It performs operations such as:
+    </p>
+    <p>- page splitting,</p>
+    <p>- deskewing,</p>
+    <p>- adding/removing borders,</p>
+    <p>- selecting content</p>
+    <p>- ... and others.</p>
+    <p>
+      You give it raw scans, and you get pages ready to be printed or assembled into a PDF or DJVU file.
+      Scanning, optical character recognition, and assembling multi-page documents are out of scope of this project.
+    </p>
+    <p>
+      Scan Tailor Experimental is Free Software (which is more than just freeware).
+      It's written in C++ with Qt and released under the General Public License version 3.
+      We develop both Windows and GNU/Linux versions.
+    </p>
+  </description>
+  <url type="homepage">https://github.com/ImageProcessing-ElectronicPublications/scantailor-experimental</url>
+  <url type="bugtracker">https://github.com/ImageProcessing-ElectronicPublications/scantailor-experimental/issues</url>
+  <content_rating type="oars-1.1" />
+  <launchable type="desktop-id">io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.desktop</launchable>
+  <developer id="io.github.imageprocessing_electronicpublications">
+    <name>Image Processing for Electronic Publications</name>
+  </developer>
+  <developer_name>Image Processing for Electronic Publications</developer_name>
+  <releases>
+    <release version="${ST_VERSION}" date="${ST_RELEASE_DATE}"/>
+  </releases>
+</component>
