@@ -4,5 +4,6 @@
     <comment>Scan Tailor Experimental project file</comment>
     <glob pattern="*.ScanTailor"/>
     <sub-class-of type="text/xml"/>
+    <generic-icon name="io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.svg"/>
   </mime-type>
 </mime-info>
