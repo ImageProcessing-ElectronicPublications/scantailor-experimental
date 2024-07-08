@@ -33,6 +33,7 @@
 #include "GrayImage.h"
 #include "ColorFilter.h"
 #include "RasterOpGeneric.h"
+#include "GaussBlur.h"
 
 namespace imageproc
 {
@@ -461,7 +462,10 @@ GrayImage binarizeNiblackMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -710,7 +714,10 @@ GrayImage binarizeSauvolaMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -795,7 +802,10 @@ GrayImage binarizeWolfMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -899,7 +909,10 @@ GrayImage binarizeBradleyMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+//    GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -973,7 +986,10 @@ GrayImage binarizeSinghMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -1058,7 +1074,10 @@ GrayImage binarizeWANMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -1150,7 +1169,10 @@ GrayImage binarizeEdgeDivPrefilter(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -1245,7 +1267,10 @@ GrayImage binarizeRobustPrefilter(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, window_size);
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
     if (gmean.isNull())
     {
         return GrayImage();

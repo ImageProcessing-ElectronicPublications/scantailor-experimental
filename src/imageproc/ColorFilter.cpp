@@ -36,6 +36,7 @@
 #include "BinaryThreshold.h"
 #include "Binarize.h"
 #include "ColorFilter.h"
+#include "GaussBlur.h"
 
 namespace imageproc
 {
@@ -220,7 +221,10 @@ void wienerFilterInPlace(
         uint8_t* image_line = image.data();
         int const image_stride = image.stride();
 
-        GrayImage gmean = grayMapMean(image, window_size);
+        //GrayImage gmean = grayMapMean(image, window_size);
+        int rx = window_size.width() >> 1;
+        int ry = window_size.height() >> 1;
+        GrayImage gmean = gaussBlur(image, rx, ry);
         if (gmean.isNull())
         {
             return;
@@ -346,7 +350,10 @@ void autoLevelFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        GrayImage gmean = grayMapMean(gray, window_size);
+        //GrayImage gmean = grayMapMean(gray, window_size);
+        int rx = window_size.width() >> 1;
+        int ry = window_size.height() >> 1;
+        GrayImage gmean = gaussBlur(gray, rx, ry);
         if (gmean.isNull())
         {
             return;
@@ -586,7 +593,10 @@ void blurFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        GrayImage gmean = grayMapMean(gray, window_size);
+        //GrayImage gmean = grayMapMean(gray, window_size);
+        int rx = window_size.width() >> 1;
+        int ry = window_size.height() >> 1;
+        GrayImage gmean = gaussBlur(gray, rx, ry);
         if (gmean.isNull())
         {
             return;
@@ -654,7 +664,10 @@ void screenFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        GrayImage gmean = grayMapMean(gray, window_size);
+        //GrayImage gmean = grayMapMean(gray, window_size);
+        int rx = window_size.width() >> 1;
+        int ry = window_size.height() >> 1;
+        GrayImage gmean = gaussBlur(gray, rx, ry);
         if (gmean.isNull())
         {
             return;
@@ -926,7 +939,10 @@ void gravureFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        GrayImage gmean = grayMapMean(gray, window_size);
+        //GrayImage gmean = grayMapMean(gray, window_size);
+        int rx = window_size.width() >> 1;
+        int ry = window_size.height() >> 1;
+        GrayImage gmean = gaussBlur(gray, rx, ry);
         if (gmean.isNull())
         {
             return;
@@ -1031,7 +1047,10 @@ void dots8FilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        GrayImage gmean = grayMapMean(gray, window_size);
+        //GrayImage gmean = grayMapMean(gray, window_size);
+        int rx = window_size.width() >> 1;
+        int ry = window_size.height() >> 1;
+        GrayImage gmean = gaussBlur(gray, rx, ry);
         if (gmean.isNull())
         {
             return;
