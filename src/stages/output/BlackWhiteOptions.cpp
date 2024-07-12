@@ -69,11 +69,20 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     el.setAttribute("thresholdMethod", formatThresholdMethod(m_thresholdMethod));
     el.setAttribute("morphology", m_morphology ? "1" : "0");
     el.setAttribute("negate", m_negate ? "1" : "0");
-    el.setAttribute("dimmingColoredCoef", m_dimmingColoredCoef);
-    el.setAttribute("thresholdAdj", m_thresholdAdjustment);
+    if (m_dimmingColoredCoef != 0.0)
+    {
+        el.setAttribute("dimmingColoredCoef", m_dimmingColoredCoef);
+    }
+    if (m_thresholdAdjustment != 0)
+    {
+        el.setAttribute("thresholdAdj", m_thresholdAdjustment);
+    }
     el.setAttribute("thresholdWinSize", m_thresholdWindowSize);
     el.setAttribute("thresholdCoef", m_thresholdCoef);
-    el.setAttribute("autoPictureCoef", m_autoPictureCoef);
+    if (m_autoPictureCoef != 0.0)
+    {
+        el.setAttribute("autoPictureCoef", m_autoPictureCoef);
+    }
     el.setAttribute("autoPictureOff", m_autoPictureOff ? "1" : "0");
     return el;
 }

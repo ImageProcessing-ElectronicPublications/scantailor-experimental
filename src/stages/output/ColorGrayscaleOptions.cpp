@@ -151,26 +151,56 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.setAttribute("curveCoef", m_curveCoef);
     el.setAttribute("sqrCoef", m_sqrCoef);
-    el.setAttribute("wienerSize", m_wienerSize);
-    el.setAttribute("wienerCoef", m_wienerCoef);
-    el.setAttribute("autoLevelSize", m_autoLevelSize);
-    el.setAttribute("autoLevelCoef", m_autoLevelCoef);
-    el.setAttribute("knnDenoiser", m_knndCoef);
-    el.setAttribute("knnDRadius", m_knndRadius);
-    el.setAttribute("cdespeckle", m_cdespeckleCoef);
-    el.setAttribute("cdespeckleRadius", m_cdespeckleRadius);
-    el.setAttribute("blurSize", m_blurSize);
-    el.setAttribute("blurCoef", m_blurCoef);
-    el.setAttribute("screenSize", m_screenSize);
-    el.setAttribute("screenCoef", m_screenCoef);
-    el.setAttribute("edgedivSize", m_edgedivSize);
-    el.setAttribute("edgedivCoef", m_edgedivCoef);
-    el.setAttribute("gravureSize", m_gravureSize);
-    el.setAttribute("gravureCoef", m_gravureCoef);
-    el.setAttribute("dots8Size", m_dots8Size);
-    el.setAttribute("dots8Coef", m_dots8Coef);
-    el.setAttribute("unPaper", m_unPaperCoef);
-    el.setAttribute("unPaperIters", m_unPaperIters);
+    if (m_wienerCoef != 0.0)
+    {
+        el.setAttribute("wienerSize", m_wienerSize);
+        el.setAttribute("wienerCoef", m_wienerCoef);
+    }
+    if (m_autoLevelCoef != 0.0)
+    {
+        el.setAttribute("autoLevelSize", m_autoLevelSize);
+        el.setAttribute("autoLevelCoef", m_autoLevelCoef);
+    }
+    if (m_knndCoef != 0.0)
+    {
+        el.setAttribute("knnDenoiser", m_knndCoef);
+        el.setAttribute("knnDRadius", m_knndRadius);
+    }
+    if (m_cdespeckleCoef != 0.0)
+    {
+        el.setAttribute("cdespeckle", m_cdespeckleCoef);
+        el.setAttribute("cdespeckleRadius", m_cdespeckleRadius);
+    }
+    if (m_blurCoef != 0.0)
+    {
+        el.setAttribute("blurSize", m_blurSize);
+        el.setAttribute("blurCoef", m_blurCoef);
+    }
+    if (m_screenCoef != 0.0)
+    {
+        el.setAttribute("screenSize", m_screenSize);
+        el.setAttribute("screenCoef", m_screenCoef);
+    }
+    if (m_edgedivCoef != 0.0)
+    {
+        el.setAttribute("edgedivSize", m_edgedivSize);
+        el.setAttribute("edgedivCoef", m_edgedivCoef);
+    }
+    if (m_gravureCoef != 0.0)
+    {
+        el.setAttribute("gravureSize", m_gravureSize);
+        el.setAttribute("gravureCoef", m_gravureCoef);
+    }
+    if (m_dots8Coef != 0.0)
+    {
+        el.setAttribute("dots8Size", m_dots8Size);
+        el.setAttribute("dots8Coef", m_dots8Coef);
+    }
+    if (m_unPaperCoef != 0.0)
+    {
+        el.setAttribute("unPaper", m_unPaperCoef);
+        el.setAttribute("unPaperIters", m_unPaperIters);
+    }
     el.setAttribute("normalizeCoef", m_normalizeCoef);
     el.setAttribute("whiteMargins", m_whiteMargins ? "1" : "0");
     el.setAttribute("grayScale", m_grayScale ? "1" : "0");

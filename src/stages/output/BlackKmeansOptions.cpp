@@ -77,13 +77,31 @@ BlackKmeansOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
     el.setAttribute("kmeans", m_kmeansCount);
-    el.setAttribute("kmeansVal", m_kmeansValueStart);
-    el.setAttribute("kmeansSat", m_kmeansSat);
-    el.setAttribute("kmeansNorm", m_kmeansNorm);
-    el.setAttribute("kmeansBG", m_kmeansBG);
-    el.setAttribute("coloredMaskCoef", m_coloredMaskCoef);
+    if (m_kmeansValueStart != 0)
+    {
+        el.setAttribute("kmeansVal", m_kmeansValueStart);
+    }
+    if (m_kmeansSat != 0.0)
+    {
+        el.setAttribute("kmeansSat", m_kmeansSat);
+    }
+    if (m_kmeansNorm != 0.0)
+    {
+        el.setAttribute("kmeansNorm", m_kmeansNorm);
+    }
+    if (m_kmeansBG != 0.0)
+    {
+        el.setAttribute("kmeansBG", m_kmeansBG);
+    }
+    if (m_coloredMaskCoef != 0.0)
+    {
+        el.setAttribute("coloredMaskCoef", m_coloredMaskCoef);
+    }
     el.setAttribute("colorspace", formatKmeansColorSpace(m_kmeansColorSpace));
-    el.setAttribute("kmeansMorphology", m_kmeansMorphology);
+    if (m_kmeansMorphology != 0)
+    {
+        el.setAttribute("kmeansMorphology", m_kmeansMorphology);
+    }
     return el;
 }
 
