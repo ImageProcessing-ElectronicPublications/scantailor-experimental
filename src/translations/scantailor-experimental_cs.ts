@@ -329,7 +329,7 @@ English or Russian please.</source>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Aplikovat na</translation>
     </message>
 </context>
@@ -1137,10 +1137,6 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="vanished">Výstupní rozlišení (DPI)</translation>
     </message>
     <message>
-        <source>Change ...</source>
-        <translation type="vanished">Změnit ...</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="20"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="33"/>
         <source>Resolution Enhancement</source>
@@ -1449,7 +1445,7 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Aplikovat na ...</translation>
     </message>
     <message>
@@ -1599,7 +1595,7 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Aplikovat na ...</translation>
     </message>
     <message>
@@ -1724,8 +1720,8 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation>Změnit ...</translation>
+        <source>Apply to ...</source>
+        <translation>Aplikovat na</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

@@ -273,7 +273,7 @@
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -966,7 +966,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1388,7 +1388,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1509,7 +1509,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

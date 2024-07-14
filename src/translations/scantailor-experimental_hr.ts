@@ -289,7 +289,7 @@
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Primijeni na...</translation>
     </message>
 </context>
@@ -1076,10 +1076,6 @@ Da bi to odredili, pokrenite skupne obrade u &quot;Odredi sadržaja&quot; ili &q
         <translation type="vanished">Izlazna rezolucija (DPI)</translation>
     </message>
     <message>
-        <source>Change ...</source>
-        <translation type="vanished">Promijeni...</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Mode</source>
@@ -1112,7 +1108,7 @@ Da bi to odredili, pokrenite skupne obrade u &quot;Odredi sadržaja&quot; ili &q
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Primijeni na...</translation>
     </message>
     <message>
@@ -1532,7 +1528,7 @@ Da bi to odredili, pokrenite skupne obrade u &quot;Odredi sadržaja&quot; ili &q
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Primijeni na...</translation>
     </message>
     <message>
@@ -1658,8 +1654,8 @@ ostalim stranicama</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation>Promijeni...</translation>
+        <source>Apply to ...</source>
+        <translation>Primijeni na...</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

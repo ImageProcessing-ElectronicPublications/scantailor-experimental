@@ -326,7 +326,7 @@ Taxman</translation>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Anwenden auf ...</translation>
     </message>
 </context>
@@ -1164,10 +1164,6 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
         <translation type="vanished">Auflösung der Ausgabedatei (dpi)</translation>
     </message>
     <message>
-        <source>Change ...</source>
-        <translation type="vanished">Ändern ...</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Mode</source>
@@ -1204,7 +1200,7 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Anwenden auf ...</translation>
     </message>
     <message>
@@ -1633,7 +1629,7 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Anwenden auf ...</translation>
     </message>
     <message>
@@ -1758,8 +1754,8 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation>Ändern ...</translation>
+        <source>Apply to ...</source>
+        <translation>Anwenden auf ...</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

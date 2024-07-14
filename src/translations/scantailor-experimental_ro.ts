@@ -278,7 +278,7 @@
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished">Aplică la...</translation>
     </message>
 </context>
@@ -995,7 +995,7 @@ Pentru determinarea ei rulați comenzile de procesare în bloc - &quot;Selectare
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished">Aplică la...</translation>
     </message>
     <message>
@@ -1418,7 +1418,7 @@ Pentru determinarea ei rulați comenzile de procesare în bloc - &quot;Selectare
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished">Aplică la...</translation>
     </message>
     <message>
@@ -1538,11 +1538,6 @@ Pentru determinarea ei rulați comenzile de procesare în bloc - &quot;Selectare
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="134"/>
         <source>?</source>
         <translation type="unfinished">?</translation>
-    </message>
-    <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation type="unfinished">Schimbă...</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

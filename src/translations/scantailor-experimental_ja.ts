@@ -376,7 +376,7 @@ Andrey Bergman - システム負荷調整
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>適用先...</translation>
     </message>
 </context>
@@ -1243,10 +1243,6 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="vanished">出力解像度 (DPI)</translation>
     </message>
     <message>
-        <source>Change ...</source>
-        <translation type="vanished">変更...</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Mode</source>
@@ -1427,7 +1423,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>適用先...</translation>
     </message>
     <message>
@@ -1712,7 +1708,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>適用先...</translation>
     </message>
     <message>
@@ -1857,8 +1853,8 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation>変更...</translation>
+        <source>Apply to ...</source>
+        <translation>適用先...</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

@@ -320,7 +320,7 @@ Taxman</translation>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation type="unfinished">Applica a...</translation>
     </message>
 </context>
@@ -1132,10 +1132,6 @@ Per determinarla, avvia l&apos;elaborazione automatica a &quot; o &quot; Conform
         <translation type="vanished">Risoluzione di uscita (DPI)</translation>
     </message>
     <message>
-        <source>Change ...</source>
-        <translation type="vanished">Cambia...</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Mode</source>
@@ -1308,7 +1304,7 @@ Per determinarla, avvia l&apos;elaborazione automatica a &quot; o &quot; Conform
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Applica a...</translation>
     </message>
     <message>
@@ -1593,7 +1589,7 @@ Per determinarla, avvia l&apos;elaborazione automatica a &quot; o &quot; Conform
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>Applica a...</translation>
     </message>
     <message>
@@ -1738,8 +1734,8 @@ Per determinarla, avvia l&apos;elaborazione automatica a &quot; o &quot; Conform
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation>Cambia...</translation>
+        <source>Apply to ...</source>
+        <translation type="unfinished">Applica a...</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

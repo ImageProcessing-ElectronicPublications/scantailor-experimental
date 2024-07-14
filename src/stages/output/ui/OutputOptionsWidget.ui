@@ -424,7 +424,7 @@
         <item>
          <widget class="QPushButton" name="applyColorsFiltersButton">
           <property name="text">
-           <string>Apply To ...</string>
+           <string>Apply to ...</string>
           </property>
          </widget>
         </item>
@@ -821,7 +821,7 @@
         <item>
          <widget class="QPushButton" name="applyColorsModeButton">
           <property name="text">
-           <string>Apply To ...</string>
+           <string>Apply to ...</string>
           </property>
          </widget>
         </item>
@@ -1040,7 +1040,7 @@
         <item>
          <widget class="QPushButton" name="applyKmeansButton">
           <property name="text">
-           <string>Apply To ...</string>
+           <string>Apply to ...</string>
           </property>
          </widget>
         </item>
@@ -1294,7 +1294,7 @@
         <item>
          <widget class="QPushButton" name="applyDespeckleButton">
           <property name="text">
-           <string>Apply To ...</string>
+           <string>Apply to ...</string>
           </property>
          </widget>
         </item>

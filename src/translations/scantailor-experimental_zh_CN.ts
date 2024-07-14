@@ -346,7 +346,7 @@ English or Russian please.</source>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>应用到……</translation>
     </message>
 </context>
@@ -1132,10 +1132,6 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="vanished">输出分辨率（DPI）</translation>
     </message>
     <message>
-        <source>Change ...</source>
-        <translation type="vanished">改变……</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="20"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="33"/>
         <source>Resolution Enhancement</source>
@@ -1438,7 +1434,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>应用到……</translation>
     </message>
     <message>
@@ -1592,7 +1588,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
-        <source>Apply To ...</source>
+        <source>Apply to ...</source>
         <translation>应用到……</translation>
     </message>
     <message>
@@ -1717,8 +1713,8 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
-        <source>Change ...</source>
-        <translation>改变……</translation>
+        <source>Apply to ...</source>
+        <translation>应用到……</translation>
     </message>
     <message>
         <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>

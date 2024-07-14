@@ -233,7 +233,7 @@
         <item>
          <widget class="QPushButton" name="applyMarginsBtn">
           <property name="text">
-           <string>Apply To ...</string>
+           <string>Apply to ...</string>
           </property>
          </widget>
         </item>
@@ -616,7 +616,7 @@
         <item>
          <widget class="QPushButton" name="applyAlignmentBtn">
           <property name="text">
-           <string>Apply To ...</string>
+           <string>Apply to ...</string>
           </property>
          </widget>
         </item>
