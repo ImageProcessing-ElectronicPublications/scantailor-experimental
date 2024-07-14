@@ -152,6 +152,19 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     double k = 0.2, int delta = 0);
 
 /**
+ * \brief Image binarization using Grad local/global thresholding method.
+ *
+ * Grad, zvezdochiot 2024. "Adaptive/global document image binarization".
+ */
+IMAGEPROC_EXPORT float binarizeGradValue(
+    GrayImage const& gray, GrayImage const& gmean);
+IMAGEPROC_EXPORT GrayImage binarizeGradMap(
+    GrayImage const& src, QSize window_size, double coef = 0.34);
+IMAGEPROC_EXPORT BinaryImage binarizeGrad(
+    GrayImage const& src, QSize window_size,
+    double coef = 0.34, int delta = 0);
+
+/**
  * \brief Image binarization using Singh's adaptive thresholding method.
  *
  * Singh, O. I., Sinam, T., James, O., & Singh, T. R. (2012).

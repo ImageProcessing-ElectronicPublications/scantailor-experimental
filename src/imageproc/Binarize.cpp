@@ -965,6 +965,134 @@ BinaryImage binarizeBradley(
 }  // binarizeBradley
 
 /*
+ * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.30
+ */
+float binarizeGradValue(
+    GrayImage const& gray, GrayImage const& gmean)
+{
+    float tvalue = 127.5f;
+
+    if (gray.isNull() || gmean.isNull())
+    {
+        return tvalue;
+    }
+
+    int const w = gray.width();
+    int const h = gray.height();
+
+    if ((gmean.width() != w) || (gmean.height() != h))
+    {
+        return tvalue;
+    }
+
+    uint8_t const* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+    uint8_t const* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+
+    double g, gi;
+    double sum_g = 0.0, sum_gi = 0.0, sum_gl = 0.0, sum_gil = 0.0;
+
+    for (int y = 0; y < h; y++)
+    {
+        sum_gl = 0.0;
+        sum_gil = 0.0;
+        for (int x = 0; x < w; x++)
+        {
+            gi = gray_line[x];
+            g = gmean_line[x];
+            g -= gi;
+            g = (g < 0.0) ? -g : g;
+            gi *= g;
+            sum_gl += g;
+            sum_gil += gi;
+        }
+        sum_g += sum_gl;
+        sum_gi += sum_gil;
+        gray_line += gray_stride;
+        gmean_line += gmean_stride;
+    }
+    tvalue = (sum_g == 0.0) ? tvalue : (sum_gi / sum_g);
+
+    return tvalue;
+}
+
+GrayImage binarizeGradMap(
+    GrayImage const& src, QSize const window_size, double const coef)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeGradMap: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+
+    //GrayImage gmean = grayMapMean(src, window_size);
+    int rx = window_size.width() >> 1;
+    int ry = window_size.height() >> 1;
+    GrayImage gmean = gaussBlur(gray, rx, ry);
+    if (gmean.isNull())
+    {
+        return GrayImage();
+    }
+
+    float const mean_grad = (1.0 - coef) * binarizeGradValue(gray, gmean);
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+
+    for (int y = 0; y < h; ++y)
+    {
+        for (int x = 0; x < w; ++x)
+        {
+            float const mean = gmean_line[x];
+
+            float threshold = mean_grad + mean * coef;
+
+            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+            gray_line[x] = (uint8_t) threshold;
+        }
+        gray_line += gray_stride;
+        gmean_line += gmean_stride;
+    }
+
+    return gray;
+}
+
+BinaryImage binarizeGrad(
+    GrayImage const& src, QSize const window_size,
+    double const coef, int const delta)
+{
+    if (window_size.isEmpty())
+    {
+        throw std::invalid_argument("binarizeGrad: invalid window_size");
+    }
+
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(binarizeGradMap(src, window_size, coef));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+
+    return bw_img;
+}
+
+/*
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
 GrayImage binarizeSinghMap(

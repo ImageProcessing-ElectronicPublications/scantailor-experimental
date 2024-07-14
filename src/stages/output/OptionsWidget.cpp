@@ -64,21 +64,22 @@ OptionsWidget::OptionsWidget(
     colorModeSelector->addItem(tr("Color / Grayscale"), ColorParams::COLOR_GRAYSCALE);
     colorModeSelector->addItem(tr("Mixed"), ColorParams::MIXED);
 
-    thresholdMethodSelector->addItem(tr("Otsu"), OTSU);
-    thresholdMethodSelector->addItem(tr("Mean"), MEANDELTA);
-    thresholdMethodSelector->addItem(tr("Dots8"), DOTS8);
-    thresholdMethodSelector->addItem(tr("Niblack"), NIBLACK);
-    thresholdMethodSelector->addItem(tr("Gatos"), GATOS);
-    thresholdMethodSelector->addItem(tr("Sauvola"), SAUVOLA);
-    thresholdMethodSelector->addItem(tr("Wolf"), WOLF);
-    thresholdMethodSelector->addItem(tr("Bradley"), BRADLEY);
-    thresholdMethodSelector->addItem(tr("Singh"), SINGH);
-    thresholdMethodSelector->addItem(tr("WAN"), WAN);
-    thresholdMethodSelector->addItem(tr("EdgePlus"), EDGEPLUS);
-    thresholdMethodSelector->addItem(tr("BlurDiv"), BLURDIV);
-    thresholdMethodSelector->addItem(tr("EdgeDiv"), EDGEDIV);
-    thresholdMethodSelector->addItem(tr("Robust"), ROBUST);
-    thresholdMethodSelector->addItem(tr("MultiScale"), MSCALE);
+    thresholdMethodSelector->addItem(tr("Otsu"), T_OTSU);
+    thresholdMethodSelector->addItem(tr("Mean"), T_MEANDELTA);
+    thresholdMethodSelector->addItem(tr("Dots8"), T_DOTS8);
+    thresholdMethodSelector->addItem(tr("Niblack"), T_NIBLACK);
+    thresholdMethodSelector->addItem(tr("Gatos"), T_GATOS);
+    thresholdMethodSelector->addItem(tr("Sauvola"), T_SAUVOLA);
+    thresholdMethodSelector->addItem(tr("Wolf"), T_WOLF);
+    thresholdMethodSelector->addItem(tr("Bradley"), T_BRADLEY);
+    thresholdMethodSelector->addItem(tr("Grad"), T_GRAD);
+    thresholdMethodSelector->addItem(tr("Singh"), T_SINGH);
+    thresholdMethodSelector->addItem(tr("WAN"), T_WAN);
+    thresholdMethodSelector->addItem(tr("EdgePlus"), T_EDGEPLUS);
+    thresholdMethodSelector->addItem(tr("BlurDiv"), T_BLURDIV);
+    thresholdMethodSelector->addItem(tr("EdgeDiv"), T_EDGEDIV);
+    thresholdMethodSelector->addItem(tr("Robust"), T_ROBUST);
+    thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
 
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
@@ -1157,7 +1158,7 @@ OptionsWidget::updateColorsDisplay()
         thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
         thresholdCoef->setValue(black_white_options.thresholdCoef());
 
-        if ((black_white_options.thresholdMethod() == OTSU) || (black_white_options.thresholdMethod() == MEANDELTA) || (black_white_options.thresholdMethod() == DOTS8))
+        if ((black_white_options.thresholdMethod() == T_OTSU) || (black_white_options.thresholdMethod() == T_MEANDELTA) || (black_white_options.thresholdMethod() == T_DOTS8))
         {
             thresholdWindowSize->setEnabled( false );
             thresholdCoef->setEnabled( false );

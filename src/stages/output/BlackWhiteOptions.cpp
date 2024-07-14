@@ -25,7 +25,7 @@ namespace output
 {
 
 BlackWhiteOptions::BlackWhiteOptions()
-    :   m_thresholdMethod(OTSU),
+    :   m_thresholdMethod(T_OTSU),
         m_morphology(true),
         m_negate(false),
         m_dimmingColoredCoef(0.0),
@@ -141,63 +141,67 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
 {
     if (str == "mean")
     {
-        return MEANDELTA;
+        return T_MEANDELTA;
     }
     else if (str == "dots8")
     {
-        return DOTS8;
+        return T_DOTS8;
     }
     else if (str == "niblack")
     {
-        return NIBLACK;
+        return T_NIBLACK;
     }
     else if (str == "gatos")
     {
-        return GATOS;
+        return T_GATOS;
     }
     else if (str == "sauvola")
     {
-        return SAUVOLA;
+        return T_SAUVOLA;
     }
     else if (str == "wolf")
     {
-        return WOLF;
+        return T_WOLF;
     }
     else if (str == "bradley")
     {
-        return BRADLEY;
+        return T_BRADLEY;
+    }
+    else if (str == "grad")
+    {
+        return T_GRAD;
     }
     else if (str == "singh")
     {
-        return SINGH;
+        return T_SINGH;
     }
     else if (str == "WAN")
     {
-        return WAN;
+        return T_WAN;
     }
     else if (str == "edgeplus")
     {
-        return EDGEPLUS;
+        return T_EDGEPLUS;
     }
     else if (str == "blurdiv")
     {
-        return BLURDIV;
+        return T_BLURDIV;
     }
     else if (str == "edgediv")
     {
-        return EDGEDIV;
+        return T_EDGEDIV;
     }
     else if (str == "robust")
     {
-        return ROBUST;
+        return T_ROBUST;
     }
     else if (str == "multiscale")
     {
-        return MSCALE;
+        return T_MSCALE;
     }
     else
     {
-        return OTSU;
+        return T_OTSU;
     }
 }
 
@@ -207,49 +211,52 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
     QString str = "";
     switch (type)
     {
-    case OTSU:
+    case T_OTSU:
         str = "otsu";
         break;
-    case MEANDELTA:
+    case T_MEANDELTA:
         str = "mean";
         break;
-    case DOTS8:
+    case T_DOTS8:
         str = "dots8";
         break;
-    case NIBLACK:
+    case T_NIBLACK:
         str = "niblack";
         break;
-    case GATOS:
+    case T_GATOS:
         str = "gatos";
         break;
-    case SAUVOLA:
+    case T_SAUVOLA:
         str = "sauvola";
         break;
-    case WOLF:
+    case T_WOLF:
         str = "wolf";
         break;
-    case BRADLEY:
+    case T_BRADLEY:
         str = "bradley";
         break;
-    case SINGH:
+    case T_GRAD:
+        str = "grad";
+        break;
+    case T_SINGH:
         str = "singh";
         break;
-    case WAN:
+    case T_WAN:
         str = "WAN";
         break;
-    case EDGEPLUS:
+    case T_EDGEPLUS:
         str = "edgeplus";
         break;
-    case BLURDIV:
+    case T_BLURDIV:
         str = "blurdiv";
         break;
-    case EDGEDIV:
+    case T_EDGEDIV:
         str = "edgediv";
         break;
-    case ROBUST:
+    case T_ROBUST:
         str = "robust";
         break;
-    case MSCALE:
+    case T_MSCALE:
         str = "multiscale";
         break;
     }
