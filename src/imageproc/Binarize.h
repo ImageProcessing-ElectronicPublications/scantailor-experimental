@@ -106,10 +106,12 @@ IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
  */
 IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
     GrayImage& wiener, BinaryImage const& niblack,
-    QSize const window_size);
+    QSize const window_size, double q = 0.6,
+    double p1 = 0.5, double p2 = 0.8);
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
     GrayImage const& src, QSize window_size,
-    double noise_sigma = 3.0, double k = 0.2, int delta = 0);
+    double noise_sigma = 3.0, double k = 0.2, int delta = 0,
+    double q = 0.6, double p1 = 0.5, double p2 = 0.8);
 
 /**
  * \brief Image binarization using Sauvola's local thresholding method.
@@ -159,10 +161,10 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
 IMAGEPROC_EXPORT float binarizeGradValue(
     GrayImage const& gray, GrayImage const& gmean);
 IMAGEPROC_EXPORT GrayImage binarizeGradMap(
-    GrayImage const& src, QSize window_size, double coef = 0.34);
+    GrayImage const& src, QSize window_size, double coef = 0.75);
 IMAGEPROC_EXPORT BinaryImage binarizeGrad(
     GrayImage const& src, QSize window_size,
-    double coef = 0.34, int delta = 0);
+    double coef = 0.75, int delta = 0);
 
 /**
  * \brief Image binarization using Singh's adaptive thresholding method.

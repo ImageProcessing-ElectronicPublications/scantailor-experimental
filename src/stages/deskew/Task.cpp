@@ -334,7 +334,8 @@ Task::processRotationDistortion(
                     transformed_crop_rect, OutsidePixels::assumeColor(Qt::white)
                 )
             );
-            BinaryImage bw_image(binarizeEdgeDiv(trim_image, QSize(15, 15), 0.5, 1.0, 0.0));
+            //BinaryImage bw_image(binarizeEdgeDiv(trim_image, QSize(15, 15), 0.5, 1.0, 0.0));
+            BinaryImage bw_image(binarizeGrad(trim_image, QSize(15, 15), 0.75, 0.0));
             trim_image = GrayImage();
             if (m_ptrDbg.get())
             {
