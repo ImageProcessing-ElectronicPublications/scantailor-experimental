@@ -78,6 +78,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgePlus"), T_EDGEPLUS);
     thresholdMethodSelector->addItem(tr("BlurDiv"), T_BLURDIV);
     thresholdMethodSelector->addItem(tr("EdgeDiv"), T_EDGEDIV);
+    thresholdMethodSelector->addItem(tr("EdgeAdapt"), T_EDGEADAPT);
     thresholdMethodSelector->addItem(tr("Robust"), T_ROBUST);
     thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
 

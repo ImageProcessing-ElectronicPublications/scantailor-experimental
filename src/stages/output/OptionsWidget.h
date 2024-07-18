@@ -72,7 +72,7 @@ private slots:
     void sqrCoefChanged(double value);
 
     void colorFilterGet();
-    
+
     void colorFilterChanged(int idx);
 
     void colorFilterSizeChanged(int value);

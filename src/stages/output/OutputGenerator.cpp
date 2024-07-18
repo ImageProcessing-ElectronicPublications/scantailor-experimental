@@ -1268,6 +1268,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, threshold_coef, threshold_delta);
             break;
         }
+        case T_EDGEADAPT:
+        {
+            binarized = binarizeEdgeDiv(gray, window_size, -1.0, threshold_coef, threshold_delta);
+            break;
+        }
         case T_ROBUST:
         {
             binarized = binarizeRobust(gray, window_size, threshold_coef, threshold_delta);

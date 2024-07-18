@@ -191,6 +191,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_EDGEDIV;
     }
+    else if (str == "edgeadapt")
+    {
+        return T_EDGEADAPT;
+    }
     else if (str == "robust")
     {
         return T_ROBUST;
@@ -252,6 +256,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_EDGEDIV:
         str = "edgediv";
+        break;
+    case T_EDGEADAPT:
+        str = "edgeadapt";
         break;
     case T_ROBUST:
         str = "robust";

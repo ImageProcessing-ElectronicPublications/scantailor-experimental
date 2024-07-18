@@ -1286,7 +1286,7 @@ GrayImage binarizeEdgeDivPrefilter(
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeBlurDivPrefilter: invalid window_size");
+        throw std::invalid_argument("binarizeeEdgeDivPrefilter: invalid window_size");
     }
 
     if (src.isNull())
@@ -1316,6 +1316,40 @@ GrayImage binarizeEdgeDivPrefilter(
     uint8_t* gmean_line = gmean.data();
     int const gmean_stride = gmean.stride();
 
+    double kepw = kep;
+    // Adapt mode
+    if (kep < 0.0)
+    {
+        kepw = 0.0;
+        double kepl = 0.0, kd = 0.0, kdl = 0.0, gdelta;
+        for (int y = 0; y < h; y++)
+        {
+            kdl = 0.0;
+            kepl = 0.0;
+            for (int x = 0; x < w; x++)
+            {
+                double const mean = gmean_line[x];
+                double const origin = gray_line[x];
+                gdelta = (origin < mean) ? (mean - origin) : (origin - mean);
+                kdl += gdelta;
+                kepl += (gdelta * gdelta);
+            }
+            kd += kdl;
+            kepw += kepl;
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
+        }
+        kepw = (kd > 0.0) ? (kepw / kd) : 0.0;
+        kepw /= 64.0;
+        kepw = 1.0 - kepw;
+        kepw = (kepw < 0.0) ? 0.0 : kepw;
+        kepw *= kbd;
+
+        gray_line = gray.data();
+        gmean_line = gmean.data();
+    }
+    // Adapt mode end
+
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
@@ -1323,7 +1357,7 @@ GrayImage binarizeEdgeDivPrefilter(
             float const mean = gmean_line[x];
             float const origin = gray_line[x];
             float retval = origin;
-            if (kep > 0.0)
+            if (kepw > 0.0)
             {
                 // EdgePlus
                 // edge = I / blur (shift = -0.5) {0.0 .. >1.0}, mean value = 0.5
@@ -1331,7 +1365,7 @@ GrayImage binarizeEdgeDivPrefilter(
                 // edgeplus = I * edge, mean value = 0.5 * mean(I)
                 float const edgeplus = origin * edge;
                 // return k * edgeplus + (1 - k) * I
-                retval = kep * edgeplus + (1.0 - kep) * origin;
+                retval = kepw * edgeplus + (1.0 - kepw) * origin;
             }
             if (kbd > 0.0)
             {
@@ -1360,7 +1394,7 @@ BinaryImage binarizeEdgeDiv(
 {
     if (window_size.isEmpty())
     {
-        throw std::invalid_argument("binarizeBlurDiv: invalid window_size");
+        throw std::invalid_argument("binarizeeEdgeDiv: invalid window_size");
     }
 
     if (src.isNull())

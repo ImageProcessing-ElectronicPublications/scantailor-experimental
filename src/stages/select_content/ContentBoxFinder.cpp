@@ -151,7 +151,7 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     //BinaryImage bw150(binarizeWolf(GrayImage(gray150), QSize(51, 51), 50));
     //BinaryImage bw150(binarizeEdgeDiv(GrayImage(gray150), QSize(51, 51), 0.5, 1.0, 0));
-    BinaryImage bw150(binarizeGatos(GrayImage(gray150), QSize(51, 51)));
+    BinaryImage bw150(binarizeEdgeDiv(GrayImage(gray150), QSize(51, 51), -1.0, 0.75, 0));
     if (dbg)
     {
         dbg->add(bw150, "bw150");
