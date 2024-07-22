@@ -361,8 +361,8 @@ TextLineSegmenter::findSkewAngleRad(
     GrayImage const& image, TaskStatus const& status, DebugImages* dbg)
 {
     //BinaryImage const binarized(binarizeGatos(image, QSize(9, 9), 3.0));
-    //BinaryImage const binarized(binarizeEdgeDiv(image, QSize(9, 9), 0.5, 1.0, 0));
-    BinaryImage const binarized(binarizeGrad(image, QSize(9, 9), 0.75, 0));
+    //BinaryImage const binarized(binarizeGrad(image, QSize(9, 9), 0.75, 0));
+    BinaryImage const binarized(binarizeEdgeDiv(image, QSize(9, 9), -1.0, 1.0, 0));
 
     status.throwIfCancelled();
 
