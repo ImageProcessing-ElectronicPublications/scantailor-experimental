@@ -60,22 +60,20 @@ GrayImage::accessor()
  * mean, w = 200
  */
 GrayImage grayMapMean(
-    GrayImage const& src, QSize const window_size)
+    GrayImage const& src, int const radius)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMapMean: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
+    }
+    if (radius < 1)
+    {
+        return gray;
     }
 
     int const w = src.width();
@@ -98,20 +96,15 @@ GrayImage grayMapMean(
         src_line += src_stride;
     }
 
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
     for (int y = 0; y < h; ++y)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+        int const top = ((y - radius) < 0) ? 0 : (y - radius);
+        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
         for (int x = 0; x < w; ++x)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const left = ((x - radius) < 0) ? 0 : (x - radius);
+            int const right = ((x + radius) < w) ? (x + radius) : w;
             int const area = (bottom - top) * (right - left);
             assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
 
@@ -135,22 +128,20 @@ GrayImage grayMapMean(
  * stdev, w = 200
  */
 GrayImage grayMapDeviation(
-    GrayImage const& src, QSize const window_size)
+    GrayImage const& src, int const radius)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMapDeviation: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
+    }
+    if (radius < 1)
+    {
+        return gray;
     }
 
     int const w = src.width();
@@ -179,22 +170,16 @@ GrayImage grayMapDeviation(
         src_line += src_stride;
     }
 
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
     double max_deviation = 0;
-
     for (int y = 0; y < h; ++y)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+        int const top = ((y - radius) < 0) ? 0 : (y - radius);
+        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
         for (int x = 0; x < w; ++x)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const left = ((x - radius) < 0) ? 0 : (x - radius);
+            int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
             int const area = (bottom - top) * (right - left);
             assert(area > 0); // because window_size > 0 and w > 0 and h > 0
 
@@ -220,27 +205,25 @@ GrayImage grayMapDeviation(
 } // grayMapDeviation
 
 GrayImage grayMapMax(
-    GrayImage const& src, QSize const window_size)
+    GrayImage const& src, int const radius)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMapMax: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
     GrayImage gmax = GrayImage(src);
     if (gmax.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -249,17 +232,12 @@ GrayImage grayMapMax(
     int const gray_stride = gray.stride();
     uint8_t* gmax_line = gmax.data();
 
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
     for (int y = 0; y < h; y++)
     {
         for (int x = 0; x < w; x++)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const left = ((x - radius) < 0) ? 0 : (x - radius);
+            int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
 
             uint8_t const origin = gray_line[x];
             uint8_t immax = origin;
@@ -281,8 +259,8 @@ GrayImage grayMapMax(
     gray_line = gray.data();
     for (int y = 0; y < h; y++)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+        int const top = ((y - radius) < 0) ? 0 : (y - radius);
+        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
         for (int x = 0; x < w; x++)
         {
@@ -307,32 +285,30 @@ GrayImage grayMapMax(
 }  // grayMapMax
 
 GrayImage grayMapContrast(
-    GrayImage const& src, QSize const window_size)
+    GrayImage const& src, int const radius)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMapContrast: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
     GrayImage gmax = GrayImage(src);
     if (gmax.isNull())
     {
-        return GrayImage();
+        return gray;
     }
     GrayImage gmin = GrayImage(src);
     if (gmin.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -342,17 +318,12 @@ GrayImage grayMapContrast(
     uint8_t* gmax_line = gmax.data();
     uint8_t* gmin_line = gmin.data();
 
-    int const window_lower_half = window_size.height() >> 1;
-    int const window_upper_half = window_size.height() - window_lower_half;
-    int const window_left_half = window_size.width() >> 1;
-    int const window_right_half = window_size.width() - window_left_half;
-
     for (int y = 0; y < h; y++)
     {
         for (int x = 0; x < w; x++)
         {
-            int const left = ((x - window_left_half) < 0) ? 0 : (x - window_left_half);
-            int const right = ((x + window_right_half) < w) ? (x + window_right_half) : w;
+            int const left = ((x - radius) < 0) ? 0 : (x - radius);
+            int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
 
             uint8_t const origin = gray_line[x];
             uint8_t immin = origin;
@@ -382,8 +353,8 @@ GrayImage grayMapContrast(
     gray_line = gray.data();
     for (int y = 0; y < h; y++)
     {
-        int const top = ((y - window_lower_half) < 0) ? 0 : (y - window_lower_half);
-        int const bottom = ((y + window_upper_half) < h) ? (y + window_upper_half) : h;
+        int const top = ((y - radius) < 0) ? 0 : (y - radius);
+        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
         for (int x = 0; x < w; x++)
         {
@@ -423,11 +394,11 @@ GrayImage grayKnnDenoiser(
         return GrayImage();
     }
 
-	GrayImage gray = GrayImage(src);
-	if (gray.isNull())
-	{
-		return GrayImage();
-	}
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
 
     if ((radius > 0) && (coef > 0.0))
     {
@@ -513,7 +484,7 @@ GrayImage grayKnnDenoiser(
             gray_line += gray_stride;
         }
     }
-	return gray;
+    return gray;
 
 } // grayKnnDenoiser
 

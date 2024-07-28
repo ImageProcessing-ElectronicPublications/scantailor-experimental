@@ -109,7 +109,7 @@ private slots:
 
     void bwThresholdChanged();
 
-    void thresholdWindowSizeChanged(int value);
+    void thresholdRadiusChanged(int value);
 
     void thresholdCoefChanged(double value);
 

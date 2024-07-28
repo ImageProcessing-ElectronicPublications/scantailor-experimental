@@ -242,8 +242,8 @@ OptionsWidget::OptionsWidget(
         this, SLOT(bwThresholdChanged())
     );
     connect(
-        thresholdWindowSize, SIGNAL(valueChanged(int)),
-        this, SLOT(thresholdWindowSizeChanged(int))
+        thresholdRadius, SIGNAL(valueChanged(int)),
+        this, SLOT(thresholdRadiusChanged(int))
     );
     connect(
         thresholdCoef, SIGNAL(valueChanged(double)),
@@ -791,10 +791,10 @@ OptionsWidget::dimmingColoredCoefChanged(double value)
 }
 
 void
-OptionsWidget::thresholdWindowSizeChanged(int value)
+OptionsWidget::thresholdRadiusChanged(int value)
 {
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setThresholdWindowSize(value);
+    black_white_options.setThresholdRadius(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -1156,17 +1156,17 @@ OptionsWidget::updateColorsDisplay()
         negateCB->setChecked(black_white_options.negate());
         dimmingColoredCoef->setValue(black_white_options.dimmingColoredCoef());
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
-        thresholdWindowSize->setValue(black_white_options.thresholdWindowSize());
+        thresholdRadius->setValue(black_white_options.thresholdRadius());
         thresholdCoef->setValue(black_white_options.thresholdCoef());
 
         if ((black_white_options.thresholdMethod() == T_OTSU) || (black_white_options.thresholdMethod() == T_MEANDELTA) || (black_white_options.thresholdMethod() == T_DOTS8))
         {
-            thresholdWindowSize->setEnabled( false );
+            thresholdRadius->setEnabled( false );
             thresholdCoef->setEnabled( false );
         }
         else
         {
-            thresholdWindowSize->setEnabled( true );
+            thresholdRadius->setEnabled( true );
             thresholdCoef->setEnabled( true );
         }
         if (mixed_options_visible)

@@ -1463,7 +1463,7 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
+        <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

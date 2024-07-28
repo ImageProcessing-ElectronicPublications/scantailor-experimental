@@ -1423,7 +1423,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
+        <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -106,9 +106,9 @@ TextLineTracer::trace(
 
     status.throwIfCancelled();
 
-    //downscaled_image = GrayImage(binarizeGatos(downscaled_image, QSize(21, 21), 3.0).toQImage());
-    //downscaled_image = GrayImage(binarizeEdgeDiv(downscaled_image, QSize(21, 21), -1.0, 1.0, 0).toQImage());
-    downscaled_image = GrayImage(binarizeGrad(downscaled_image, QSize(21, 21), 0.75, 0).toQImage());
+    //downscaled_image = GrayImage(binarizeGatos(downscaled_image, 10, 3.0).toQImage());
+    //downscaled_image = GrayImage(binarizeEdgeDiv(downscaled_image, 10, -1.0, 1.0, 0).toQImage());
+    downscaled_image = GrayImage(binarizeGrad(downscaled_image, 10, 0.75, 0).toQImage());
 
     status.throwIfCancelled();
 

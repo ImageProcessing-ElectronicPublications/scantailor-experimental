@@ -79,7 +79,8 @@ BinaryImage binarizeMokji(
     return BinaryImage(src, threshold);
 }
 
-BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
+BinaryImage binarizeUse(
+    GrayImage const& src, unsigned int const threshold)
 {
     if (src.isNull())
     {
@@ -113,8 +114,10 @@ BinaryImage binarizeUse(GrayImage const& src, unsigned int const threshold)
     return bw_img;
 }  // binarizeUse
 
-BinaryImage binarizeFromMap(GrayImage const& src, GrayImage const& threshold,
-                            unsigned char const lower_bound, unsigned char const upper_bound, int const delta)
+BinaryImage binarizeFromMap(
+    GrayImage const& src, GrayImage const& threshold,
+    unsigned char const lower_bound, unsigned char const upper_bound,
+    int const delta)
 {
     if (src.isNull() || threshold.isNull())
     {
@@ -444,34 +447,28 @@ BinaryImage binarizeDots(GrayImage const& src, int const delta)
  * niblack = mean - k * stderr, k = 0.2
  */
 GrayImage binarizeNiblackMap(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeNiblackMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
 
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
     if (gmean.isNull())
     {
         return GrayImage();
     }
-
-    GrayImage gdeviation = grayMapDeviation(src, window_size);
+    GrayImage gdeviation = grayMapDeviation(src, radius);
     if (gdeviation.isNull())
     {
         return GrayImage();
@@ -508,20 +505,15 @@ GrayImage binarizeNiblackMap(
 }
 
 BinaryImage binarizeNiblack(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeNiblack: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeNiblackMap(src, window_size, k));
+    GrayImage threshold_map(binarizeNiblackMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
@@ -529,25 +521,23 @@ BinaryImage binarizeNiblack(
 
 BinaryImage binarizeGatosCleaner(
     GrayImage& wiener, BinaryImage const& niblack,
-    QSize const window_size, double const q,
+    int const radius, double const q,
     double const p1, double const p2)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeGatosPostfilter: invalid window_size");
-    }
-
     if (wiener.isNull() || niblack.isNull())
+    {
+        return niblack;
+    }
+    if (radius < 1)
     {
         return niblack;
     }
 
     int const w = wiener.width();
     int const h = wiener.height();
-    int const wb = niblack.width();
-    int const hb = niblack.height();
+    unsigned int const ws = radius + radius + 1;
 
-    if ((w != wb) || (h != hb))
+    if ((w != niblack.width()) || (h != niblack.height()))
     {
         return niblack;
     }
@@ -560,11 +550,11 @@ BinaryImage binarizeGatosCleaner(
     uint8_t const* wiener_line = wiener.data();
     int const wiener_stride = wiener.stride();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
         niblack_bg_ii.beginRow();
         wiener_bg_ii.beginRow();
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             // bg: 1, fg: 0
             uint32_t const niblack_inverted_pixel =
@@ -580,9 +570,9 @@ BinaryImage binarizeGatosCleaner(
     }
 
     std::vector<QRect> windows;
-    for (int scale = 1;; ++scale)
+    for (int scale = 1;; scale++)
     {
-        windows.emplace_back(0, 0, window_size.width() * scale, window_size.height() * scale);
+        windows.emplace_back(0, 0, ws * scale, ws * scale);
         if (windows.back().width() > w*2 && windows.back().height() > h * 2)
         {
             // Such a window is enough to cover the whole image when centered
@@ -671,26 +661,18 @@ BinaryImage binarizeGatosCleaner(
 }
 
 BinaryImage binarizeGatos(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const noise_sigma, double const k, int const delta,
     double const q, double const p1, double const p2)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeGatos: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    int const w = src.width();
-    int const h = src.height();
-
-    GrayImage wiener(wienerFilter(src, QSize(5, 5), noise_sigma));
-    BinaryImage niblack(binarizeNiblack(wiener, window_size, k, delta));
-    BinaryImage bw_img(binarizeGatosCleaner(wiener, niblack, window_size, q, p1, p2));
+    GrayImage wiener(wienerFilter(src, 5, noise_sigma));
+    BinaryImage niblack(binarizeNiblack(wiener, radius, k, delta));
+    BinaryImage bw_img(binarizeGatosCleaner(wiener, niblack, radius, q, p1, p2));
 
     return bw_img;
 }
@@ -699,37 +681,31 @@ BinaryImage binarizeGatos(
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage binarizeSauvolaMap(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeSauvolaMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
-
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
-    if (gmean.isNull())
+    if (radius < 1)
     {
-        return GrayImage();
+        return gray;
     }
 
-    GrayImage gdeviation = grayMapDeviation(src, window_size);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
+    if (gmean.isNull())
+    {
+        return gray;
+    }
+    GrayImage gdeviation = grayMapDeviation(src, radius);
     if (gdeviation.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -764,20 +740,15 @@ GrayImage binarizeSauvolaMap(
 }
 
 BinaryImage binarizeSauvola(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeSauvola: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeSauvolaMap(src, window_size, k));
+    GrayImage threshold_map(binarizeSauvolaMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
@@ -787,37 +758,31 @@ BinaryImage binarizeSauvola(
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  */
 GrayImage binarizeWolfMap(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeWolfMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
-
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
-    if (gmean.isNull())
+    if (radius < 1)
     {
-        return GrayImage();
+        return gray;
     }
 
-    GrayImage gdeviation = grayMapDeviation(src, window_size);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
+    if (gmean.isNull())
+    {
+        return gray;
+    }
+    GrayImage gdeviation = grayMapDeviation(src, radius);
     if (gdeviation.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -870,21 +835,16 @@ GrayImage binarizeWolfMap(
 }
 
 BinaryImage binarizeWolf(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     unsigned char const lower_bound, unsigned char const upper_bound,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeWolf: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeWolfMap(src, window_size, k));
+    GrayImage threshold_map(binarizeWolfMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, lower_bound, upper_bound, delta));
 
     return bw_img;
@@ -894,31 +854,26 @@ BinaryImage binarizeWolf(
  * bradley = mean * (1.0 - k), k = 0.2
  */
 GrayImage binarizeBradleyMap(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeBradleyMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
 
-//    GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
     if (gmean.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -948,20 +903,15 @@ GrayImage binarizeBradleyMap(
 }  // binarizeBradleyMap
 
 BinaryImage binarizeBradley(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeBradley: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeBradleyMap(src, window_size, k));
+    GrayImage threshold_map(binarizeBradleyMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
@@ -1021,31 +971,26 @@ float binarizeGradValue(
 }
 
 GrayImage binarizeGradMap(
-    GrayImage const& src, QSize const window_size, double const coef)
+    GrayImage const& src, int const radius, double const coef)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeGradMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
 
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
     if (gmean.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     float const mean_grad = (1.0 - coef) * binarizeGradValue(gray, gmean);
@@ -1076,20 +1021,15 @@ GrayImage binarizeGradMap(
 }
 
 BinaryImage binarizeGrad(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const coef, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeGrad: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeGradMap(src, window_size, coef));
+    GrayImage threshold_map(binarizeGradMap(src, radius, coef));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
@@ -1099,37 +1039,31 @@ BinaryImage binarizeGrad(
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
 GrayImage binarizeSinghMap(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeSinghMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
-
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
-    if (gmean.isNull())
+    if (radius < 1)
     {
-        return GrayImage();
+        return gray;
     }
 
-    GrayImage graymm = grayMapContrast(src, window_size);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
+    if (gmean.isNull())
+    {
+        return gray;
+    }
+    GrayImage graymm = grayMapContrast(src, radius);
     if (graymm.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -1164,20 +1098,15 @@ GrayImage binarizeSinghMap(
 }  // binarizeSinghMap
 
 BinaryImage binarizeSingh(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeSingh: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeSinghMap(src, window_size, k));
+    GrayImage threshold_map(binarizeSinghMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
@@ -1187,43 +1116,36 @@ BinaryImage binarizeSingh(
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage binarizeWANMap(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeWANMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
 
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
     if (gmean.isNull())
     {
-        return GrayImage();
+        return gray;
     }
-
-    GrayImage gdeviation = grayMapDeviation(src, window_size);
+    GrayImage gdeviation = grayMapDeviation(src, radius);
     if (gdeviation.isNull())
     {
-        return GrayImage();
+        return gray;
     }
-
-    GrayImage gmax = grayMapMax(src, window_size);
+    GrayImage gmax = grayMapMax(src, radius);
     if (gmax.isNull())
     {
-        return GrayImage();
+        return gray;
     }
 
     int const w = src.width();
@@ -1261,49 +1183,39 @@ GrayImage binarizeWANMap(
 }
 
 BinaryImage binarizeWAN(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeWAN: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeWANMap(src, window_size, k));
+    GrayImage threshold_map(binarizeWANMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;
 }
 
 GrayImage binarizeEdgeDivPrefilter(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const kep, double const kbd)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeeEdgeDivPrefilter: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
 
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -1389,20 +1301,15 @@ GrayImage binarizeEdgeDivPrefilter(
 }  // binarizeEdgeDivPrefilter
 
 BinaryImage binarizeEdgeDiv(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const kep, double const kbd, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeeEdgeDiv: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage gray(binarizeEdgeDivPrefilter(src, window_size, kep, kbd));
+    GrayImage gray(binarizeEdgeDivPrefilter(src, radius, kep, kbd));
     BinaryImage bw_img(binarizeBiModal(gray, delta));
 
     return bw_img;
@@ -1411,31 +1318,26 @@ BinaryImage binarizeEdgeDiv(
 /*
  * Robust = 255.0 - (surround + 255.0) * sc / (surround + sc), k = 0.2
  * sc = surround - img
- * surround = blur(img, w), w = 15
+ * surround = blur(img, r), r = 10
  */
 GrayImage binarizeRobustPrefilter(
-    GrayImage const& src, QSize const window_size, double const k)
+    GrayImage const& src, int const radius, double const k)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeRobustPrefilter: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
     }
+    if (radius < 1)
+    {
+        return gray;
+    }
 
-    //GrayImage gmean = grayMapMean(src, window_size);
-    int rx = window_size.width() >> 1;
-    int ry = window_size.height() >> 1;
-    GrayImage gmean = gaussBlur(gray, rx, ry);
+    GrayImage gmean = gaussBlur(gray, radius, radius);
     if (gmean.isNull())
     {
         return GrayImage();
@@ -1474,42 +1376,35 @@ GrayImage binarizeRobustPrefilter(
 }
 
 BinaryImage binarizeRobust(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const k, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeRobust: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage gray(binarizeRobustPrefilter(src, window_size, k));
+    GrayImage gray(binarizeRobustPrefilter(src, radius, k));
     BinaryImage bw_img(binarizeBiModal(gray, delta));
 
     return bw_img;
 } // binarizeRobust
 
 GrayImage binarizeMScaleMap(
-    GrayImage const& src, QSize const window_size, double const coef)
+    GrayImage const& src, int const radius, double const coef)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMScaleMap: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
         return GrayImage();
+    }
+    if (radius < 1)
+    {
+        return gray;
     }
 
     int const w = src.width();
@@ -1519,13 +1414,12 @@ GrayImage binarizeMScaleMap(
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
 
-    unsigned int whcp, l, i, j, blsz, rsz, radius;
+    unsigned int whcp, l, i, j, blsz, rsz;
     double immean, kover, sensitivity, sensdiv, senspos, sensinv;
     unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
     unsigned int maskbl, maskover, tim, threshold = 0;
     unsigned long int idx;
 
-    radius = (window_size.height() + window_size.width()) >> 1;
     whcp = (h + w) >> 1;
     blsz = 1;
     while (blsz < whcp)
@@ -1657,20 +1551,15 @@ GrayImage binarizeMScaleMap(
 }  // binarizeMScaleMap
 
 BinaryImage binarizeMScale(
-    GrayImage const& src, QSize const window_size,
+    GrayImage const& src, int const radius,
     double const coef, int const delta)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("binarizeMScale: invalid window_size");
-    }
-
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeMScaleMap(src, window_size, coef));
+    GrayImage threshold_map(binarizeMScaleMap(src, radius, coef));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
 
     return bw_img;

@@ -1185,7 +1185,7 @@ Pentru determinarea ei rulați comenzile de procesare în bloc - &quot;Selectare
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
+        <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

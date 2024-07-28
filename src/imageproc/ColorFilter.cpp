@@ -193,21 +193,21 @@ void colorSqrFilterInPlace(
 }
 
 GrayImage wienerFilter(
-    GrayImage const& image, QSize const& window_size, float const noise_sigma)
+    GrayImage const& image, int const radius, float const noise_sigma)
 {
     GrayImage dst(image);
-    wienerFilterInPlace(dst, window_size, noise_sigma);
+    wienerFilterInPlace(dst, radius, noise_sigma);
     return dst;
 }
 
 void wienerFilterInPlace(
-    GrayImage& image, QSize const& window_size, float const noise_sigma)
+    GrayImage& image, int const radius, float const noise_sigma)
 {
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("wienerFilter: empty window_size");
-    }
     if (image.isNull())
+    {
+        return;
+    }
+    if (radius < 1)
     {
         return;
     }
@@ -221,10 +221,7 @@ void wienerFilterInPlace(
         uint8_t* image_line = image.data();
         int const image_stride = image.stride();
 
-        //GrayImage gmean = grayMapMean(image, window_size);
-        int rx = window_size.width() >> 1;
-        int ry = window_size.height() >> 1;
-        GrayImage gmean = gaussBlur(image, rx, ry);
+        GrayImage gmean = gaussBlur(image, radius, radius);
         if (gmean.isNull())
         {
             return;
@@ -233,7 +230,7 @@ void wienerFilterInPlace(
         uint8_t* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
-        GrayImage gdeviation = grayMapDeviation(image, window_size);
+        GrayImage gdeviation = grayMapDeviation(image, radius);
         if (gdeviation.isNull())
         {
             return;
@@ -284,11 +281,9 @@ void wienerColorFilterInPlace(
     {
         return;
     }
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
+    if (f_size < 1)
     {
-        throw std::invalid_argument("wienerFilter: empty window_size");
+        return;
     }
 
     if (coef > 0.0f)
@@ -305,7 +300,7 @@ void wienerColorFilterInPlace(
             return;
         }
 
-        GrayImage wiener(wienerFilter(gray, window_size, 255.0f * coef));
+        GrayImage wiener(wienerFilter(gray, f_size, 255.0f * coef));
         if (wiener.isNull())
         {
             return;
@@ -326,11 +321,13 @@ QImage autoLevelFilter(
 void autoLevelFilterInPlace(
     QImage& image, int const f_size, float const coef)
 {
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
+    if (image.isNull())
     {
-        throw std::invalid_argument("autoLevelFilter: empty window_size");
+        return;
+    }
+    if (f_size < 1)
+    {
+        return;
     }
 
     if (coef != 0.0f)
@@ -350,10 +347,7 @@ void autoLevelFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        //GrayImage gmean = grayMapMean(gray, window_size);
-        int rx = window_size.width() >> 1;
-        int ry = window_size.height() >> 1;
-        GrayImage gmean = gaussBlur(gray, rx, ry);
+        GrayImage gmean = gaussBlur(gray, f_size, f_size);
         if (gmean.isNull())
         {
             return;
@@ -1141,11 +1135,13 @@ QImage edgedivFilter(
 void edgedivFilterInPlace(
     QImage& image, int const f_size, float const coef)
 {
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
+    if (image.isNull())
     {
-        throw std::invalid_argument("edgedivFilter: empty window_size");
+        return;
+    }
+    if (f_size < 1)
+    {
+        return;
     }
 
     if (coef != 0.0f)
@@ -1162,7 +1158,7 @@ void edgedivFilterInPlace(
             return;
         }
 
-        GrayImage gmean(binarizeEdgeDivPrefilter(gray, window_size, coef, coef));
+        GrayImage gmean(binarizeEdgeDivPrefilter(gray, f_size, coef, coef));
         if (gmean.isNull())
         {
             return;

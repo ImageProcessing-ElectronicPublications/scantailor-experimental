@@ -41,14 +41,14 @@ static void imageReLevel(
  * @return The filtered image.
  */
 IMAGEPROC_EXPORT GrayImage wienerFilter(
-    GrayImage const& image, QSize const& window_size, float noise_sigma);
+    GrayImage const& image, int radius = 100, float noise_sigma = 0.01f);
 
 /**
  * @brief An in-place version of wienerFilter().
  * @see wienerFilter()
  */
 IMAGEPROC_EXPORT void wienerFilterInPlace(
-    GrayImage& image, QSize const& window_size, float noise_sigma);
+    GrayImage& image, int radius = 100, float noise_sigma = 0.01f);
 
 /**
  * @brief S-curve.

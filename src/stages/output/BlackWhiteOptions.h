@@ -82,13 +82,13 @@ public:
         m_thresholdAdjustment = val;
     }
 
-    int thresholdWindowSize() const
+    int thresholdRadius() const
     {
-        return m_thresholdWindowSize;
+        return m_thresholdRadius;
     }
-    void setThresholdWindowSize(int val)
+    void setThresholdRadius(int val)
     {
-        m_thresholdWindowSize = val;
+        m_thresholdRadius = val;
     }
 
     double thresholdCoef() const
@@ -127,7 +127,7 @@ private:
     bool m_negate;
     double m_dimmingColoredCoef;
     int m_thresholdAdjustment;
-    int m_thresholdWindowSize;
+    int m_thresholdRadius;
     double m_thresholdCoef;
     double m_autoPictureCoef;
     bool m_autoPictureOff;

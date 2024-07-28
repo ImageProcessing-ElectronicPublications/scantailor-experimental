@@ -1297,7 +1297,7 @@ Da bi to odredili, pokrenite skupne obrade u &quot;Odredi sadržaja&quot; ili &q
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
+        <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -1186,7 +1186,7 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         ThresholdFilter const threshold_method = black_white_options.thresholdMethod();
 
         int const threshold_delta = (black_white_options.negate()) ? -black_white_options.thresholdAdjustment() : black_white_options.thresholdAdjustment();
-        QSize const window_size = QSize(black_white_options.thresholdWindowSize(), black_white_options.thresholdWindowSize());
+        int const radius = black_white_options.thresholdRadius();
         double const threshold_coef = black_white_options.thresholdCoef();
 
         GrayImage gray = GrayImage(image);
@@ -1215,72 +1215,72 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         }
         case T_NIBLACK:
         {
-            binarized = binarizeNiblack(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeNiblack(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_GATOS:
         {
-            binarized = binarizeGatos(gray, window_size, 3.0, threshold_coef, threshold_delta);
+            binarized = binarizeGatos(gray, radius, 3.0, threshold_coef, threshold_delta);
             break;
         }
         case T_SAUVOLA:
         {
-            binarized = binarizeSauvola(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeSauvola(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_WOLF:
         {
-            binarized = binarizeWolf(gray, window_size, 1, 254, threshold_coef, threshold_delta);
+            binarized = binarizeWolf(gray, radius, 1, 254, threshold_coef, threshold_delta);
             break;
         }
         case T_BRADLEY:
         {
-            binarized = binarizeBradley(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeBradley(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_GRAD:
         {
-            binarized = binarizeGrad(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeGrad(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_SINGH:
         {
-            binarized = binarizeSingh(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeSingh(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_WAN:
         {
-            binarized = binarizeWAN(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeWAN(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_EDGEPLUS:
         {
-            binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, 0.0, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, radius, threshold_coef, 0.0, threshold_delta);
             break;
         }
         case T_BLURDIV:
         {
-            binarized = binarizeEdgeDiv(gray, window_size, 0.0, threshold_coef, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, radius, 0.0, threshold_coef, threshold_delta);
             break;
         }
         case T_EDGEDIV:
         {
-            binarized = binarizeEdgeDiv(gray, window_size, threshold_coef, threshold_coef, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, radius, threshold_coef, threshold_coef, threshold_delta);
             break;
         }
         case T_EDGEADAPT:
         {
-            binarized = binarizeEdgeDiv(gray, window_size, -1.0, threshold_coef, threshold_delta);
+            binarized = binarizeEdgeDiv(gray, radius, -1.0, threshold_coef, threshold_delta);
             break;
         }
         case T_ROBUST:
         {
-            binarized = binarizeRobust(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeRobust(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         case T_MSCALE:
         {
-            binarized = binarizeMScale(gray, window_size, threshold_coef, threshold_delta);
+            binarized = binarizeMScale(gray, radius, threshold_coef, threshold_delta);
             break;
         }
         }

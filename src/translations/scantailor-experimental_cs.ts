@@ -1408,7 +1408,7 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
+        <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

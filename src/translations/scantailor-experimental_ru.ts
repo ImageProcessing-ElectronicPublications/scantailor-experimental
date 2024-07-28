@@ -1569,8 +1569,8 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
-        <translation> - окно, коэф.:</translation>
+        <source> - radius, coef.:</source>
+        <translation> - радиус, коэф.:</translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="694"/>

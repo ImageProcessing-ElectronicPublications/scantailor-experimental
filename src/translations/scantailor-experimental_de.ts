@@ -1492,7 +1492,7 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - w.size, coef.:</source>
+        <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

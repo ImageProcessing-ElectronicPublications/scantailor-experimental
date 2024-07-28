@@ -91,9 +91,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeDots(
   * \see Help -> About -> References -> [9]
   */
 IMAGEPROC_EXPORT GrayImage binarizeNiblackMap(
-    GrayImage const& src, QSize window_size, double k = 0.20);
+    GrayImage const& src, int radius = 100, double k = 0.20);
 IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     double k = 0.20, int delta = 0);
 
 /**
@@ -106,10 +106,10 @@ IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
  */
 IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
     GrayImage& wiener, BinaryImage const& niblack,
-    QSize const window_size, double q = 0.6,
+    int radius = 100, double q = 0.6,
     double p1 = 0.5, double p2 = 0.8);
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     double noise_sigma = 3.0, double k = 0.2, int delta = 0,
     double q = 0.6, double p1 = 0.5, double p2 = 0.8);
 
@@ -119,9 +119,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatos(
  * \see Help -> About -> References -> [11]
  */
 IMAGEPROC_EXPORT GrayImage binarizeSauvolaMap(
-    GrayImage const& src, QSize window_size, double k = 0.34);
+    GrayImage const& src, int radius = 100, double k = 0.34);
 IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     double k = 0.34, int delta = 0);
 
 /**
@@ -130,14 +130,14 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
  * \see Help -> About -> References -> [12]
  *
  * \param src The image to binarize.
- * \param window_size The dimensions of a pixel neighborhood to consider.
+ * \param radius The dimensions of a pixel neighborhood to consider.
  * \param lower_bound The minimum possible gray level that can be made white.
  * \param upper_bound The maximum possible gray level that can be made black.
  */
 IMAGEPROC_EXPORT GrayImage binarizeWolfMap(
-    GrayImage const& src, QSize window_size, double k = 0.30);
+    GrayImage const& src, int radius = 100, double k = 0.30);
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     unsigned char lower_bound = 1, unsigned char upper_bound = 254,
     double k = 0.30, int delta = 0);
 
@@ -148,9 +148,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
  * http://www.scs.carleton.ca/~roth/iit-publications-iti/docs/gerh-50002.pdf
  */
 IMAGEPROC_EXPORT GrayImage binarizeBradleyMap(
-    GrayImage const& src, QSize window_size, double k = 0.2);
+    GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeBradley(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     double k = 0.2, int delta = 0);
 
 /**
@@ -161,9 +161,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
 IMAGEPROC_EXPORT float binarizeGradValue(
     GrayImage const& gray, GrayImage const& gmean);
 IMAGEPROC_EXPORT GrayImage binarizeGradMap(
-    GrayImage const& src, QSize window_size, double coef = 0.75);
+    GrayImage const& src, int radius = 10, double coef = 0.75);
 IMAGEPROC_EXPORT BinaryImage binarizeGrad(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 10,
     double coef = 0.75, int delta = 0);
 
 /**
@@ -175,9 +175,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeGrad(
  * https://research.ijcaonline.org/volume51/number6/pxc3881362.pdf
  */
 IMAGEPROC_EXPORT GrayImage binarizeSinghMap(
-    GrayImage const& src, QSize window_size, double k = 0.2);
+    GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeSingh(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     double k = 0.2, int delta = 0);
 
 /**
@@ -188,9 +188,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeSingh(
  * https://www.researchgate.net/publication/326026836_Binarization_of_Document_Image_Using_Optimum_Threshold_Modification
  */
 IMAGEPROC_EXPORT GrayImage binarizeWANMap(
-    GrayImage const& src, QSize window_size, double k = 0.2);
+    GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeWAN(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 100,
     double k = 0.2, int delta = 0);
 
 /**
@@ -199,10 +199,10 @@ IMAGEPROC_EXPORT BinaryImage binarizeWAN(
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
  */
 IMAGEPROC_EXPORT GrayImage binarizeEdgeDivPrefilter(
-    GrayImage const& src, QSize const window_size,
-    double const kep, double const kbd);
+    GrayImage const& src, int radius = 10,
+    double kep = 0.5, double kdb = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 10,
     double kep = 0.5, double kdb = 0.5, int delta = 0);
 
 /**
@@ -213,9 +213,9 @@ IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
  * https://www.researchgate.net/publication/226333284_Robust_document_binarization_with_OFF_center-surround_cells
  */
 IMAGEPROC_EXPORT GrayImage binarizeRobustPrefilter(
-    GrayImage const& src, QSize window_size, double k = 0.2);
+    GrayImage const& src, int radius = 10, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeRobust(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 10,
     double k = 0.2, int delta = 0);
 
 /**
@@ -224,10 +224,10 @@ IMAGEPROC_EXPORT BinaryImage binarizeRobust(
  * MultiScale thresholding method.
  */
 IMAGEPROC_EXPORT GrayImage binarizeMScaleMap(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 10,
     double coef = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeMScale(
-    GrayImage const& src, QSize window_size,
+    GrayImage const& src, int radius = 10,
     double coef = 0.5, int delta = 0);
 
 } // namespace imageproc
