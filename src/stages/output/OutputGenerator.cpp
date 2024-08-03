@@ -398,7 +398,7 @@ OutputGenerator::process(
         // For background estimation we need a downscaled image of about 200x300 pixels.
         // We can't just downscale transformed_image, as this background estimation we
         // need to set outside pixels to black.
-        qreal const downscale_factor = 300.0 / std::max<int>(
+        double const downscale_factor = 300.0 / std::max<int>(
                                            300, std::max(m_outRect.width(), m_outRect.height())
                                        );
         auto downscaled_transform = m_ptrImageTransform->clone();

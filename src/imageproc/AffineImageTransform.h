@@ -88,11 +88,11 @@ public:
      */
     void translateSoThatPointBecomes(QPointF const& transformed_pt, QPointF const& target_pos);
 
-    virtual QTransform scale(qreal xscale, qreal yscale);
+    virtual QTransform scale(double xscale, double yscale);
 
     void scaleTo(QSizeF const& size, Qt::AspectRatioMode mode);
 
-    void rotate(qreal degrees);
+    void rotate(double degrees);
 
     /**
      * Returns a version of this transformation modified by a client-provided

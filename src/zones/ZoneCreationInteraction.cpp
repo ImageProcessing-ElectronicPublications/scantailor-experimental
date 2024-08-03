@@ -317,8 +317,8 @@ ZoneCreationInteraction::onMouseMoveEvent(QMouseEvent* event, InteractionState& 
         screen_mouse_pos_mid2.setX(screen_mouse_pos.x());
         screen_mouse_pos_mid2.setY(first.y());
 
-        qreal dx = screen_mouse_pos.x() - first.x();
-        qreal dy = screen_mouse_pos.y() - first.y();
+        double dx = screen_mouse_pos.x() - first.x();
+        double dy = screen_mouse_pos.y() - first.y();
 
         if (((dx > 0) && (dy > 0)) || ((dx < 0) && (dy < 0)))
         {

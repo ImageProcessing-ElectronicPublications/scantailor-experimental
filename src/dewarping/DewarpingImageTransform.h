@@ -84,7 +84,7 @@ public:
 
     virtual QPolygonF transformedCropArea() const;
 
-    virtual QTransform scale(qreal xscale, qreal yscale);
+    virtual QTransform scale(double xscale, double yscale);
 
     virtual imageproc::AffineTransformedImage toAffine(
         QImage const& image, QColor const& outside_color,
@@ -132,8 +132,8 @@ private:
      * scale factors will be a bit off in a way that RoundingHasher (used in transform
      * fingerprint calculation) won't be able to compensate.
      */
-    qreal m_intrinsicScaleX;
-    qreal m_intrinsicScaleY;
+    double m_intrinsicScaleX;
+    double m_intrinsicScaleY;
 
     /**
      * Additional post-scaling is the result of client code calling scale().
@@ -141,8 +141,8 @@ private:
      * do participate in transform fingerprint calculation, while m_intrinsicScale[XY]
      * don't.
      */
-    qreal m_userScaleX;
-    qreal m_userScaleY;
+    double m_userScaleX;
+    double m_userScaleY;
 };
 
 } // namespace dewarping

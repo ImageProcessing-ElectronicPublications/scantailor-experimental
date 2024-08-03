@@ -1192,7 +1192,7 @@ std::list<std::vector<QPointF>>
             --path_it;
             if (node->label == 1)
             {
-                trimmed_path.emplace_back(qreal(path_it->x), qreal(path_it->y));
+                trimmed_path.emplace_back((double)(path_it->x), (double)(path_it->y));
                 if (dbg)
                 {
                     cmap(path_it->x, path_it->y) = path_idx + 1;

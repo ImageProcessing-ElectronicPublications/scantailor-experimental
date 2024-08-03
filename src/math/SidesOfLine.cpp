@@ -18,12 +18,12 @@
 
 #include "SidesOfLine.h"
 
-qreal sidesOfLine(QLineF const& line, QPointF const& p1, QPointF const& p2)
+double sidesOfLine(QLineF const& line, QPointF const& p1, QPointF const& p2)
 {
     QPointF const normal(line.normalVector().p2() - line.p1());
     QPointF const vec1(p1 - line.p1());
     QPointF const vec2(p2 - line.p1());
-    qreal const dot1 = normal.x() * vec1.x() + normal.y() * vec1.y();
-    qreal const dot2 = normal.x() * vec2.x() + normal.y() * vec2.y();
+    double const dot1 = normal.x() * vec1.x() + normal.y() * vec1.y();
+    double const dot2 = normal.x() * vec2.x() + normal.y() * vec2.y();
     return dot1 * dot2;
 }

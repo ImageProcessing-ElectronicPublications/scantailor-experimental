@@ -39,12 +39,12 @@ Utils::calcSoftMarginsPx(
         return QMarginsF();
     }
 
-    qreal top = 0.0;
-    qreal bottom = 0.0;
-    qreal left = 0.0;
-    qreal right = 0.0;
+    double top = 0.0;
+    double bottom = 0.0;
+    double left = 0.0;
+    double right = 0.0;
 
-    qreal const delta_width = aggregate_hard_size_px.width() - hard_size_px.width();
+    double const delta_width = aggregate_hard_size_px.width() - hard_size_px.width();
     if (delta_width > 0.0)
     {
         switch (alignment.horizontal())
@@ -61,7 +61,7 @@ Utils::calcSoftMarginsPx(
         }
     }
 
-    qreal const delta_height = aggregate_hard_size_px.height() - hard_size_px.height();
+    double const delta_height = aggregate_hard_size_px.height() - hard_size_px.height();
     if (delta_height > 0.0)
     {
         switch (alignment.vertical())

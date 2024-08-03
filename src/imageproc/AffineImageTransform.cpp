@@ -97,7 +97,7 @@ AffineImageTransform::translateSoThatPointBecomes(
 }
 
 QTransform
-AffineImageTransform::scale(qreal xscale, qreal yscale)
+AffineImageTransform::scale(double xscale, double yscale)
 {
     QTransform scaling_transform;
     scaling_transform.scale(xscale, yscale);
@@ -122,7 +122,7 @@ AffineImageTransform::scaleTo(QSizeF const& size, Qt::AspectRatioMode mode)
 }
 
 void
-AffineImageTransform::rotate(qreal degrees)
+AffineImageTransform::rotate(double degrees)
 {
     m_transform *= QTransform().rotate(degrees);
 }

@@ -244,8 +244,8 @@ void
 ImageView::cornerMoveRequest(int edge_mask, QPointF const& pos)
 {
     QRectF r(virtualToWidget().mapRect(m_contentRect));
-    qreal const minw = m_minBoxSize.width();
-    qreal const minh = m_minBoxSize.height();
+    double const minw = m_minBoxSize.width();
+    double const minh = m_minBoxSize.height();
 
     if (edge_mask & TOP)
     {
@@ -310,8 +310,8 @@ ImageView::dragFinished()
 void
 ImageView::forceInsideImage(QRectF& widget_rect, int const edge_mask) const
 {
-    qreal const minw = m_minBoxSize.width();
-    qreal const minh = m_minBoxSize.height();
+    double const minw = m_minBoxSize.width();
+    double const minh = m_minBoxSize.height();
     QRectF const image_rect(getOccupiedWidgetRect());
 
     if ((edge_mask & LEFT) && widget_rect.left() < image_rect.left())

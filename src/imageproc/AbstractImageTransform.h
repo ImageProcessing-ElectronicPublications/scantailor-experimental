@@ -82,7 +82,7 @@ public:
      * a QTransform that maps points in transformed space before scaling
      * to corresponding points after scaling.
      */
-    virtual QTransform scale(qreal xscale, qreal yscale) = 0;
+    virtual QTransform scale(double xscale, double yscale) = 0;
 
     /**
      * If the concrete class implementing this interface is AffineImageTransform,

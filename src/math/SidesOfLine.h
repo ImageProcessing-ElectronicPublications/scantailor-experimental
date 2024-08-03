@@ -36,6 +36,6 @@
  *       not a line segment.  If the line is really a point, zero will
  *       always be returned.
  */
-MATH_EXPORT qreal sidesOfLine(QLineF const& line, QPointF const& p1, QPointF const& p2);
+MATH_EXPORT double sidesOfLine(QLineF const& line, QPointF const& p1, QPointF const& p2);
 
 #endif

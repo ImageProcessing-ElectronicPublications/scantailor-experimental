@@ -75,8 +75,8 @@ static QSizeF calcSrcUnitSize(QTransform const& xform, QSizeF const& min)
 
     QSizeF const min32(min * 32.0);
     return QSizeF(
-               std::max(min32.width(), qreal(width)),
-               std::max(min32.height(), qreal(height))
+               std::max(min32.width(), double(width)),
+               std::max(min32.height(), double(height))
            );
 }
 

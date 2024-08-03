@@ -382,8 +382,8 @@ VertLineFinder::LineGroup::belongsHere(QualityLine const& line) const
 void
 VertLineFinder::LineGroup::add(QualityLine const& line)
 {
-    m_left = std::min(qreal(m_left), line.left().x());
-    m_right = std::max(qreal(m_right), line.right().x());
+    m_left = std::min(double(m_left), line.left().x());
+    m_right = std::max(double(m_right), line.right().x());
     if (line.quality() > m_leader.quality())
     {
         m_leader = line;

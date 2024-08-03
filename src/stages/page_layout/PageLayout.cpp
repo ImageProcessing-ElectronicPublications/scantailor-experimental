@@ -50,12 +50,12 @@ PageLayout::PageLayout(
         // aggregate_size = content_size * scale + margins * width * scale
         // Solving for scale:
         // scale = aggregate_size / (content_size + margins * width)
-        qreal const pagewidthx = m_innerRect.width();
-        qreal const pagewidthy = m_innerRect.height() * 0.7071067811865475244;
-        qreal const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
-        qreal const x_scale = aggregate_hard_size.width() /
+        double const pagewidthx = m_innerRect.width();
+        double const pagewidthy = m_innerRect.height() * 0.7071067811865475244;
+        double const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
+        double const x_scale = aggregate_hard_size.width() /
                               (m_innerRect.width() + (margins.left() + margins.right()) * pagewidth);
-        qreal const y_scale = aggregate_hard_size.height() /
+        double const y_scale = aggregate_hard_size.height() /
                               (m_innerRect.height() + (margins.top() + margins.bottom()) * pagewidth);
 
         if (x_scale > 1.0 && y_scale > 1.0)

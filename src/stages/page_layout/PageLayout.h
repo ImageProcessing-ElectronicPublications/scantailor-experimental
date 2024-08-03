@@ -75,7 +75,7 @@ private:
     QRectF m_outerRect;
 
     /** Scaling applied as a result of MatchSizeMode::SCALE. */
-    qreal m_scaleFactor;
+    double m_scaleFactor;
 };
 
 } // namespace page_layout

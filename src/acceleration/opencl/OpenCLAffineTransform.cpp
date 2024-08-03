@@ -105,21 +105,21 @@ QSizeF calcSrcUnitSize(QTransform const& xform, QSizeF const& min)
 
     QPolygonF const src_poly(xform.map(dst_poly));
 
-    qreal left = src_poly[0].x();
-    qreal right = left;
-    qreal top = src_poly[0].y();
-    qreal bottom = top;
+    double left = src_poly[0].x();
+    double right = left;
+    double top = src_poly[0].y();
+    double bottom = top;
     for (int i = 1; i < 4; ++i)
     {
-        left = std::min<qreal>(left, src_poly[i].x());
-        right = std::max<qreal>(right, src_poly[i].x());
-        top = std::min<qreal>(top, src_poly[i].y());
-        bottom = std::max<qreal>(bottom, src_poly[i].y());
+        left = std::min<double>(left, src_poly[i].x());
+        right = std::max<double>(right, src_poly[i].x());
+        top = std::min<double>(top, src_poly[i].y());
+        bottom = std::max<double>(bottom, src_poly[i].y());
     }
 
     return QSizeF(
-               std::max<qreal>(min.width(), right - left),
-               std::max<qreal>(min.height(), bottom - top)
+               std::max<double>(min.width(), right - left),
+               std::max<double>(min.height(), bottom - top)
            );
 }
 

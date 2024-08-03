@@ -426,10 +426,10 @@ ImageView::innerRectDragContinuation(int edge_mask, QPointF const& mouse_pos)
     // on screen so that the object being dragged is still under mouse.
 
     QPointF const delta(mouse_pos - m_beforeResizing.mousePos);
-    qreal left_adjust = 0;
-    qreal right_adjust = 0;
-    qreal top_adjust = 0;
-    qreal bottom_adjust = 0;
+    double left_adjust = 0;
+    double right_adjust = 0;
+    double top_adjust = 0;
+    double bottom_adjust = 0;
 
     if (edge_mask & LEFT)
     {
@@ -471,8 +471,8 @@ ImageView::innerRectDragContinuation(int edge_mask, QPointF const& mouse_pos)
     forceNonNegativeHardMargins(m_middleRect);
     widget_rect = m_beforeResizing.virtToWidget.mapRect(m_middleRect);
 
-    qreal effective_dx = 0;
-    qreal effective_dy = 0;
+    double effective_dx = 0;
+    double effective_dy = 0;
 
     QRectF const& old_widget_rect = m_beforeResizing.middleWidgetRect;
     if (edge_mask & LEFT)
@@ -513,10 +513,10 @@ void
 ImageView::middleRectDragContinuation(int const edge_mask, QPointF const& mouse_pos)
 {
     QPointF const delta(mouse_pos - m_beforeResizing.mousePos);
-    qreal left_adjust = 0;
-    qreal right_adjust = 0;
-    qreal top_adjust = 0;
-    qreal bottom_adjust = 0;
+    double left_adjust = 0;
+    double right_adjust = 0;
+    double top_adjust = 0;
+    double bottom_adjust = 0;
 
     QRectF const bounds(maxViewportRect());
     QRectF const old_middle_rect(m_beforeResizing.middleWidgetRect);
@@ -696,10 +696,10 @@ ImageView::forceNonNegativeHardMargins(QRectF& middle_rect) const
 RelativeMargins
 ImageView::calcHardMargins() const
 {
-    qreal pagewidth = m_innerRect.width();
-    qreal pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
+    double pagewidth = m_innerRect.width();
+    double pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
     pagewidth = (pagewidth < pagewidthheight) ? pagewidthheight : pagewidth;
-    qreal const scale = 1.0 / pagewidth;
+    double const scale = 1.0 / pagewidth;
     return RelativeMargins(
                (m_innerRect.left() - m_middleRect.left()) * scale,
                (m_innerRect.top() - m_middleRect.top()) * scale,

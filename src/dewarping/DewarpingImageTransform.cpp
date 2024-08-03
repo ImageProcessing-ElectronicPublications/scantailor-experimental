@@ -184,7 +184,7 @@ DewarpingImageTransform::transformedCropArea() const
 }
 
 QTransform
-DewarpingImageTransform::scale(qreal xscale, qreal yscale)
+DewarpingImageTransform::scale(double xscale, double yscale)
 {
     m_userScaleX *= xscale;
     m_userScaleY *= yscale;
@@ -286,8 +286,8 @@ DewarpingImageTransform::backwardMapper() const
 {
     auto dewarper(std::make_shared<CylindricalSurfaceDewarper>(m_dewarper));
     QTransform pre_transform;
-    qreal const xscale = m_intrinsicScaleX * m_userScaleX;
-    qreal const yscale = m_intrinsicScaleY * m_userScaleY;
+    double const xscale = m_intrinsicScaleX * m_userScaleX;
+    double const yscale = m_intrinsicScaleY * m_userScaleY;
     pre_transform.scale(1.0 / xscale, 1.0 / yscale);
 
     return [=](QPointF const& pt)
@@ -299,8 +299,8 @@ DewarpingImageTransform::backwardMapper() const
 QPointF
 DewarpingImageTransform::postScale(QPointF const& pt) const
 {
-    qreal const xscale = m_intrinsicScaleX * m_userScaleX;
-    qreal const yscale = m_intrinsicScaleY * m_userScaleY;
+    double const xscale = m_intrinsicScaleX * m_userScaleX;
+    double const yscale = m_intrinsicScaleY * m_userScaleY;
     return QPointF(pt.x() * xscale, pt.y() * yscale);
 }
 

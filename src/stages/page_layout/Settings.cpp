@@ -787,7 +787,7 @@ Settings::Impl::getAggregateHardSize(
         return QSizeF(0.0, 0.0);
     }
 
-    qreal width = 0.0;
+    double width = 0.0;
 
     {
         DescWidthOrder::iterator it(m_descWidthOrder.begin());
@@ -802,11 +802,11 @@ Settings::Impl::getAggregateHardSize(
         }
         else
         {
-            width = std::max(influence_hard_size.width(), qreal(it->influenceHardWidth()));
+            width = std::max(influence_hard_size.width(), double(it->influenceHardWidth()));
         }
     }
 
-    qreal height = 0.0;
+    double height = 0.0;
 
     {
         DescHeightOrder::iterator it(m_descHeightOrder.begin());
@@ -821,7 +821,7 @@ Settings::Impl::getAggregateHardSize(
         }
         else
         {
-            height = std::max(influence_hard_size.height(), qreal(it->influenceHardHeight()));
+            height = std::max(influence_hard_size.height(), double(it->influenceHardHeight()));
         }
     }
 

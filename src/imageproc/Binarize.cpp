@@ -1429,7 +1429,7 @@ GrayImage binarizeMScaleMap(
     }
     blsz >>= 1;
     rsz = 1;
-    while ((rsz < radius) && (level > 1))
+    while (((int)rsz < radius) && (level > 1))
     {
         level--;
         rsz <<= 1;

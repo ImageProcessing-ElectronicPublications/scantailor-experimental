@@ -168,7 +168,7 @@ RelinkingListView::drawStatusLayer(QPainter* painter)
         {
             if (group.status == status)
             {
-                qreal const radius = 0.5 * group.rect.width();
+                double const radius = 0.5 * group.rect.width();
                 QRectF rect(group.rect);
                 rect.adjust(pen.widthF(), pen.widthF(), -pen.widthF(), -pen.widthF());
                 painter->drawRoundedRect(rect, radius, radius);

@@ -44,8 +44,8 @@ public:
     {
         QRectF const lhs_bbox(lhs.spline()->toPolygon().boundingRect());
         QRectF const rhs_bbox(rhs.spline()->toPolygon().boundingRect());
-        qreal const lhs_area = lhs_bbox.width() * lhs_bbox.height();
-        qreal const rhs_area = rhs_bbox.width() * rhs_bbox.height();
+        double const lhs_area = lhs_bbox.width() * lhs_bbox.height();
+        double const rhs_area = rhs_bbox.width() * rhs_bbox.height();
         return lhs_area < rhs_area;
     }
 };
