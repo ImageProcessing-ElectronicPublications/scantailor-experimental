@@ -105,7 +105,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
  * \see Help -> About -> References -> [10]
  */
 IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
-    GrayImage& wiener, BinaryImage const& niblack,
+    GrayImage const& src, BinaryImage const& niblack,
     int radius = 100, double q = 0.6,
     double p1 = 0.5, double p2 = 0.8);
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(

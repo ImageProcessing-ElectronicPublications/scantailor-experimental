@@ -38,7 +38,7 @@
 namespace imageproc
 {
 
-static inline bool binaryGetBW(uint32_t* bw_line, unsigned int x)
+static inline bool binaryGetBW(uint32_t const* bw_line, unsigned int x)
 {
     static uint32_t const msb = uint32_t(1) << 31;
     uint32_t const mask = msb >> (x & 31);
@@ -520,11 +520,12 @@ BinaryImage binarizeNiblack(
 }
 
 BinaryImage binarizeGatosCleaner(
-    GrayImage& wiener, BinaryImage const& niblack,
+    GrayImage const& src, BinaryImage const& niblack,
     int const radius, double const q,
     double const p1, double const p2)
 {
-    if (wiener.isNull() || niblack.isNull())
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull() || niblack.isNull())
     {
         return niblack;
     }
@@ -533,8 +534,8 @@ BinaryImage binarizeGatosCleaner(
         return niblack;
     }
 
-    int const w = wiener.width();
-    int const h = wiener.height();
+    int const w = src.width();
+    int const h = src.height();
     unsigned int const ws = radius + radius + 1;
 
     if ((w != niblack.width()) || (h != niblack.height()))
@@ -543,42 +544,47 @@ BinaryImage binarizeGatosCleaner(
     }
 
     IntegralImage<uint32_t> niblack_bg_ii(w, h);
-    IntegralImage<uint32_t> wiener_bg_ii(w, h);
+    IntegralImage<uint32_t> gray_bg_ii(w, h);
 
     uint32_t const* niblack_line = niblack.data();
     int const niblack_stride = niblack.wordsPerLine();
-    uint8_t const* wiener_line = wiener.data();
-    int const wiener_stride = wiener.stride();
+    uint8_t const* gray_line = gray.data();
+    int const gray_stride = gray.stride();
 
     for (int y = 0; y < h; y++)
     {
         niblack_bg_ii.beginRow();
-        wiener_bg_ii.beginRow();
+        gray_bg_ii.beginRow();
         for (int x = 0; x < w; x++)
         {
             // bg: 1, fg: 0
             uint32_t const niblack_inverted_pixel =
                 (~niblack_line[x >> 5] >> (31 - (x & 31))) & uint32_t(1);
-            uint32_t const wiener_pixel = wiener_line[x];
+            uint32_t const gray_pixel = gray_line[x];
             niblack_bg_ii.push(niblack_inverted_pixel);
 
-            // bg: wiener_pixel, fg: 0
-            wiener_bg_ii.push(wiener_pixel & ~(niblack_inverted_pixel - uint32_t(1)));
+            // bg: gray_pixel, fg: 0
+            gray_bg_ii.push(gray_pixel & ~(niblack_inverted_pixel - uint32_t(1)));
         }
-        wiener_line += wiener_stride;
+        gray_line += gray_stride;
         niblack_line += niblack_stride;
     }
 
-    std::vector<QRect> windows;
-    for (int scale = 1;; scale++)
+    QRect const image_rect(gray.rect());
+    GrayImage background(gray);
+    if (background.isNull())
     {
-        windows.emplace_back(0, 0, ws * scale, ws * scale);
-        if (windows.back().width() > w*2 && windows.back().height() > h * 2)
-        {
-            // Such a window is enough to cover the whole image when centered
-            // at any of its corners.
-            break;
-        }
+        return niblack;
+    }
+
+    uint8_t* background_line = background.data();
+    int const background_stride = background.stride();
+
+    uint64_t niblack_bg_sum = niblack_bg_ii.sum(image_rect);
+    uint64_t src_size = w * h;
+    if ((niblack_bg_sum == 0) || (niblack_bg_sum == src_size))
+    {
+        return niblack;
     }
 
     // sum(background - original) for foreground pixels according to Niblack.
@@ -587,54 +593,52 @@ BinaryImage binarizeGatosCleaner(
     // sum(background) pixels for background pixels according to Niblack.
     uint32_t sum_bg = 0;
 
-    QRect const image_rect(wiener.rect());
-    GrayImage background(wiener);
-    if (background.isNull())
-    {
-        return niblack;
-    }
-
-    uint8_t* background_line = background.data();
-    int const background_stride = background.stride();
     niblack_line = niblack.data();
+    unsigned int const w3 = w + w + w;
+    unsigned int const h3 = h + h + h;
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
         {
-            for (QRect window : windows)
+            if (binaryGetBW(niblack_line, x))
             {
-                window.moveCenter(QPoint(x, y));
-                window &= image_rect;
-                uint32_t const niblack_sum_bg = niblack_bg_ii.sum(window);
-                if (niblack_sum_bg == 0)
+                uint32_t niblack_sum_bg = 0;
+                unsigned int wss = ws;
+                QRect window;
+                while ((niblack_sum_bg == 0) && ((wss < w3) || (wss < h3)))
                 {
-                    // No background pixels in this window. Try a larger one.
-                    continue;
+                    window = QRect(0, 0, wss, wss);
+                    window.moveCenter(QPoint(x, y));
+                    window &= image_rect;
+                    niblack_sum_bg = niblack_bg_ii.sum(window);
+                    wss += ws;
                 }
 
-                static uint32_t const msb = uint32_t(1) << 31;
-                if (niblack_line[x >> 5] & (msb >> (x & 31)))
+                // Foreground pixel. Interpolate from background pixels in window.
+                if (niblack_sum_bg > 0)
                 {
-                    // Foreground pixel. Interpolate from background pixels in window.
-                    uint32_t const wiener_sum_bg = wiener_bg_ii.sum(window);
-                    uint32_t const bg = (wiener_sum_bg + (niblack_sum_bg >> 1)) / niblack_sum_bg;
+                    uint32_t const gray_sum_bg = gray_bg_ii.sum(window);
+                    uint32_t const bg = (gray_sum_bg + (niblack_sum_bg >> 1)) / niblack_sum_bg;
                     sum_diff += bg - background_line[x];
                     background_line[x] = bg;
                 }
                 else
                 {
-                    sum_bg += background_line[x];
+                    sum_diff += 255 - background_line[x];
+                    background_line[x] = 255;
                 }
-
-                break;
+            }
+            else
+            {
+                sum_bg += background_line[x];
             }
         }
         background_line += background_stride;
         niblack_line += niblack_stride;
     }
 
-    double const delta = double(sum_diff) / (w*h - niblack_bg_ii.sum(image_rect));
-    double const b = double(sum_bg) / niblack_bg_ii.sum(image_rect);
+    double const delta = double(sum_diff) / (src_size - niblack_bg_sum);
+    double const b = double(sum_bg) / niblack_bg_sum;
 
 /*
     double const q = 0.6;
@@ -648,16 +652,18 @@ BinaryImage binarizeGatosCleaner(
 
     rasterOpGeneric(
         [exp_scale, exp_bias, threshold_scale, threshold_bias]
-        (uint8_t& wiener, uint8_t const bg)
+        (uint8_t& gray, uint8_t const bg)
     {
         double const threshold = threshold_scale /
                                  (1.0 + exp(double(bg) * exp_scale + exp_bias)) + threshold_bias;
-        wiener = double(bg) - double(wiener) > threshold ? 0x00 : 0xff;
+        gray = double(bg) - double(gray) > threshold ? 0x00 : 0xff;
     },
-    wiener, background
+    gray, background
     );
 
-    return BinaryImage(wiener);
+    BinaryImage bw_img = BinaryImage(gray);
+
+    return bw_img;
 }
 
 BinaryImage binarizeGatos(
