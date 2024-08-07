@@ -594,8 +594,8 @@ BinaryImage binarizeGatosCleaner(
     uint32_t sum_bg = 0;
 
     niblack_line = niblack.data();
-    unsigned int const w3 = w + w + w;
-    unsigned int const h3 = h + h + h;
+    unsigned int const w2 = w + w;
+    unsigned int const h2 = h + h;
     for (int y = 0; y < h; ++y)
     {
         for (int x = 0; x < w; ++x)
@@ -603,15 +603,15 @@ BinaryImage binarizeGatosCleaner(
             if (binaryGetBW(niblack_line, x))
             {
                 uint32_t niblack_sum_bg = 0;
-                unsigned int wss = ws;
+                unsigned int wss = 0;
                 QRect window;
-                while ((niblack_sum_bg == 0) && ((wss < w3) || (wss < h3)))
+                while ((niblack_sum_bg == 0) && ((wss < w2) || (wss < h2)))
                 {
+                    wss += ws;
                     window = QRect(0, 0, wss, wss);
                     window.moveCenter(QPoint(x, y));
                     window &= image_rect;
                     niblack_sum_bg = niblack_bg_ii.sum(window);
-                    wss += ws;
                 }
 
                 // Foreground pixel. Interpolate from background pixels in window.
