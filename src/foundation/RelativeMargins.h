@@ -32,24 +32,52 @@
 class FOUNDATION_EXPORT RelativeMargins
 {
 public:
-    RelativeMargins() : m_top(), m_bottom(), m_left(), m_right() {}
+    RelativeMargins() : m_top(), m_bottom(), m_left(), m_right(), m_base() {}
 
-    RelativeMargins(double left, double top, double right, double bottom)
-        : m_top(top), m_bottom(bottom), m_left(left), m_right(right) {}
+    RelativeMargins(double left, double top, double right, double bottom, double base = 0.0)
+        : m_top(top), m_bottom(bottom), m_left(left), m_right(right), m_base(base) {}
+
+    double getBaseRect(QRectF const& rect) const
+    {
+        double scale;
+        if (m_base > 0.0)
+        {
+            scale = m_base;
+        }
+        else
+        {
+            double const scalex = rect.width();
+            double const scaley = rect.height() * 0.7071067811865475244;
+            scale = (scalex < scaley) ? scaley : scalex;
+        }
+        return scale;
+    }
 
     QRectF extendContentRect(QRectF const& rect) const
     {
-        double const scalex = rect.width();
-        double const scaley = rect.height() * 0.7071067811865475244;
-        double const scale = (scalex < scaley) ? scaley : scalex;
+        double const scale = getBaseRect(rect);
         return rect.adjusted(-m_left * scale, -m_top * scale, m_right * scale, m_bottom * scale);
+    }
+
+    double getBaseSize(QSizeF const& size) const
+    {
+        double scale;
+        if (m_base > 0.0)
+        {
+            scale = m_base;
+        }
+        else
+        {
+            double const scalex = size.width();
+            double const scaley = size.height() * 0.7071067811865475244;
+            scale = (scalex < scaley) ? scaley : scalex;
+        }
+        return scale;
     }
 
     QSizeF extendContentSize(QSizeF const& size) const
     {
-        double const scalex = size.width();
-        double const scaley = size.height() * 0.7071067811865475244;
-        double const scale = (scalex < scaley) ? scaley : scalex;
+        double const scale = getBaseSize(size);
         return QSizeF(
                    size.width() + (m_left + m_right) * scale,
                    size.height() + (m_top + m_bottom) * scale
@@ -96,6 +124,16 @@ public:
         m_right = val;
     }
 
+    double getBase() const
+    {
+        return m_base;
+    }
+
+    void setBase(double val)
+    {
+        m_base = val;
+    }
+
     bool horizontalMarginsApproxEqual() const
     {
         return std::lround(std::abs(m_right - m_left) * 100.0) == 0;
@@ -110,6 +148,7 @@ private:
     double m_bottom;
     double m_left;
     double m_right;
+    double m_base;
 };
 
 #endif

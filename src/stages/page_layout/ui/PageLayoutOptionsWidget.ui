@@ -44,6 +44,25 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="topMarginSpinBox">
+            <property name="suffix">
+             <string notr="true">%</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>-49.5</double>
+            </property>
+            <property name="maximum">
+             <double>999.5</double>
+            </property>
+            <property name="singleStep">
+             <double>0.5</double>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="2" rowspan="2">
            <widget class="QToolButton" name="topBottomLink">
             <property name="minimumSize">
@@ -162,25 +181,6 @@
           </item>
           <item row="3" column="1">
            <widget class="QDoubleSpinBox" name="rightMarginSpinBox">
-            <property name="suffix">
-             <string notr="true">%</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>-49.5</double>
-            </property>
-            <property name="maximum">
-             <double>999.5</double>
-            </property>
-            <property name="singleStep">
-             <double>0.5</double>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="topMarginSpinBox">
             <property name="suffix">
              <string notr="true">%</string>
             </property>
