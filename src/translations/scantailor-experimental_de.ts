@@ -1491,6 +1491,21 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="580"/>
+        <source> - bounds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="587"/>
+        <source>Lower bound.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="600"/>
+        <source>Upper bound.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>

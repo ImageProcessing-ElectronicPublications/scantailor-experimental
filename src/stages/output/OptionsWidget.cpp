@@ -242,6 +242,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(bwThresholdChanged())
     );
     connect(
+        thresholdBoundLower, SIGNAL(valueChanged(int)),
+        this, SLOT(thresholdBoundLowerChanged(int))
+    );
+    connect(
+        thresholdBoundUpper, SIGNAL(valueChanged(int)),
+        this, SLOT(thresholdBoundUpperChanged(int))
+    );
+    connect(
         thresholdRadius, SIGNAL(valueChanged(int)),
         this, SLOT(thresholdRadiusChanged(int))
     );
@@ -791,6 +799,26 @@ OptionsWidget::dimmingColoredCoefChanged(double value)
 }
 
 void
+OptionsWidget::thresholdBoundLowerChanged(int value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setThresholdBoundLower(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::thresholdBoundUpperChanged(int value)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setThresholdBoundUpper(value);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::thresholdRadiusChanged(int value)
 {
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
@@ -1156,6 +1184,8 @@ OptionsWidget::updateColorsDisplay()
         negateCB->setChecked(black_white_options.negate());
         dimmingColoredCoef->setValue(black_white_options.dimmingColoredCoef());
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
+        thresholdBoundLower->setValue(black_white_options.getThresholdBoundLower());
+        thresholdBoundUpper->setValue(black_white_options.getThresholdBoundUpper());
         thresholdRadius->setValue(black_white_options.thresholdRadius());
         thresholdCoef->setValue(black_white_options.thresholdCoef());
 

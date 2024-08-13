@@ -115,9 +115,8 @@ BinaryImage binarizeUse(
 }  // binarizeUse
 
 BinaryImage binarizeFromMap(
-    GrayImage const& src, GrayImage const& threshold,
-    unsigned char const lower_bound, unsigned char const upper_bound,
-    int const delta)
+    GrayImage const& src, GrayImage const& threshold, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull() || threshold.isNull())
     {
@@ -152,7 +151,7 @@ BinaryImage binarizeFromMap(
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            binarySetBW(bw_line, x, (src_line[x] < lower_bound || (src_line[x] <= upper_bound && ((int) src_line[x] < ((int) threshold_line[x] + delta)))));
+            binarySetBW(bw_line, x, (src_line[x] < bound_lower || (src_line[x] <= bound_upper && ((int) src_line[x] < ((int) threshold_line[x] + delta)))));
         }
         src_line += src_stride;
         threshold_line += threshold_stride;
@@ -185,7 +184,9 @@ void binarizeNegate(BinaryImage& src)
 
 }  // binarizeNegate
 
-unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
+unsigned int binarizeBiModalValue(
+    GrayImage const& src, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     unsigned int threshold = 128;
     if (src.isNull())
@@ -209,7 +210,8 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            uint8_t const pixel = gray_line[x];
+            unsigned char pixel = gray_line[x];
+            pixel = (pixel < bound_lower) ? bound_lower : (pixel < bound_upper) ? pixel : bound_upper;
             histogram[pixel]++;
         }
         gray_line += gray_stride;
@@ -253,20 +255,24 @@ unsigned int binarizeBiModalValue(GrayImage const& src, int const delta)
     return threshold;
 }  // binarizeBiModalValue
 
-BinaryImage binarizeBiModal(GrayImage const& src, int const delta)
+BinaryImage binarizeBiModal(
+    GrayImage const& src, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    unsigned int threshold = binarizeBiModalValue(src, delta);
+    unsigned int threshold = binarizeBiModalValue(src, delta, bound_lower, bound_upper);
     BinaryImage bw_img = binarizeUse(src, threshold);
 
     return bw_img;
 }  // binarizeBiModal
 
-BinaryImage binarizeMean(GrayImage const& src, int const delta)
+BinaryImage binarizeMean(
+    GrayImage const& src, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -286,7 +292,9 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
         meanl = 0.0;
         for (unsigned int x = 0; x < w; ++x)
         {
-            double const pixel = src_line[x];
+            unsigned char pix = src_line[x];
+            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+            double const pixel = pix;
             meanl += pixel;
             count++;
         }
@@ -301,7 +309,9 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
         meanl = 0.0;
         for (unsigned int x = 0; x < w; ++x)
         {
-            double const pixel = src_line[x];
+            unsigned char pix = src_line[x];
+            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+            double const pixel = pix;
             dist = (pixel > mean) ? (pixel - mean) : (mean - pixel);
             dist++;
             dist = 256.0 / dist;
@@ -319,7 +329,9 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
         meanl = 0.0;
         for (unsigned int x = 0; x < w; ++x)
         {
-            double const pixel = src_line[x];
+            unsigned char pix = src_line[x];
+            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+            double const pixel = pix;
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             dist *= dist;
             meanl += dist;
@@ -335,7 +347,9 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            double const pixel = src_line[x];
+            unsigned char pix = src_line[x];
+            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+            double const pixel = pix;
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             if (dist < threshold)
             {
@@ -362,7 +376,9 @@ BinaryImage binarizeMean(GrayImage const& src, int const delta)
     {
         for (unsigned int x = 0; x < w; ++x)
         {
-            double const pixel = src_line[x];
+            unsigned char pix = src_line[x];
+            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+            double const pixel = pix;
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             binarySetBW(bw_line, x, ((dist < threshold) ^ (count < countb)));
         }
@@ -430,7 +446,9 @@ GrayImage binarizeDotsMap (GrayImage const& src, int const delta)
     return gray;
 }
 
-BinaryImage binarizeDots(GrayImage const& src, int const delta)
+BinaryImage binarizeDots(
+   GrayImage const& src, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -438,7 +456,7 @@ BinaryImage binarizeDots(GrayImage const& src, int const delta)
     }
 
     GrayImage threshold_map(binarizeDotsMap(src, delta));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, 0));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeDots
@@ -506,7 +524,8 @@ GrayImage binarizeNiblackMap(
 
 BinaryImage binarizeNiblack(
     GrayImage const& src, int const radius,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -514,7 +533,7 @@ BinaryImage binarizeNiblack(
     }
 
     GrayImage threshold_map(binarizeNiblackMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -669,6 +688,7 @@ BinaryImage binarizeGatosCleaner(
 BinaryImage binarizeGatos(
     GrayImage const& src, int const radius,
     double const noise_sigma, double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper,
     double const q, double const p1, double const p2)
 {
     if (src.isNull())
@@ -677,7 +697,7 @@ BinaryImage binarizeGatos(
     }
 
     GrayImage wiener(wienerFilter(src, 5, noise_sigma));
-    BinaryImage niblack(binarizeNiblack(wiener, radius, k, delta));
+    BinaryImage niblack(binarizeNiblack(wiener, radius, k, delta, bound_lower, bound_upper));
     BinaryImage bw_img(binarizeGatosCleaner(wiener, niblack, radius, q, p1, p2));
 
     return bw_img;
@@ -747,7 +767,8 @@ GrayImage binarizeSauvolaMap(
 
 BinaryImage binarizeSauvola(
     GrayImage const& src, int const radius,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -755,7 +776,7 @@ BinaryImage binarizeSauvola(
     }
 
     GrayImage threshold_map(binarizeSauvolaMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -842,8 +863,8 @@ GrayImage binarizeWolfMap(
 
 BinaryImage binarizeWolf(
     GrayImage const& src, int const radius,
-    unsigned char const lower_bound, unsigned char const upper_bound,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -851,7 +872,7 @@ BinaryImage binarizeWolf(
     }
 
     GrayImage threshold_map(binarizeWolfMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, lower_bound, upper_bound, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -910,7 +931,8 @@ GrayImage binarizeBradleyMap(
 
 BinaryImage binarizeBradley(
     GrayImage const& src, int const radius,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -918,7 +940,7 @@ BinaryImage binarizeBradley(
     }
 
     GrayImage threshold_map(binarizeBradleyMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeBradley
@@ -1028,7 +1050,8 @@ GrayImage binarizeGradMap(
 
 BinaryImage binarizeGrad(
     GrayImage const& src, int const radius,
-    double const coef, int const delta)
+    double const coef, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -1036,7 +1059,7 @@ BinaryImage binarizeGrad(
     }
 
     GrayImage threshold_map(binarizeGradMap(src, radius, coef));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -1105,7 +1128,8 @@ GrayImage binarizeSinghMap(
 
 BinaryImage binarizeSingh(
     GrayImage const& src, int const radius,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -1113,7 +1137,7 @@ BinaryImage binarizeSingh(
     }
 
     GrayImage threshold_map(binarizeSinghMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeSingh
@@ -1190,7 +1214,8 @@ GrayImage binarizeWANMap(
 
 BinaryImage binarizeWAN(
     GrayImage const& src, int const radius,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -1198,7 +1223,7 @@ BinaryImage binarizeWAN(
     }
 
     GrayImage threshold_map(binarizeWANMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -1308,7 +1333,8 @@ GrayImage binarizeEdgeDivPrefilter(
 
 BinaryImage binarizeEdgeDiv(
     GrayImage const& src, int const radius,
-    double const kep, double const kbd, int const delta)
+    double const kep, double const kbd, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -1316,7 +1342,7 @@ BinaryImage binarizeEdgeDiv(
     }
 
     GrayImage gray(binarizeEdgeDivPrefilter(src, radius, kep, kbd));
-    BinaryImage bw_img(binarizeBiModal(gray, delta));
+    BinaryImage bw_img(binarizeBiModal(gray, delta, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeEdgeDiv
@@ -1383,7 +1409,8 @@ GrayImage binarizeRobustPrefilter(
 
 BinaryImage binarizeRobust(
     GrayImage const& src, int const radius,
-    double const k, int const delta)
+    double const k, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -1391,7 +1418,7 @@ BinaryImage binarizeRobust(
     }
 
     GrayImage gray(binarizeRobustPrefilter(src, radius, k));
-    BinaryImage bw_img(binarizeBiModal(gray, delta));
+    BinaryImage bw_img(binarizeBiModal(gray, delta, bound_lower, bound_upper));
 
     return bw_img;
 } // binarizeRobust
@@ -1558,7 +1585,8 @@ GrayImage binarizeMScaleMap(
 
 BinaryImage binarizeMScale(
     GrayImage const& src, int const radius,
-    double const coef, int const delta)
+    double const coef, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -1566,7 +1594,7 @@ BinaryImage binarizeMScale(
     }
 
     GrayImage threshold_map(binarizeMScaleMap(src, radius, coef));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, 255, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeMScale

@@ -30,6 +30,8 @@ BlackWhiteOptions::BlackWhiteOptions()
         m_negate(false),
         m_dimmingColoredCoef(0.0),
         m_thresholdAdjustment(0),
+        m_boundLower(0),
+        m_boundUpper(255),
         m_thresholdRadius(50),
         m_thresholdCoef(0.3),
         m_autoPictureCoef(0.0),
@@ -43,6 +45,8 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
         m_negate(el.attribute("negate") == "1"),
         m_dimmingColoredCoef(el.attribute("dimmingColoredCoef").toDouble()),
         m_thresholdAdjustment(el.attribute("thresholdAdj").toInt()),
+        m_boundLower(el.attribute("boundLower").toInt()),
+        m_boundUpper(el.attribute("boundUpper").toInt()),
         m_thresholdRadius(el.attribute("thresholdRadius").toInt()),
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
         m_autoPictureCoef(el.attribute("autoPictureCoef").toDouble()),
@@ -51,6 +55,11 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
     {
         m_dimmingColoredCoef = 0.0;
+    }
+    if (m_boundUpper <= m_boundLower)
+    {
+        m_boundLower = 0;
+        m_boundUpper = 255;
     }
     if (m_thresholdRadius < 1)
     {
@@ -76,6 +85,14 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     if (m_thresholdAdjustment != 0)
     {
         el.setAttribute("thresholdAdj", m_thresholdAdjustment);
+    }
+    if (m_boundLower > 0)
+    {
+        el.setAttribute("boundLower", m_boundLower);
+    }
+    if (m_boundUpper < 255)
+    {
+        el.setAttribute("boundUpper", m_boundUpper);
     }
     el.setAttribute("thresholdRadius", m_thresholdRadius);
     el.setAttribute("thresholdCoef", m_thresholdCoef);
@@ -107,6 +124,14 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_thresholdAdjustment != other.m_thresholdAdjustment)
+    {
+        return false;
+    }
+    if (m_boundLower != other.m_boundLower)
+    {
+        return false;
+    }
+    if (m_boundUpper != other.m_boundUpper)
     {
         return false;
     }

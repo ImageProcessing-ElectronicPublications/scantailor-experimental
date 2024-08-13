@@ -82,6 +82,30 @@ public:
         m_thresholdAdjustment = val;
     }
 
+    int getThresholdBoundLower() const
+    {
+        return m_boundLower;
+    }
+    void setThresholdBoundLower(int val)
+    {
+        if (val < m_boundUpper)
+        {
+            m_boundLower = val;
+        }
+    }
+
+    int getThresholdBoundUpper() const
+    {
+        return m_boundUpper;
+    }
+    void setThresholdBoundUpper(int val)
+    {
+        if (val > m_boundLower)
+        {
+            m_boundUpper = val;
+        }
+    }
+
     int thresholdRadius() const
     {
         return m_thresholdRadius;
@@ -127,6 +151,8 @@ private:
     bool m_negate;
     double m_dimmingColoredCoef;
     int m_thresholdAdjustment;
+    int m_boundLower;
+    int m_boundUpper;
     int m_thresholdRadius;
     double m_thresholdCoef;
     double m_autoPictureCoef;

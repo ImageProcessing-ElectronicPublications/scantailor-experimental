@@ -1568,6 +1568,21 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Обратный порог.</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="580"/>
+        <source> - bounds:</source>
+        <translation> - границы:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="587"/>
+        <source>Lower bound.</source>
+        <translation>Нижняя граница.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="600"/>
+        <source>Upper bound.</source>
+        <translation>Верхняя граница.</translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - radius, coef.:</source>
         <translation> - радиус, коэф.:</translation>

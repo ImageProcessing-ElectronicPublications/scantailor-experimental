@@ -60,17 +60,17 @@ IMAGEPROC_EXPORT BinaryImage binarizeMokji(
 IMAGEPROC_EXPORT BinaryImage binarizeUse(
     GrayImage const& src, unsigned int threshold = 128);
 IMAGEPROC_EXPORT BinaryImage binarizeFromMap(
-    GrayImage const& src, GrayImage const& threshold,
-    unsigned char const lower_bound = 0,
-    unsigned char const upper_bound = 255,
-    int const delta = 0);
-
+    GrayImage const& src, GrayImage const& threshold, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
+ 
 IMAGEPROC_EXPORT void binarizeNegate(BinaryImage& src);
 
 IMAGEPROC_EXPORT unsigned int binarizeBiModalValue(
-    GrayImage const& src, int delta = 0);
+    GrayImage const& src, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
-    GrayImage const& src, int delta = 0);
+    GrayImage const& src, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using DeltaMean global thresholding method.
@@ -78,12 +78,14 @@ IMAGEPROC_EXPORT BinaryImage binarizeBiModal(
  * \see Help -> About -> References -> [7]
  */
 IMAGEPROC_EXPORT BinaryImage binarizeMean(
-    GrayImage const& src, int delta = 0);
+    GrayImage const& src, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 IMAGEPROC_EXPORT GrayImage binarizeDotsMap (
     GrayImage const& src, int delta = 0);
 IMAGEPROC_EXPORT BinaryImage binarizeDots(
-    GrayImage const& src, int delta = 0);
+    GrayImage const& src, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
   * \brief Image binarization using Niblack's local thresholding method.
@@ -94,7 +96,8 @@ IMAGEPROC_EXPORT GrayImage binarizeNiblackMap(
     GrayImage const& src, int radius = 100, double k = 0.20);
 IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
     GrayImage const& src, int radius = 100,
-    double k = 0.20, int delta = 0);
+    double k = 0.20, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using Gatos' local thresholding method.
@@ -111,6 +114,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
     GrayImage const& src, int radius = 100,
     double noise_sigma = 3.0, double k = 0.2, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255,
     double q = 0.6, double p1 = 0.5, double p2 = 0.8);
 
 /**
@@ -122,7 +126,8 @@ IMAGEPROC_EXPORT GrayImage binarizeSauvolaMap(
     GrayImage const& src, int radius = 100, double k = 0.34);
 IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
     GrayImage const& src, int radius = 100,
-    double k = 0.34, int delta = 0);
+    double k = 0.34, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using Wolf's local thresholding method.
@@ -138,8 +143,8 @@ IMAGEPROC_EXPORT GrayImage binarizeWolfMap(
     GrayImage const& src, int radius = 100, double k = 0.30);
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
     GrayImage const& src, int radius = 100,
-    unsigned char lower_bound = 1, unsigned char upper_bound = 254,
-    double k = 0.30, int delta = 0);
+    double k = 0.30, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using Bradley's adaptive thresholding method.
@@ -151,7 +156,8 @@ IMAGEPROC_EXPORT GrayImage binarizeBradleyMap(
     GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     GrayImage const& src, int radius = 100,
-    double k = 0.2, int delta = 0);
+    double k = 0.2, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using Grad local/global thresholding method.
@@ -164,7 +170,8 @@ IMAGEPROC_EXPORT GrayImage binarizeGradMap(
     GrayImage const& src, int radius = 10, double coef = 0.75);
 IMAGEPROC_EXPORT BinaryImage binarizeGrad(
     GrayImage const& src, int radius = 10,
-    double coef = 0.75, int delta = 0);
+    double coef = 0.75, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using Singh's adaptive thresholding method.
@@ -178,7 +185,8 @@ IMAGEPROC_EXPORT GrayImage binarizeSinghMap(
     GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeSingh(
     GrayImage const& src, int radius = 100,
-    double k = 0.2, int delta = 0);
+    double k = 0.2, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using WAN's local thresholding method.
@@ -191,7 +199,8 @@ IMAGEPROC_EXPORT GrayImage binarizeWANMap(
     GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeWAN(
     GrayImage const& src, int radius = 100,
-    double k = 0.2, int delta = 0);
+    double k = 0.2, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using EdgeDiv (EdgePlus & BlurDiv) local/global thresholding method.
@@ -203,7 +212,8 @@ IMAGEPROC_EXPORT GrayImage binarizeEdgeDivPrefilter(
     double kep = 0.5, double kdb = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     GrayImage const& src, int radius = 10,
-    double kep = 0.5, double kdb = 0.5, int delta = 0);
+    double kep = 0.5, double kdb = 0.5, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using Robust's local thresholding method.
@@ -216,7 +226,8 @@ IMAGEPROC_EXPORT GrayImage binarizeRobustPrefilter(
     GrayImage const& src, int radius = 10, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeRobust(
     GrayImage const& src, int radius = 10,
-    double k = 0.2, int delta = 0);
+    double k = 0.2, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 /**
  * \brief Image binarization using MultiScale thresholding method.
@@ -228,7 +239,8 @@ IMAGEPROC_EXPORT GrayImage binarizeMScaleMap(
     double coef = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeMScale(
     GrayImage const& src, int radius = 10,
-    double coef = 0.5, int delta = 0);
+    double coef = 0.5, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
 } // namespace imageproc
 

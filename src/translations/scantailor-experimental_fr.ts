@@ -1462,6 +1462,21 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="580"/>
+        <source> - bounds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="587"/>
+        <source>Lower bound.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="600"/>
+        <source>Upper bound.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
         <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>

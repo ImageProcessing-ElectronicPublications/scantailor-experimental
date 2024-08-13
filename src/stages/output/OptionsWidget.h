@@ -109,6 +109,10 @@ private slots:
 
     void bwThresholdChanged();
 
+    void thresholdBoundLowerChanged(int value);
+
+    void thresholdBoundUpperChanged(int value);
+
     void thresholdRadiusChanged(int value);
 
     void thresholdCoefChanged(double value);
