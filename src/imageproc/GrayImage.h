@@ -27,6 +27,7 @@
 #include "imageproc_config.h"
 #include "GridAccessor.h"
 #include "IntegralImage.h"
+#include "GaussBlur.h"
 
 namespace imageproc
 {
@@ -155,6 +156,8 @@ IMAGEPROC_EXPORT GrayImage grayMapContrast(
     GrayImage const& src, int radius = 100);
 IMAGEPROC_EXPORT GrayImage grayKnnDenoiser(
     GrayImage const& src, int radius = 1, float coef = 0.0f);
+IMAGEPROC_EXPORT GrayImage grayEqualize(
+    GrayImage const& src, int radius = 1, bool flg_blur = false);
 
 
 } // namespace imageproc

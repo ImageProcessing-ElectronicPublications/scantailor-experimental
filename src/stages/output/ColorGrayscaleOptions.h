@@ -36,6 +36,8 @@ public:
           m_wienerCoef(0.0),
           m_autoLevelSize(10),
           m_autoLevelCoef(0.0),
+          m_equalizeSize(6),
+          m_equalizeCoef(0.0),
           m_knndRadius(7),
           m_knndCoef(0.0),
           m_cdespeckleRadius(2),
@@ -110,6 +112,23 @@ public:
     void setAutoLevelCoef(double val)
     {
         m_autoLevelCoef = val;
+    }
+
+    int equalizeSize() const
+    {
+        return m_equalizeSize;
+    }
+    void setEqualizeSize(int val)
+    {
+        m_equalizeSize = val;
+    }
+    double equalizeCoef() const
+    {
+        return m_equalizeCoef;
+    }
+    void setEqualizeCoef(double val)
+    {
+        m_equalizeCoef = val;
     }
 
     int knndRadius() const
@@ -286,6 +305,8 @@ private:
     double m_wienerCoef;
     int m_autoLevelSize;
     double m_autoLevelCoef;
+    int m_equalizeSize;
+    double m_equalizeCoef;
     int m_knndRadius;
     double m_knndCoef;
     int m_cdespeckleRadius;

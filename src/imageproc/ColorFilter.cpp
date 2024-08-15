@@ -267,21 +267,21 @@ void wienerFilterInPlace(
 }
 
 QImage wienerColorFilter(
-    QImage const& image, int const f_size, float const coef)
+    QImage const& image, int const radius, float const coef)
 {
     QImage dst(image);
-    wienerColorFilterInPlace(dst, f_size, coef);
+    wienerColorFilterInPlace(dst, radius, coef);
     return dst;
 }
 
 void wienerColorFilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
     if (image.isNull())
     {
         return;
     }
-    if (f_size < 1)
+    if (radius < 1)
     {
         return;
     }
@@ -300,7 +300,7 @@ void wienerColorFilterInPlace(
             return;
         }
 
-        GrayImage wiener(wienerFilter(gray, f_size, 255.0f * coef));
+        GrayImage wiener(wienerFilter(gray, radius, 255.0f * coef));
         if (wiener.isNull())
         {
             return;
@@ -319,13 +319,13 @@ QImage autoLevelFilter(
 }
 
 void autoLevelFilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
     if (image.isNull())
     {
         return;
     }
-    if (f_size < 1)
+    if (radius < 1)
     {
         return;
     }
@@ -347,7 +347,7 @@ void autoLevelFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        GrayImage gmean = gaussBlur(gray, f_size, f_size);
+        GrayImage gmean = gaussBlur(gray, radius, radius);
         if (gmean.isNull())
         {
             return;
@@ -383,6 +383,67 @@ void autoLevelFilterInPlace(
                 gmean_line[x] = (uint8_t) (retval + 0.5f);
             }
             image_line += image_stride;
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
+        }
+
+        imageReLevel(image, gray, gmean);
+    }
+}
+
+QImage colorEqualizeFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    colorEqualizeFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void colorEqualizeFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if (coef != 0.0)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean = grayEqualize(gray, radius, false);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const origin = gray_line[x];
+                float mean = gmean_line[x];
+
+                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
+                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
+                gmean_line[x] = (uint8_t) mean;
+            }
             gray_line += gray_stride;
             gmean_line += gmean_stride;
         }
@@ -553,24 +614,22 @@ void colorDespeckleFilterInPlace(
 }
 
 QImage blurFilter(
-    QImage const& image, int const f_size, float const coef)
+    QImage const& image, int const radius, float const coef)
 {
     QImage dst(image);
-    blurFilterInPlace(dst, f_size, coef);
+    blurFilterInPlace(dst, radius, coef);
     return dst;
 }
 
 void blurFilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
+    if (image.isNull())
     {
-        throw std::invalid_argument("blurFilter: empty window_size");
+        return;
     }
 
-    if (coef != 0.0f)
+    if ((radius > 0) && (coef != 0.0))
     {
         int const w = image.width();
         int const h = image.height();
@@ -587,10 +646,7 @@ void blurFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        //GrayImage gmean = grayMapMean(gray, window_size);
-        int rx = window_size.width() >> 1;
-        int ry = window_size.height() >> 1;
-        GrayImage gmean = gaussBlur(gray, rx, ry);
+        GrayImage gmean = gaussBlur(gray, radius, radius);
         if (gmean.isNull())
         {
             return;
@@ -606,9 +662,9 @@ void blurFilterInPlace(
                 float const mean = gmean_line[x];
 
                 float const origin = gray_line[x];
-                float retval = coef * mean + (1.0 - coef) * origin;
+                float retval = coef * mean + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) (retval + 0.5f);
+                gmean_line[x] = (uint8_t) retval;
             }
             image_line += image_stride;
             gray_line += gray_stride;
@@ -620,28 +676,22 @@ void blurFilterInPlace(
 }
 
 QImage screenFilter(
-    QImage const& image, int const f_size, float const coef)
+    QImage const& image, int const radius, float const coef)
 {
     QImage dst(image);
-    screenFilterInPlace(dst, f_size, coef);
+    screenFilterInPlace(dst, radius, coef);
     return dst;
 }
 
 void screenFilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
     if (image.isNull())
     {
         return;
     }
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
-    {
-        throw std::invalid_argument("screenFilter: empty window_size");
-    }
 
-    if (coef != 0.0f)
+    if (coef != 0.0)
     {
         int const w = image.width();
         int const h = image.height();
@@ -658,10 +708,7 @@ void screenFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        //GrayImage gmean = grayMapMean(gray, window_size);
-        int rx = window_size.width() >> 1;
-        int ry = window_size.height() >> 1;
-        GrayImage gmean = gaussBlur(gray, rx, ry);
+        GrayImage gmean = grayEqualize(gray, radius, true);
         if (gmean.isNull())
         {
             return;
@@ -670,63 +717,36 @@ void screenFilterInPlace(
         uint8_t* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
-        unsigned long int histogram[256] = {0};
-        unsigned long int szi = (h * w) >> 8;
-        gray_line = gray.data();
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                unsigned int const mean = gmean_line[x];
-
-                gray_line[x] = mean;
-                unsigned int indx = mean;
-                histogram[indx]++;
-            }
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
-        }
-        gmean = GrayImage(); // free
-
-        for (unsigned int i = 1; i < 256; i++)
-        {
-            histogram[i] += histogram[i - 1];
-        }
-        for (unsigned int i = 0; i < 256; i++)
-        {
-            histogram[i] += (szi >> 1);
-            histogram[i] /= szi;
-            histogram[i] = (histogram[i] < 255) ? histogram[i] : 255;
-        }
-
-        gray_line = gray.data();
         for (int y = 0; y < h; ++y)
         {
             for (int x = 0; x < w; ++x)
             {
                 float const origin = gray_line[x];
-                float const remap = histogram[gray_line[x]];
-                float const colscale = (remap + 1.0f) / (origin + 1.0f);
-                float const coldelta = remap - origin * colscale;
-                for (unsigned int c = 0; c < cnum; ++c)
+                float mean = 255.0f - gmean_line[x];
+
+                /* overlay */
+                float retval = origin;
+                if (origin > 127.5f)
                 {
-                    int const indx = x * cnum + c;
-                    float origcol = image_line[indx];
-                    float kcg = (origcol + 1.0f) / (origin + 1.0f);
-                    float valpos = origcol * colscale + coldelta * kcg;
-                    float valneg = 255.0f - valpos;
-                    float retval = origcol * valneg;
-                    retval /= 255.0f;
-                    retval += valpos;
-                    retval = coef * retval + (1.0f - coef) * origcol;
-                    int val = (int) (retval + 0.5f);
-                    val = (val < 0) ? 0 : (val < 255) ? val : 255;
-                    image_line[indx] = (uint8_t) val;
+                    retval = 255.0f - retval;
+                    mean = 255.0f - mean;
                 }
+                retval *= mean;
+                retval += retval;
+                retval /= 255.0f;
+                if (origin > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                }
+                retval = coef * retval + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                gmean_line[x] = (uint8_t) retval;
             }
-            image_line += image_stride;
             gray_line += gray_stride;
+            gmean_line += gmean_stride;
         }
+
+        imageReLevel(image, gray, gmean);
     }
 }
 
@@ -899,24 +919,22 @@ void unPaperFilterInPlace(
 
 
 QImage gravureFilter(
-    QImage const& image, int const f_size, float const coef)
+    QImage const& image, int const radius, float const coef)
 {
     QImage dst(image);
-    gravureFilterInPlace(dst, f_size, coef);
+    gravureFilterInPlace(dst, radius, coef);
     return dst;
 }
 
 void gravureFilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
+    if (image.isNull())
     {
-        throw std::invalid_argument("gravureFilter: empty window_size");
+        return;
     }
 
-    if (coef != 0.0f)
+    if ((radius > 0) && (coef != 0.0))
     {
         int const w = image.width();
         int const h = image.height();
@@ -933,10 +951,7 @@ void gravureFilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        //GrayImage gmean = grayMapMean(gray, window_size);
-        int rx = window_size.width() >> 1;
-        int ry = window_size.height() >> 1;
-        GrayImage gmean = gaussBlur(gray, rx, ry);
+        GrayImage gmean = gaussBlur(gray, radius, radius);
         if (gmean.isNull())
         {
             return;
@@ -992,11 +1007,10 @@ void gravureFilterInPlace(
                     {
                         retval = 255.0f - retval;
                     }
-                    retval = coef * retval + (1.0f - coef) * origin;
+                    retval = coef * retval + (1.0f - coef) * origin + 0.5f;
                     retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                    gmean_line[x] = (uint8_t) (retval + 0.5f);
+                    gmean_line[x] = (uint8_t) retval;
                 }
-                image_line += image_stride;
                 gray_line += gray_stride;
                 gmean_line += gmean_stride;
             }
@@ -1007,24 +1021,22 @@ void gravureFilterInPlace(
 }
 
 QImage dots8Filter(
-    QImage const& image, int const f_size, float const coef)
+    QImage const& image, int const radius, float const coef)
 {
     QImage dst(image);
-    dots8FilterInPlace(dst, f_size, coef);
+    dots8FilterInPlace(dst, radius, coef);
     return dst;
 }
 
 void dots8FilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
-    int const ff_size = f_size + f_size + 1;
-    QSize const& window_size = QSize(ff_size, ff_size);
-    if (window_size.isEmpty())
+    if (image.isNull())
     {
-        throw std::invalid_argument("dots8Filter: empty window_size");
+        return;
     }
 
-    if (coef != 0.0f)
+    if ((radius > 0) && (coef != 0.0))
     {
         int const w = image.width();
         int const h = image.height();
@@ -1041,10 +1053,7 @@ void dots8FilterInPlace(
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        //GrayImage gmean = grayMapMean(gray, window_size);
-        int rx = window_size.width() >> 1;
-        int ry = window_size.height() >> 1;
-        GrayImage gmean = gaussBlur(gray, rx, ry);
+        GrayImage gmean = gaussBlur(gray, radius, radius);
         if (gmean.isNull())
         {
             return;
@@ -1111,11 +1120,10 @@ void dots8FilterInPlace(
                 {
                     retval = 255.0f - retval;
                 }
-                retval = coef * retval + (1.0f - coef) * origin;
+                retval = coef * retval + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) (retval + 0.5f);
+                gmean_line[x] = (uint8_t) retval;
             }
-            image_line += image_stride;
             gray_line += gray_stride;
             gmean_line += gmean_stride;
         }
@@ -1125,26 +1133,22 @@ void dots8FilterInPlace(
 }
 
 QImage edgedivFilter(
-    QImage const& image, int const f_size, float const coef)
+    QImage const& image, int const radius, float const coef)
 {
     QImage dst(image);
-    edgedivFilterInPlace(dst, f_size, coef);
+    edgedivFilterInPlace(dst, radius, coef);
     return dst;
 }
 
 void edgedivFilterInPlace(
-    QImage& image, int const f_size, float const coef)
+    QImage& image, int const radius, float const coef)
 {
     if (image.isNull())
     {
         return;
     }
-    if (f_size < 1)
-    {
-        return;
-    }
 
-    if (coef != 0.0f)
+    if ((radius > 0) && (coef != 0.0))
     {
         int const w = image.width();
         int const h = image.height();
@@ -1158,7 +1162,7 @@ void edgedivFilterInPlace(
             return;
         }
 
-        GrayImage gmean(binarizeEdgeDivPrefilter(gray, f_size, coef, coef));
+        GrayImage gmean(binarizeEdgeDivPrefilter(gray, radius, coef, coef));
         if (gmean.isNull())
         {
             return;

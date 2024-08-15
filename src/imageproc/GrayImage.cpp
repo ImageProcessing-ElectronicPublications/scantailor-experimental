@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "GrayImage.h"
-#include "Grayscale.h"
 #include <new>
 #include <stdexcept>
+#include "GrayImage.h"
+#include "Grayscale.h"
 
 namespace imageproc
 {
@@ -412,7 +412,6 @@ GrayImage grayKnnDenoiser(
         uint8_t const* src_line = src.data();
         int const src_stride = src.stride();
 
-
         uint8_t* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
@@ -487,5 +486,92 @@ GrayImage grayKnnDenoiser(
     return gray;
 
 } // grayKnnDenoiser
+
+GrayImage grayEqualize(
+    GrayImage const& src, int const radius, bool flg_blur)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+
+    GrayImage gmean;
+    if (radius > 0)
+    {
+        gmean = gaussBlur(src, radius, radius);
+    }
+    else
+    {
+        gmean = GrayImage(src);
+    }
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    uint8_t* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+
+    uint64_t histogram[256] = {0};
+    uint64_t szi = (h * w) >> 8;
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            unsigned int const mean = gmean_line[x];
+            histogram[mean]++;
+        }
+        gmean_line += gmean_stride;
+    }
+
+    for (unsigned int i = 1; i < 256; i++)
+    {
+        histogram[i] += histogram[i - 1];
+    }
+    for (unsigned int i = 0; i < 256; i++)
+    {
+        histogram[i] += (szi >> 1);
+        histogram[i] /= szi;
+        histogram[i] = (histogram[i] < 255) ? histogram[i] : 255;
+    }
+
+    gmean_line = gmean.data();
+    if (flg_blur)
+    {
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const origin = gmean_line[x];
+                int const remap = histogram[origin];
+
+                gmean_line[x] = (uint8_t) remap;
+            }
+            gmean_line += gmean_stride;
+        }
+    }
+    else
+    {
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const origin = src_line[x];
+                int const remap = histogram[origin];
+
+                gmean_line[x] = (uint8_t) remap;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+
+    return gmean;
+} // grayEqualize
 
 } // namespace imageproc

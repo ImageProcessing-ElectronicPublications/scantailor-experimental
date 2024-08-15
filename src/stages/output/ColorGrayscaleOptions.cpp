@@ -31,6 +31,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_wienerCoef(el.attribute("wienerCoef").toDouble()),
        m_autoLevelSize(el.attribute("autoLevelSize").toInt()),
        m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble()),
+       m_equalizeSize(el.attribute("equalizeSize").toInt()),
+       m_equalizeCoef(el.attribute("equalizeCoef").toDouble()),
        m_knndRadius(el.attribute("knnDRadius").toInt()),
        m_knndCoef(el.attribute("knnDenoiser").toDouble()),
        m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt()),
@@ -74,6 +76,10 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_autoLevelCoef < -1.0 || m_autoLevelCoef > 1.0)
     {
         m_autoLevelCoef = 0.0;
+    }
+    if (m_equalizeSize < 1)
+    {
+        m_equalizeSize = 6;
     }
     if (m_knndRadius < 1)
     {
@@ -161,6 +167,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("autoLevelSize", m_autoLevelSize);
         el.setAttribute("autoLevelCoef", m_autoLevelCoef);
     }
+    if (m_equalizeCoef != 0.0)
+    {
+        el.setAttribute("equalizeSize", m_equalizeSize);
+        el.setAttribute("equalizeCoef", m_equalizeCoef);
+    }
     if (m_knndCoef != 0.0)
     {
         el.setAttribute("knnDenoiser", m_knndCoef);
@@ -223,6 +234,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_autoLevelCoef != other.m_autoLevelCoef) || (m_autoLevelSize != other.m_autoLevelSize))
+    {
+        return false;
+    }
+    if ((m_equalizeCoef != other.m_equalizeCoef) || (m_equalizeSize != other.m_equalizeSize))
     {
         return false;
     }

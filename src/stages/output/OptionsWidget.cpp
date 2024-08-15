@@ -83,6 +83,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
 
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
+    colorFilterSelector->addItem(tr("Equalize"), F_EQUALIZE);
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
     colorFilterSelector->addItem(tr("KNN denoiser"), F_KNND);
     colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
@@ -481,6 +482,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.autoLevelSize());
         colorFilterCoef->setValue(color_options.autoLevelCoef());
         break;
+    case F_EQUALIZE:
+        colorFilterSize->setValue(color_options.equalizeSize());
+        colorFilterCoef->setValue(color_options.equalizeCoef());
+        break;
     case F_WIENER:
         colorFilterSize->setValue(color_options.wienerSize());
         colorFilterCoef->setValue(color_options.wienerCoef());
@@ -538,6 +543,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_AUTOLEVEL:
         color_options.setAutoLevelSize(value);
         break;
+    case F_EQUALIZE:
+        color_options.setEqualizeSize(value);
+        break;
     case F_WIENER:
         color_options.setWienerSize(value);
         break;
@@ -579,6 +587,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
     {
     case F_AUTOLEVEL:
         color_options.setAutoLevelCoef(value);
+        break;
+    case F_EQUALIZE:
+        color_options.setEqualizeCoef(value);
         break;
     case F_WIENER:
         color_options.setWienerCoef(value);

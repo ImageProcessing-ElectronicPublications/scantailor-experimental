@@ -76,10 +76,10 @@ IMAGEPROC_EXPORT void colorSqrFilterInPlace(
  * @brief Applies the Wiener filter to a color image.
  */
 IMAGEPROC_EXPORT QImage wienerColorFilter(
-    QImage const& image, int f_size = 3, float coef = 0.0f);
+    QImage const& image, int radius = 3, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void wienerColorFilterInPlace(
-    QImage& image, int f_size = 3, float coef = 0.0f);
+    QImage& image, int radius = 3, float coef = 0.0f);
 
 /**
  * @brief AutoLevel
@@ -89,10 +89,21 @@ IMAGEPROC_EXPORT void wienerColorFilterInPlace(
  * Modification: The values ​​of Imin and Imax are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 10.
  */
 IMAGEPROC_EXPORT QImage autoLevelFilter(
-    QImage const& image, int f_size = 10, float coef = 0.0f);
+    QImage const& image, int radius = 10, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void autoLevelFilterInPlace(
-    QImage& image, int f_size = 10, float coef = 0.0f);
+    QImage& image, int radius = 10, float coef = 0.0f);
+
+/**
+ * @brief Color Equalize
+ * Ie = equalize(I)
+ * Modification: The values ​​of Imin and Imax are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 6.
+ */
+IMAGEPROC_EXPORT QImage colorEqualizeFilter(
+    QImage const& image, int radius = 6, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void colorEqualizeFilterInPlace(
+    QImage& image, int radius = 6, float coef = 0.0f);
 
 /**
  * @brief Simple version KNN denoiser image.
@@ -120,10 +131,10 @@ IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
  * Ib = mean(I, w), w = box(2*r+1)
  */
 IMAGEPROC_EXPORT QImage blurFilter(
-    QImage const& image, int f_size = 1, float coef = 0.0f);
+    QImage const& image, int radius = 1, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void blurFilterInPlace(
-    QImage& image, int f_size = 1, float coef = 0.0f);
+    QImage& image, int radius = 1, float coef = 0.0f);
 
 /**
  * @brief Applies the Screen filter to a image.
@@ -134,10 +145,10 @@ IMAGEPROC_EXPORT void blurFilterInPlace(
  * @return The filtered image.
  */
 IMAGEPROC_EXPORT QImage screenFilter(
-    QImage const& image, int f_size = 5, float coef = 0.0f);
+    QImage const& image, int radius = 5, float coef = 0.0f);
 
 IMAGEPROC_EXPORT void screenFilterInPlace(
-    QImage& image, int f_size = 5, float coef = 0.0f);
+    QImage& image, int radius = 5, float coef = 0.0f);
 
 /**
  * @brief Remove BG.
@@ -154,10 +165,10 @@ IMAGEPROC_EXPORT void unPaperFilterInPlace(
  * @brief Add engraving texture to image.
  */
 IMAGEPROC_EXPORT void gravureFilterInPlace(
-    QImage& image, int f_size = 15, float coef = 0.0f);
+    QImage& image, int radius = 15, float coef = 0.0f);
 
 IMAGEPROC_EXPORT QImage gravureFilter(
-    QImage& image, int f_size = 15, float coef = 0.0f);
+    QImage& image, int radius = 15, float coef = 0.0f);
 
 /**
  * @brief Add dots8x8 texture to image.
@@ -165,19 +176,19 @@ IMAGEPROC_EXPORT QImage gravureFilter(
  * Modification: The threshold values are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 17.
  */
 IMAGEPROC_EXPORT void dots8FilterInPlace(
-    QImage& image, int f_size = 17, float coef = 0.0f);
+    QImage& image, int radius = 17, float coef = 0.0f);
 
 IMAGEPROC_EXPORT QImage dots8Filter(
-    QImage& image, int f_size = 17, float coef = 0.0f);
+    QImage& image, int radius = 17, float coef = 0.0f);
 
 /**
  * @brief EdgeDiv (EdgePlus+BlurDiv) filter image.
  */
 IMAGEPROC_EXPORT void edgedivFilterInPlace(
-    QImage& image, int f_size = 13, float coef = 0.0f);
+    QImage& image, int radius = 13, float coef = 0.0f);
 
 IMAGEPROC_EXPORT QImage edgedivFilter(
-    QImage& image, int f_size = 13, float coef = 0.0f);
+    QImage& image, int radius = 13, float coef = 0.0f);
 
 /**
  * @brief Highlighting and masking colors in image.
