@@ -95,6 +95,21 @@ IMAGEPROC_EXPORT void autoLevelFilterInPlace(
     QImage& image, int radius = 10, float coef = 0.0f);
 
 /**
+ * @brief Color Balance
+ * Ib = blur(I, r), r = 23.
+ * Ib2 = blur(I, r+r)
+ * Io1 = overlay(invert(Ib), Ib2)
+ * Io2 = overlay(invert(Ib2), Ib)
+ * Ic = overlay(I, Io1)
+ * Icb = overlay(Ic, Io2)
+ */
+IMAGEPROC_EXPORT QImage colorBalanceFilter(
+    QImage const& image, int radius = 23, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void colorBalanceFilterInPlace(
+    QImage& image, int radius = 23, float coef = 0.0f);
+
+/**
  * @brief Color Equalize
  * Ie = equalize(I)
  * Modification: The values ​​of Imin and Imax are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 6.

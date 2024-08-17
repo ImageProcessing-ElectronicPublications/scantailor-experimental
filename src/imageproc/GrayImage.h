@@ -158,7 +158,8 @@ IMAGEPROC_EXPORT GrayImage grayKnnDenoiser(
     GrayImage const& src, int radius = 1, float coef = 0.0f);
 IMAGEPROC_EXPORT GrayImage grayEqualize(
     GrayImage const& src, int radius = 1, bool flg_blur = false);
-
+IMAGEPROC_EXPORT GrayImage grayBalance(
+    GrayImage const& src, int radius = 23);
 
 } // namespace imageproc
 

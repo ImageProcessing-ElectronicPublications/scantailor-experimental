@@ -574,4 +574,130 @@ GrayImage grayEqualize(
     return gmean;
 } // grayEqualize
 
+GrayImage grayBalance(
+    GrayImage const& src, int const radius)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+
+    GrayImage gmean;
+    if (radius > 0)
+    {
+        gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return GrayImage(src);
+        }
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        int const radius2 = radius + radius;
+        GrayImage gmean2 = gaussBlur(src, radius2, radius2);
+        if (gmean2.isNull())
+        {
+            return GrayImage(src);
+        }
+        uint8_t* gmean2_line = gmean2.data();
+        int const gmean2_stride = gmean2.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float origin = src_line[x];
+                float mean = gmean_line[x];
+                float mean2 = gmean2_line[x];
+
+                /* overlay 1 */
+                float base = 255.0f - mean;
+                float overlay = mean2;
+                float retval1 = base;
+                if (base > 127.5f)
+                {
+                    retval1 = 255.0f - retval1;
+                    overlay = 255.0f - overlay;
+                }
+                retval1 *= overlay;
+                retval1 += retval1;
+                retval1 /= 255.0f;
+                if (base > 127.5f)
+                {
+                    retval1 = 255.0f - retval1;
+                }
+
+                /* overlay 2 */
+                base = 255.0f - mean2;
+                overlay = mean;
+                float retval2 = base;
+                if (base > 127.5f)
+                {
+                    retval2 = 255.0f - retval2;
+                    overlay = 255.0f - overlay;
+                }
+                retval2 *= overlay;
+                retval2 += retval2;
+                retval2 /= 255.0f;
+                if (base > 127.5f)
+                {
+                    retval2 = 255.0f - retval2;
+                }
+
+                /* overlay 3 */
+                base = origin;
+                overlay = retval1;
+                float retval3 = base;
+                if (base > 127.5f)
+                {
+                    retval3 = 255.0f - retval3;
+                    overlay = 255.0f - overlay;
+                }
+                retval3 *= overlay;
+                retval3 += retval3;
+                retval3 /= 255.0f;
+                if (base > 127.5f)
+                {
+                    retval3 = 255.0f - retval3;
+                }
+
+                /* overlay 4 */
+                base = retval3;
+                overlay = retval2;
+                float retval = base;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+                retval *= overlay;
+                retval += retval;
+                retval /= 255.0f;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                }
+
+                retval += 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                gmean_line[x] = (uint8_t) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+            gmean2_line += gmean2_stride;
+        }
+    }
+    else
+    {
+        gmean = GrayImage(src);
+    }
+
+    return gmean;
+} // grayBalance
+
 } // namespace imageproc

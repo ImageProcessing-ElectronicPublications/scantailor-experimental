@@ -36,6 +36,8 @@ public:
           m_wienerCoef(0.0),
           m_autoLevelSize(10),
           m_autoLevelCoef(0.0),
+          m_balanceSize(23),
+          m_balanceCoef(0.0),
           m_equalizeSize(6),
           m_equalizeCoef(0.0),
           m_knndRadius(7),
@@ -112,6 +114,23 @@ public:
     void setAutoLevelCoef(double val)
     {
         m_autoLevelCoef = val;
+    }
+
+    int balanceSize() const
+    {
+        return m_balanceSize;
+    }
+    void setBalanceSize(int val)
+    {
+        m_balanceSize = val;
+    }
+    double balanceCoef() const
+    {
+        return m_balanceCoef;
+    }
+    void setBalanceCoef(double val)
+    {
+        m_balanceCoef = val;
     }
 
     int equalizeSize() const
@@ -305,6 +324,8 @@ private:
     double m_wienerCoef;
     int m_autoLevelSize;
     double m_autoLevelCoef;
+    int m_balanceSize;
+    double m_balanceCoef;
     int m_equalizeSize;
     double m_equalizeCoef;
     int m_knndRadius;
