@@ -61,7 +61,7 @@ DewarpingView::DewarpingView(
     dewarping::DistortionModel const& distortion_model,
     dewarping::DepthPerception const& depth_perception,
     bool const fixed_number_of_control_points)
-    :	ImageViewBase(
+    :   ImageViewBase(
           accel_ops, full_size_image.origImage(), downscaled_image,
           ImagePresentation(
               full_size_image.xform().transform(),
@@ -152,11 +152,17 @@ DewarpingView::~DewarpingView()
 void
 DewarpingView::initNewSpline(XSpline& spline, QPointF const& p1, QPointF const& p2)
 {
+    int const num_points = 4;
     QLineF const line(p1, p2);
     spline.appendControlPoint(line.p1(), 0);
-    spline.appendControlPoint(line.pointAt(1.0/4.0), 1);
-    spline.appendControlPoint(line.pointAt(2.0/4.0), 1);
-    spline.appendControlPoint(line.pointAt(3.0/4.0), 1);
+    if (num_points > 2)
+    {
+        for (int i = 1; i < (num_points - 1); i++)
+        {
+            double frac = (double) i / (num_points - 1);
+            spline.appendControlPoint(line.pointAt(frac), 1);
+        }
+    }
     spline.appendControlPoint(line.p2(), 0);
 }
 
