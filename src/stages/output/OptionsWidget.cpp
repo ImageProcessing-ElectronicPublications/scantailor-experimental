@@ -84,6 +84,7 @@ OptionsWidget::OptionsWidget(
 
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Balance"), F_BALANCE);
+    colorFilterSelector->addItem(tr("Retinex"), F_RETINEX);
     colorFilterSelector->addItem(tr("Equalize"), F_EQUALIZE);
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
     colorFilterSelector->addItem(tr("KNN denoiser"), F_KNND);
@@ -487,6 +488,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.balanceSize());
         colorFilterCoef->setValue(color_options.balanceCoef());
         break;
+    case F_RETINEX:
+        colorFilterSize->setValue(color_options.retinexSize());
+        colorFilterCoef->setValue(color_options.retinexCoef());
+        break;
     case F_EQUALIZE:
         colorFilterSize->setValue(color_options.equalizeSize());
         colorFilterCoef->setValue(color_options.equalizeCoef());
@@ -551,6 +556,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_BALANCE:
         color_options.setBalanceSize(value);
         break;
+    case F_RETINEX:
+        color_options.setRetinexSize(value);
+        break;
     case F_EQUALIZE:
         color_options.setEqualizeSize(value);
         break;
@@ -598,6 +606,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_BALANCE:
         color_options.setBalanceCoef(value);
+        break;
+    case F_RETINEX:
+        color_options.setRetinexCoef(value);
         break;
     case F_EQUALIZE:
         color_options.setEqualizeCoef(value);

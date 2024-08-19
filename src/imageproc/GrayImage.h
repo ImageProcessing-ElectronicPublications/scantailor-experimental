@@ -160,6 +160,8 @@ IMAGEPROC_EXPORT GrayImage grayEqualize(
     GrayImage const& src, int radius = 1, bool flg_blur = false);
 IMAGEPROC_EXPORT GrayImage grayBalance(
     GrayImage const& src, int radius = 23);
+IMAGEPROC_EXPORT GrayImage grayRetinex(
+    GrayImage const& src, int radius = 31);
 
 } // namespace imageproc
 

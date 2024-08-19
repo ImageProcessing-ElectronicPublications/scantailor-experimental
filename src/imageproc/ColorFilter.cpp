@@ -452,6 +452,67 @@ void colorBalanceFilterInPlace(
     }
 }
 
+QImage colorRetinexFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    colorRetinexFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void colorRetinexFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if (coef != 0.0)
+    {
+        int const w = image.width();
+        int const h = image.height();
+        uint8_t* image_line = (uint8_t*) image.bits();
+        int const image_stride = image.bytesPerLine();
+        unsigned int const cnum = image_stride / w;
+
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean = grayRetinex(gray, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; ++y)
+        {
+            for (int x = 0; x < w; ++x)
+            {
+                float const origin = gray_line[x];
+                float mean = gmean_line[x];
+
+                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
+                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
+                gmean_line[x] = (uint8_t) mean;
+            }
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
+        }
+
+        imageReLevel(image, gray, gmean);
+    }
+}
+
 QImage colorEqualizeFilter(
     QImage const& image, int const radius, float const coef)
 {

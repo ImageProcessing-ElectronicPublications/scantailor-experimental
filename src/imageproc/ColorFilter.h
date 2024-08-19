@@ -110,6 +110,17 @@ IMAGEPROC_EXPORT void colorBalanceFilterInPlace(
     QImage& image, int radius = 23, float coef = 0.0f);
 
 /**
+ * @brief Color Retinex
+ * Ib = blur(I, r), r = 31.
+ * Ir = retinex(I, Ib) = 127.5 * (I / Ib)
+ */
+IMAGEPROC_EXPORT QImage colorRetinexFilter(
+    QImage const& image, int radius = 31, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void colorRetinexFilterInPlace(
+    QImage& image, int radius = 31, float coef = 0.0f);
+
+/**
  * @brief Color Equalize
  * Ie = equalize(I)
  * Modification: The values ​​of Imin and Imax are sought not from the original image I, but from its smoothed version Ib = blur(I, r), r = 6.

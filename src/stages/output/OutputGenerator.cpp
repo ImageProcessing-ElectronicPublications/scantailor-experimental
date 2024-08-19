@@ -368,6 +368,8 @@ OutputGenerator::process(
 
     colorBalanceFilterInPlace(transformed_image, color_options.balanceSize(), color_options.balanceCoef());
 
+    colorRetinexFilterInPlace(transformed_image, color_options.retinexSize(), color_options.retinexCoef());
+
     colorEqualizeFilterInPlace(transformed_image, color_options.equalizeSize(), color_options.equalizeCoef());
 
     wienerColorFilterInPlace(transformed_image, color_options.wienerSize(), (color_options.wienerCoef() * color_options.wienerCoef()));

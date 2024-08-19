@@ -700,4 +700,52 @@ GrayImage grayBalance(
     return gmean;
 } // grayBalance
 
+GrayImage grayRetinex(
+    GrayImage const& src, int const radius)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+
+    GrayImage gmean;
+    if (radius > 0)
+    {
+        gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return GrayImage(src);
+        }
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = 1.0f + src_line[x];
+                float const mean = 1.0f + gmean_line[x];
+                float const frac = origin / mean;
+                float const retinex = 127.5f * frac + 0.5f;
+                float const target = (retinex < 0.0f) ? 0.0f : (retinex < 255.0f) ? retinex : 255.0f;
+
+                gmean_line[x] = (uint8_t) retinex;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+    else
+    {
+        gmean = GrayImage(src);
+    }
+
+    return gmean;
+} // grayReinex
+
 } // namespace imageproc
