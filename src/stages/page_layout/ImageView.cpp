@@ -312,13 +312,11 @@ ImageView::aggregateHardSizeChanged()
 void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
-    QRectF centerRectV = QRectF((m_outerRect.right() + m_outerRect.left()) * 0.5 - 1, m_outerRect.top(), 3, (m_outerRect.bottom() - m_outerRect.top()));
-    QRectF centerRectH = QRectF(m_outerRect.left(), (m_outerRect.bottom() + m_outerRect.top()) * 0.5 - 1, (m_outerRect.right() - m_outerRect.left()), 3);
+    QRectF centerRectV = QRectF((m_outerRect.right() + m_outerRect.left()) * 0.5f, m_outerRect.top(), 0.0f, (m_outerRect.bottom() - m_outerRect.top()));
+    QRectF centerRectH = QRectF(m_outerRect.left(), (m_outerRect.bottom() + m_outerRect.top()) * 0.5f, (m_outerRect.right() - m_outerRect.left()), 0.0f);
 
     QPainterPath outer_outline;
     outer_outline.addPolygon(m_outerRect);
-    outer_outline.addPolygon(centerRectV);
-    outer_outline.addPolygon(centerRectH);
 
     QPainterPath content_outline;
     content_outline.addPolygon(m_innerRect);
@@ -337,6 +335,8 @@ ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
     pen.setWidthF(2.0);
     painter.setPen(pen);
     painter.setBrush(Qt::NoBrush);
+    painter.drawRect(centerRectV);
+    painter.drawRect(centerRectH);
     painter.drawRect(m_middleRect);
     painter.drawRect(m_innerRect);
 
