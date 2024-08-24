@@ -162,6 +162,8 @@ IMAGEPROC_EXPORT GrayImage grayBalance(
     GrayImage const& src, int radius = 23);
 IMAGEPROC_EXPORT GrayImage grayRetinex(
     GrayImage const& src, int radius = 31);
+IMAGEPROC_EXPORT unsigned int grayDominantaValue(
+    GrayImage const& src);
 
 } // namespace imageproc
 

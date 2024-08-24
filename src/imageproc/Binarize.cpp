@@ -283,14 +283,15 @@ BinaryImage binarizeMean(
     unsigned int const h = src.height();
     uint8_t const* src_line = src.data();
     unsigned int const src_stride = src.stride();
-    unsigned long int count = 0, countb = 0;
+    uint64_t count = 0, countb = 0;
     double meanl = 0, mean = 0.0, meanw = 0.0, countw = 0.0;
     double dist, dist_mean = 0, threshold = 128;
 
-    for (unsigned int y = 0; y < h; ++y)
+/*
+    for (unsigned int y = 0; y < h; y++)
     {
         meanl = 0.0;
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             unsigned char pix = src_line[x];
             pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
@@ -304,10 +305,10 @@ BinaryImage binarizeMean(
     mean = (count > 0) ? (mean / count) : 128.0;
 
     src_line = src.data();
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
         meanl = 0.0;
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             unsigned char pix = src_line[x];
             pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
@@ -322,12 +323,15 @@ BinaryImage binarizeMean(
         src_line += src_stride;
     }
     meanw = (countw > 0.0) ? (meanw / countw) : 128.0;
+*/
+    meanw = grayDominantaValue(src);
 
     src_line = src.data();
-    for (unsigned int y = 0; y < h; ++y)
+    count = 0;
+    for (unsigned int y = 0; y < h; y++)
     {
         meanl = 0.0;
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             unsigned char pix = src_line[x];
             pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
@@ -335,6 +339,7 @@ BinaryImage binarizeMean(
             dist = (pixel > meanw) ? (pixel - meanw) : (meanw - pixel);
             dist *= dist;
             meanl += dist;
+            count++;
         }
         dist_mean += meanl;
         src_line += src_stride;
@@ -343,9 +348,9 @@ BinaryImage binarizeMean(
     threshold = sqrt(dist_mean);
 
     src_line = src.data();
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             unsigned char pix = src_line[x];
             pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
@@ -372,9 +377,9 @@ BinaryImage binarizeMean(
 
     src_line = src.data();
     threshold *= (count < countb) ? (1.0 - (double) delta * 0.02) : (1.0 + (double) delta * 0.02);
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             unsigned char pix = src_line[x];
             pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;

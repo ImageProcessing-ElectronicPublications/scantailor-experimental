@@ -748,4 +748,56 @@ GrayImage grayRetinex(
     return gmean;
 } // grayReinex
 
+unsigned int grayDominantaValue(
+    GrayImage const& src)
+{
+    if (src.isNull())
+    {
+        return 127;
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+
+
+    uint64_t histogram[256] = {0};
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            unsigned int const value = src_line[x];
+            histogram[value]++;
+        }
+        src_line += src_stride;
+    }
+
+    for (unsigned int i = 1; i < 256; i++)
+    {
+        histogram[i] += histogram[i - 1];
+    }
+
+    unsigned int ilow  = 0;
+    for (unsigned int i = (256 >> 1); i > 0; i >>= 1)
+    {
+		uint64_t sum_max = 0;
+        unsigned int inew = ilow;
+		for (unsigned int j = ilow; j < (ilow + i); j++)
+		{
+			uint64_t const sum_low = (j > 0) ? histogram[j] : 0;
+			uint64_t const sum_high = histogram[j + i];
+			uint64_t const sum = sum_high - sum_low;
+			if (sum > sum_max)
+			{
+				inew = j;
+				sum_max = sum;
+			}
+		}
+		ilow = inew;
+    }
+
+    return ilow;
+} // grayEqualize
+
 } // namespace imageproc
