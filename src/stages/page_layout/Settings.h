@@ -35,6 +35,7 @@ namespace page_layout
 class Params;
 class MatchSizeMode;
 class Alignment;
+class Framings;
 
 class Settings : public RefCountable
 {
@@ -44,7 +45,7 @@ public:
 
     static RelativeMargins defaultHardMargins()
     {
-        return RelativeMargins(0.05, 0.05, 0.05, 0.05);
+        return RelativeMargins(0.0, 0.0, 0.0, 0.0);
     }
 
     Settings();
@@ -152,6 +153,10 @@ public:
      */
     void setPageAlignment(PageId const& page_id, Alignment const& alignment);
 
+    Framings getPageFramings(PageId const& page_id) const;
+
+    void setPageFramings(PageId const& page_id, Framings const& framings);
+
     /**
      * \brief Sets content size in millimeters for the specified page.
      *
@@ -182,6 +187,7 @@ private:
     class Item;
     class ModifyMargins;
     class ModifyAlignment;
+    class ModifyFramings;
     class ModifyContentSize;
 
     std::unique_ptr<Impl> m_ptrImpl;

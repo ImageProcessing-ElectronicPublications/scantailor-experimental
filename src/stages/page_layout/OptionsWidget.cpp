@@ -16,14 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "OptionsWidget.h"
-#include "Settings.h"
-#include "ApplyDialog.h"
-#include "../../Utils.h"
-#include "ScopedIncDec.h"
-#include "PageInfo.h"
-#include "PageId.h"
-#include "imageproc/Constants.h"
+#include <assert.h>
 #include <boost/foreach.hpp>
 #include <QApplication>
 #include <QStyle>
@@ -32,7 +25,14 @@
 #include <QString>
 #include <QSettings>
 #include <QVariant>
-#include <assert.h>
+#include "OptionsWidget.h"
+#include "Settings.h"
+#include "ApplyDialog.h"
+#include "../../Utils.h"
+#include "ScopedIncDec.h"
+#include "PageInfo.h"
+#include "PageId.h"
+#include "imageproc/Constants.h"
 
 using namespace imageproc::constants;
 
@@ -42,7 +42,7 @@ namespace page_layout
 OptionsWidget::OptionsWidget(
     IntrusivePtr<Settings> const& settings,
     PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(settings),
+    : m_ptrSettings(settings),
       m_pageSelectionAccessor(page_selection_accessor),
       m_ignoreMarginChanges(0),
       m_ignoreMatchSizeModeChanges(0),
@@ -109,6 +109,18 @@ OptionsWidget::OptionsWidget(
     );
 
     connect(
+        extraWMarginSpinBox, SIGNAL(valueChanged(double)),
+        this, SLOT(extraWMarginChanged(double))
+    );
+    connect(
+        extraHMarginSpinBox, SIGNAL(valueChanged(double)),
+        this, SLOT(extraHMarginChanged(double))
+    );
+    connect(
+        applyFramingsBtn, SIGNAL(clicked()),
+        this, SLOT(showApplyFramingsDialog())
+    );
+    connect(
         topMarginSpinBox, SIGNAL(valueChanged(double)),
         this, SLOT(vertMarginsChanged(double))
     );
@@ -169,13 +181,17 @@ OptionsWidget::~OptionsWidget()
 
 void
 OptionsWidget::preUpdateUI(
-    PageId const& page_id, RelativeMargins const& margins,
-    MatchSizeMode const& match_size_mode, Alignment const& alignment)
+    PageId const& page_id,
+    RelativeMargins const& margins,
+    MatchSizeMode const& match_size_mode,
+    Alignment const& alignment,
+    Framings const& framings)
 {
     m_pageId = page_id;
     m_margins = margins;
     m_matchSizeMode = match_size_mode;
     m_alignment = alignment;
+    m_framings = framings;
 
     for (auto const& kv : m_alignmentByButton)
     {
@@ -235,6 +251,28 @@ OptionsWidget::marginsSetExternally(RelativeMargins const& margins)
 {
     m_margins = margins;
     updateMarginsDisplay();
+}
+
+void
+OptionsWidget::extraWMarginChanged(double const val)
+{
+    extraWMarginSpinBox->setValue(val);
+
+    m_framings.setFramingWidth(extraWMarginSpinBox->value() / 100.0);
+    updateMarginsDisplay();
+    emit framingsChanged(m_framings);
+    emit marginsSetLocally(m_margins);
+}
+
+void
+OptionsWidget::extraHMarginChanged(double const val)
+{
+    extraHMarginSpinBox->setValue(val);
+
+    m_framings.setFramingHeight(extraHMarginSpinBox->value() / 100.0);
+    updateMarginsDisplay();
+    emit framingsChanged(m_framings);
+    emit marginsSetLocally(m_margins);
 }
 
 void
@@ -353,6 +391,21 @@ OptionsWidget::alignmentButtonClicked()
 }
 
 void
+OptionsWidget::showApplyFramingsDialog()
+{
+    ApplyDialog* dialog = new ApplyDialog(
+        this, m_pageId, m_pageSelectionAccessor
+    );
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowTitle(tr("Apply Framings"));
+    connect(
+        dialog, SIGNAL(accepted(std::set<PageId> const&)),
+        this, SLOT(applyFramings(std::set<PageId> const&))
+    );
+    dialog->show();
+}
+
+void
 OptionsWidget::showApplyMarginsDialog()
 {
     ApplyDialog* dialog = new ApplyDialog(
@@ -380,6 +433,22 @@ OptionsWidget::showApplyAlignmentDialog()
         this, SLOT(applyAlignment(std::set<PageId> const&))
     );
     dialog->show();
+}
+
+void
+OptionsWidget::applyFramings(std::set<PageId> const& pages)
+{
+    if (pages.empty())
+    {
+        return;
+    }
+
+    for (PageId const& page_id : pages)
+    {
+        m_ptrSettings->setPageFramings(page_id, m_framings);
+    }
+
+    emit invalidateAllThumbnails();
 }
 
 void
@@ -421,6 +490,8 @@ OptionsWidget::updateMarginsDisplay()
 {
     ScopedIncDec<int> const ignore_scope(m_ignoreMarginChanges);
 
+    extraWMarginSpinBox->setValue(m_framings.getFramingWidth() * 100.0);
+    extraHMarginSpinBox->setValue(m_framings.getFramingHeight() * 100.0);
     topMarginSpinBox->setValue(m_margins.top() * 100.0);
     bottomMarginSpinBox->setValue(m_margins.bottom() * 100.0);
     leftMarginSpinBox->setValue(m_margins.left() * 100.0);

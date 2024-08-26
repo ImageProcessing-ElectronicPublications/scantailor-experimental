@@ -19,12 +19,13 @@
 #ifndef PAGE_LAYOUT_THUMBNAIL_H_
 #define PAGE_LAYOUT_THUMBNAIL_H_
 
+#include <QTransform>
+#include <QRectF>
 #include "ThumbnailBase.h"
 #include "Params.h"
 #include "PageLayout.h"
+#include "Framings.h"
 #include "IntrusivePtr.h"
-#include <QTransform>
-#include <QRectF>
 
 class ThumbnailPixmapCache;
 class PageId;
@@ -41,16 +42,21 @@ class Thumbnail : public ThumbnailBase
 {
 public:
     Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-              QSizeF const& max_display_size, PageId const& page_id, Params const& params,
+              QSizeF const& max_display_size,
+              PageId const& page_id,
+              Params const& params,
               imageproc::AbstractImageTransform const& full_size_image_transform,
-              PageLayout const& page_layout);
+              PageLayout const& page_layout,
+              Framings const& framings);
 
     virtual void paintOverImage(
-        QPainter& painter, QTransform const& transformed_to_display,
+        QPainter& painter,
+        QTransform const& transformed_to_display,
         QTransform const& thumb_to_display);
 private:
     Params m_params;
     PageLayout m_pageLayout;
+    Framings m_framings;
 };
 
 } // namespace page_layout

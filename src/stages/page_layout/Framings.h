@@ -16,14 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PAGE_LAYOUT_PARAMS_H_
-#define PAGE_LAYOUT_PARAMS_H_
-
-#include "RelativeMargins.h"
-#include "MatchSizeMode.h"
-#include "Alignment.h"
-#include "Framings.h"
-#include <QSizeF>
+#ifndef PAGE_LAYOUT_FRAMINGS_H_
+#define PAGE_LAYOUT_FRAMINGS_H_
 
 class QDomDocument;
 class QDomElement;
@@ -32,50 +26,47 @@ class QString;
 namespace page_layout
 {
 
-class Params
+class Framings
 {
-    // Member-wise copying is OK.
 public:
-    Params(RelativeMargins const& hard_margins,
-           QSizeF const& content_size,
-           MatchSizeMode const& match_size_mode,
-           Alignment const& alignment,
-           Framings const& framings);
+    Framings() : m_framingw(0.12), m_framingh(0.08) {}
 
-    Params(QDomElement const& el);
+    Framings(double hor, double vert) : m_framingw(hor), m_framingh(vert) {}
 
-    RelativeMargins const& hardMargins() const
+    Framings(QDomElement const& el);
+
+    double getFramingWidth() const
     {
-        return m_hardMargins;
+        return m_framingw;
+    }
+    void setFramingWidth(double value)
+    {
+        m_framingw = value;
     }
 
-    QSizeF const& contentSize() const
+    double getFramingHeight() const
     {
-        return m_contentSize;
+        return m_framingh;
+    }
+    void setFramingHeight(double value)
+    {
+        m_framingh = value;
     }
 
-    MatchSizeMode matchSizeMode() const
+    bool operator==(Framings const& other) const
     {
-        return m_matchSizeMode;
+        return m_framingw == other.m_framingw && m_framingh == other.m_framingh;
     }
 
-    Alignment const& alignment() const
+    bool operator!=(Framings const& other) const
     {
-        return m_alignment;
-    }
-
-    Framings const& framings() const
-    {
-        return m_framings;
+        return !(*this == other);
     }
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
-    RelativeMargins m_hardMargins;
-    QSizeF m_contentSize;
-    MatchSizeMode m_matchSizeMode;
-    Alignment m_alignment;
-    Framings m_framings;
+    double m_framingw;
+    double m_framingh;
 };
 
 } // namespace page_layout

@@ -19,6 +19,8 @@
 #ifndef PAGE_LAYOUT_TASK_H_
 #define PAGE_LAYOUT_TASK_H_
 
+#include <memory>
+#include <boost/optional.hpp>
 #include "NonCopyable.h"
 #include "RefCountable.h"
 #include "FilterResult.h"
@@ -26,8 +28,6 @@
 #include "CachingFactory.h"
 #include "imageproc/AffineTransformedImage.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <boost/optional.hpp>
-#include <memory>
 
 class TaskStatus;
 class ContentBox;

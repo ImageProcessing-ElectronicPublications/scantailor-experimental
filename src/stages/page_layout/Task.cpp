@@ -16,6 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QSizeF>
+#include <QRectF>
+#include <QLineF>
+#include <QPolygonF>
+#include <QTransform>
+#include <QObject>
 #include "Task.h"
 #include "Filter.h"
 #include "OptionsWidget.h"
@@ -31,12 +37,6 @@
 #include "PageLayout.h"
 #include "stages/output/Task.h"
 #include "imageproc/AffineTransformedImage.h"
-#include <QSizeF>
-#include <QRectF>
-#include <QLineF>
-#include <QPolygonF>
-#include <QTransform>
-#include <QObject>
 
 #include "CommandLine.h"
 
@@ -55,7 +55,8 @@ public:
               std::shared_ptr<AbstractImageTransform const> const& orig_transform,
               AffineTransformedImage const& affine_transformed_image,
               ContentBox const& content_box,
-              bool agg_size_changed, bool batch);
+              bool agg_size_changed,
+              bool batch);
 
     virtual void updateUI(FilterUiInterface* ui);
 
@@ -80,8 +81,10 @@ private:
 Task::Task(IntrusivePtr<Filter> const& filter,
            IntrusivePtr<output::Task> const& next_task,
            IntrusivePtr<Settings> const& settings,
-           PageId const& page_id, bool batch, bool debug)
-    :	m_ptrFilter(filter),
+           PageId const& page_id,
+           bool batch,
+           bool debug)
+    : m_ptrFilter(filter),
       m_ptrNextTask(next_task),
       m_ptrSettings(settings),
       m_pageId(page_id),
@@ -125,14 +128,18 @@ Task::process(
         );
 
         PageLayout const page_layout(
-            unscaled_content_rect, agg_hard_size_after,
-            params.matchSizeMode(), params.alignment(), params.hardMargins()
+            unscaled_content_rect,
+            agg_hard_size_after,
+            params.matchSizeMode(),
+            params.alignment(),
+            params.framings(),
+            params.hardMargins()
         );
         page_layout.absorbScalingIntoTransform(*adjusted_transform);
 
         return m_ptrNextTask->process(
                    status, accel_ops, orig_image, gray_orig_image_factory, adjusted_transform,
-                   page_layout.innerRect(), page_layout.outerRect()
+                   page_layout.innerRect(), page_layout.extraRect(params.framings())
                );
     }
     else if (m_ptrFilter->optionsWidget())
@@ -171,7 +178,7 @@ Task::UiUpdater::UiUpdater(
     std::shared_ptr<AbstractImageTransform const> const& orig_transform,
     AffineTransformedImage const& affine_transformed_image,
     ContentBox const& content_box, bool agg_size_changed, bool batch)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_ptrSettings(settings),
       m_pageId(page_id),
@@ -262,6 +269,10 @@ Task::UiUpdater::updateUI(FilterUiInterface* ui)
         QObject::connect(
             opt_widget, SIGNAL(alignmentChanged(Alignment const&)),
             view, SLOT(alignmentChanged(Alignment const&))
+        );
+        QObject::connect(
+            opt_widget, SIGNAL(framingsChanged(Framings const&)),
+            view, SLOT(framingsChanged(Framings const&))
         );
         QObject::connect(
             opt_widget, SIGNAL(aggregateHardSizeChanged()),

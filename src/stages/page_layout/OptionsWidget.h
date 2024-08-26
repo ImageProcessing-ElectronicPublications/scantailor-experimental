@@ -19,6 +19,10 @@
 #ifndef PAGE_LAYOUT_OPTIONSWIDGET_H_
 #define PAGE_LAYOUT_OPTIONSWIDGET_H_
 
+#include <memory>
+#include <map>
+#include <set>
+#include <QIcon>
 #include "ui_PageLayoutOptionsWidget.h"
 #include "FilterOptionsWidget.h"
 #include "PageSelectionAccessor.h"
@@ -26,11 +30,8 @@
 #include "RelativeMargins.h"
 #include "MatchSizeMode.h"
 #include "Alignment.h"
+#include "Framings.h"
 #include "PageId.h"
-#include <QIcon>
-#include <memory>
-#include <map>
-#include <set>
 
 class QToolButton;
 class ProjectPages;
@@ -52,8 +53,13 @@ public:
 
     virtual ~OptionsWidget();
 
-    void preUpdateUI(PageId const& page_id, RelativeMargins const& margins,
-                     MatchSizeMode const& match_size_mode, Alignment const& alignment);
+    void preUpdateUI(
+        PageId const& page_id,
+        RelativeMargins const& margins,
+        MatchSizeMode const& match_size_mode,
+        Alignment const& alignment,
+        Framings const& framings
+    );
 
     void postUpdateUI(bool have_content_box);
 
@@ -81,6 +87,11 @@ public:
     {
         return m_alignment;
     }
+
+    Framings const& framings() const
+    {
+        return m_framings;
+    }
 signals:
     void leftRightLinkToggled(bool linked);
 
@@ -90,12 +101,18 @@ signals:
 
     void alignmentChanged(Alignment const& alignment);
 
+    void framingsChanged(Framings const& framings);
+
     void marginsSetLocally(RelativeMargins const& margins);
 
     void aggregateHardSizeChanged();
 public slots:
     void marginsSetExternally(RelativeMargins const& margins);
 private slots:
+    void extraWMarginChanged(double val);
+
+    void extraHMarginChanged(double val);
+
     void horMarginsChanged(double val);
 
     void vertMarginsChanged(double val);
@@ -112,9 +129,13 @@ private slots:
 
     void alignmentButtonClicked();
 
+    void showApplyFramingsDialog();
+
     void showApplyMarginsDialog();
 
     void showApplyAlignmentDialog();
+
+    void applyFramings(std::set<PageId> const& pages);
 
     void applyMargins(std::set<PageId> const& pages);
 
@@ -137,6 +158,7 @@ private:
     RelativeMargins m_margins;
     MatchSizeMode m_matchSizeMode;
     Alignment m_alignment;
+    Framings m_framings;
     int m_ignoreMarginChanges;
     int m_ignoreMatchSizeModeChanges;
     bool m_leftRightLinked;

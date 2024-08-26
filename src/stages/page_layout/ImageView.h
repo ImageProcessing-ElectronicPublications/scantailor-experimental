@@ -35,6 +35,7 @@
 #include "ObjectDragHandler.h"
 #include "MatchSizeMode.h"
 #include "Alignment.h"
+#include "Framings.h"
 #include "IntrusivePtr.h"
 #include "PageId.h"
 #include "imageproc/AffineImageTransform.h"
@@ -86,6 +87,8 @@ public slots:
     void matchSizeModeChanged(MatchSizeMode const& match_size_mode);
 
     void alignmentChanged(Alignment const& alignment);
+
+    void framingsChanged(Framings const& framings);
 
     void aggregateHardSizeChanged();
 private:
@@ -210,6 +213,7 @@ private:
      * size with other pages.
      */
     QRectF m_outerRect;
+    QRectF m_extraRect;
 
     /**
      * \brief Aggregate (max_width, max_height) hard page size in pixels.
@@ -235,6 +239,8 @@ private:
     MatchSizeMode m_matchSizeMode;
 
     Alignment m_alignment;
+
+    Framings m_framings;
 
     /**
      * Some data saved at the beginning of a resizing operation.

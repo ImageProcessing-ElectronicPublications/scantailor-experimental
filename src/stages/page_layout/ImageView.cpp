@@ -16,15 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ImageView.h"
-#include "OptionsWidget.h"
-#include "RelativeMargins.h"
-#include "Settings.h"
-#include "ContentBox.h"
-#include "ImagePresentation.h"
-#include "PageLayout.h"
-#include "Utils.h"
-#include "imageproc/AffineTransformedImage.h"
+#include <algorithm>
+#include <math.h>
+#include <assert.h>
+#include <boost/bind/bind.hpp>
+#include <Qt>
 #include <QPointF>
 #include <QLineF>
 #include <QPolygonF>
@@ -37,11 +33,15 @@
 #include <QPen>
 #include <QColor>
 #include <QDebug>
-#include <Qt>
-#include <boost/bind/bind.hpp>
-#include <algorithm>
-#include <math.h>
-#include <assert.h>
+#include "ImageView.h"
+#include "OptionsWidget.h"
+#include "RelativeMargins.h"
+#include "Settings.h"
+#include "ContentBox.h"
+#include "ImagePresentation.h"
+#include "PageLayout.h"
+#include "Utils.h"
+#include "imageproc/AffineTransformedImage.h"
 
 using namespace imageproc;
 
@@ -62,7 +62,7 @@ ImageView::ImageView(
                 affine_transformed_image.xform().transform(),
                 affine_transformed_image.xform().transformedCropArea()
             ),
-            QMarginsF(5.0, 5.0, 5.0, 5.0)
+            QMarginsF(0.0, 0.0, 0.0, 0.0)
         ),
         m_dragHandler(*this),
         m_zoomHandler(*this),
@@ -79,6 +79,7 @@ ImageView::ImageView(
         m_committedAggregateHardSize(m_aggregateHardSize),
         m_matchSizeMode(opt_widget.matchSizeMode()),
         m_alignment(opt_widget.alignment()),
+        m_framings(opt_widget.framings()),
         m_leftRightLinked(opt_widget.leftRightLinked()),
         m_topBottomLinked(opt_widget.topBottomLinked())
 {
@@ -301,6 +302,14 @@ ImageView::alignmentChanged(Alignment const& alignment)
 }
 
 void
+ImageView::framingsChanged(Framings const& framings)
+{
+    m_framings = framings;
+    m_ptrSettings->setPageFramings(m_pageId, framings);
+    emit invalidateThumbnail(m_pageId);
+}
+
+void
 ImageView::aggregateHardSizeChanged()
 {
     m_aggregateHardSize = m_ptrSettings->getAggregateHardSize();
@@ -312,11 +321,12 @@ ImageView::aggregateHardSizeChanged()
 void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
-    QRectF centerRectV = QRectF((m_outerRect.right() + m_outerRect.left()) * 0.5f, m_outerRect.top(), 0.0f, (m_outerRect.bottom() - m_outerRect.top()));
-    QRectF centerRectH = QRectF(m_outerRect.left(), (m_outerRect.bottom() + m_outerRect.top()) * 0.5f, (m_outerRect.right() - m_outerRect.left()), 0.0f);
+    QRectF centerRectV = QRectF((m_extraRect.right() + m_extraRect.left()) * 0.5f, m_extraRect.top(), 0.0f, (m_extraRect.bottom() - m_extraRect.top()));
+    QRectF centerRectH = QRectF(m_extraRect.left(), (m_extraRect.bottom() + m_extraRect.top()) * 0.5f, (m_extraRect.right() - m_extraRect.left()), 0.0f);
 
     QPainterPath outer_outline;
-    outer_outline.addPolygon(m_outerRect);
+//    outer_outline.addPolygon(m_outerRect);
+    outer_outline.addPolygon(m_extraRect);
 
     QPainterPath content_outline;
     content_outline.addPolygon(m_innerRect);
@@ -625,13 +635,18 @@ void
 ImageView::recalcBoxesAndFit(RelativeMargins const& margins)
 {
     PageLayout const page_layout(
-        m_unscaledContentRect, m_aggregateHardSize,
-        m_matchSizeMode, m_alignment, margins
+        m_unscaledContentRect,
+        m_aggregateHardSize,
+        m_matchSizeMode,
+        m_alignment,
+        m_framings,
+        margins
     );
 
     m_innerRect = page_layout.innerRect();
     m_middleRect = page_layout.middleRect();
     m_outerRect = page_layout.outerRect();
+    m_extraRect = page_layout.extraRect(m_framings);
 
     AffineImageTransform scaled_transform(m_unscaledAffineTransform);
     page_layout.absorbScalingIntoTransform(scaled_transform);
@@ -642,7 +657,7 @@ ImageView::recalcBoxesAndFit(RelativeMargins const& margins)
 
     setZoomLevel(1.0);
     updateTransformAndFixFocalPoint(
-        ImagePresentation(scaled_transform.transform(), m_outerRect),
+        ImagePresentation(scaled_transform.transform(), m_extraRect),
         CENTER_IF_FITS
     );
 }
@@ -658,13 +673,13 @@ ImageView::updatePresentationTransform(FitMode const fit_mode)
 {
     if (fit_mode == DONT_FIT)
     {
-        updateTransformPreservingScale(ImagePresentation(imageToVirtual(), m_outerRect));
+        updateTransformPreservingScale(ImagePresentation(imageToVirtual(), m_extraRect));
     }
     else
     {
         setZoomLevel(1.0);
         updateTransformAndFixFocalPoint(
-            ImagePresentation(imageToVirtual(), m_outerRect), CENTER_IF_FITS
+            ImagePresentation(imageToVirtual(), m_extraRect), CENTER_IF_FITS
         );
     }
 }
@@ -725,6 +740,12 @@ ImageView::recalcOuterRect()
                       -soft_margins.left(), -soft_margins.top(),
                       soft_margins.right(), soft_margins.bottom()
                   );
+
+    float const basew = m_outerRect.width();
+    float const baseh = m_outerRect.height();
+    float const extraw = basew * m_framings.getFramingWidth();
+    float const extrah = baseh * m_framings.getFramingHeight();
+    m_extraRect = m_outerRect.adjusted(-extraw, -extrah, extraw, extrah);
 }
 
 ImageView::AggregateSizeChanged

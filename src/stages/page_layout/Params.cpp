@@ -30,16 +30,18 @@ Params::Params(
     RelativeMargins const& hard_margins,
     QSizeF const& content_size,
     MatchSizeMode const& match_size_mode,
-    Alignment const& alignment)
-    :	m_hardMargins(hard_margins),
+    Alignment const& alignment,
+    Framings const& framings)
+    : m_hardMargins(hard_margins),
       m_contentSize(content_size),
       m_matchSizeMode(match_size_mode),
-      m_alignment(alignment)
+      m_alignment(alignment),
+      m_framings(framings)
 {
 }
 
 Params::Params(QDomElement const& el)
-    :	m_hardMargins(
+    :    m_hardMargins(
           XmlUnmarshaller::relativeMargins(
               el.namedItem("hardMargins").toElement()
           )
@@ -50,7 +52,8 @@ Params::Params(QDomElement const& el)
           )
       ),
       m_matchSizeMode(el.namedItem("matchSizeMode").toElement()),
-      m_alignment(el.namedItem("alignment").toElement())
+      m_alignment(el.namedItem("alignment").toElement()),
+      m_framings(el.namedItem("framings").toElement())
 {
 }
 
@@ -64,6 +67,7 @@ Params::toXml(QDomDocument& doc, QString const& name) const
     el.appendChild(marshaller.sizeF(m_contentSize, "contentSize"));
     el.appendChild(m_matchSizeMode.toXml(doc, "matchSizeMode"));
     el.appendChild(m_alignment.toXml(doc, "alignment"));
+    el.appendChild(m_framings.toXml(doc, "framings"));
     return el;
 }
 

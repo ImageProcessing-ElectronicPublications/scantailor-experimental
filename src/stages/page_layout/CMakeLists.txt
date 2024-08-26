@@ -16,6 +16,7 @@ SET(
     ApplyDialog.cpp ApplyDialog.h
     Alignment.cpp Alignment.h
     MatchSizeMode.cpp MatchSizeMode.h
+    Framings.cpp Framings.h
     PageLayout.cpp PageLayout.h
     OrderByWidthProvider.cpp OrderByWidthProvider.h
     OrderByHeightProvider.cpp OrderByHeightProvider.h

@@ -16,16 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "PageLayout.h"
-#include "MatchSizeMode.h"
-#include "Alignment.h"
-#include "RelativeMargins.h"
-#include "Utils.h"
-#include "imageproc/AbstractImageTransform.h"
+#include <algorithm>
 #include <QTransform>
 #include <QtGlobal>
 #include <QMarginsF>
-#include <algorithm>
+#include "PageLayout.h"
+#include "MatchSizeMode.h"
+#include "Alignment.h"
+#include "Framings.h"
+#include "RelativeMargins.h"
+#include "Utils.h"
+#include "imageproc/AbstractImageTransform.h"
 
 using namespace imageproc;
 
@@ -33,8 +34,11 @@ namespace page_layout
 {
 
 PageLayout::PageLayout(
-    QRectF const& unscaled_content_rect, QSizeF const& aggregate_hard_size,
-    MatchSizeMode const& match_size_mode, Alignment const& alignment,
+    QRectF const& unscaled_content_rect,
+    QSizeF const& aggregate_hard_size,
+    MatchSizeMode const& match_size_mode,
+    Alignment const& alignment,
+    Framings const& framings,
     RelativeMargins const& margins)
 {
     m_innerRect = unscaled_content_rect;
@@ -95,6 +99,19 @@ PageLayout::PageLayout(
                       -soft_margins.left(), -soft_margins.top(),
                       soft_margins.right(), soft_margins.bottom()
                   );
+}
+
+QRectF const
+PageLayout::extraRect(Framings const& framings) const
+{
+    QRectF const base = outerRect();
+    float const basew = base.width();
+    float const baseh = base.height();
+    float const extraw = basew * framings.getFramingWidth();
+    float const extrah = baseh * framings.getFramingHeight();
+    QRectF const extra = m_outerRect.adjusted(-extraw, -extrah, extraw, extrah);
+
+    return extra;
 }
 
 void

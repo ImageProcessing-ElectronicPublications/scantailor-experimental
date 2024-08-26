@@ -16,6 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <assert.h>
+#include <QRectF>
+#include <QSizeF>
+#include <QString>
+#include <QObject>
+#include <QCoreApplication>
+#include <QDomDocument>
+#include <QDomElement>
 #include "Filter.h"
 #include "FilterUiInterface.h"
 #include "OptionsWidget.h"
@@ -25,6 +33,7 @@
 #include "RelativeMargins.h"
 #include "MatchSizeMode.h"
 #include "Alignment.h"
+#include "Framings.h"
 #include "Params.h"
 #include "ProjectPages.h"
 #include "ProjectReader.h"
@@ -35,14 +44,6 @@
 #include "OrderByRatioProvider.h"
 #include "OrderByAreaProvider.h"
 #include "Utils.h"
-#include <QRectF>
-#include <QSizeF>
-#include <QString>
-#include <QObject>
-#include <QCoreApplication>
-#include <QDomDocument>
-#include <QDomElement>
-#include <assert.h>
 #include "CommandLine.h"
 
 namespace page_layout
@@ -50,7 +51,7 @@ namespace page_layout
 
 Filter::Filter(IntrusivePtr<ProjectPages> const& pages,
                PageSelectionAccessor const& page_selection_accessor)
-    :   m_ptrPages(pages),
+    : m_ptrPages(pages),
       m_ptrSettings(new Settings),
       m_selectedPageOrder(0)
 {
@@ -128,8 +129,9 @@ Filter::preUpdateUI(FilterUiInterface* ui, PageId const& page_id)
     RelativeMargins const margins(m_ptrSettings->getHardMargins(page_id));
     MatchSizeMode const match_size_mode(m_ptrSettings->getMatchSizeMode(page_id));
     Alignment const alignment(m_ptrSettings->getPageAlignment(page_id));
+    Framings const framings(m_ptrSettings->getPageFramings(page_id));
 
-    m_ptrOptionsWidget->preUpdateUI(page_id, margins, match_size_mode, alignment);
+    m_ptrOptionsWidget->preUpdateUI(page_id, margins, match_size_mode, alignment, framings);
     ui->setOptionsWidget(m_ptrOptionsWidget.get(), ui->KEEP_OWNERSHIP);
 }
 

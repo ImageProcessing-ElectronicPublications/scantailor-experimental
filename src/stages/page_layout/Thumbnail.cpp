@@ -16,9 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Thumbnail.h"
-#include "Utils.h"
-#include "imageproc/AbstractImageTransform.h"
 #include <QApplication>
 #include <QPalette>
 #include <QPolygonF>
@@ -27,6 +24,9 @@
 #include <QPen>
 #include <QBrush>
 #include <QColor>
+#include "Thumbnail.h"
+#include "Utils.h"
+#include "imageproc/AbstractImageTransform.h"
 
 using namespace imageproc;
 
@@ -35,20 +35,29 @@ namespace page_layout
 
 Thumbnail::Thumbnail(
     IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-    QSizeF const& max_display_size, PageId const& page_id, Params const& params,
-    AbstractImageTransform const& full_size_image_transform, PageLayout const& page_layout)
-    :	ThumbnailBase(
-          thumbnail_cache, max_display_size, page_id,
-          full_size_image_transform, page_layout.outerRect()
+    QSizeF const& max_display_size,
+    PageId const& page_id,
+    Params const& params,
+    AbstractImageTransform const& full_size_image_transform,
+    PageLayout const& page_layout,
+    Framings const& framings)
+    :    ThumbnailBase(
+          thumbnail_cache,
+          max_display_size,
+          page_id,
+          full_size_image_transform,
+          page_layout.extraRect(framings)
       )
-    ,	m_params(params)
-    ,	m_pageLayout(page_layout)
+    ,    m_params(params)
+    ,    m_pageLayout(page_layout)
+    ,    m_framings(framings)
 {
 }
 
 void
 Thumbnail::paintOverImage(
-    QPainter& painter, QTransform const& transformed_to_display,
+    QPainter& painter,
+    QTransform const& transformed_to_display,
     QTransform const& thumb_to_display)
 {
     // We work in display coordinates because we want to be
@@ -59,6 +68,7 @@ Thumbnail::paintOverImage(
 
     QRectF const inner_rect(transformed_to_display.mapRect(m_pageLayout.innerRect()));
     QRectF const outer_rect(transformed_to_display.mapRect(m_pageLayout.outerRect()));
+    QRectF const extra_rect(transformed_to_display.mapRect(m_pageLayout.extraRect(m_framings)));
 
     // Fill the transparent (that is not covered by the thumbnail) portions
     // of outer_rect with "window" color. That's done because we are going to
@@ -67,7 +77,7 @@ Thumbnail::paintOverImage(
     // which is typically of dark color. Introducing the "window" color
     // in those areas will make margins more visible.
     painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    painter.fillRect(outer_rect, qApp->palette().window());
+    painter.fillRect(extra_rect, qApp->palette().window());
 
     QPainterPath outer_outline;
     outer_outline.addPolygon(outer_rect);

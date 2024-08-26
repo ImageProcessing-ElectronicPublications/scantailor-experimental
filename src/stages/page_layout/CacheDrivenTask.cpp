@@ -16,6 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <memory>
+#include <QSizeF>
+#include <QRectF>
+#include <QPolygonF>
 #include "CacheDrivenTask.h"
 #include "Settings.h"
 #include "Params.h"
@@ -28,10 +32,6 @@
 #include "stages/output/CacheDrivenTask.h"
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
-#include <QSizeF>
-#include <QRectF>
-#include <QPolygonF>
-#include <memory>
 
 using namespace imageproc;
 
@@ -41,8 +41,8 @@ namespace page_layout
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<output::CacheDrivenTask> const& next_task,
     IntrusivePtr<Settings> const& settings)
-    :	m_ptrNextTask(next_task)
-    ,	m_ptrSettings(settings)
+    :    m_ptrNextTask(next_task)
+    ,    m_ptrSettings(settings)
 {
 }
 
@@ -52,7 +52,8 @@ CacheDrivenTask::~CacheDrivenTask()
 
 void
 CacheDrivenTask::process(
-    PageInfo const& page_info, AbstractFilterDataCollector* collector,
+    PageInfo const& page_info,
+    AbstractFilterDataCollector* collector,
     std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
     ContentBox const& content_box)
 {
@@ -85,8 +86,12 @@ CacheDrivenTask::process(
     );
 
     PageLayout const page_layout(
-        unscaled_content_rect, m_ptrSettings->getAggregateHardSize(),
-        params->matchSizeMode(), params->alignment(), params->hardMargins()
+        unscaled_content_rect,
+        m_ptrSettings->getAggregateHardSize(),
+        params->matchSizeMode(),
+        params->alignment(),
+        params->framings(),
+        params->hardMargins()
     );
     page_layout.absorbScalingIntoTransform(*adjusted_transform);
 
@@ -94,8 +99,11 @@ CacheDrivenTask::process(
     {
 
         m_ptrNextTask->process(
-            page_info, adjusted_transform,
-            page_layout.innerRect(), page_layout.outerRect(), collector
+            page_info,
+            adjusted_transform,
+            page_layout.innerRect(),
+            page_layout.extraRect(params->framings()),
+            collector
         );
         return;
     }
@@ -111,8 +119,11 @@ CacheDrivenTask::process(
                 new Thumbnail(
                     thumb_col->thumbnailCache(),
                     thumb_col->maxLogicalThumbSize(),
-                    page_info.id(), *params,
-                    *adjusted_transform, page_layout
+                    page_info.id(),
+                    *params,
+                    *adjusted_transform,
+                    page_layout,
+                    params->framings()
                 )
             );
         }

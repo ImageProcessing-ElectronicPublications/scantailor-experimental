@@ -33,14 +33,18 @@ namespace page_layout
 {
 
 class Alignment;
+class Framings;
 class MatchSizeMode;
 
 class PageLayout
 {
 public:
     PageLayout(
-        QRectF const& unscaled_content_rect, QSizeF const& aggregate_hard_size,
-        MatchSizeMode const& match_size_mode, Alignment const& alignment,
+        QRectF const& unscaled_content_rect,
+        QSizeF const& aggregate_hard_size,
+        MatchSizeMode const& match_size_mode,
+        Alignment const& alignment,
+        Framings const& framings,
         RelativeMargins const& margins);
 
     QRectF const& innerRect() const
@@ -57,6 +61,8 @@ public:
     {
         return m_outerRect;
     }
+
+    QRectF const extraRect(Framings const& framings) const;
 
     /**
      * If match_size_mode passed into the constructor was set to SCALE,
@@ -76,6 +82,7 @@ private:
 
     /** Scaling applied as a result of MatchSizeMode::SCALE. */
     double m_scaleFactor;
+
 };
 
 } // namespace page_layout
