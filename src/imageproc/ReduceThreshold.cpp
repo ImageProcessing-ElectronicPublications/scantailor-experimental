@@ -31,12 +31,12 @@ namespace
  * This lookup table is filled like this:
  * \code
  * for (unsigned i = 0; i < 256; i += 2) {
- *	unsigned out =
- *		((i & (1 << 1)) >> 1) |  // bit 1 becomes bit 0
- *		((i & (1 << 3)) >> 2) |  // bit 3 becomes bit 1
- *		((i & (1 << 5)) >> 3) |  // bit 5 becomes bit 2
- *		((i & (1 << 7)) >> 4);   // bit 7 becomes bit 3
- *	compressBitsLut[i >> 1] = static_cast<uint8_t>(out);
+ *    unsigned out =
+ *        ((i & (1 << 1)) >> 1) |  // bit 1 becomes bit 0
+ *        ((i & (1 << 3)) >> 2) |  // bit 3 becomes bit 1
+ *        ((i & (1 << 5)) >> 3) |  // bit 5 becomes bit 2
+ *        ((i & (1 << 7)) >> 4);   // bit 7 becomes bit 3
+ *    compressBitsLut[i >> 1] = static_cast<uint8_t>(out);
  * }
  * \endcode
  * We take every other byte because bit 0 doesn't matter here.
@@ -125,7 +125,7 @@ inline uint32_t threshold4(uint32_t const top, uint32_t const bottom)
 
 
 ReduceThreshold::ReduceThreshold(BinaryImage const& image)
-    :	m_image(image)
+    :    m_image(image)
 {
 }
 

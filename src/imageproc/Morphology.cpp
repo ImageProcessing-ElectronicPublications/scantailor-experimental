@@ -1,6 +1,6 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
-	Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -57,10 +57,10 @@ Brick::Brick(QSize const& size, QPoint const& origin)
 }
 
 Brick::Brick(int min_x, int min_y, int max_x, int max_y)
-    :	m_minX(min_x),
-      m_maxX(max_x),
-      m_minY(min_y),
-      m_maxY(max_y)
+    :    m_minX(min_x),
+         m_maxX(max_x),
+         m_minY(min_y),
+         m_maxY(max_y)
 {
 }
 

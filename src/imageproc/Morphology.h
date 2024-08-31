@@ -329,9 +329,9 @@ IMAGEPROC_EXPORT BinaryImage hitMissMatch(
  * \param pattern A string representing a pattern.  Example:
  * \code
  * char const* pattern =
- * 	"?X?"
- * 	"X X"
- * 	"?X?";
+ *     "?X?"
+ *     "X X"
+ *     "?X?";
  * \endcode
  * Here X stads for a hit (black pixel) and [space] stands for a miss
  * (white pixel).  Question marks indicate pixels that we are not interested in.
@@ -356,9 +356,9 @@ IMAGEPROC_EXPORT BinaryImage hitMissMatch(
  * \param pattern A string representing a pattern.  Example:
  * \code
  * char const* pattern =
- * 	" - "
- * 	"X+X"
- * 	"XXX";
+ *     " - "
+ *     "X+X"
+ *     "XXX";
  * \endcode
  * Pattern characters have the following meaning:\n
  * 'X': A black pixel.\n
@@ -383,9 +383,9 @@ IMAGEPROC_EXPORT BinaryImage hitMissReplace(
  * \param pattern A string representing a pattern.  Example:
  * \code
  * char const* pattern =
- * 	" - "
- * 	"X+X"
- * 	"XXX";
+ *     " - "
+ *     "X+X"
+ *     "XXX";
  * \endcode
  * Pattern characters have the following meaning:\n
  * 'X': A black pixel.\n

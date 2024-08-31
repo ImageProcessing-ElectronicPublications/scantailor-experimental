@@ -89,7 +89,7 @@ private:
 
 template<typename T>
 IntegralImage<T>::IntegralImage(int const width, int const height)
-    :	m_lineSum() // init with 0 or with default constructor.
+    :    m_lineSum() // init with 0 or with default constructor.
 {
     // The first row and column are fake.
     init(width + 1, height + 1);
@@ -97,7 +97,7 @@ IntegralImage<T>::IntegralImage(int const width, int const height)
 
 template<typename T>
 IntegralImage<T>::IntegralImage(QSize const& size)
-    :	m_lineSum() // init with 0 or with default constructor.
+    :    m_lineSum() // init with 0 or with default constructor.
 {
     // The first row and column are fake.
     init(size.width() + 1, size.height() + 1);

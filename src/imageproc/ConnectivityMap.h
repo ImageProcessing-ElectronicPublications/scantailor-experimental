@@ -268,10 +268,10 @@ template<typename T>
 ConnectivityMap::ConnectivityMap(
     QSize const size, T const* src,
     int const src_stride, Connectivity const conn)
-    :	m_pData(0),
-      m_size(size),
-      m_stride(0),
-      m_maxLabel(0)
+    :    m_pData(0),
+         m_size(size),
+         m_stride(0),
+         m_maxLabel(0)
 {
     if (size.isEmpty())
     {

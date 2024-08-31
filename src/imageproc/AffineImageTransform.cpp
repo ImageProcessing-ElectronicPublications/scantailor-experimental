@@ -32,9 +32,9 @@ namespace imageproc
 {
 
 AffineImageTransform::AffineImageTransform(QSize const& orig_size)
-    :	m_origSize(orig_size)
-    ,	m_origCropArea(QRectF(QPointF(0, 0), orig_size))
-    ,	m_transform()
+    :    m_origSize(orig_size)
+    ,    m_origCropArea(QRectF(QPointF(0, 0), orig_size))
+    ,    m_transform()
 {
 }
 

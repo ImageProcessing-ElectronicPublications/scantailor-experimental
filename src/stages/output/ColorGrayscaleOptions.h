@@ -52,6 +52,8 @@ public:
           m_screenCoef(0.0),
           m_edgedivSize(13),
           m_edgedivCoef(0.0),
+          m_robustSize(10),
+          m_robustCoef(0.0),
           m_gravureSize(15),
           m_gravureCoef(0.0),
           m_dots8Size(17),
@@ -254,6 +256,23 @@ public:
         m_edgedivCoef = val;
     }
 
+    int robustSize() const
+    {
+        return m_robustSize;
+    }
+    void setRobustSize(int val)
+    {
+        m_robustSize = val;
+    }
+    double robustCoef() const
+    {
+        return m_robustCoef;
+    }
+    void setRobustCoef(double val)
+    {
+        m_robustCoef = val;
+    }
+
     int gravureSize() const
     {
         return m_gravureSize;
@@ -359,6 +378,8 @@ private:
     double m_screenCoef;
     int m_edgedivSize;
     double m_edgedivCoef;
+    int m_robustSize;
+    double m_robustCoef;
     int m_gravureSize;
     double m_gravureCoef;
     int m_dots8Size;

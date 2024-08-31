@@ -68,14 +68,14 @@ ConnCompEraser::clearBit(uint32_t* const line, int const x)
 }
 
 ConnCompEraser::ConnCompEraser(BinaryImage const& image, Connectivity conn)
-    :	m_image(image),
-      m_pLine(0),
-      m_width(m_image.width()),
-      m_height(m_image.height()),
-      m_wpl(m_image.wordsPerLine()),
-      m_connectivity(conn),
-      m_x(0),
-      m_y(0)
+    :    m_image(image),
+         m_pLine(0),
+         m_width(m_image.width()),
+         m_height(m_image.height()),
+         m_wpl(m_image.wordsPerLine()),
+         m_connectivity(conn),
+         m_x(0),
+         m_y(0)
 {
     // By initializing m_pLine with 0 instead of m_image.data(),
     // we avoid copy-on-write, provided that the caller used image.release().

@@ -388,6 +388,8 @@ OutputGenerator::process(
 
     edgedivFilterInPlace(transformed_image, color_options.edgedivSize(), color_options.edgedivCoef());
 
+    robustFilterInPlace(transformed_image, color_options.robustSize(), color_options.robustCoef());
+
     gravureFilterInPlace(transformed_image, color_options.gravureSize(), color_options.gravureCoef());
 
     dots8FilterInPlace(transformed_image, color_options.dots8Size(), color_options.dots8Coef());

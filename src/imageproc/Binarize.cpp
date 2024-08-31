@@ -31,7 +31,6 @@
 #include "BinaryThreshold.h"
 #include "Grayscale.h"
 #include "GrayImage.h"
-#include "ColorFilter.h"
 #include "RasterOpGeneric.h"
 #include "GaussBlur.h"
 
@@ -101,9 +100,9 @@ BinaryImage binarizeUse(
     uint32_t* bw_line = bw_img.data();
     unsigned int const bw_stride = bw_img.wordsPerLine();
 
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             binarySetBW(bw_line, x, (src_line[x] < threshold));
         }
@@ -147,9 +146,9 @@ BinaryImage binarizeFromMap(
     uint32_t* bw_line = bw_img.data();
     unsigned int const bw_stride = bw_img.wordsPerLine();
 
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             binarySetBW(bw_line, x, (src_line[x] < bound_lower || (src_line[x] <= bound_upper && ((int) src_line[x] < ((int) threshold_line[x] + delta)))));
         }
@@ -173,9 +172,9 @@ void binarizeNegate(BinaryImage& src)
     uint32_t* src_line = src.data();
     unsigned int const src_stride = src.wordsPerLine();
 
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             binarySetBW(src_line, x, !(binaryGetBW(src_line, x)));
         }
@@ -206,9 +205,9 @@ unsigned int binarizeBiModalValue(
     part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
     double const partval = part * (double) histsize;
 
-    for (unsigned int y = 0; y < h; ++y)
+    for (unsigned int y = 0; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; ++x)
+        for (unsigned int x = 0; x < w; x++)
         {
             unsigned char pixel = gray_line[x];
             pixel = (pixel < bound_lower) ? bound_lower : (pixel < bound_upper) ? pixel : bound_upper;
@@ -287,43 +286,43 @@ BinaryImage binarizeMean(
     double meanl = 0, mean = 0.0, meanw = 0.0, countw = 0.0;
     double dist, dist_mean = 0, threshold = 128;
 
-/*
-    for (unsigned int y = 0; y < h; y++)
-    {
-        meanl = 0.0;
-        for (unsigned int x = 0; x < w; x++)
+    /*
+        for (unsigned int y = 0; y < h; y++)
         {
-            unsigned char pix = src_line[x];
-            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
-            double const pixel = pix;
-            meanl += pixel;
-            count++;
+            meanl = 0.0;
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned char pix = src_line[x];
+                pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+                double const pixel = pix;
+                meanl += pixel;
+                count++;
+            }
+            mean += meanl;
+            src_line += src_stride;
         }
-        mean += meanl;
-        src_line += src_stride;
-    }
-    mean = (count > 0) ? (mean / count) : 128.0;
+        mean = (count > 0) ? (mean / count) : 128.0;
 
-    src_line = src.data();
-    for (unsigned int y = 0; y < h; y++)
-    {
-        meanl = 0.0;
-        for (unsigned int x = 0; x < w; x++)
+        src_line = src.data();
+        for (unsigned int y = 0; y < h; y++)
         {
-            unsigned char pix = src_line[x];
-            pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
-            double const pixel = pix;
-            dist = (pixel > mean) ? (pixel - mean) : (mean - pixel);
-            dist++;
-            dist = 256.0 / dist;
-            meanl += (pixel * dist);
-            countw += dist;
+            meanl = 0.0;
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned char pix = src_line[x];
+                pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
+                double const pixel = pix;
+                dist = (pixel > mean) ? (pixel - mean) : (mean - pixel);
+                dist++;
+                dist = 256.0 / dist;
+                meanl += (pixel * dist);
+                countw += dist;
+            }
+            meanw += meanl;
+            src_line += src_stride;
         }
-        meanw += meanl;
-        src_line += src_stride;
-    }
-    meanw = (countw > 0.0) ? (meanw / countw) : 128.0;
-*/
+        meanw = (countw > 0.0) ? (meanw / countw) : 128.0;
+    */
     meanw = grayDominantaValue(src);
 
     src_line = src.data();
@@ -436,10 +435,10 @@ GrayImage binarizeDotsMap (GrayImage const& src, int const delta)
         }
     }
 
-    for (y = 0; y < h; ++y)
+    for (y = 0; y < h; y++)
     {
         yb = y % wwidth;
-        for (x = 0; x < w; ++x)
+        for (x = 0; x < w; x++)
         {
             xb = x % wwidth;
             threshold = ddith[yb * wwidth + xb];
@@ -452,7 +451,7 @@ GrayImage binarizeDotsMap (GrayImage const& src, int const delta)
 }
 
 BinaryImage binarizeDots(
-   GrayImage const& src, int const delta,
+    GrayImage const& src, int const delta,
     unsigned char const bound_lower, unsigned char const bound_upper)
 {
     if (src.isNull())
@@ -508,9 +507,9 @@ GrayImage binarizeNiblackMap(
     uint8_t* gdeviation_line = gdeviation.data();
     int const gdeviation_stride = gdeviation.stride();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             float const mean = gmean_line[x];
             float const deviation = gdeviation_line[x];
@@ -620,9 +619,9 @@ BinaryImage binarizeGatosCleaner(
     niblack_line = niblack.data();
     unsigned int const w2 = w + w;
     unsigned int const h2 = h + h;
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             if (binaryGetBW(niblack_line, x))
             {
@@ -664,11 +663,11 @@ BinaryImage binarizeGatosCleaner(
     double const delta = double(sum_diff) / (src_size - niblack_bg_sum);
     double const b = double(sum_bg) / niblack_bg_sum;
 
-/*
-    double const q = 0.6;
-    double const p1 = 0.5;
-    double const p2 = 0.8;
-*/
+    /*
+        double const q = 0.6;
+        double const p1 = 0.5;
+        double const p2 = 0.8;
+    */
     double const exp_scale = -4.0 / (b * (1.0 - p1));
     double const exp_bias = 2.0 * (1.0 + p1) / (1.0 - p1);
     double const threshold_scale = q * delta * (1.0 - p2);
@@ -701,7 +700,7 @@ BinaryImage binarizeGatos(
         return BinaryImage();
     }
 
-    GrayImage wiener(wienerFilter(src, 5, noise_sigma));
+    GrayImage wiener(grayWiener(src, 5, noise_sigma));
     BinaryImage niblack(binarizeNiblack(wiener, radius, k, delta, bound_lower, bound_upper));
     BinaryImage bw_img(binarizeGatosCleaner(wiener, niblack, radius, q, p1, p2));
 
@@ -750,9 +749,9 @@ GrayImage binarizeSauvolaMap(
     uint8_t* gdeviation_line = gdeviation.data();
     int const gdeviation_stride = gdeviation.stride();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             float const mean = gmean_line[x];
             float const deviation = gdeviation_line[x];
@@ -831,9 +830,9 @@ GrayImage binarizeWolfMap(
     uint32_t min_gray_level = 255;
     float max_deviation = 0.0;
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             uint32_t origin = gray_line[x];
             float const deviation = gdeviation_line[x];
@@ -846,9 +845,9 @@ GrayImage binarizeWolfMap(
 
     gray_line = gray.data();
     gdeviation_line = gdeviation.data();
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             float const mean = gmean_line[x];
             float const deviation = gdeviation_line[x];
@@ -917,9 +916,9 @@ GrayImage binarizeBradleyMap(
     uint8_t* gmean_line = gmean.data();
     int const gmean_stride = gmean.stride();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             float const mean = gmean_line[x];
             float threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
@@ -1035,9 +1034,9 @@ GrayImage binarizeGradMap(
     uint8_t* gmean_line = gmean.data();
     int const gmean_stride = gmean.stride();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             float const mean = gmean_line[x];
 
@@ -1196,9 +1195,9 @@ GrayImage binarizeWANMap(
     uint8_t* gmax_line = gmax.data();
     int const gmax_stride = gmax.stride();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = 0; y < h; y++)
     {
-        for (int x = 0; x < w; ++x)
+        for (int x = 0; x < w; x++)
         {
             float const mean = gmean_line[x];
             float const deviation = gdeviation_line[x];
@@ -1233,109 +1232,6 @@ BinaryImage binarizeWAN(
     return bw_img;
 }
 
-GrayImage binarizeEdgeDivPrefilter(
-    GrayImage const& src, int const radius,
-    double const kep, double const kbd)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return GrayImage();
-    }
-
-    int const w = gray.width();
-    int const h = gray.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-
-    double kepw = kep;
-    // Adapt mode
-    if (kep < 0.0)
-    {
-        kepw = 0.0;
-        double kepl = 0.0, kd = 0.0, kdl = 0.0, gdelta;
-        for (int y = 0; y < h; y++)
-        {
-            kdl = 0.0;
-            kepl = 0.0;
-            for (int x = 0; x < w; x++)
-            {
-                double const mean = gmean_line[x];
-                double const origin = gray_line[x];
-                gdelta = (origin < mean) ? (mean - origin) : (origin - mean);
-                kdl += gdelta;
-                kepl += (gdelta * gdelta);
-            }
-            kd += kdl;
-            kepw += kepl;
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
-        }
-        kepw = (kd > 0.0) ? (kepw / kd) : 0.0;
-        kepw /= 64.0;
-        kepw = 1.0 - kepw;
-        kepw = (kepw < 0.0) ? 0.0 : kepw;
-        kepw *= kbd;
-
-        gray_line = gray.data();
-        gmean_line = gmean.data();
-    }
-    // Adapt mode end
-
-    for (int y = 0; y < h; ++y)
-    {
-        for (int x = 0; x < w; ++x)
-        {
-            float const mean = gmean_line[x];
-            float const origin = gray_line[x];
-            float retval = origin;
-            if (kepw > 0.0)
-            {
-                // EdgePlus
-                // edge = I / blur (shift = -0.5) {0.0 .. >1.0}, mean value = 0.5
-                float const edge = (retval + 1) / (mean + 1) - 0.5;
-                // edgeplus = I * edge, mean value = 0.5 * mean(I)
-                float const edgeplus = origin * edge;
-                // return k * edgeplus + (1 - k) * I
-                retval = kepw * edgeplus + (1.0 - kepw) * origin;
-            }
-            if (kbd > 0.0)
-            {
-                // BlurDiv
-                // edge = blur / I (shift = -0.5) {0.0 .. >1.0}, mean value = 0.5
-                float const edgeinv = (mean + 1) / (retval + 1) - 0.5;
-                // edgenorm = edge * k + max * (1 - k), mean value = {0.5 .. 1.0} * mean(I)
-                float const edgenorm = kbd * edgeinv + (1.0 - kbd);
-                // return I / edgenorm
-                retval = (edgenorm > 0.0) ? (origin / edgenorm) : origin;
-            }
-            // trim value {0..255}
-            retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
-            gray_line[x] = (int) retval;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-    }
-
-    return gray;
-}  // binarizeEdgeDivPrefilter
-
 BinaryImage binarizeEdgeDiv(
     GrayImage const& src, int const radius,
     double const kep, double const kbd, int const delta,
@@ -1346,71 +1242,11 @@ BinaryImage binarizeEdgeDiv(
         return BinaryImage();
     }
 
-    GrayImage gray(binarizeEdgeDivPrefilter(src, radius, kep, kbd));
+    GrayImage gray(grayEdgeDiv(src, radius, kep, kbd));
     BinaryImage bw_img(binarizeBiModal(gray, delta, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeEdgeDiv
-
-/*
- * Robust = 255.0 - (surround + 255.0) * sc / (surround + sc), k = 0.2
- * sc = surround - img
- * surround = blur(img, r), r = 10
- */
-GrayImage binarizeRobustPrefilter(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return GrayImage();
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-
-    for (int y = 0; y < h; ++y)
-    {
-        for (int x = 0; x < w; ++x)
-        {
-            float const mean = gmean_line[x];
-            float const origin = gray_line[x];
-            float retval = origin;
-            if (k > 0.0)
-            {
-                float const sc = mean - origin;
-                float const robust = 255.0 - (mean + 255.0) * sc / (mean + sc);
-                retval = k * robust + (1.0 - k) * origin;
-            }
-            retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
-            gray_line[x] = (int) retval;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-    }
-
-    return gray;
-}
 
 BinaryImage binarizeRobust(
     GrayImage const& src, int const radius,
@@ -1422,7 +1258,7 @@ BinaryImage binarizeRobust(
         return BinaryImage();
     }
 
-    GrayImage gray(binarizeRobustPrefilter(src, radius, k));
+    GrayImage gray(grayRobust(src, radius, k));
     BinaryImage bw_img(binarizeBiModal(gray, delta, bound_lower, bound_upper));
 
     return bw_img;

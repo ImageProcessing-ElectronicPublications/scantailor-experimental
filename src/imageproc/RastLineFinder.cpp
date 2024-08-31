@@ -33,12 +33,12 @@ namespace imageproc
 /*========================= RastLineFinderParams ===========================*/
 
 RastLineFinderParams::RastLineFinderParams()
-    :	m_origin(0, 0)
-    ,	m_minAngleDeg(0)
-    ,	m_maxAngleDeg(180)
-    ,	m_angleToleranceDeg(0.1)
-    ,	m_maxDistFromLine(1.0)
-    ,	m_minSupportPoints(3)
+    :    m_origin(0, 0)
+    ,    m_minAngleDeg(0)
+    ,    m_maxAngleDeg(180)
+    ,    m_angleToleranceDeg(0.1)
+    ,    m_maxDistFromLine(1.0)
+    ,    m_minSupportPoints(3)
 {
 }
 
@@ -86,11 +86,11 @@ RastLineFinderParams::validate(std::string* error) const
 
 
 RastLineFinder::RastLineFinder(std::vector<QPointF> const& points, RastLineFinderParams const& params)
-    :	m_origin(params.origin())
-    ,	m_angleToleranceRad(params.angleToleranceDeg() * constants::DEG2RAD)
-    ,	m_maxDistFromLine(params.maxDistFromLine())
-    ,	m_minSupportPoints(params.minSupportPoints())
-    ,	m_firstLine(true)
+    :    m_origin(params.origin())
+    ,    m_angleToleranceRad(params.angleToleranceDeg() * constants::DEG2RAD)
+    ,    m_maxDistFromLine(params.maxDistFromLine())
+    ,    m_minSupportPoints(params.minSupportPoints())
+    ,    m_firstLine(true)
 {
     std::string error;
     if (!params.validate(&error))
@@ -300,20 +300,20 @@ RastLineFinder::pruneUnavailablePoints()
 /*============================= SearchSpace ================================*/
 
 RastLineFinder::SearchSpace::SearchSpace()
-    :	m_minDist(0)
-    ,	m_maxDist(0)
-    ,	m_minAngleRad(0)
-    ,	m_maxAngleRad(0)
+    :    m_minDist(0)
+    ,    m_maxDist(0)
+    ,    m_minAngleRad(0)
+    ,    m_maxAngleRad(0)
 {
 }
 
 RastLineFinder::SearchSpace::SearchSpace(
     RastLineFinder const& owner, float min_dist, float max_dist,
     float min_angle_rad, float max_angle_rad, std::vector<unsigned> const& candidate_idxs)
-    :	m_minDist(min_dist)
-    ,	m_maxDist(max_dist)
-    ,	m_minAngleRad(min_angle_rad)
-    ,	m_maxAngleRad(max_angle_rad)
+    :    m_minDist(min_dist)
+    ,    m_maxDist(max_dist)
+    ,    m_minAngleRad(min_angle_rad)
+    ,    m_maxAngleRad(max_angle_rad)
 {
     m_pointIdxs.reserve(candidate_idxs.size());
 

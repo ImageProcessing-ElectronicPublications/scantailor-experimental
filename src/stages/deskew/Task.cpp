@@ -16,6 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
+#include <memory>
+#include <algorithm>
+#include <stdexcept>
+#include <assert.h>
+#include <stddef.h>
+#include <QImage>
+#include <QSize>
+#include <QPoint>
+#include <QRect>
+#include <QLineF>
+#include <QPainter>
+#include <QPolygonF>
+#include <QTransform>
 #include "Task.h"
 #include "Filter.h"
 #include "OptionsWidget.h"
@@ -53,20 +67,6 @@
 #include "imageproc/Morphology.h"
 #include "math/LineBoundedByRect.h"
 #include "math/XSpline.h"
-#include <QImage>
-#include <QSize>
-#include <QPoint>
-#include <QRect>
-#include <QLineF>
-#include <QPainter>
-#include <QPolygonF>
-#include <QTransform>
-#include <vector>
-#include <memory>
-#include <algorithm>
-#include <stdexcept>
-#include <assert.h>
-#include <stddef.h>
 
 #include "CommandLine.h"
 
@@ -335,7 +335,8 @@ Task::processRotationDistortion(
                 )
             );
             //BinaryImage bw_image(binarizeGrad(trim_image, 7, 0.75, 0.0));
-            BinaryImage bw_image(binarizeEdgeDiv(trim_image, 7, -1.0, 1.0, 0.0));
+            //BinaryImage bw_image(binarizeEdgeDiv(trim_image, 7, -1.0, 1.0, 0.0));
+            BinaryImage bw_image(binarizeEdgeDiv(grayRetinex(trim_image, 31, 1.0), 7, 0.0, 1.0, 0.0));
             trim_image = GrayImage();
             if (m_ptrDbg.get())
             {

@@ -36,8 +36,8 @@ namespace imageproc
 
 PolynomialSurface::PolynomialSurface(
     int const hor_degree, int const vert_degree, GrayImage const& src)
-    :	m_horDegree(hor_degree),
-      m_vertDegree(vert_degree)
+    :    m_horDegree(hor_degree),
+         m_vertDegree(vert_degree)
 {
     // Note: m_horDegree and m_vertDegree may still change!
 
@@ -80,8 +80,8 @@ PolynomialSurface::PolynomialSurface(
 PolynomialSurface::PolynomialSurface(
     int const hor_degree, int const vert_degree,
     GrayImage const& src, BinaryImage const& mask)
-    :	m_horDegree(hor_degree),
-      m_vertDegree(vert_degree)
+    :    m_horDegree(hor_degree),
+         m_vertDegree(vert_degree)
 {
     // Note: m_horDegree and m_vertDegree may still change!
 

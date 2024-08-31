@@ -34,9 +34,7 @@
 #include "GrayImage.h"
 #include "BinaryImage.h"
 #include "BinaryThreshold.h"
-#include "Binarize.h"
 #include "ColorFilter.h"
-#include "GaussBlur.h"
 
 namespace imageproc
 {
@@ -192,80 +190,6 @@ void colorSqrFilterInPlace(
     }
 }
 
-GrayImage wienerFilter(
-    GrayImage const& image, int const radius, float const noise_sigma)
-{
-    GrayImage dst(image);
-    wienerFilterInPlace(dst, radius, noise_sigma);
-    return dst;
-}
-
-void wienerFilterInPlace(
-    GrayImage& image, int const radius, float const noise_sigma)
-{
-    if (image.isNull())
-    {
-        return;
-    }
-    if (radius < 1)
-    {
-        return;
-    }
-
-    if (noise_sigma > 0.0f)
-    {
-        int const w = image.width();
-        int const h = image.height();
-        float const noise_variance = noise_sigma * noise_sigma;
-
-        uint8_t* image_line = image.data();
-        int const image_stride = image.stride();
-
-        GrayImage gmean = gaussBlur(image, radius, radius);
-        if (gmean.isNull())
-        {
-            return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        GrayImage gdeviation = grayMapDeviation(image, radius);
-        if (gdeviation.isNull())
-        {
-            return;
-        }
-
-        uint8_t* gdeviation_line = gdeviation.data();
-        int const gdeviation_stride = gdeviation.stride();
-
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
-                float const variance = deviation * deviation;
-
-                float const src_pixel = (float) image_line[x];
-                float const delta_pixel = src_pixel - mean;
-                float const delta_variance = variance - noise_variance;
-                float dst_pixel = mean;
-                if (delta_variance > 0.0f)
-                {
-                    dst_pixel += delta_pixel * delta_variance / variance;
-                }
-                int val = (int) (dst_pixel + 0.5f);
-                val = (val < 0) ? 0 : (val < 255) ? val : 255;
-                image_line[x] = (uint8_t) val;
-            }
-            image_line += image_stride;
-            gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
-        }
-    }
-}
-
 QImage wienerColorFilter(
     QImage const& image, int const radius, float const coef)
 {
@@ -281,26 +205,16 @@ void wienerColorFilterInPlace(
     {
         return;
     }
-    if (radius < 1)
-    {
-        return;
-    }
 
-    if (coef > 0.0f)
+    if ((radius > 0) && (coef > 0.0f))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        GrayImage wiener(wienerFilter(gray, radius, 255.0f * coef));
+        GrayImage wiener(grayWiener(gray, radius, 255.0f * coef));
         if (wiener.isNull())
         {
             return;
@@ -325,66 +239,19 @@ void autoLevelFilterInPlace(
     {
         return;
     }
-    if (radius < 1)
-    {
-        return;
-    }
 
-    if (coef != 0.0f)
+    if ((radius > 0) && (coef != 0.0f))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = gaussBlur(gray, radius, radius);
+        GrayImage gmean = grayAutoLevel(gray, radius, coef);
         if (gmean.isNull())
         {
             return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        int gmin = 256, gmax = 0;
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const mean = gmean_line[x];
-                gmin = (gmin < mean) ? gmin : mean;
-                gmax = (gmax < mean) ? mean : gmax;
-            }
-            gmean_line += gmean_stride;
-        }
-
-        float const a1 = 256.0f / (gmax - gmin + 1);
-        float const a0 = -a1 * gmin;
-
-        gmean_line = gmean.data();
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const origin = gray_line[x];
-                float retval = origin * a1 + a0;
-                retval = coef * retval + (1.0f - coef) * origin;
-                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) (retval + 0.5f);
-            }
-            image_line += image_stride;
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
         }
 
         imageReLevel(image, gray, gmean);
@@ -407,45 +274,18 @@ void colorBalanceFilterInPlace(
         return;
     }
 
-    if (coef != 0.0)
+    if ((radius > 0) && (coef != 0.0f))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = grayBalance(gray, radius);
+        GrayImage gmean = grayBalance(gray, radius, coef);
         if (gmean.isNull())
         {
             return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const origin = gray_line[x];
-                float mean = gmean_line[x];
-
-                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
-                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                gmean_line[x] = (uint8_t) mean;
-            }
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
         }
 
         imageReLevel(image, gray, gmean);
@@ -468,45 +308,18 @@ void colorRetinexFilterInPlace(
         return;
     }
 
-    if (coef != 0.0)
+    if ((radius > 0) && (coef != 0.0f))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = grayRetinex(gray, radius);
+        GrayImage gmean = grayRetinex(gray, radius, coef);
         if (gmean.isNull())
         {
             return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const origin = gray_line[x];
-                float mean = gmean_line[x];
-
-                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
-                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                gmean_line[x] = (uint8_t) mean;
-            }
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
         }
 
         imageReLevel(image, gray, gmean);
@@ -529,45 +342,18 @@ void colorEqualizeFilterInPlace(
         return;
     }
 
-    if (coef != 0.0)
+    if ((radius > 0) && (coef != 0.0f))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = grayEqualize(gray, radius, false);
+        GrayImage gmean = grayEqualize(gray, radius, coef, false);
         if (gmean.isNull())
         {
             return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const origin = gray_line[x];
-                float mean = gmean_line[x];
-
-                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
-                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                gmean_line[x] = (uint8_t) mean;
-            }
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
         }
 
         imageReLevel(image, gray, gmean);
@@ -590,7 +376,7 @@ void knnDenoiserFilterInPlace(
         return;
     }
 
-    if ((radius > 0) && (coef > 0.0))
+    if ((radius > 0) && (coef > 0.0f))
     {
         float const threshold_weight = 0.02f;
         float const threshold_lerp = 0.66f;
@@ -637,101 +423,19 @@ void colorDespeckleFilterInPlace(
 
     if ((radius > 0) && (coef != 0.0f))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage temp = GrayImage(image);
-        if (temp.isNull())
+        GrayImage despeckle(grayDespeckle(gray, radius, coef));
+        if (despeckle.isNull())
         {
             return;
         }
 
-        uint8_t* temp_line = temp.data();
-        int const temp_stride = temp.stride();
-
-        for (int j = 0; j < radius; j++)
-        {
-            gray_line = gray.data();
-            temp_line = temp.data();
-            for (int y = 0; y < h; y++)
-            {
-                uint8_t* gray_line1 = (y > 0) ? (gray_line - gray_stride) : gray_line;
-                uint8_t* gray_line2 = (y < (h - 1)) ? (gray_line + gray_stride) : gray_line;
-                for (int x = 0; x < w; x++)
-                {
-                    int x1 = (x > 0) ? (x - 1) : x;
-                    int x2 = (x < (w - 1)) ? (x + 1) : x;
-
-                    int pA = gray_line1[x1];
-                    int pB = gray_line1[x];
-                    int pC = gray_line1[x2];
-                    int pD = gray_line[x1];
-                    int pE = gray_line[x];
-                    int pF = gray_line[x2];
-                    int pH = gray_line2[x1];
-                    int pG = gray_line2[x];
-                    int pI = gray_line2[x2];
-
-                    int dIy = (pH - pB) * (pH - pB);
-                    int dIx = (pF - pD) * (pF - pD);
-                    int dIxy = (pH - pB) * (pF - pD);
-                    int dI = dIy + dIx;
-                    int pR = pE;
-                    int pM = (pA + pB + pC + pD + pE + pF + pG + pH + pI + 4) / 9;
-
-                    if (dI > 0)
-                    {
-                        float gy = pH + pB - pE - pE;
-                        float gx = pF + pD - pE - pE;
-                        float gxy = pG + pC - pI - pA;
-                        float gd2 = (gy * dIx + gx * dIy - 0.5f * gxy * dIxy);
-                        if((pM > 128 && gd2 < 0.0f) || (pM <= 128 && gd2 >= 0.0f))
-                        {
-                            pR = pE + (int) (coef * gd2 / dI + 0.5f);
-                            pR = (pR < 0) ? 0 : (pR < 255) ? pR : 255;
-                        }
-                    }
-                    else
-                    {
-                        pR = pM;
-                    }
-                    temp_line[x] = pR;
-
-                }
-                gray_line += gray_stride;
-                temp_line += temp_stride;
-            }
-            gray_line = gray.data();
-            temp_line = temp.data();
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    gray_line[x] = temp_line[x];
-                }
-                gray_line += gray_stride;
-                temp_line += temp_stride;
-            }
-        }
-        temp = GrayImage(image);
-        if (temp.isNull())
-        {
-            return;
-        }
-
-        imageReLevel(image, temp, gray);
+        imageReLevel(image, gray, despeckle);
     }
 }
 
@@ -753,44 +457,16 @@ void blurFilterInPlace(
 
     if ((radius > 0) && (coef != 0.0))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = gaussBlur(gray, radius, radius);
+        GrayImage gmean = grayBlur(gray, radius, coef);
         if (gmean.isNull())
         {
             return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const mean = gmean_line[x];
-
-                float const origin = gray_line[x];
-                float retval = coef * mean + (1.0f - coef) * origin + 0.5f;
-                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) retval;
-            }
-            image_line += image_stride;
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
         }
 
         imageReLevel(image, gray, gmean);
@@ -813,59 +489,155 @@ void screenFilterInPlace(
         return;
     }
 
-    if (coef != 0.0)
+    if ((radius > 0) && (coef != 0.0))
     {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
             return;
         }
 
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = grayEqualize(gray, radius, true);
+        GrayImage gmean = grayScreen(gray, radius, coef);
         if (gmean.isNull())
         {
             return;
         }
 
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
+        imageReLevel(image, gray, gmean);
+    }
+}
 
-        for (int y = 0; y < h; ++y)
+
+QImage edgedivFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    edgedivFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void edgedivFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0))
+    {
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
         {
-            for (int x = 0; x < w; ++x)
-            {
-                float const origin = gray_line[x];
-                float mean = 255.0f - gmean_line[x];
+            return;
+        }
 
-                /* overlay */
-                float retval = origin;
-                if (origin > 127.5f)
-                {
-                    retval = 255.0f - retval;
-                    mean = 255.0f - mean;
-                }
-                retval *= mean;
-                retval += retval;
-                retval /= 255.0f;
-                if (origin > 127.5f)
-                {
-                    retval = 255.0f - retval;
-                }
-                retval = coef * retval + (1.0f - coef) * origin + 0.5f;
-                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) retval;
-            }
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
+        GrayImage gmean(grayEdgeDiv(gray, radius, coef, coef));
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        imageReLevel(image, gray, gmean);
+    }
+}
+
+QImage robustFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    robustFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void robustFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0))
+    {
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        GrayImage gmean(grayRobust(gray, radius, coef));
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        imageReLevel(image, gray, gmean);
+    }
+}
+
+QImage gravureFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    gravureFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void gravureFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0))
+    {
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        GrayImage gmean = grayGravure(gray, radius, coef);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        imageReLevel(image, gray, gmean);
+    }
+}
+
+QImage dots8Filter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    dots8FilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void dots8FilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0))
+    {
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        GrayImage gmean = grayDots8(gray, radius, coef);
+        if (gmean.isNull())
+        {
+            return;
         }
 
         imageReLevel(image, gray, gmean);
@@ -1039,261 +811,6 @@ void unPaperFilterInPlace(
     }
 }
 
-
-QImage gravureFilter(
-    QImage const& image, int const radius, float const coef)
-{
-    QImage dst(image);
-    gravureFilterInPlace(dst, radius, coef);
-    return dst;
-}
-
-void gravureFilterInPlace(
-    QImage& image, int const radius, float const coef)
-{
-    if (image.isNull())
-    {
-        return;
-    }
-
-    if ((radius > 0) && (coef != 0.0))
-    {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
-        GrayImage gray = GrayImage(image);
-        if (gray.isNull())
-        {
-            return;
-        }
-
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = gaussBlur(gray, radius, radius);
-        if (gmean.isNull())
-        {
-            return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        double mean_delta = 0.0;
-        for (int y = 0; y < h; ++y)
-        {
-            double mean_delta_line = 0.0;
-            for (int x = 0; x < w; ++x)
-            {
-                float const mean = gmean_line[x];
-                float const origin = gray_line[x];
-
-                float const delta = (origin < mean) ? (mean - origin) : (origin - mean);
-                mean_delta_line += delta;
-            }
-            mean_delta += mean_delta_line;
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
-        }
-        mean_delta /= w;
-        mean_delta /= h;
-        if (mean_delta > 0.0)
-        {
-            gray_line = gray.data();
-            gmean_line = gmean.data();
-            for (int y = 0; y < h; ++y)
-            {
-                for (int x = 0; x < w; ++x)
-                {
-                    float const mean = gmean_line[x];
-                    float const origin = gray_line[x];
-
-                    float const tline = mean / mean_delta;
-                    int threshold = (int) tline;
-                    float delta = tline - threshold;
-                    delta = (delta < 0.5f) ? (0.5f - delta) : (delta - 0.5f);
-                    delta += delta;
-                    /* overlay */
-                    float retval = origin;
-                    if (origin > 127.5f)
-                    {
-                        retval = 255.0f - retval;
-                        delta = 1.0f - delta;
-                    }
-                    retval *= delta;
-                    retval += retval;
-                    if (origin > 127.5f)
-                    {
-                        retval = 255.0f - retval;
-                    }
-                    retval = coef * retval + (1.0f - coef) * origin + 0.5f;
-                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                    gmean_line[x] = (uint8_t) retval;
-                }
-                gray_line += gray_stride;
-                gmean_line += gmean_stride;
-            }
-
-            imageReLevel(image, gray, gmean);
-        }
-    }
-}
-
-QImage dots8Filter(
-    QImage const& image, int const radius, float const coef)
-{
-    QImage dst(image);
-    dots8FilterInPlace(dst, radius, coef);
-    return dst;
-}
-
-void dots8FilterInPlace(
-    QImage& image, int const radius, float const coef)
-{
-    if (image.isNull())
-    {
-        return;
-    }
-
-    if ((radius > 0) && (coef != 0.0))
-    {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
-        GrayImage gray = GrayImage(image);
-        if (gray.isNull())
-        {
-            return;
-        }
-
-        uint8_t* gray_line = gray.data();
-        int const gray_stride = gray.stride();
-
-        GrayImage gmean = gaussBlur(gray, radius, radius);
-        if (gmean.isNull())
-        {
-            return;
-        }
-
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        int y, x, yb, xb, k, wwidth = 8;
-        int threshold, part;
-        // Dots dither matrix
-        int ddith[64] = {13,  9,  5, 12, 18, 22, 26, 19,  6,  1,  0,  8, 25, 30, 31, 23, 10,  2,  3,  4, 21, 29, 28, 27, 14,  7, 11, 15, 17, 24, 20, 16, 18, 22, 26, 19, 13,  9,  5, 12, 25, 30, 31, 23,  6,  1,  0,  8, 21, 29, 28, 27, 10,  2,  3,  4, 17, 24, 20, 16, 14,  7, 11, 15};
-        int thres[32];
-
-        for (k = 0; k < 32; k++)
-        {
-            part = k * 8 - 128;
-            part = (part < -128) ? -128 : (part < 128) ? part : 128;
-            thres[k] = binarizeBiModalValue(gmean, part);
-        }
-
-        k = 0;
-        for (y = 0; y < wwidth; y++)
-        {
-            for (x = 0; x < wwidth; x++)
-            {
-                ddith[k] = thres[ddith[k]];
-                k++;
-            }
-        }
-
-        for (y = 0; y < h; ++y)
-        {
-            yb = y % wwidth;
-            for (x = 0; x < w; ++x)
-            {
-                xb = x % wwidth;
-                threshold = ddith[yb * wwidth + xb];
-                gmean_line[x] = (uint8_t) threshold;
-            }
-            gmean_line += gmean_stride;
-        }
-
-        gray_line = gray.data();
-        gmean_line = gmean.data();
-        for (int y = 0; y < h; ++y)
-        {
-            for (int x = 0; x < w; ++x)
-            {
-                float const origin = gray_line[x];
-                float gmul = gmean_line[x];
-
-                /* overlay */
-                float retval = origin;
-                if (origin > 127.5f)
-                {
-                    retval = 255.0f - retval;
-                    gmul = 255.0f - gmul;
-                }
-                retval *= gmul;
-                retval += retval;
-                retval /= 255.0f;
-                if (origin > 127.5f)
-                {
-                    retval = 255.0f - retval;
-                }
-                retval = coef * retval + (1.0f - coef) * origin + 0.5f;
-                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) retval;
-            }
-            gray_line += gray_stride;
-            gmean_line += gmean_stride;
-        }
-
-        imageReLevel(image, gray, gmean);
-    }
-}
-
-QImage edgedivFilter(
-    QImage const& image, int const radius, float const coef)
-{
-    QImage dst(image);
-    edgedivFilterInPlace(dst, radius, coef);
-    return dst;
-}
-
-void edgedivFilterInPlace(
-    QImage& image, int const radius, float const coef)
-{
-    if (image.isNull())
-    {
-        return;
-    }
-
-    if ((radius > 0) && (coef != 0.0))
-    {
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
-        GrayImage gray = GrayImage(image);
-        if (gray.isNull())
-        {
-            return;
-        }
-
-        GrayImage gmean(binarizeEdgeDivPrefilter(gray, radius, coef, coef));
-        if (gmean.isNull())
-        {
-            return;
-        }
-
-        imageReLevel(image, gray, gmean);
-    }
-}
-
 GrayImage coloredSignificanceFilter(
     QImage const& image, float const coef)
 {
@@ -1356,9 +873,9 @@ void coloredSignificanceFilterInPlace(
     }
     else
     {
-        for (unsigned int y = 0; y < hg; ++y)
+        for (unsigned int y = 0; y < hg; y++)
         {
-            for (unsigned int x = 0; x < wg; ++x)
+            for (unsigned int x = 0; x < wg; x++)
             {
                 gray_line[x] = (uint8_t) 255;
             }
@@ -1396,9 +913,9 @@ void coloredDimmingFilterInPlace(
         uint8_t const* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
-        for (unsigned int y = 0; y < h; ++y)
+        for (unsigned int y = 0; y < h; y++)
         {
-            for (unsigned int x = 0; x < w; ++x)
+            for (unsigned int x = 0; x < w; x++)
             {
                 float ycbcr = gray_line[x];
                 for (unsigned int c = 0; c < cnum; ++c)
@@ -1447,9 +964,9 @@ void coloredMaskInPlace(
         unsigned long int count = 0;
 
         uint32_t const msb = uint32_t(1) << 31;
-        for (unsigned int y = 0; y < h; ++y)
+        for (unsigned int y = 0; y < h; y++)
         {
-            for (unsigned int x = 0; x < w; ++x)
+            for (unsigned int x = 0; x < w; x++)
             {
                 if (content_line[x >> 5] & (msb >> (x & 31)))
                 {
@@ -1479,9 +996,9 @@ void coloredMaskInPlace(
             image_line = (uint8_t*) image.bits();
             content_line = content.data();
             mask_line = mask.data();
-            for (unsigned int y = 0; y < h; ++y)
+            for (unsigned int y = 0; y < h; y++)
             {
-                for (unsigned int x = 0; x < w; ++x)
+                for (unsigned int x = 0; x < w; x++)
                 {
                     if (content_line[x >> 5] & (msb >> (x & 31)))
                     {
@@ -1974,22 +1491,26 @@ void hsvKMeansInPlace(
         switch (color_space)
         {
         case 0:
-        { // HSV
+        {
+            // HSV
             hsv_img = imageHSVcylinder(image);
             break;
         }
         case 1:
-        { // HSL
+        {
+            // HSL
             hsv_img = imageHSLcylinder(image);
             break;
         }
         case 2:
-        { // YCbCr
+        {
+            // YCbCr
             hsv_img = imageYCbCr(image);
             break;
         }
         default:
-        { // HSV
+        {
+            // HSV
             hsv_img = imageHSVcylinder(image);
             break;
         }
@@ -2239,22 +1760,26 @@ void hsvKMeansInPlace(
         switch (color_space)
         {
         case 0:
-        { // HSV
+        {
+            // HSV
             paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
             break;
         }
         case 1:
-        { // HSL
+        {
+            // HSL
             paletteHSLtoRGB(mean_h, mean_s, mean_v, ncount);
             break;
         }
         case 2:
-        { // YCbCr
+        {
+            // YCbCr
             paletteYCbCrtoRGB(mean_h, mean_s, mean_v, ncount);
             break;
         }
         default:
-        { // HSV
+        {
+            // HSV
             paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
             break;
         }
@@ -2342,9 +1867,9 @@ void maskMorphologicalErode(
         int const mask_stride = mask.wordsPerLine();
         uint32_t const msb = uint32_t(1) << 31;
 
-        for (int y = 0; y < h; ++y)
+        for (int y = 0; y < h; y++)
         {
-            for (int x = 0; x < w; ++x)
+            for (int x = 0; x < w; x++)
             {
                 if (mask_line[x >> 5] & (msb >> (x & 31)))
                 {
@@ -2425,9 +1950,9 @@ void maskMorphologicalDilate(
         int const mask_stride = mask.wordsPerLine();
         uint32_t const msb = uint32_t(1) << 31;
 
-        for (int y = 0; y < h; ++y)
+        for (int y = 0; y < h; y++)
         {
-            for (int x = 0; x < w; ++x)
+            for (int x = 0; x < w; x++)
             {
                 if (mask_line[x >> 5] & (msb >> (x & 31)))
                 {

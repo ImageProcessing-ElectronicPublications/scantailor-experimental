@@ -33,24 +33,6 @@ static void imageReLevel(
     QImage& image, GrayImage const y_old,  GrayImage const y_new);
 
 /**
- * @brief Applies the Wiener filter to a grayscale image.
- *
- * @param image The image to apply the filter to. A null image is allowed.
- * @param window_size The local neighbourhood around a pixel to use.
- * @param noise_sigma The standard deviation of noise in the image.
- * @return The filtered image.
- */
-IMAGEPROC_EXPORT GrayImage wienerFilter(
-    GrayImage const& image, int radius = 100, float noise_sigma = 0.01f);
-
-/**
- * @brief An in-place version of wienerFilter().
- * @see wienerFilter()
- */
-IMAGEPROC_EXPORT void wienerFilterInPlace(
-    GrayImage& image, int radius = 100, float noise_sigma = 0.01f);
-
-/**
  * @brief S-curve.
  *
  * (0-T)+(T-255), T = Otsu(I)
@@ -177,15 +159,22 @@ IMAGEPROC_EXPORT void screenFilterInPlace(
     QImage& image, int radius = 5, float coef = 0.0f);
 
 /**
- * @brief Remove BG.
- *
- * Irbg = ((I - BG) < T) ? BG : (I - BG), BG = mean(I)
+ * @brief EdgeDiv (EdgePlus+BlurDiv) filter image.
  */
-IMAGEPROC_EXPORT QImage unPaperFilter(
-    QImage const& image, unsigned int iters = 4, float coef = 0.0f);
+IMAGEPROC_EXPORT void edgedivFilterInPlace(
+    QImage& image, int radius = 13, float coef = 0.0f);
 
-IMAGEPROC_EXPORT void unPaperFilterInPlace(
-    QImage& image, unsigned int iters = 4, float coef = 0.0f);
+IMAGEPROC_EXPORT QImage edgedivFilter(
+    QImage& image, int radius = 13, float coef = 0.0f);
+
+/**
+ * @brief Robust filter image.
+ */
+IMAGEPROC_EXPORT void robustFilterInPlace(
+    QImage& image, int radius = 10, float coef = 0.0f);
+
+IMAGEPROC_EXPORT QImage robustFilter(
+    QImage& image, int radius = 10, float coef = 0.0f);
 
 /**
  * @brief Add engraving texture to image.
@@ -208,13 +197,15 @@ IMAGEPROC_EXPORT QImage dots8Filter(
     QImage& image, int radius = 17, float coef = 0.0f);
 
 /**
- * @brief EdgeDiv (EdgePlus+BlurDiv) filter image.
+ * @brief Remove BG.
+ *
+ * Irbg = ((I - BG) < T) ? BG : (I - BG), BG = mean(I)
  */
-IMAGEPROC_EXPORT void edgedivFilterInPlace(
-    QImage& image, int radius = 13, float coef = 0.0f);
+IMAGEPROC_EXPORT QImage unPaperFilter(
+    QImage const& image, unsigned int iters = 4, float coef = 0.0f);
 
-IMAGEPROC_EXPORT QImage edgedivFilter(
-    QImage& image, int radius = 13, float coef = 0.0f);
+IMAGEPROC_EXPORT void unPaperFilterInPlace(
+    QImage& image, unsigned int iters = 4, float coef = 0.0f);
 
 /**
  * @brief Highlighting and masking colors in image.

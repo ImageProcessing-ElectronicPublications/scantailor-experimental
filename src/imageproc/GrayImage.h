@@ -27,6 +27,7 @@
 #include "imageproc_config.h"
 #include "GridAccessor.h"
 #include "IntegralImage.h"
+#include "Binarize.h"
 #include "GaussBlur.h"
 
 namespace imageproc
@@ -154,14 +155,65 @@ IMAGEPROC_EXPORT GrayImage grayMapMax(
     GrayImage const& src, int radius = 100);
 IMAGEPROC_EXPORT GrayImage grayMapContrast(
     GrayImage const& src, int radius = 100);
+
+/**
+ * @brief Applies the Wiener filter to a grayscale image.
+ *
+ * @param src The image to apply the filter to. A null image is allowed.
+ * @param window_size The local neighbourhood around a pixel to use.
+ * @param noise_sigma The standard deviation of noise in the image.
+ * @return The filtered image.
+ */
+IMAGEPROC_EXPORT GrayImage grayWiener(
+    GrayImage const& src, int radius = 3, float noise_sigma = 0.01f);
+
+/**
+ * @brief An in-place version of grayWiener().
+ * @see grayWiener()
+ */
+IMAGEPROC_EXPORT void grayWienerInPlace(
+    GrayImage& src, int radius = 3, float noise_sigma = 0.01f);
 IMAGEPROC_EXPORT GrayImage grayKnnDenoiser(
     GrayImage const& src, int radius = 1, float coef = 0.0f);
-IMAGEPROC_EXPORT GrayImage grayEqualize(
-    GrayImage const& src, int radius = 1, bool flg_blur = false);
+IMAGEPROC_EXPORT GrayImage grayDespeckle(
+    GrayImage const& src, int radius = 7, float coef = 0.0f);
+IMAGEPROC_EXPORT void grayDespeckleInPlace(
+    GrayImage& src, int radius = 7, float coef = 0.0f);
+IMAGEPROC_EXPORT GrayImage grayAutoLevel(
+    GrayImage const& src, int radius = 10, float coef = 0.0f);
 IMAGEPROC_EXPORT GrayImage grayBalance(
-    GrayImage const& src, int radius = 23);
+    GrayImage const& src, int radius = 23, float coef = 0.0f);
+IMAGEPROC_EXPORT GrayImage grayEqualize(
+    GrayImage const& src, int radius = 1, float coef = 0.0f,
+    bool flg_blur = false);
 IMAGEPROC_EXPORT GrayImage grayRetinex(
-    GrayImage const& src, int radius = 31);
+    GrayImage const& src, int radius = 31, float coef = 0.0f);
+IMAGEPROC_EXPORT GrayImage grayBlur(
+    GrayImage const& src, int radius = 1, float coef = 0.0f);
+IMAGEPROC_EXPORT GrayImage grayScreen(
+    GrayImage const& src, int radius = 5, float coef = 0.0f);
+
+/**
+ * \brief Image prefilter EdgeDiv (EdgePlus & BlurDiv) for local/global thresholding method.
+ *
+ * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
+ */
+IMAGEPROC_EXPORT GrayImage grayEdgeDiv(
+    GrayImage const& src, int radius = 10,
+    double kep = 0.5, double kdb = 0.5);
+/**
+ * \brief Image prefilter Robust's for local thresholding method.
+ *
+ * Tom Liao
+ * "Robust document binarization with OFF center-surround cells", 2017-08-09.
+ * https://www.researchgate.net/publication/226333284_Robust_document_binarization_with_OFF_center-surround_cells
+ */
+IMAGEPROC_EXPORT GrayImage grayRobust(
+    GrayImage const& src, int radius = 10, float coef = 0.2f);
+IMAGEPROC_EXPORT GrayImage grayGravure(
+    GrayImage const& src, int radius = 15, float coef = 0.0f);
+IMAGEPROC_EXPORT GrayImage grayDots8(
+    GrayImage const& src, int radius = 17, float coef = 0.0f);
 IMAGEPROC_EXPORT unsigned int grayDominantaValue(
     GrayImage const& src);
 

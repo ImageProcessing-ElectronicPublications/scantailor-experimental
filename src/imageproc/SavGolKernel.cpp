@@ -42,11 +42,11 @@ int calcNumTerms(int const hor_degree, int const vert_degree)
 SavGolKernel::SavGolKernel(
     QSize const& size, QPoint const& origin,
     int const hor_degree, int const vert_degree)
-    :	m_horDegree(hor_degree),
-      m_vertDegree(vert_degree),
-      m_width(size.width()),
-      m_height(size.height()),
-      m_numTerms(calcNumTerms(hor_degree, vert_degree))
+    :    m_horDegree(hor_degree),
+         m_vertDegree(vert_degree),
+         m_width(size.width()),
+         m_height(size.height()),
+         m_numTerms(calcNumTerms(hor_degree, vert_degree))
 {
     if (size.isEmpty())
     {

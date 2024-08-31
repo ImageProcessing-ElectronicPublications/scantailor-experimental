@@ -47,6 +47,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_screenCoef(el.attribute("screenCoef").toDouble()),
        m_edgedivSize(el.attribute("edgedivSize").toInt()),
        m_edgedivCoef(el.attribute("edgedivCoef").toDouble()),
+       m_robustSize(el.attribute("robustSize").toInt()),
+       m_robustCoef(el.attribute("robustCoef").toDouble()),
        m_gravureSize(el.attribute("gravureSize").toInt()),
        m_gravureCoef(el.attribute("gravureCoef").toDouble()),
        m_dots8Size(el.attribute("dots8Size").toInt()),
@@ -129,9 +131,17 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_edgedivSize = 13;
     }
-    if (m_edgedivCoef < 0.0 || m_edgedivCoef > 1.0)
+    if (m_edgedivCoef < -1.0 || m_edgedivCoef > 1.0)
     {
         m_edgedivCoef = 0.0;
+    }
+    if (m_robustSize < 1)
+    {
+        m_robustSize = 10;
+    }
+    if (m_robustCoef < -1.0 || m_robustCoef > 1.0)
+    {
+        m_robustCoef = 0.0;
     }
     if (m_gravureSize < 1)
     {
@@ -219,6 +229,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("edgedivSize", m_edgedivSize);
         el.setAttribute("edgedivCoef", m_edgedivCoef);
     }
+    if (m_robustCoef != 0.0)
+    {
+        el.setAttribute("robustSize", m_robustSize);
+        el.setAttribute("robustCoef", m_robustCoef);
+    }
     if (m_gravureCoef != 0.0)
     {
         el.setAttribute("gravureSize", m_gravureSize);
@@ -288,6 +303,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_edgedivCoef != other.m_edgedivCoef) || (m_edgedivSize != other.m_edgedivSize))
+    {
+        return false;
+    }
+    if ((m_robustCoef != other.m_robustCoef) || (m_robustSize != other.m_robustSize))
     {
         return false;
     }

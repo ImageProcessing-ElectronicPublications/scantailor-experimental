@@ -362,7 +362,8 @@ TextLineSegmenter::findSkewAngleRad(
 {
     //BinaryImage const binarized(binarizeGatos(image, 4, 3.0));
     //BinaryImage const binarized(binarizeGrad(image, 4, 0.75, 0));
-    BinaryImage const binarized(binarizeEdgeDiv(image, 4, -1.0, 1.0, 0));
+    //BinaryImage const binarized(binarizeEdgeDiv(image, 4, -1.0, 1.0, 0));
+    BinaryImage const binarized(binarizeEdgeDiv(grayRetinex(image, 31, 1.0), 4, 0.0, 1.0, 0));
 
     status.throwIfCancelled();
 
@@ -1050,7 +1051,8 @@ std::list<std::vector<QPointF>>
 
     //BinaryImage binarized(binarizeGatos(seed, 4, 3.0));
     //BinaryImage binarized(binarizeEdgeDiv(seed, 4, 0.5, 1.0, 0));
-    BinaryImage binarized(binarizeGrad(seed, 4, 0.75, 0));
+    //BinaryImage binarized(binarizeGrad(seed, 4, 0.75, 0));
+    BinaryImage binarized(binarizeEdgeDiv(grayRetinex(seed, 31, 1.0), 4, 0.0, 1.0, 0));
     seed = GrayImage();
 
     status.throwIfCancelled();

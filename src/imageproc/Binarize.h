@@ -62,7 +62,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeUse(
 IMAGEPROC_EXPORT BinaryImage binarizeFromMap(
     GrayImage const& src, GrayImage const& threshold, int delta = 0,
     unsigned char lower_bound = 0, unsigned char upper_bound = 255);
- 
+
 IMAGEPROC_EXPORT void binarizeNegate(BinaryImage& src);
 
 IMAGEPROC_EXPORT unsigned int binarizeBiModalValue(
@@ -207,9 +207,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeWAN(
  *
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
  */
-IMAGEPROC_EXPORT GrayImage binarizeEdgeDivPrefilter(
-    GrayImage const& src, int radius = 10,
-    double kep = 0.5, double kdb = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     GrayImage const& src, int radius = 10,
     double kep = 0.5, double kdb = 0.5, int delta = 0,

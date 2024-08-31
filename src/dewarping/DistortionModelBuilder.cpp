@@ -212,6 +212,8 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
 
     ransac.buildAndAssessModel(&ordered_curves.front(), &ordered_curves.back());
 
+/*
+    // (Tulon)
     // First let's try to combine each of the 5 top-most lines
     // with each of the 3 bottom-most ones.
     int const exhaustive_search_threshold = 5;
@@ -225,7 +227,6 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
             }
         }
     }
-
     // Continue by throwing in some random pairs of lines.
 
     // Repeatablity is important, so don't seed the RNG.
@@ -244,6 +245,19 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
         if (i < j)
         {
             ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
+        }
+    }
+*/
+
+    // Full RANCAS (zvezdochiot)
+    for (int i = 0; i < (num_curves - 1); i++)
+    {
+        for (int j = (num_curves - 1); j > i; j--)
+        {
+            if (i < j)
+            {
+                ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
+            }
         }
     }
 

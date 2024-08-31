@@ -29,8 +29,8 @@ namespace imageproc
 
 ConnCompEraserExt::ConnCompEraserExt(
     BinaryImage const& image, Connectivity const conn)
-    :	m_eraser(image, conn),
-      m_lastImage(image)
+    :    m_eraser(image, conn),
+         m_lastImage(image)
 {
 }
 

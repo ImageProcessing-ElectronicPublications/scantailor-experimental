@@ -49,9 +49,9 @@ public:
 
 
 MaxWhitespaceFinder::MaxWhitespaceFinder(BinaryImage const& img, QSize min_size)
-    :	m_integralImg(img.size()),
-      m_ptrQueuedRegions(new PriorityStorageImpl<AreaCompare>(AreaCompare())),
-      m_minSize(min_size)
+    :    m_integralImg(img.size()),
+         m_ptrQueuedRegions(new PriorityStorageImpl<AreaCompare>(AreaCompare())),
+         m_minSize(min_size)
 {
     init(img);
 }
@@ -431,14 +431,14 @@ MaxWhitespaceFinder::extendBlackPixelToBlackBox(
 
 MaxWhitespaceFinder::Region::Region(
     unsigned known_new_obstacles, QRect const& bounds)
-    :	m_knownNewObstacles(known_new_obstacles),
-      m_bounds(bounds)
+    :    m_knownNewObstacles(known_new_obstacles),
+         m_bounds(bounds)
 {
 }
 
 MaxWhitespaceFinder::Region::Region(Region const& other)
-    :	m_knownNewObstacles(other.m_knownNewObstacles),
-      m_bounds(other.m_bounds)
+    :    m_knownNewObstacles(other.m_knownNewObstacles),
+         m_bounds(other.m_bounds)
 {
     // Note that we don't copy m_obstacles.  This is a shallow copy.
 }

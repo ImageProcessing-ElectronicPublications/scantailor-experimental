@@ -95,7 +95,7 @@ void horizontalSobel(
  */
 template<
     typename T, typename SrcIt, typename TmpIt, typename DstIt,
-    typename SrcReader, typename TmpWriter,	typename TmpReader, typename DstWriter
+    typename SrcReader, typename TmpWriter,    typename TmpReader, typename DstWriter
     >
 void verticalSobel(
     int width, int height, SrcIt src, int src_stride, SrcReader src_reader,
