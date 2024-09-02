@@ -364,6 +364,10 @@ OutputGenerator::process(
     double norm_coef = color_options.normalizeCoef();
 
     // Color filters begin
+    colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
+
+    colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
+
     autoLevelFilterInPlace(transformed_image, color_options.autoLevelSize(), color_options.autoLevelCoef());
 
     colorBalanceFilterInPlace(transformed_image, color_options.balanceSize(), color_options.balanceCoef());
@@ -381,10 +385,6 @@ OutputGenerator::process(
     blurFilterInPlace(transformed_image, color_options.blurSize(), color_options.blurCoef());
 
     screenFilterInPlace(transformed_image, color_options.screenSize(), color_options.screenCoef());
-
-    colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
-
-    colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
 
     edgedivFilterInPlace(transformed_image, color_options.edgedivSize(), color_options.edgedivCoef());
 

@@ -678,8 +678,8 @@ void unPaperFilterInPlace(
         unsigned int const gray_stride = gray.stride();
 
         unsigned int const histsize = 256;
-        unsigned long int histogram[histsize] = {0};
-        unsigned long int hmax = 0, bgcount = 0;
+        uint64_t histogram[histsize] = {0};
+        uint64_t hmax = 0, bgcount = 0;
         double bgthres, bg[4] = {0.0}, bgsum[4] = {0.0};
 
         for (unsigned int y = 0; y < h; y++)
@@ -797,7 +797,7 @@ void unPaperFilterInPlace(
                             }
                             if (dist < distthres)
                             {
-                                for (unsigned int c = 0; c < cnum; ++c)
+                                for (unsigned int c = 0; c < cnum; c++)
                                 {
                                     image_line[indx + c] = (uint8_t) (bg[c] + 0.5);
                                 }
@@ -918,7 +918,7 @@ void coloredDimmingFilterInPlace(
             for (unsigned int x = 0; x < w; x++)
             {
                 float ycbcr = gray_line[x];
-                for (unsigned int c = 0; c < cnum; ++c)
+                for (unsigned int c = 0; c < cnum; c++)
                 {
                     unsigned int const indx = x * cnum + c;
                     float const origin = image_line[indx];
@@ -961,7 +961,7 @@ void coloredMaskInPlace(
         uint32_t const* mask_line = mask.data();
         int const mask_stride = mask.wordsPerLine();
         double fgmean[4] = {0};
-        unsigned long int count = 0;
+        uint32_t count = 0;
 
         uint32_t const msb = uint32_t(1) << 31;
         for (unsigned int y = 0; y < h; y++)
@@ -972,7 +972,7 @@ void coloredMaskInPlace(
                 {
                     if (!(mask_line[x >> 5] & (msb >> (x & 31))))
                     {
-                        for (unsigned int c = 0; c < cnum; ++c)
+                        for (unsigned int c = 0; c < cnum; c++)
                         {
                             unsigned int const indx = x * cnum + c;
                             fgmean[c] += image_line[indx];
@@ -987,7 +987,7 @@ void coloredMaskInPlace(
         }
         if (count > 0)
         {
-            for (unsigned int c = 0; c < cnum; ++c)
+            for (unsigned int c = 0; c < cnum; c++)
             {
                 fgmean[c] /= count;
                 fgmean[c] += 0.5;
@@ -1004,7 +1004,7 @@ void coloredMaskInPlace(
                     {
                         if (!(mask_line[x >> 5] & (msb >> (x & 31))))
                         {
-                            for (unsigned int c = 0; c < cnum; ++c)
+                            for (unsigned int c = 0; c < cnum; c++)
                             {
                                 unsigned int const indx = x * cnum + c;
                                 image_line[indx] = (uint8_t) fgmean[c];
@@ -1521,7 +1521,7 @@ void hsvKMeansInPlace(
             return;
         }
 
-        unsigned long mean_len[256] = {0};
+        uint32_t mean_len[256] = {0};
         double mean_h0[256] = {0.0};
         double mean_s0[256] = {0.0};
         double mean_v0[256] = {0.0};
@@ -1661,7 +1661,7 @@ void hsvKMeansInPlace(
                 mask_line += mask_stride;
                 clusters_line += clusters_stride;
             }
-            unsigned long changes = 0;
+            uint32_t changes = 0;
             for (int i = 1; i <= ncount; i++)
             {
                 if (mean_len[i] > 0)
