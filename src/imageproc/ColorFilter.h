@@ -29,7 +29,7 @@ namespace imageproc
 
 class GrayImage;
 
-static void imageReLevel(
+IMAGEPROC_EXPORT void imageReLevel(
     QImage& image, GrayImage const y_old,  GrayImage const y_new);
 
 /**
