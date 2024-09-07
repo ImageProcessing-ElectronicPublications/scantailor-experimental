@@ -29,6 +29,8 @@ namespace imageproc
 
 class GrayImage;
 
+IMAGEPROC_EXPORT void imageLevelSet(
+    QImage& image,  GrayImage const y_new);
 IMAGEPROC_EXPORT void imageReLevel(
     QImage& image, GrayImage const y_old,  GrayImage const y_new);
 
@@ -134,9 +136,18 @@ IMAGEPROC_EXPORT void colorDespeckleFilterInPlace(
     QImage& image, int radius = 2, float coef = 0.0f);
 
 /**
- * @brief Blur (box) image.
+ * @brief Sigma (blur manipulation) image.
+ */
+IMAGEPROC_EXPORT QImage sigmaFilter(
+    QImage const& image, int radius = 29, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void sigmaFilterInPlace(
+    QImage& image, int radius = 29, float coef = 0.0f);
+
+/**
+ * @brief Blur (Gauss) image.
  *
- * Ib = mean(I, w), w = box(2*r+1)
+ * Ib = gaussBlur(I, r, r)
  */
 IMAGEPROC_EXPORT QImage blurFilter(
     QImage const& image, int radius = 1, float coef = 0.0f);

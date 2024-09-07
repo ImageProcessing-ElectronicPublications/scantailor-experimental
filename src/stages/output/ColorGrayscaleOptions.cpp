@@ -41,6 +41,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
        m_knndCoef(el.attribute("knnDenoiser").toDouble()),
        m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt()),
        m_cdespeckleCoef(el.attribute("cdespeckle").toDouble()),
+       m_sigmaSize(el.attribute("sigmaSize").toInt()),
+       m_sigmaCoef(el.attribute("sigmaCoef").toDouble()),
        m_blurSize(el.attribute("blurSize").toInt()),
        m_blurCoef(el.attribute("blurCoef").toDouble()),
        m_screenSize(el.attribute("screenSize").toInt()),
@@ -110,6 +112,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_cdespeckleCoef < -1.0 || m_cdespeckleCoef > 1.0)
     {
         m_cdespeckleCoef = 0.0;
+    }
+    if (m_sigmaSize < 1)
+    {
+        m_sigmaSize = 29;
+    }
+    if (m_sigmaCoef < -1.0 || m_sigmaCoef > 1.0)
+    {
+        m_sigmaCoef = 0.0;
     }
     if (m_blurSize < 1)
     {
@@ -214,6 +224,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("cdespeckle", m_cdespeckleCoef);
         el.setAttribute("cdespeckleRadius", m_cdespeckleRadius);
     }
+    if (m_sigmaCoef != 0.0)
+    {
+        el.setAttribute("sigmaSize", m_sigmaSize);
+        el.setAttribute("sigmaCoef", m_sigmaCoef);
+    }
     if (m_blurCoef != 0.0)
     {
         el.setAttribute("blurSize", m_blurSize);
@@ -291,6 +306,10 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if ((m_cdespeckleCoef != other.m_cdespeckleCoef) || (m_cdespeckleRadius != other.m_cdespeckleRadius))
+    {
+        return false;
+    }
+    if ((m_sigmaCoef != other.m_sigmaCoef) || (m_sigmaSize != other.m_sigmaSize))
     {
         return false;
     }

@@ -227,6 +227,14 @@ IMAGEPROC_EXPORT void grayRetinexInPlace(
     GrayImage& src, int radius = 31, float coef = 0.0f);
 
 /**
+ * @brief Sigma (blur manipulation) GrayImage based GaussBlur.
+ */
+IMAGEPROC_EXPORT GrayImage graySigma(
+    GrayImage const& src, int radius = 29, float coef = 0.0f);
+IMAGEPROC_EXPORT void graySigmaInPlace(
+    GrayImage& src, int radius = 29, float coef = 0.0f);
+
+/**
  * @brief Blur GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayBlur(
@@ -274,7 +282,8 @@ IMAGEPROC_EXPORT void grayGravureInPlace(
     GrayImage& src, int radius = 15, float coef = 0.0f);
     
 /**
- * @brief Dots 8x8 GrayImage based GaussBlur.
+ * @brief Dots 8x8 GrayImage.
+ * Modification: used GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayDots8(
     GrayImage const& src, int radius = 17, float coef = 0.0f);

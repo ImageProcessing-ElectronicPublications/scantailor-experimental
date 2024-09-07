@@ -368,9 +368,8 @@ OutputGenerator::process(
 
     colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
 
-    GrayImage gray = GrayImage(transformed_image);
     GrayImage gout = GrayImage(transformed_image);
-    if (!gray.isNull() && !gout.isNull())
+    if (!gout.isNull())
     {
         grayAutoLevelInPlace(gout, color_options.autoLevelSize(), color_options.autoLevelCoef());
 
@@ -386,6 +385,8 @@ OutputGenerator::process(
 
         grayDespeckleInPlace(gout, color_options.cdespeckleRadius(), color_options.cdespeckleCoef());
 
+        graySigmaInPlace(gout, color_options.sigmaSize(), color_options.sigmaCoef());
+
         grayBlurInPlace(gout, color_options.blurSize(), color_options.blurCoef());
 
         grayScreenInPlace(gout, color_options.screenSize(), color_options.screenCoef());
@@ -398,9 +399,8 @@ OutputGenerator::process(
 
         grayDots8InPlace(gout, color_options.dots8Size(), color_options.dots8Coef());
 
-        imageReLevel(transformed_image, gray, gout);
+        imageLevelSet(transformed_image, gout);
     }
-    gray = GrayImage();
     gout = GrayImage();
 
     GrayImage coloredSignificance(transformed_image);

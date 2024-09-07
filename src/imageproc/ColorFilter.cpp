@@ -39,6 +39,18 @@
 namespace imageproc
 {
 
+void imageLevelSet(
+    QImage& image,  GrayImage const y_new)
+{
+    if (image.isNull() || y_new.isNull())
+    {
+        return;
+    }
+    GrayImage const y_old = GrayImage(image);
+
+    imageReLevel(image, y_old, y_new);
+}
+
 void imageReLevel(
     QImage& image, GrayImage const y_old,  GrayImage const y_new)
 {
@@ -436,6 +448,40 @@ void colorDespeckleFilterInPlace(
         }
 
         imageReLevel(image, gray, despeckle);
+    }
+}
+
+QImage sigmaFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    sigmaFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void sigmaFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0))
+    {
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        GrayImage gmean = graySigma(gray, radius, coef);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        imageReLevel(image, gray, gmean);
     }
 }
 

@@ -46,6 +46,8 @@ public:
           m_knndCoef(0.0),
           m_cdespeckleRadius(2),
           m_cdespeckleCoef(0.0),
+          m_sigmaSize(29),
+          m_sigmaCoef(0.0),
           m_blurSize(1),
           m_blurCoef(0.0),
           m_screenSize(5),
@@ -203,6 +205,23 @@ public:
     void setCdespeckleCoef(double val)
     {
         m_cdespeckleCoef = val;
+    }
+
+    int sigmaSize() const
+    {
+        return m_sigmaSize;
+    }
+    void setSigmaSize(int val)
+    {
+        m_sigmaSize = val;
+    }
+    double sigmaCoef() const
+    {
+        return m_sigmaCoef;
+    }
+    void setSigmaCoef(double val)
+    {
+        m_sigmaCoef = val;
     }
 
     int blurSize() const
@@ -372,6 +391,8 @@ private:
     double m_knndCoef;
     int m_cdespeckleRadius;
     double m_cdespeckleCoef;
+    int m_sigmaSize;
+    double m_sigmaCoef;
     int m_blurSize;
     double m_blurCoef;
     int m_screenSize;

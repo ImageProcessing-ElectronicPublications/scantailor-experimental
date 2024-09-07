@@ -89,6 +89,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
     colorFilterSelector->addItem(tr("KNN denoiser"), F_KNND);
     colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
+    colorFilterSelector->addItem(tr("Sigma"), F_SIGMA);
     colorFilterSelector->addItem(tr("Blur/Sharpen"), F_BLUR);
     colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
     colorFilterSelector->addItem(tr("EdgeDiv"), F_EDGEDIV);
@@ -509,6 +510,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.cdespeckleRadius());
         colorFilterCoef->setValue(color_options.cdespeckleCoef());
         break;
+    case F_SIGMA:
+        colorFilterSize->setValue(color_options.sigmaSize());
+        colorFilterCoef->setValue(color_options.sigmaCoef());
+        break;
     case F_BLUR:
         colorFilterSize->setValue(color_options.blurSize());
         colorFilterCoef->setValue(color_options.blurCoef());
@@ -576,6 +581,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_DESPECKLE:
         color_options.setCdespeckleRadius(value);
         break;
+    case F_SIGMA:
+        color_options.setSigmaSize(value);
+        break;
     case F_BLUR:
         color_options.setBlurSize(value);
         break;
@@ -629,6 +637,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_DESPECKLE:
         color_options.setCdespeckleCoef(value);
+        break;
+    case F_SIGMA:
+        color_options.setSigmaCoef(value);
         break;
     case F_BLUR:
         color_options.setBlurCoef(value);

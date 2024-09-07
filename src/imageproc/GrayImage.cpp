@@ -1081,9 +1081,9 @@ void grayBlurInPlace(
         {
             for (int x = 0; x < w; x++)
             {
+                float const origin = src_line[x];
                 float const mean = gmean_line[x];
 
-                float const origin = src_line[x];
                 float retval = coef * mean + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
                 src_line[x] = (uint8_t) retval;
@@ -1093,6 +1093,60 @@ void grayBlurInPlace(
         }
     }
 } // grayBlur
+
+GrayImage graySigma(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    graySigmaInPlace(dst, radius, coef);
+    return dst;
+}
+
+void graySigmaInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* src_line = src.data();
+    int const src_stride = src.stride();
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+                float const delta = mean - origin;
+                float const deltainv = (delta < 0.0f) ? (255.0f + delta) : (255.0f - delta);
+                float const sigma = delta * deltainv / 127.5f;
+                float const target = mean - sigma;
+
+                float retval = coef * target + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                src_line[x] = (uint8_t) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+} // graySigma
 
 GrayImage grayScreen(
     GrayImage const& src, int const radius, float const coef)
