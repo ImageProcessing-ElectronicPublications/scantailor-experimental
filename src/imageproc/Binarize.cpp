@@ -393,63 +393,6 @@ BinaryImage binarizeMean(
     return bw_img;
 }  // binarizeMean
 
-GrayImage binarizeDotsMap (GrayImage const& src, int const delta)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-
-    int y, x, yb, xb, k, wwidth = 8;
-    int threshold, part;
-    // Dots dither matrix
-    int ddith[64] = {13,  9,  5, 12, 18, 22, 26, 19,  6,  1,  0,  8, 25, 30, 31, 23, 10,  2,  3,  4, 21, 29, 28, 27, 14,  7, 11, 15, 17, 24, 20, 16, 18, 22, 26, 19, 13,  9,  5, 12, 25, 30, 31, 23,  6,  1,  0,  8, 21, 29, 28, 27, 10,  2,  3,  4, 17, 24, 20, 16, 14,  7, 11, 15};
-    int thres[32];
-
-    for (k = 0; k < 32; k++)
-    {
-        part = k * 8 + delta - 128;
-        part = (part < -128) ? -128 : (part < 128) ? part : 128;
-        thres[k] = binarizeBiModalValue(src, part);
-        thres[k] = (thres[k] < 1) ? 1 : ((thres[k] < 255) ? thres[k] : 255);
-    }
-
-    k = 0;
-    for (y = 0; y < wwidth; y++)
-    {
-        for (x = 0; x < wwidth; x++)
-        {
-            ddith[k] = thres[ddith[k]];
-            k++;
-        }
-    }
-
-    for (y = 0; y < h; y++)
-    {
-        yb = y % wwidth;
-        for (x = 0; x < w; x++)
-        {
-            xb = x % wwidth;
-            threshold = ddith[yb * wwidth + xb];
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-    }
-
-    return gray;
-}
-
 BinaryImage binarizeDots(
     GrayImage const& src, int const delta,
     unsigned char const bound_lower, unsigned char const bound_upper)
@@ -459,72 +402,11 @@ BinaryImage binarizeDots(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeDotsMap(src, delta));
+    GrayImage threshold_map(grayDotsMap(src, delta));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeDots
-
-/*
- * niblack = mean - k * stderr, k = 0.2
- */
-GrayImage binarizeNiblackMap(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return GrayImage();
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-            float threshold = mean - k * deviation;
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
-    }
-
-    return gray;
-}
 
 BinaryImage binarizeNiblack(
     GrayImage const& src, int const radius,
@@ -536,7 +418,7 @@ BinaryImage binarizeNiblack(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeNiblackMap(src, radius, k));
+    GrayImage threshold_map(grayNiblackMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -689,6 +571,9 @@ BinaryImage binarizeGatosCleaner(
     return bw_img;
 }
 
+/*
+ * niblack = mean - k * stderr, k = 0.2
+ */
 BinaryImage binarizeGatos(
     GrayImage const& src, int const radius,
     double const noise_sigma, double const k, int const delta,
@@ -710,65 +595,6 @@ BinaryImage binarizeGatos(
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
-GrayImage binarizeSauvolaMap(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return gray;
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return gray;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-
-            float threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
-    }
-
-    return gray;
-}
-
 BinaryImage binarizeSauvola(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -779,7 +605,7 @@ BinaryImage binarizeSauvola(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeSauvolaMap(src, radius, k));
+    GrayImage threshold_map(graySauvolaMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -788,83 +614,6 @@ BinaryImage binarizeSauvola(
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  */
-GrayImage binarizeWolfMap(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return gray;
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return gray;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-
-    uint32_t min_gray_level = 255;
-    float max_deviation = 0.0;
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            uint32_t origin = gray_line[x];
-            float const deviation = gdeviation_line[x];
-            max_deviation = (max_deviation < deviation) ? deviation : max_deviation;
-            min_gray_level = (min_gray_level < origin) ? min_gray_level : origin;
-        }
-        gray_line += gray_stride;
-        gdeviation_line += gdeviation_stride;
-    }
-
-    gray_line = gray.data();
-    gdeviation_line = gdeviation.data();
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-            float const a = 1.0 - deviation / max_deviation;
-            float threshold = mean - k * a * (mean - min_gray_level);
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
-    }
-
-    return gray;
-}
-
 BinaryImage binarizeWolf(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -875,7 +624,7 @@ BinaryImage binarizeWolf(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeWolfMap(src, radius, k));
+    GrayImage threshold_map(grayWolfMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -884,55 +633,6 @@ BinaryImage binarizeWolf(
 /*
  * bradley = mean * (1.0 - k), k = 0.2
  */
-GrayImage binarizeBradleyMap(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return gray;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-    }
-
-    return gray;
-}  // binarizeBradleyMap
-
 BinaryImage binarizeBradley(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -943,7 +643,7 @@ BinaryImage binarizeBradley(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeBradleyMap(src, radius, k));
+    GrayImage threshold_map(grayBradleyMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -1002,56 +702,6 @@ float binarizeGradValue(
     return tvalue;
 }
 
-GrayImage binarizeGradMap(
-    GrayImage const& src, int const radius, double const coef)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return gray;
-    }
-
-    float const mean_grad = (1.0 - coef) * binarizeGradValue(gray, gmean);
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-
-            float threshold = mean_grad + mean * coef;
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-    }
-
-    return gray;
-}
-
 BinaryImage binarizeGrad(
     GrayImage const& src, int const radius,
     double const coef, int const delta,
@@ -1062,7 +712,7 @@ BinaryImage binarizeGrad(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeGradMap(src, radius, coef));
+    GrayImage threshold_map(grayGradMap(src, radius, coef));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -1071,65 +721,6 @@ BinaryImage binarizeGrad(
 /*
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
-GrayImage binarizeSinghMap(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return gray;
-    }
-    GrayImage graymm = grayMapContrast(src, radius);
-    if (graymm.isNull())
-    {
-        return gray;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* graymm_line = graymm.data();
-    int const graymm_stride = graymm.stride();
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float const origin = gray_line[x];
-            float const maxmin = graymm_line[x];
-            float threshold = (1.0 - k) * (mean + maxmin * (1.0 - origin / 255.0));
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        graymm_line += graymm_stride;
-    }
-
-    return gray;
-}  // binarizeSinghMap
-
 BinaryImage binarizeSingh(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -1140,7 +731,7 @@ BinaryImage binarizeSingh(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeSinghMap(src, radius, k));
+    GrayImage threshold_map(graySinghMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -1149,73 +740,6 @@ BinaryImage binarizeSingh(
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
-GrayImage binarizeWANMap(
-    GrayImage const& src, int const radius, double const k)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
-    if (gmean.isNull())
-    {
-        return gray;
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return gray;
-    }
-    GrayImage gmax = grayMapMax(src, radius);
-    if (gmax.isNull())
-    {
-        return gray;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-    uint8_t* gmax_line = gmax.data();
-    int const gmax_stride = gmax.stride();
-
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-            float const imax = gmax_line[x];
-
-            float threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
-        }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
-        gmax_line += gmax_stride;
-    }
-
-    return gray;
-}
-
 BinaryImage binarizeWAN(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -1226,7 +750,7 @@ BinaryImage binarizeWAN(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeWANMap(src, radius, k));
+    GrayImage threshold_map(grayWANMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
@@ -1248,6 +772,11 @@ BinaryImage binarizeEdgeDiv(
     return bw_img;
 }  // binarizeEdgeDiv
 
+/*
+ * Robust = 255.0 - (surround + 255.0) * sc / (surround + sc), k = 0.2
+ * sc = surround - img
+ * surround = blur(img, r), r = 10
+ */
 BinaryImage binarizeRobust(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -1264,166 +793,6 @@ BinaryImage binarizeRobust(
     return bw_img;
 } // binarizeRobust
 
-GrayImage binarizeMScaleMap(
-    GrayImage const& src, int const radius, double const coef)
-{
-    if (src.isNull())
-    {
-        return GrayImage();
-    }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-
-    unsigned int whcp, l, i, j, blsz, rsz;
-    double immean, kover, sensitivity, sensdiv, senspos, sensinv;
-    unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
-    unsigned int maskbl, maskover, tim, threshold = 0;
-    unsigned long int idx;
-
-    whcp = (h + w) >> 1;
-    blsz = 1;
-    while (blsz < whcp)
-    {
-        level++;
-        blsz <<= 1;
-    }
-    blsz >>= 1;
-    rsz = 1;
-    while (((int)rsz < radius) && (level > 1))
-    {
-        level--;
-        rsz <<= 1;
-    }
-
-    gray_line = gray.data();
-    immin = gray_line[0];
-    immax = immin;
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            pim = gray_line[x];
-            if (pim < immin)
-            {
-                immin = pim;
-            }
-            if (pim > immax)
-            {
-                immax = pim;
-            }
-        }
-        gray_line += gray_stride;
-    }
-    immean = (double) (immax + immin);
-    immean *= 0.5;
-    immean += 0.5;
-    tim = (unsigned int) immean;
-
-    gray_line = gray.data();
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
-        {
-            gray_line[x] = tim;
-        }
-        gray_line += gray_stride;
-    }
-
-    kover = 1.5;
-
-    if (coef < 0.0)
-    {
-        sensitivity = -coef;
-        sensdiv = sensitivity;
-        sensdiv += 1.0;
-        sensinv = 1.0 / sensdiv;
-        senspos = sensitivity / sensdiv;
-    }
-    else
-    {
-        sensitivity = coef;
-        sensdiv = sensitivity;
-        sensdiv += 1.0;
-        senspos = 1.0 / sensdiv;
-        sensinv = sensitivity / sensdiv;
-    }
-
-    src_line = src.data();
-    gray_line = gray.data();
-    for (l = 0; l < level; l++)
-    {
-        cnth = (h + blsz - 1) / blsz;
-        cntw = (w + blsz - 1) / blsz;
-        maskbl = blsz;
-        maskover = (unsigned int) (kover * maskbl);
-        for (i = 0; i < cnth; i++)
-        {
-            int y0 = i * maskbl;
-            int y1 = y0 + maskover;
-            y1 = (y1 < h) ? y1 : h;
-            for (j = 0; j < cntw; j++)
-            {
-                int x0 = j * maskbl;
-                int x1 = x0 + maskover;
-                x1 = (x1 < w) ? x1 : w;
-
-                idx = y0 * src_stride + x0;
-                immin = src_line[idx];
-                immax = immin;
-                for (int y = y0; y < y1; y++)
-                {
-                    for (int x = x0; x < x1; x++)
-                    {
-                        idx = y * src_stride + x;
-                        pim = src_line[idx];
-                        if (pim < immin)
-                        {
-                            immin = pim;
-                        }
-                        if (pim > immax)
-                        {
-                            immax = pim;
-                        }
-                    }
-                }
-                immean = (double) (immax + immin);
-                immean *= 0.5;
-                immean *= sensinv;
-                for (int y = y0; y < y1; y++)
-                {
-                    for (int x = x0; x < x1; x++)
-                    {
-                        idx = y * gray_stride + x;
-                        imt = gray_line[idx];
-                        imt *= senspos;
-                        imt += immean;
-                        imt += 0.5;
-                        imt = (imt < 0.0) ? 0.0 : ((imt < 255.0) ? imt : 255.0);
-                        gray_line[idx] = (uint8_t) imt;
-                    }
-                }
-            }
-        }
-        blsz >>= 1;
-    }
-
-    return gray;
-}  // binarizeMScaleMap
-
 BinaryImage binarizeMScale(
     GrayImage const& src, int const radius,
     double const coef, int const delta,
@@ -1434,7 +803,7 @@ BinaryImage binarizeMScale(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(binarizeMScaleMap(src, radius, coef));
+    GrayImage threshold_map(grayMScaleMap(src, radius, coef));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;

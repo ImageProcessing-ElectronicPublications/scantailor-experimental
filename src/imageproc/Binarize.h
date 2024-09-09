@@ -81,8 +81,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeMean(
     GrayImage const& src, int delta = 0,
     unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
-IMAGEPROC_EXPORT GrayImage binarizeDotsMap (
-    GrayImage const& src, int delta = 0);
 IMAGEPROC_EXPORT BinaryImage binarizeDots(
     GrayImage const& src, int delta = 0,
     unsigned char lower_bound = 0, unsigned char upper_bound = 255);
@@ -92,8 +90,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeDots(
   *
   * \see Help -> About -> References -> [9]
   */
-IMAGEPROC_EXPORT GrayImage binarizeNiblackMap(
-    GrayImage const& src, int radius = 100, double k = 0.20);
 IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
     GrayImage const& src, int radius = 100,
     double k = 0.20, int delta = 0,
@@ -122,8 +118,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatos(
  *
  * \see Help -> About -> References -> [11]
  */
-IMAGEPROC_EXPORT GrayImage binarizeSauvolaMap(
-    GrayImage const& src, int radius = 100, double k = 0.34);
 IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
     GrayImage const& src, int radius = 100,
     double k = 0.34, int delta = 0,
@@ -139,8 +133,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
  * \param lower_bound The minimum possible gray level that can be made white.
  * \param upper_bound The maximum possible gray level that can be made black.
  */
-IMAGEPROC_EXPORT GrayImage binarizeWolfMap(
-    GrayImage const& src, int radius = 100, double k = 0.30);
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
     GrayImage const& src, int radius = 100,
     double k = 0.30, int delta = 0,
@@ -152,8 +144,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
  * Derek Bradley, Gerhard Roth. 2005. "Adaptive Thresholding Using the Integral Image".
  * http://www.scs.carleton.ca/~roth/iit-publications-iti/docs/gerh-50002.pdf
  */
-IMAGEPROC_EXPORT GrayImage binarizeBradleyMap(
-    GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     GrayImage const& src, int radius = 100,
     double k = 0.2, int delta = 0,
@@ -166,8 +156,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
  */
 IMAGEPROC_EXPORT float binarizeGradValue(
     GrayImage const& gray, GrayImage const& gmean);
-IMAGEPROC_EXPORT GrayImage binarizeGradMap(
-    GrayImage const& src, int radius = 10, double coef = 0.75);
 IMAGEPROC_EXPORT BinaryImage binarizeGrad(
     GrayImage const& src, int radius = 10,
     double coef = 0.75, int delta = 0,
@@ -181,8 +169,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeGrad(
  * International Journal of Computer Applications, 51, 5-10.
  * https://research.ijcaonline.org/volume51/number6/pxc3881362.pdf
  */
-IMAGEPROC_EXPORT GrayImage binarizeSinghMap(
-    GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeSingh(
     GrayImage const& src, int radius = 100,
     double k = 0.2, int delta = 0,
@@ -195,8 +181,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeSingh(
  * "Binarization of Document Image Using Optimum Threshold Modification", 2018.
  * https://www.researchgate.net/publication/326026836_Binarization_of_Document_Image_Using_Optimum_Threshold_Modification
  */
-IMAGEPROC_EXPORT GrayImage binarizeWANMap(
-    GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeWAN(
     GrayImage const& src, int radius = 100,
     double k = 0.2, int delta = 0,
@@ -219,8 +203,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
  * "Robust document binarization with OFF center-surround cells", 2017-08-09.
  * https://www.researchgate.net/publication/226333284_Robust_document_binarization_with_OFF_center-surround_cells
  */
-IMAGEPROC_EXPORT GrayImage binarizeRobustPrefilter(
-    GrayImage const& src, int radius = 10, double k = 0.2);
 IMAGEPROC_EXPORT BinaryImage binarizeRobust(
     GrayImage const& src, int radius = 10,
     double k = 0.2, int delta = 0,
@@ -231,9 +213,6 @@ IMAGEPROC_EXPORT BinaryImage binarizeRobust(
  *
  * MultiScale thresholding method.
  */
-IMAGEPROC_EXPORT GrayImage binarizeMScaleMap(
-    GrayImage const& src, int radius = 10,
-    double coef = 0.5);
 IMAGEPROC_EXPORT BinaryImage binarizeMScale(
     GrayImage const& src, int radius = 10,
     double coef = 0.5, int delta = 0,

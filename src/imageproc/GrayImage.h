@@ -157,6 +157,28 @@ IMAGEPROC_EXPORT GrayImage grayMapContrast(
     GrayImage const& src, int radius = 100);
 
 /**
+ * \brief Threshold Map Images:
+ */
+IMAGEPROC_EXPORT GrayImage grayNiblackMap(
+    GrayImage const& src, int radius = 100, double k = 0.20);
+IMAGEPROC_EXPORT GrayImage graySauvolaMap(
+    GrayImage const& src, int radius = 100, double k = 0.34);
+IMAGEPROC_EXPORT GrayImage grayWolfMap(
+    GrayImage const& src, int radius = 100, double k = 0.30);
+IMAGEPROC_EXPORT GrayImage grayBradleyMap(
+    GrayImage const& src, int radius = 100, double k = 0.2);
+IMAGEPROC_EXPORT GrayImage grayGradMap(
+    GrayImage const& src, int radius = 10, double coef = 0.75);
+IMAGEPROC_EXPORT GrayImage graySinghMap(
+    GrayImage const& src, int radius = 100, double k = 0.2);
+IMAGEPROC_EXPORT GrayImage grayWANMap(
+    GrayImage const& src, int radius = 100, double k = 0.2);
+IMAGEPROC_EXPORT GrayImage grayMScaleMap(
+    GrayImage const& src, int radius = 10, double coef = 0.5);
+IMAGEPROC_EXPORT GrayImage grayDotsMap (
+    GrayImage const& src, int delta = 0);
+
+/**
  * @brief Applies the Wiener filter to a grayscale image.
  *
  * @param src The image to apply the filter to. A null image is allowed.
