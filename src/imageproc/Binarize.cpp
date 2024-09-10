@@ -809,4 +809,20 @@ BinaryImage binarizeMScale(
     return bw_img;
 }  // binarizeMScale
 
+BinaryImage binarizeEngraving(
+    GrayImage const& src, int const radius,
+    double const coef, int const delta,
+    unsigned char const bound_lower, unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(grayEngravingMap(src, radius, coef));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+
+    return bw_img;
+}
+
 } // namespace imageproc

@@ -81,6 +81,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgeAdapt"), T_EDGEADAPT);
     thresholdMethodSelector->addItem(tr("Robust"), T_ROBUST);
     thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
+    thresholdMethodSelector->addItem(tr("Engraving"), T_ENGRAVING);
 
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Balance"), F_BALANCE);

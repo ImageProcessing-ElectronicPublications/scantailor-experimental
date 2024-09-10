@@ -218,6 +218,11 @@ IMAGEPROC_EXPORT BinaryImage binarizeMScale(
     double coef = 0.5, int delta = 0,
     unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
+IMAGEPROC_EXPORT BinaryImage binarizeEngraving(
+    GrayImage const& src, int radius = 20,
+    double coef = 0.2, int delta = 0,
+    unsigned char lower_bound = 0, unsigned char upper_bound = 255);
+
 } // namespace imageproc
 
 #endif

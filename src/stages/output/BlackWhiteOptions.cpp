@@ -228,6 +228,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_MSCALE;
     }
+    else if (str == "engraving")
+    {
+        return T_ENGRAVING;
+    }
     else
     {
         return T_OTSU;
@@ -290,6 +294,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_MSCALE:
         str = "multiscale";
+        break;
+    case T_ENGRAVING:
+        str = "engraving";
         break;
     }
     return str;

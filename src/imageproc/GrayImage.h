@@ -175,8 +175,33 @@ IMAGEPROC_EXPORT GrayImage grayWANMap(
     GrayImage const& src, int radius = 100, double k = 0.2);
 IMAGEPROC_EXPORT GrayImage grayMScaleMap(
     GrayImage const& src, int radius = 10, double coef = 0.5);
-IMAGEPROC_EXPORT GrayImage grayDotsMap (
+IMAGEPROC_EXPORT GrayImage grayEngravingMap(
+    GrayImage const& src, int radius = 20, float coef = 0.20f);
+IMAGEPROC_EXPORT GrayImage grayDotsMap(
     GrayImage const& src, int delta = 0);
+
+/**
+ * threshold MAPs as filters
+ */
+void grayMapOverlay(
+    GrayImage& src, GrayImage& gover, float coef = 0.0f);
+
+/**
+ * @brief Engraving GrayImage based GaussBlur.
+ */
+IMAGEPROC_EXPORT GrayImage grayGravure(
+    GrayImage const& src, int radius = 15, float coef = 0.0f);
+IMAGEPROC_EXPORT void grayGravureInPlace(
+    GrayImage& src, int radius = 15, float coef = 0.0f);
+
+/**
+ * @brief Dots 8x8 GrayImage.
+ * Modification: used GaussBlur.
+ */
+IMAGEPROC_EXPORT GrayImage grayDots8(
+    GrayImage const& src, int radius = 17, float coef = 0.0f);
+IMAGEPROC_EXPORT void grayDots8InPlace(
+    GrayImage& src, int radius = 17, float coef = 0.0f);
 
 /**
  * @brief Applies the Wiener filter to a grayscale image.
@@ -294,23 +319,6 @@ IMAGEPROC_EXPORT GrayImage grayRobust(
     GrayImage const& src, int radius = 10, float coef = 0.2f);
 IMAGEPROC_EXPORT void grayRobustInPlace(
     GrayImage& src, int radius = 10, float coef = 0.2f);
-
-/**
- * @brief Engraving GrayImage based GaussBlur.
- */
-IMAGEPROC_EXPORT GrayImage grayGravure(
-    GrayImage const& src, int radius = 15, float coef = 0.0f);
-IMAGEPROC_EXPORT void grayGravureInPlace(
-    GrayImage& src, int radius = 15, float coef = 0.0f);
-    
-/**
- * @brief Dots 8x8 GrayImage.
- * Modification: used GaussBlur.
- */
-IMAGEPROC_EXPORT GrayImage grayDots8(
-    GrayImage const& src, int radius = 17, float coef = 0.0f);
-IMAGEPROC_EXPORT void grayDots8InPlace(
-    GrayImage& src, int radius = 17, float coef = 0.0f);
 
 /**
  * @brief Dominanta GrayImage.

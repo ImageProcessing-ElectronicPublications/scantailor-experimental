@@ -1302,6 +1302,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeMScale(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_ENGRAVING:
+        {
+            binarized = binarizeEngraving(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         }
     }
     if (black_white_options.negate())

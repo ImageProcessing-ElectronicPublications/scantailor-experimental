@@ -71,54 +71,52 @@ GrayImage grayMapMean(
     {
         return GrayImage();
     }
-    if (radius < 1)
+    if (radius > 0)
     {
-        return gray;
-    }
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t const* src_line = src.data();
+        int const src_stride = src.stride();
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
+        IntegralImage<uint32_t> integral_image(w, h);
 
-    IntegralImage<uint32_t> integral_image(w, h);
-
-    for (int y = 0; y < h; y++)
-    {
-        integral_image.beginRow();
-        for (int x = 0; x < w; x++)
+        for (int y = 0; y < h; y++)
         {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
+            integral_image.beginRow();
+            for (int x = 0; x < w; x++)
+            {
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+            }
+            src_line += src_stride;
         }
-        src_line += src_stride;
-    }
 
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - radius) < 0) ? 0 : (y - radius);
-        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
-
-        for (int x = 0; x < w; x++)
+        for (int y = 0; y < h; y++)
         {
-            int const left = ((x - radius) < 0) ? 0 : (x - radius);
-            int const right = ((x + radius) < w) ? (x + radius) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius) < w) ? (x + radius) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0);  // because windowSize > 0 and w > 0 and h > 0
 
-            double const r_area = 1.0 / area;
-            double mean = window_sum * r_area;
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
 
-            mean += 0.5;
-            mean = (mean < 0.0) ? 0.0 : ((mean < 255.0) ? mean : 255.0);
-            gray_line[x] = (uint8_t) mean;
+                double const r_area = 1.0 / area;
+                double mean = window_sum * r_area;
+
+                mean += 0.5;
+                mean = (mean < 0.0) ? 0.0 : ((mean < 255.0) ? mean : 255.0);
+                gray_line[x] = (uint8_t) mean;
+            }
+            gray_line += gray_stride;
         }
-        gray_line += gray_stride;
     }
 
     return gray;
@@ -139,66 +137,64 @@ GrayImage grayMapDeviation(
     {
         return GrayImage();
     }
-    if (radius < 1)
+    if (radius > 0)
     {
-        return gray;
-    }
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t const* src_line = src.data();
+        int const src_stride = src.stride();
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
 
-    IntegralImage<uint32_t> integral_image(w, h);
-    IntegralImage<uint64_t> integral_sqimage(w, h);
+        uint32_t min_gray_level = 255;
 
-    uint32_t min_gray_level = 255;
-
-    for (int y = 0; y < h; y++)
-    {
-        integral_image.beginRow();
-        integral_sqimage.beginRow();
-        for (int x = 0; x < w; x++)
+        for (int y = 0; y < h; y++)
         {
-            uint32_t const pixel = src_line[x];
-            integral_image.push(pixel);
-            integral_sqimage.push(pixel * pixel);
-            min_gray_level = std::min(min_gray_level, pixel);
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
+            for (int x = 0; x < w; x++)
+            {
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+                min_gray_level = std::min(min_gray_level, pixel);
+            }
+            src_line += src_stride;
         }
-        src_line += src_stride;
-    }
 
-    double max_deviation = 0;
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - radius) < 0) ? 0 : (y - radius);
-        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
-
-        for (int x = 0; x < w; x++)
+        double max_deviation = 0;
+        for (int y = 0; y < h; y++)
         {
-            int const left = ((x - radius) < 0) ? 0 : (x - radius);
-            int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
-            int const area = (bottom - top) * (right - left);
-            assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
-            QRect const rect(left, top, right - left, bottom - top);
-            double const window_sum = integral_image.sum(rect);
-            double const window_sqsum = integral_sqimage.sum(rect);
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
 
-            double const r_area = 1.0 / area;
-            double const mean = window_sum * r_area;
-            double const sqmean = window_sqsum * r_area;
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
 
-            double const variance = sqmean - mean * mean;
-            double deviation = sqrt(fabs(variance));
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
 
-            deviation += 0.5;
-            deviation = (deviation < 0.0) ? 0.0 : ((deviation < 255.0) ? deviation : 255.0);
-            gray_line[x] = (uint8_t) deviation;
+                double const variance = sqmean - mean * mean;
+                double deviation = sqrt(fabs(variance));
+
+                deviation += 0.5;
+                deviation = (deviation < 0.0) ? 0.0 : ((deviation < 255.0) ? deviation : 255.0);
+                gray_line[x] = (uint8_t) deviation;
+            }
+            gray_line += gray_stride;
         }
-        gray_line += gray_stride;
     }
 
     return gray;
@@ -216,69 +212,68 @@ GrayImage grayMapMax(
     {
         return GrayImage();
     }
-    if (radius < 1)
-    {
-        return gray;
-    }
-    GrayImage gmax = GrayImage(src);
-    if (gmax.isNull())
-    {
-        return gray;
-    }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmax_line = gmax.data();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage gmax = GrayImage(src);
+        if (gmax.isNull())
         {
-            int const left = ((x - radius) < 0) ? 0 : (x - radius);
-            int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
-
-            uint8_t const origin = gray_line[x];
-            uint8_t immax = origin;
-            for (int xf = left; xf < right; xf++)
-            {
-                uint8_t imf = gray_line[xf];
-                if (imf > immax)
-                {
-                    immax = imf;
-                }
-            }
-            gmax_line[x] = immax;
+            return gray;
         }
-        gray_line += gray_stride;
-        gmax_line += gray_stride;
-    }
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+        uint8_t* gmax_line = gmax.data();
 
-    gmax_line = gmax.data();
-    gray_line = gray.data();
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - radius) < 0) ? 0 : (y - radius);
-        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
-
-        for (int x = 0; x < w; x++)
+        for (int y = 0; y < h; y++)
         {
-            uint8_t const origin = gray_line[x];
-            uint8_t immax = origin;
-            unsigned long int idx = top * gray_stride + x;
-            for (int yf = top; yf < bottom; yf++)
+            for (int x = 0; x < w; x++)
             {
-                uint8_t immaxf = gmax_line[idx];
-                if (immaxf > immax)
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+
+                uint8_t const origin = gray_line[x];
+                uint8_t immax = origin;
+                for (int xf = left; xf < right; xf++)
                 {
-                    immax = immaxf;
+                    uint8_t imf = gray_line[xf];
+                    if (imf > immax)
+                    {
+                        immax = imf;
+                    }
                 }
-                idx += gray_stride;
+                gmax_line[x] = immax;
             }
-            gray_line[x] = immax;
+            gray_line += gray_stride;
+            gmax_line += gray_stride;
         }
-        gray_line += gray_stride;
+
+        gmax_line = gmax.data();
+        gray_line = gray.data();
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                uint8_t const origin = gray_line[x];
+                uint8_t immax = origin;
+                unsigned long int idx = top * gray_stride + x;
+                for (int yf = top; yf < bottom; yf++)
+                {
+                    uint8_t immaxf = gmax_line[idx];
+                    if (immaxf > immax)
+                    {
+                        immax = immaxf;
+                    }
+                    idx += gray_stride;
+                }
+                gray_line[x] = immax;
+            }
+            gray_line += gray_stride;
+        }
     }
 
     return gray;
@@ -296,91 +291,90 @@ GrayImage grayMapContrast(
     {
         return GrayImage();
     }
-    if (radius < 1)
-    {
-        return gray;
-    }
-    GrayImage gmax = GrayImage(src);
-    if (gmax.isNull())
-    {
-        return gray;
-    }
-    GrayImage gmin = GrayImage(src);
-    if (gmin.isNull())
-    {
-        return gray;
-    }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmax_line = gmax.data();
-    uint8_t* gmin_line = gmin.data();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage gmax = GrayImage(src);
+        if (gmax.isNull())
         {
-            int const left = ((x - radius) < 0) ? 0 : (x - radius);
-            int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
-
-            uint8_t const origin = gray_line[x];
-            uint8_t immin = origin;
-            uint8_t immax = origin;
-            for (int xf = left; xf < right; xf++)
-            {
-                uint8_t imf = gray_line[xf];
-                if (imf > immax)
-                {
-                    immax = imf;
-                }
-                if (imf < immin)
-                {
-                    immin = imf;
-                }
-            }
-            gmax_line[x] = immax;
-            gmin_line[x] = immin;
+            return gray;
         }
-        gray_line += gray_stride;
-        gmax_line += gray_stride;
-        gmin_line += gray_stride;
-    }
-
-    gmax_line = gmax.data();
-    gmin_line = gmin.data();
-    gray_line = gray.data();
-    for (int y = 0; y < h; y++)
-    {
-        int const top = ((y - radius) < 0) ? 0 : (y - radius);
-        int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
-
-        for (int x = 0; x < w; x++)
+        GrayImage gmin = GrayImage(src);
+        if (gmin.isNull())
         {
-            uint8_t const origin = gray_line[x];
-            uint8_t immin = origin;
-            uint8_t immax = origin;
-            unsigned long int idx = top * gray_stride + x;
-            for (int yf = top; yf < bottom; yf++)
-            {
-                uint8_t immaxf = gmax_line[idx];
-                uint8_t imminf = gmin_line[idx];
-                if (immaxf > immax)
-                {
-                    immax = immaxf;
-                }
-                if (imminf < immin)
-                {
-                    immin = imminf;
-                }
-                idx += gray_stride;
-            }
-            uint8_t threshold = (immax - immin);
-
-            gray_line[x] = threshold;
+            return gray;
         }
-        gray_line += gray_stride;
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+        uint8_t* gmax_line = gmax.data();
+        uint8_t* gmin_line = gmin.data();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+
+                uint8_t const origin = gray_line[x];
+                uint8_t immin = origin;
+                uint8_t immax = origin;
+                for (int xf = left; xf < right; xf++)
+                {
+                    uint8_t imf = gray_line[xf];
+                    if (imf > immax)
+                    {
+                        immax = imf;
+                    }
+                    if (imf < immin)
+                    {
+                        immin = imf;
+                    }
+                }
+                gmax_line[x] = immax;
+                gmin_line[x] = immin;
+            }
+            gray_line += gray_stride;
+            gmax_line += gray_stride;
+            gmin_line += gray_stride;
+        }
+
+        gmax_line = gmax.data();
+        gmin_line = gmin.data();
+        gray_line = gray.data();
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                uint8_t const origin = gray_line[x];
+                uint8_t immin = origin;
+                uint8_t immax = origin;
+                unsigned long int idx = top * gray_stride + x;
+                for (int yf = top; yf < bottom; yf++)
+                {
+                    uint8_t immaxf = gmax_line[idx];
+                    uint8_t imminf = gmin_line[idx];
+                    if (immaxf > immax)
+                    {
+                        immax = immaxf;
+                    }
+                    if (imminf < immin)
+                    {
+                        immin = imminf;
+                    }
+                    idx += gray_stride;
+                }
+                uint8_t threshold = (immax - immin);
+
+                gray_line[x] = threshold;
+            }
+            gray_line += gray_stride;
+        }
     }
 
     return gray;
@@ -396,55 +390,44 @@ GrayImage grayNiblackMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return GrayImage();
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return GrayImage();
+        return GrayImage(src);
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage gdeviation = grayMapDeviation(src, radius);
+        if (gdeviation.isNull())
         {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-            float threshold = mean - k * deviation;
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+            return gmean;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
+
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        uint8_t* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+                float threshold = mean - k * deviation;
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
+        }
     }
 
-    return gray;
+    return gmean;
 }
 
 /*
@@ -457,56 +440,45 @@ GrayImage graySauvolaMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return gray;
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return gray;
+        return GrayImage(src);
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage gdeviation = grayMapDeviation(src, radius);
+        if (gdeviation.isNull())
         {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-
-            float threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+            return gmean;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
+
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        uint8_t* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+
+                float threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
+        }
     }
 
-    return gray;
+    return gmean;
 }
 
 /*
@@ -519,74 +491,65 @@ GrayImage grayWolfMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return gray;
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return gray;
+        return GrayImage(src);
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-
-    uint32_t min_gray_level = 255;
-    float max_deviation = 0.0;
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage gdeviation = grayMapDeviation(src, radius);
+        if (gdeviation.isNull())
         {
-            uint32_t origin = gray_line[x];
-            float const deviation = gdeviation_line[x];
-            max_deviation = (max_deviation < deviation) ? deviation : max_deviation;
-            min_gray_level = (min_gray_level < origin) ? min_gray_level : origin;
+            return gmean;
         }
-        gray_line += gray_stride;
-        gdeviation_line += gdeviation_stride;
-    }
 
-    gray_line = gray.data();
-    gdeviation_line = gdeviation.data();
-    for (int y = 0; y < h; y++)
-    {
-        for (int x = 0; x < w; x++)
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t const* src_line = src.data();
+        int const src_stride = src.stride();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        uint8_t* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+
+        uint32_t min_gray_level = 255;
+        float max_deviation = 0.0;
+
+        for (int y = 0; y < h; y++)
         {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-            float const a = 1.0 - deviation / max_deviation;
-            float threshold = mean - k * a * (mean - min_gray_level);
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+            for (int x = 0; x < w; x++)
+            {
+                uint32_t origin = src_line[x];
+                float const deviation = gdeviation_line[x];
+                max_deviation = (max_deviation < deviation) ? deviation : max_deviation;
+                min_gray_level = (min_gray_level < origin) ? min_gray_level : origin;
+            }
+            src_line += src_stride;
+            gdeviation_line += gdeviation_stride;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
+
+        gmean_line = gmean.data();
+        gdeviation_line = gdeviation.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+                float const a = 1.0 - deviation / max_deviation;
+                float threshold = mean - k * a * (mean - min_gray_level);
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
+        }
     }
 
-    return gray;
+    return gmean;
 }
 
 /*
@@ -599,46 +562,34 @@ GrayImage grayBradleyMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return gray;
+        return GrayImage(src);
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
-        {
-            float const mean = gmean_line[x];
-            float threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
 
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
     }
 
-    return gray;
+    return gmean;
 }  // grayBradleyMap
 
 /*
@@ -651,47 +602,37 @@ GrayImage grayGradMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return gray;
+        return GrayImage(src);
     }
 
-    float const mean_grad = (1.0 - coef) * binarizeGradValue(gray, gmean);
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        float const mean_grad = (1.0 - coef) * binarizeGradValue(src, gmean);
+
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
         {
-            float const mean = gmean_line[x];
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
 
-            float threshold = mean_grad + mean * coef;
+                float threshold = mean_grad + mean * coef;
 
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
     }
 
-    return gray;
+    return gmean;
 }
 
 /*
@@ -704,56 +645,48 @@ GrayImage graySinghMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return gray;
-    }
-    GrayImage graymm = grayMapContrast(src, radius);
-    if (graymm.isNull())
-    {
-        return gray;
+        return GrayImage(src);
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* graymm_line = graymm.data();
-    int const graymm_stride = graymm.stride();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage graymm = grayMapContrast(src, radius);
+        if (graymm.isNull())
         {
-            float const mean = gmean_line[x];
-            float const origin = gray_line[x];
-            float const maxmin = graymm_line[x];
-            float threshold = (1.0 - k) * (mean + maxmin * (1.0 - origin / 255.0));
-
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+            return gmean;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        graymm_line += graymm_stride;
+
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t const* src_line = src.data();
+        int const src_stride = src.stride();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        uint8_t* graymm_line = graymm.data();
+        int const graymm_stride = graymm.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+                float const maxmin = graymm_line[x];
+                float threshold = (1.0 - k) * (mean + maxmin * (1.0 - origin / 255.0));
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+            graymm_line += graymm_stride;
+        }
     }
 
-    return gray;
+    return gmean;
 }  // graySinghMap
 
 /*
@@ -766,64 +699,53 @@ GrayImage grayWANMap(
     {
         return GrayImage();
     }
-    GrayImage gray = GrayImage(src);
-    if (gray.isNull())
-    {
-        return GrayImage();
-    }
-    if (radius < 1)
-    {
-        return gray;
-    }
-
-    GrayImage gmean = gaussBlur(gray, radius, radius);
+    GrayImage gmean = gaussBlur(src, radius, radius);
     if (gmean.isNull())
     {
-        return gray;
-    }
-    GrayImage gdeviation = grayMapDeviation(src, radius);
-    if (gdeviation.isNull())
-    {
-        return gray;
-    }
-    GrayImage gmax = grayMapMax(src, radius);
-    if (gmax.isNull())
-    {
-        return gray;
+        return GrayImage(src);
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t const* src_line = src.data();
-    int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
-    int const gray_stride = gray.stride();
-    uint8_t* gmean_line = gmean.data();
-    int const gmean_stride = gmean.stride();
-    uint8_t* gdeviation_line = gdeviation.data();
-    int const gdeviation_stride = gdeviation.stride();
-    uint8_t* gmax_line = gmax.data();
-    int const gmax_stride = gmax.stride();
-
-    for (int y = 0; y < h; y++)
+    if (radius > 0)
     {
-        for (int x = 0; x < w; x++)
+        GrayImage gdeviation = grayMapDeviation(src, radius);
+        if (gdeviation.isNull())
         {
-            float const mean = gmean_line[x];
-            float const deviation = gdeviation_line[x];
-            float const imax = gmax_line[x];
-
-            float threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
-            threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
-            gray_line[x] = (uint8_t) threshold;
+            return gmean;
         }
-        gray_line += gray_stride;
-        gmean_line += gmean_stride;
-        gdeviation_line += gdeviation_stride;
-        gmax_line += gmax_stride;
+        GrayImage gmax = grayMapMax(src, radius);
+        if (gmax.isNull())
+        {
+            return gmean;
+        }
+
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        uint8_t* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+        uint8_t* gmax_line = gmax.data();
+        int const gmax_stride = gmax.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+                float const imax = gmax_line[x];
+
+                float threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                gmean_line[x] = (uint8_t) threshold;
+            }
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
+            gmax_line += gmax_stride;
+        }
     }
 
-    return gray;
+    return gmean;
 }
 
 GrayImage grayMScaleMap(
@@ -986,6 +908,84 @@ GrayImage grayMScaleMap(
     return gray;
 }  // grayMScaleMap
 
+GrayImage grayEngravingMap(
+    GrayImage const& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmean = gaussBlur(src, radius, radius);
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t const* src_line = src.data();
+        int const src_stride = src.stride();
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        double mean_delta = 0.0;
+        for (int y = 0; y < h; y++)
+        {
+            double mean_delta_line = 0.0;
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+
+                float const delta = (origin < mean) ? (mean - origin) : (origin - mean);
+                mean_delta_line += delta;
+            }
+            mean_delta += mean_delta_line;
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+        mean_delta /= w;
+        mean_delta /= h;
+        if (mean_delta > 0.0)
+        {
+            gmean_line = gmean.data();
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    float const mean = gmean_line[x];
+
+                    float const tline = mean / mean_delta;
+                    int threshold = (int) tline;
+                    float delta = tline - threshold;
+                    delta = (delta < 0.5f) ? (0.5f - delta) : (delta - 0.5f);
+                    delta += delta;
+                    /* overlay */
+                    float retval = mean;
+                    if (mean > 127.5f)
+                    {
+                        retval = 255.0f - retval;
+                        delta = 1.0f - delta;
+                    }
+                    retval *= delta;
+                    retval += retval;
+                    if (mean > 127.5f)
+                    {
+                        retval = 255.0f - retval;
+                    }
+                    retval = coef * retval + (1.0f - coef) * mean + 0.5f;
+                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                    gmean_line[x] = (uint8_t) retval;
+                }
+                gmean_line += gmean_stride;
+            }
+        }
+    }
+
+    return gmean;
+}  // grayEngraving
 
 GrayImage grayDotsMap (GrayImage const& src, int const delta)
 {
@@ -993,7 +993,6 @@ GrayImage grayDotsMap (GrayImage const& src, int const delta)
     {
         return GrayImage();
     }
-
     GrayImage gray = GrayImage(src);
     if (gray.isNull())
     {
@@ -1043,6 +1042,141 @@ GrayImage grayDotsMap (GrayImage const& src, int const delta)
 
     return gray;
 }
+
+// threshold MAPs as filters
+
+void grayMapOverlay(
+    GrayImage& src, GrayImage& gover, float const coef)
+{
+    if ((src.isNull()) || (gover.isNull()))
+    {
+        return;
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* src_line = src.data();
+    int const src_stride = src.stride();
+
+    if ((gover.width() != w) || (gover.height() != h))
+    {
+        return;
+    }
+    uint8_t* gover_line = gover.data();
+    int const gover_stride = gover.stride();
+
+    if (coef != 0.0f)
+    {
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float overlay = gover_line[x];
+                float base = 255.0f - origin;
+                /* overlay */
+                float retval = base;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+                retval *= overlay;
+                retval += retval;
+                retval /= 255.0f;
+                if (base < 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+                /* overlay */
+                base = retval;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+                retval *= overlay;
+                retval += retval;
+                retval /= 255.0f;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+
+                retval = coef * retval + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                src_line[x] = (uint8_t) retval;
+            }
+            src_line += src_stride;
+            gover_line += gover_stride;
+        }
+    }
+} // grayMapOverlay
+
+GrayImage grayGravure(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    grayGravureInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayGravureInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        GrayImage gover = grayEngravingMap(src, radius, 1.0f);
+        if (gover.isNull())
+        {
+            return;
+        }
+
+        grayMapOverlay(src, gover, coef);
+    }
+
+}  // grayGravure
+
+GrayImage grayDots8(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    grayDots8InPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayDots8InPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        GrayImage gover = grayDotsMap(gmean, 0);
+        if (gover.isNull())
+        {
+            return;
+        }
+
+        grayMapOverlay(src, gover, coef);
+    }
+}  // grayDots8
 
 GrayImage grayWiener(
     GrayImage const& src, int const radius, float const noise_sigma)
@@ -2028,193 +2162,6 @@ void grayRobustInPlace(
         }
     }
 }  // grayRobust
-
-GrayImage grayGravure(
-    GrayImage const& src, int const radius, float const coef)
-{
-    GrayImage dst(src);
-    grayGravureInPlace(dst, radius, coef);
-    return dst;
-}
-
-void grayGravureInPlace(
-    GrayImage& src, int const radius, float const coef)
-{
-    if (src.isNull())
-    {
-        return;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
-    if ((radius > 0) && (coef != 0.0f))
-    {
-        GrayImage gmean = gaussBlur(src, radius, radius);
-        if (gmean.isNull())
-        {
-            return;
-        }
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        double mean_delta = 0.0;
-        for (int y = 0; y < h; y++)
-        {
-            double mean_delta_line = 0.0;
-            for (int x = 0; x < w; x++)
-            {
-                float const mean = gmean_line[x];
-                float const origin = src_line[x];
-
-                float const delta = (origin < mean) ? (mean - origin) : (origin - mean);
-                mean_delta_line += delta;
-            }
-            mean_delta += mean_delta_line;
-            src_line += src_stride;
-            gmean_line += gmean_stride;
-        }
-        mean_delta /= w;
-        mean_delta /= h;
-        if (mean_delta > 0.0)
-        {
-            src_line = src.data();
-            gmean_line = gmean.data();
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    float const origin = src_line[x];
-                    float const mean = gmean_line[x];
-
-                    float const tline = mean / mean_delta;
-                    int threshold = (int) tline;
-                    float delta = tline - threshold;
-                    delta = (delta < 0.5f) ? (0.5f - delta) : (delta - 0.5f);
-                    delta += delta;
-                    /* overlay */
-                    float retval = origin;
-                    if (origin > 127.5f)
-                    {
-                        retval = 255.0f - retval;
-                        delta = 1.0f - delta;
-                    }
-                    retval *= delta;
-                    retval += retval;
-                    if (origin > 127.5f)
-                    {
-                        retval = 255.0f - retval;
-                    }
-                    retval = coef * retval + (1.0f - coef) * origin + 0.5f;
-                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                    src_line[x] = (uint8_t) retval;
-                }
-                src_line += src_stride;
-                gmean_line += gmean_stride;
-            }
-        }
-    }
-}  // grayGravure
-
-GrayImage grayDots8(
-    GrayImage const& src, int const radius, float const coef)
-{
-    GrayImage dst(src);
-    grayDots8InPlace(dst, radius, coef);
-    return dst;
-}
-
-void grayDots8InPlace(
-    GrayImage& src, int const radius, float const coef)
-{
-    if (src.isNull())
-    {
-        return;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
-    if ((radius > 0) && (coef != 0.0f))
-    {
-        GrayImage gmean = gaussBlur(src, radius, radius);
-        if (gmean.isNull())
-        {
-            return;
-        }
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        int y, x, yb, xb, k, wwidth = 8;
-        int threshold, part;
-        // Dots dither matrix
-        int ddith[64] = {13,  9,  5, 12, 18, 22, 26, 19,  6,  1,  0,  8, 25, 30, 31, 23, 10,  2,  3,  4, 21, 29, 28, 27, 14,  7, 11, 15, 17, 24, 20, 16, 18, 22, 26, 19, 13,  9,  5, 12, 25, 30, 31, 23,  6,  1,  0,  8, 21, 29, 28, 27, 10,  2,  3,  4, 17, 24, 20, 16, 14,  7, 11, 15};
-        int thres[32];
-
-        for (k = 0; k < 32; k++)
-        {
-            part = k * 8 - 128;
-            part = (part < -128) ? -128 : (part < 128) ? part : 128;
-            thres[k] = binarizeBiModalValue(gmean, part);
-        }
-
-        k = 0;
-        for (y = 0; y < wwidth; y++)
-        {
-            for (x = 0; x < wwidth; x++)
-            {
-                ddith[k] = thres[ddith[k]];
-                k++;
-            }
-        }
-
-        for (y = 0; y < h; y++)
-        {
-            yb = y % wwidth;
-            for (x = 0; x < w; x++)
-            {
-                xb = x % wwidth;
-                threshold = ddith[yb * wwidth + xb];
-                gmean_line[x] = (uint8_t) threshold;
-            }
-            gmean_line += gmean_stride;
-        }
-
-        gmean_line = gmean.data();
-        for (int y = 0; y < h; y++)
-        {
-            for (int x = 0; x < w; x++)
-            {
-                float const origin = src_line[x];
-                float gmul = gmean_line[x];
-
-                /* overlay */
-                float retval = origin;
-                if (origin > 127.5f)
-                {
-                    retval = 255.0f - retval;
-                    gmul = 255.0f - gmul;
-                }
-                retval *= gmul;
-                retval += retval;
-                retval /= 255.0f;
-                if (origin > 127.5f)
-                {
-                    retval = 255.0f - retval;
-                }
-                retval = coef * retval + (1.0f - coef) * origin + 0.5f;
-                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
-            }
-            src_line += src_stride;
-            gmean_line += gmean_stride;
-        }
-    }
-}  // grayDots8
 
 unsigned int grayDominantaValue(
     GrayImage const& src)
