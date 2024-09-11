@@ -145,6 +145,8 @@ private:
 
     void updateMarginsDisplay();
 
+    void updateSizeDisplay();
+
     void updateLinkDisplay(QToolButton* button, bool linked);
 
     void enableDisableAlignmentButtons();

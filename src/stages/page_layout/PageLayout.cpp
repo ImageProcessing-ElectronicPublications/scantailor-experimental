@@ -107,8 +107,8 @@ PageLayout::extraRect(Framings const& framings) const
     QRectF const base = outerRect();
     float const basew = base.width();
     float const baseh = base.height();
-    float const extraw = basew * framings.getFramingWidth();
-    float const extrah = baseh * framings.getFramingHeight();
+    float const extraw = basew * framings.getFramingWidth() * 0.5f;
+    float const extrah = baseh * framings.getFramingHeight() * 0.5f;
     QRectF const extra = m_outerRect.adjusted(-extraw, -extrah, extraw, extrah);
 
     return extra;

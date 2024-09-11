@@ -364,58 +364,13 @@ OutputGenerator::process(
     double norm_coef = color_options.normalizeCoef();
 
     // Color filters begin
-    colorCurveFilterInPlace(transformed_image, color_options.curveCoef());
-
-    colorSqrFilterInPlace(transformed_image, color_options.sqrCoef());
-
-    GrayImage gout = GrayImage(transformed_image);
-    if (!gout.isNull())
-    {
-        grayAutoLevelInPlace(gout, color_options.autoLevelSize(), color_options.autoLevelCoef());
-
-        grayBalanceInPlace(gout, color_options.balanceSize(), color_options.balanceCoef());
-
-        grayOverBlurInPlace(gout, color_options.overblurSize(), color_options.overblurCoef());
-
-        grayRetinexInPlace(gout, color_options.retinexSize(), color_options.retinexCoef());
-
-        grayEqualizeInPlace(gout, color_options.equalizeSize(), color_options.equalizeCoef());
-
-        grayWienerInPlace(gout, color_options.wienerSize(), (255.0f * color_options.wienerCoef() * color_options.wienerCoef()));
-
-        grayKnnDenoiserInPlace(gout, color_options.knndRadius(), color_options.knndCoef());
-
-        grayDespeckleInPlace(gout, color_options.cdespeckleRadius(), color_options.cdespeckleCoef());
-
-        graySigmaInPlace(gout, color_options.sigmaSize(), color_options.sigmaCoef());
-
-        grayBlurInPlace(gout, color_options.blurSize(), color_options.blurCoef());
-
-        grayScreenInPlace(gout, color_options.screenSize(), color_options.screenCoef());
-
-        grayEdgeDivInPlace(gout, color_options.edgedivSize(), color_options.edgedivCoef(), color_options.edgedivCoef());
-
-        grayRobustInPlace(gout, color_options.robustSize(), color_options.robustCoef());
-
-        grayGravureInPlace(gout, color_options.gravureSize(), color_options.gravureCoef());
-
-        grayDots8InPlace(gout, color_options.dots8Size(), color_options.dots8Coef());
-
-        imageLevelSet(transformed_image, gout);
-    }
-    gout = GrayImage();
-
-    GrayImage coloredSignificance(transformed_image);
-    if (render_params.needBinarization())
-    {
-        coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
-    }
+    colored(transformed_image, color_options);
 
     if (norm_coef > 0.0)
     {
         QImage maybe_normalized;
         // For background estimation we need a downscaled image of about 200x300 pixels.
-        // We can't just downscale transformed_image, as this background estimation we
+        // We can't just downscale image, as this background estimation we
         // need to set outside pixels to black.
         double const downscale_factor = 300.0 / std::max<int>(
                                            300, std::max(m_outRect.width(), m_outRect.height())
@@ -454,6 +409,12 @@ OutputGenerator::process(
     }
 
     unPaperFilterInPlace(transformed_image, color_options.unPaperIters(), color_options.unPaperCoef());
+
+    GrayImage coloredSignificance(transformed_image);
+    if (render_params.needBinarization())
+    {
+        coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
+    }
 
     status.throwIfCancelled();
     // Color filters end
@@ -1320,6 +1281,54 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
     rasterOp<RopAnd<RopSrc, RopDst> >(binarized, mask);
 
     return binarized;
+}
+
+void
+OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_options) const
+{
+    // Color filters begin
+    colorCurveFilterInPlace(image, color_options.curveCoef());
+
+    colorSqrFilterInPlace(image, color_options.sqrCoef());
+
+    GrayImage gout = GrayImage(image);
+    if (!gout.isNull())
+    {
+        grayAutoLevelInPlace(gout, color_options.autoLevelSize(), color_options.autoLevelCoef());
+
+        grayBalanceInPlace(gout, color_options.balanceSize(), color_options.balanceCoef());
+
+        grayOverBlurInPlace(gout, color_options.overblurSize(), color_options.overblurCoef());
+
+        grayRetinexInPlace(gout, color_options.retinexSize(), color_options.retinexCoef());
+
+        grayEqualizeInPlace(gout, color_options.equalizeSize(), color_options.equalizeCoef());
+
+        grayWienerInPlace(gout, color_options.wienerSize(), (255.0f * color_options.wienerCoef() * color_options.wienerCoef()));
+
+        grayKnnDenoiserInPlace(gout, color_options.knndRadius(), color_options.knndCoef());
+
+        grayDespeckleInPlace(gout, color_options.cdespeckleRadius(), color_options.cdespeckleCoef());
+
+        graySigmaInPlace(gout, color_options.sigmaSize(), color_options.sigmaCoef());
+
+        grayBlurInPlace(gout, color_options.blurSize(), color_options.blurCoef());
+
+        grayScreenInPlace(gout, color_options.screenSize(), color_options.screenCoef());
+
+        grayEdgeDivInPlace(gout, color_options.edgedivSize(), color_options.edgedivCoef(), color_options.edgedivCoef());
+
+        grayRobustInPlace(gout, color_options.robustSize(), color_options.robustCoef());
+
+        grayGravureInPlace(gout, color_options.gravureSize(), color_options.gravureCoef());
+
+        grayDots8InPlace(gout, color_options.dots8Size(), color_options.dots8Coef());
+
+        imageLevelSet(image, gout);
+    }
+    gout = GrayImage();
+
+    // Color filters end
 }
 
 /**

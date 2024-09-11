@@ -203,6 +203,8 @@ OptionsWidget::preUpdateUI(
 
     updateMarginsDisplay();
 
+    updateSizeDisplay();
+
     {
         ScopedIncDec<int> const guard(m_ignoreMatchSizeModeChanges);
 
@@ -250,6 +252,8 @@ void
 OptionsWidget::marginsSetExternally(RelativeMargins const& margins)
 {
     m_margins = margins;
+
+    updateSizeDisplay();
     updateMarginsDisplay();
 }
 
@@ -259,6 +263,8 @@ OptionsWidget::extraWMarginChanged(double const val)
     extraWMarginSpinBox->setValue(val);
 
     m_framings.setFramingWidth(extraWMarginSpinBox->value() / 100.0);
+
+    updateSizeDisplay();
     updateMarginsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
@@ -270,6 +276,8 @@ OptionsWidget::extraHMarginChanged(double const val)
     extraHMarginSpinBox->setValue(val);
 
     m_framings.setFramingHeight(extraHMarginSpinBox->value() / 100.0);
+
+    updateSizeDisplay();
     updateMarginsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
@@ -293,6 +301,8 @@ OptionsWidget::horMarginsChanged(double const val)
     m_margins.setLeft(leftMarginSpinBox->value() / 100.0);
     m_margins.setRight(rightMarginSpinBox->value() / 100.0);
 
+ 
+    updateSizeDisplay();
     emit marginsSetLocally(m_margins);
 }
 
@@ -314,6 +324,8 @@ OptionsWidget::vertMarginsChanged(double const val)
     m_margins.setTop(topMarginSpinBox->value() / 100.0);
     m_margins.setBottom(bottomMarginSpinBox->value() / 100.0);
 
+
+    updateSizeDisplay();
     emit marginsSetLocally(m_margins);
 }
 
@@ -496,6 +508,20 @@ OptionsWidget::updateMarginsDisplay()
     bottomMarginSpinBox->setValue(m_margins.bottom() * 100.0);
     leftMarginSpinBox->setValue(m_margins.left() * 100.0);
     rightMarginSpinBox->setValue(m_margins.right() * 100.0);
+}
+
+void
+OptionsWidget::updateSizeDisplay()
+{
+    QSizeF const agg_size = m_ptrSettings->getAggregateHardSize();
+    float const exwidth = m_framings.getFramingWidth();
+    float const exheight = m_framings.getFramingHeight();
+    float const agwidth = agg_size.width();
+    float const agheight = agg_size.height();
+    int const outwidth = (int) (agwidth * (1.0f + exwidth) + 0.5f);
+    int const outheight = (int) (agheight * (1.0f + exheight) + 0.5f);
+    labelExtraWout->setText(tr(" = %1").arg(outwidth));
+    labelExtraHout->setText(tr(" = %1").arg(outheight));
 }
 
 void

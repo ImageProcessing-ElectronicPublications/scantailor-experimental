@@ -162,6 +162,9 @@ private:
     imageproc::BinaryImage binarize(
         QImage const& image, imageproc::BinaryImage const& mask) const;
 
+    void colored(
+        QImage& image, ColorGrayscaleOptions const& color_options) const;
+
     void maybeDespeckleInPlace(
         imageproc::BinaryImage& image, double despeckle_factor,
         imageproc::BinaryImage* out_speckles_img,
