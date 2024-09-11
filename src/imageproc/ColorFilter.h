@@ -284,9 +284,16 @@ static void paletteYCbCrtoRGB(
     double* mean_cb, double* mean_cr, double* mean_cy, int const ncount);
 
 IMAGEPROC_EXPORT void hsvKMeansInPlace(
-    QImage& dst, QImage const& image, BinaryImage const& mask,
-    int const ncount, int start_value = 0, int color_space = 0,
-    float coef_sat = 0.0f, float coef_norm = 0.0f, float coef_bg = 0.0f);
+    QImage& dst,
+    QImage const& image,
+    BinaryImage const& mask,
+    BinaryImage const& mask_zones,
+    int const ncount,
+    int start_value = 0,
+    int color_space = 0,
+    float coef_sat = 0.0f,
+    float coef_norm = 0.0f,
+    float coef_bg = 0.0f);
 
 IMAGEPROC_EXPORT void maskMorphologicalErode(
     QImage& image, BinaryImage const& mask, int radius = 0);

@@ -499,17 +499,14 @@ OutputGenerator::process(
 
         if (!m_outRect.isEmpty())
         {
+            bw_mask = BinaryImage(transformed_image.size(), BLACK);
             if (render_params.mixedOutput())
             {
                 // This block should go before the block with
                 // adjustBrightnessGrayscale(), which may convert
                 // transformed_image from grayscale to color mode.
 
-                if (black_white_options.autoPictureOff())
-                {
-                    bw_mask = BinaryImage(transformed_image.size(), BLACK);
-                }
-                else
+                if (!black_white_options.autoPictureOff())
                 {
                     bw_mask = estimateBinarizationMask(status, GrayImage(transformed_image), dbg, black_white_options.autoPictureCoef());
                 }
@@ -594,7 +591,6 @@ OutputGenerator::process(
 
                 combineMixed<uint32_t>(dst, bw_content, bw_mask);
             }
-            bw_mask.release(); // Save memory.
         }
         else
         {
@@ -671,17 +667,22 @@ OutputGenerator::process(
             }
             }
 
-            hsvKMeansInPlace(dst, transformed_image, bw_content,
-                             black_kmeans_options.kmeansCount(),
-                             black_kmeans_options.kmeansValueStart(),
-                             color_space_val,
-                             black_kmeans_options.kmeansSat(),
-                             black_kmeans_options.kmeansNorm(),
-                             black_kmeans_options.kmeansBG());
+            hsvKMeansInPlace(
+                dst,
+                transformed_image,
+                bw_content,
+                bw_mask,
+                black_kmeans_options.kmeansCount(),
+                black_kmeans_options.kmeansValueStart(),
+                color_space_val,
+                black_kmeans_options.kmeansSat(),
+                black_kmeans_options.kmeansNorm(),
+                black_kmeans_options.kmeansBG());
             maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology());
         }
     }
     bw_content.release(); // Save memory.
+    bw_mask.release(); // Save memory.
     colored_mask.release(); // Save memory.
     transformed_image = QImage(); // Save memory.
 

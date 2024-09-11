@@ -50,6 +50,10 @@ BlackKmeansOptions::BlackKmeansOptions(QDomElement const& el)
     {
         m_kmeansCount = 0;
     }
+    if (m_kmeansCount > 254)
+    {
+        m_kmeansCount = 254;
+    }
     if (m_kmeansValueStart < 0 || m_kmeansValueStart > 255)
     {
         m_kmeansValueStart = 255;
