@@ -38,6 +38,8 @@ public:
           m_autoLevelCoef(0.0),
           m_balanceSize(23),
           m_balanceCoef(0.0),
+          m_overblurSize(49),
+          m_overblurCoef(0.0),
           m_retinexSize(31),
           m_retinexCoef(0.0),
           m_equalizeSize(6),
@@ -137,6 +139,23 @@ public:
     void setBalanceCoef(double val)
     {
         m_balanceCoef = val;
+    }
+
+    int overblurSize() const
+    {
+        return m_overblurSize;
+    }
+    void setOverblurSize(int val)
+    {
+        m_overblurSize = val;
+    }
+    double overblurCoef() const
+    {
+        return m_overblurCoef;
+    }
+    void setOverblurCoef(double val)
+    {
+        m_overblurCoef = val;
     }
 
     int retinexSize() const
@@ -383,6 +402,8 @@ private:
     double m_autoLevelCoef;
     int m_balanceSize;
     double m_balanceCoef;
+    int m_overblurSize;
+    double m_overblurCoef;
     int m_retinexSize;
     double m_retinexCoef;
     int m_equalizeSize;

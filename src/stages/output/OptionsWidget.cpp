@@ -85,6 +85,7 @@ OptionsWidget::OptionsWidget(
 
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Balance"), F_BALANCE);
+    colorFilterSelector->addItem(tr("OverBlur"), F_OVERBLUR);
     colorFilterSelector->addItem(tr("Retinex"), F_RETINEX);
     colorFilterSelector->addItem(tr("Equalize"), F_EQUALIZE);
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
@@ -491,6 +492,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.balanceSize());
         colorFilterCoef->setValue(color_options.balanceCoef());
         break;
+    case F_OVERBLUR:
+        colorFilterSize->setValue(color_options.overblurSize());
+        colorFilterCoef->setValue(color_options.overblurCoef());
+        break;
     case F_RETINEX:
         colorFilterSize->setValue(color_options.retinexSize());
         colorFilterCoef->setValue(color_options.retinexCoef());
@@ -567,6 +572,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_BALANCE:
         color_options.setBalanceSize(value);
         break;
+    case F_OVERBLUR:
+        color_options.setOverblurSize(value);
+        break;
     case F_RETINEX:
         color_options.setRetinexSize(value);
         break;
@@ -623,6 +631,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_BALANCE:
         color_options.setBalanceCoef(value);
+        break;
+    case F_OVERBLUR:
+        color_options.setOverblurCoef(value);
         break;
     case F_RETINEX:
         color_options.setRetinexCoef(value);

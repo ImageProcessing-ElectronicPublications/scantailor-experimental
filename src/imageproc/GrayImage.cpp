@@ -1657,6 +1657,155 @@ void grayBalanceInPlace(
     }
 } // grayBalance
 
+GrayImage grayOverBlur(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    grayOverBlurInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayOverBlurInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* src_line = src.data();
+    int const src_stride = src.stride();
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float origin = src_line[x];
+                float mean = gmean_line[x];
+
+                /* overlay */
+                float base = origin;
+                float overlay = 255.0f - mean;
+                float retval = base;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+                retval *= overlay;
+                retval += retval;
+                retval /= 255.0f;
+                if (base > 127.5f)
+                {
+                    retval = 255.0f - retval;
+                    overlay = 255.0f - overlay;
+                }
+
+                retval += 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                gmean_line[x] = (uint8_t) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+
+        src_line = src.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float mean = gmean_line[x];
+
+                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
+                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
+                src_line[x] = (uint8_t) mean;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+} // grayOverBlur
+
+GrayImage grayRetinex(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    grayRetinexInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayRetinexInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    uint8_t* src_line = src.data();
+    int const src_stride = src.stride();
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = 1.0f + src_line[x];
+                float const mean = 1.0f + gmean_line[x];
+                float const frac = origin / mean;
+                float const retinex = 127.5f * frac + 0.5f;
+                float const target = (retinex < 0.0f) ? 0.0f : (retinex < 255.0f) ? retinex : 255.0f;
+
+                gmean_line[x] = (uint8_t) retinex;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+
+        src_line = src.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float mean = gmean_line[x];
+
+                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
+                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
+                src_line[x] = (uint8_t) mean;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+} // grayReinex
+
 GrayImage grayEqualize(
     GrayImage const& src, int const radius, float const coef, bool flg_blur)
 {
@@ -1769,72 +1918,6 @@ void grayEqualizeInPlace(
         }
     }
 } // grayEqualize
-
-GrayImage grayRetinex(
-    GrayImage const& src, int const radius, float const coef)
-{
-    GrayImage dst(src);
-    grayRetinexInPlace(dst, radius, coef);
-    return dst;
-}
-
-void grayRetinexInPlace(
-    GrayImage& src, int const radius, float const coef)
-{
-    if (src.isNull())
-    {
-        return;
-    }
-
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
-    if ((radius > 0) && (coef != 0.0f))
-    {
-        GrayImage gmean = gaussBlur(src, radius, radius);
-        if (gmean.isNull())
-        {
-            return;
-        }
-        uint8_t* gmean_line = gmean.data();
-        int const gmean_stride = gmean.stride();
-
-        for (int y = 0; y < h; y++)
-        {
-            for (int x = 0; x < w; x++)
-            {
-                float const origin = 1.0f + src_line[x];
-                float const mean = 1.0f + gmean_line[x];
-                float const frac = origin / mean;
-                float const retinex = 127.5f * frac + 0.5f;
-                float const target = (retinex < 0.0f) ? 0.0f : (retinex < 255.0f) ? retinex : 255.0f;
-
-                gmean_line[x] = (uint8_t) retinex;
-            }
-            src_line += src_stride;
-            gmean_line += gmean_stride;
-        }
-
-        src_line = src.data();
-        gmean_line = gmean.data();
-        for (int y = 0; y < h; y++)
-        {
-            for (int x = 0; x < w; x++)
-            {
-                float const origin = src_line[x];
-                float mean = gmean_line[x];
-
-                mean = coef * mean + (1.0f - coef) * origin + 0.5f;
-                mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                src_line[x] = (uint8_t) mean;
-            }
-            src_line += src_stride;
-            gmean_line += gmean_stride;
-        }
-    }
-} // grayReinex
 
 GrayImage grayBlur(
     GrayImage const& src, int const radius, float const coef)

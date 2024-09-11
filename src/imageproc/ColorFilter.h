@@ -94,6 +94,17 @@ IMAGEPROC_EXPORT void colorBalanceFilterInPlace(
     QImage& image, int radius = 23, float coef = 0.0f);
 
 /**
+ * @brief Color OverBlur
+ * Ib = blur(I, r), r = 49.
+ * Iob = overlay(I, invert(Ib)).
+ */
+IMAGEPROC_EXPORT QImage colorOverBlurFilter(
+    QImage const& image, int radius = 49, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void colorOverBlurFilterInPlace(
+    QImage& image, int radius = 49, float coef = 0.0f);
+
+/**
  * @brief Color Retinex
  * Ib = blur(I, r), r = 31.
  * Ir = retinex(I, Ib) = 127.5 * (I / Ib)

@@ -304,6 +304,40 @@ void colorBalanceFilterInPlace(
     }
 }
 
+QImage colorOverBlurFilter(
+    QImage const& image, int const radius, float const coef)
+{
+    QImage dst(image);
+    colorOverBlurFilterInPlace(dst, radius, coef);
+    return dst;
+}
+
+void colorOverBlurFilterInPlace(
+    QImage& image, int const radius, float const coef)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        GrayImage gray = GrayImage(image);
+        if (gray.isNull())
+        {
+            return;
+        }
+
+        GrayImage gmean = grayOverBlur(gray, radius, coef);
+        if (gmean.isNull())
+        {
+            return;
+        }
+
+        imageReLevel(image, gray, gmean);
+    }
+}
+
 QImage colorRetinexFilter(
     QImage const& image, int const radius, float const coef)
 {

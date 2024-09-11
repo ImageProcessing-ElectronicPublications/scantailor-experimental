@@ -255,6 +255,22 @@ IMAGEPROC_EXPORT void grayBalanceInPlace(
     GrayImage& src, int radius = 23, float coef = 0.0f);
 
 /**
+ * @brief OverBlur GrayImage based GaussBlur.
+ */
+IMAGEPROC_EXPORT GrayImage grayOverBlur(
+    GrayImage const& src, int radius = 49, float coef = 0.0f);
+IMAGEPROC_EXPORT void grayOverBlurInPlace(
+    GrayImage& src, int radius = 49, float coef = 0.0f);
+
+/**
+ * @brief Retinex GrayImage based GaussBlur.
+ */
+IMAGEPROC_EXPORT GrayImage grayRetinex(
+    GrayImage const& src, int radius = 31, float coef = 0.0f);
+IMAGEPROC_EXPORT void grayRetinexInPlace(
+    GrayImage& src, int radius = 31, float coef = 0.0f);
+
+/**
  * @brief Equalize GrayImage.
  * Modification: used GaussBlur.
  */
@@ -264,14 +280,6 @@ IMAGEPROC_EXPORT GrayImage grayEqualize(
 IMAGEPROC_EXPORT void grayEqualizeInPlace(
     GrayImage& src, int radius = 1, float coef = 0.0f,
     bool flg_blur = false);
-
-/**
- * @brief Retinex GrayImage based GaussBlur.
- */
-IMAGEPROC_EXPORT GrayImage grayRetinex(
-    GrayImage const& src, int radius = 31, float coef = 0.0f);
-IMAGEPROC_EXPORT void grayRetinexInPlace(
-    GrayImage& src, int radius = 31, float coef = 0.0f);
 
 /**
  * @brief Sigma (blur manipulation) GrayImage based GaussBlur.

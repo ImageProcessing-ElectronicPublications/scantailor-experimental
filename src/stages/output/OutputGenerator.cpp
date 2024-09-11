@@ -375,6 +375,8 @@ OutputGenerator::process(
 
         grayBalanceInPlace(gout, color_options.balanceSize(), color_options.balanceCoef());
 
+        grayOverBlurInPlace(gout, color_options.overblurSize(), color_options.overblurCoef());
+
         grayRetinexInPlace(gout, color_options.retinexSize(), color_options.retinexCoef());
 
         grayEqualizeInPlace(gout, color_options.equalizeSize(), color_options.equalizeCoef());
