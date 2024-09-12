@@ -1621,15 +1621,22 @@ void hsvKMeansInPlace(
             return;
         }
 
+        /* len clusters*/
         uint32_t mean_len[256] = {0};
+        /* defaults clusters*/
         double mean_h0[256] = {0.0};
         double mean_s0[256] = {0.0};
         double mean_v0[256] = {0.0};
+        /* work clusters*/
         double mean_h[256] = {0.0};
         double mean_s[256] = {0.0};
         double mean_v[256] = {0.0};
+        /* sort clusters*/
         float dist_c[256] = {0.0f}, dist_c_max = 0.0f;
         bool dist_bg[256] = {false};
+        /* reinit clusters*/
+        unsigned int mean_y[256] = {0};
+        unsigned int mean_x[256] = {0};
 
         uint32_t const msb = uint32_t(1) << 31;
 
@@ -1642,8 +1649,10 @@ void hsvKMeansInPlace(
         uint8_t* clusters_line = clusters.data();
         int const clusters_stride = clusters.stride();
 
+        /* init clusters */
         paletteHSVcylinderGenerate(mean_h0, mean_s0, mean_v0, ncount, start_value);
 
+        /* find and sort clusters */
         for (int i = 1; i <= ncount; i++)
         {
             mask_zones_line = mask_zones.data();
@@ -1713,6 +1722,46 @@ void hsvKMeansInPlace(
             mean_v[i] = mean_v0[i];
         }
 
+        /* reinit clusters (separate fg and bg) */
+        for (int i = 1; i <= ncount; i++)
+        {
+            mask_line = mask.data();
+            mask_zones_line = mask_zones.data();
+            float dist_min = -1.0f;
+            for (unsigned int y = 0; y < h; y++)
+            {
+                QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+                for (unsigned int x = 0; x < w; x++)
+                {
+                    if (mask_zones_line[x >> 5] & (msb >> (x & 31)))
+                    {
+                        if ((i > fgcount) ^ (mask_line[x >> 5] & (msb >> (x & 31))))
+                        {
+                            float const hsv_h = qRed(rowh[x]);
+                            float const hsv_s = qGreen(rowh[x]);
+                            float const hsv_v = qBlue(rowh[x]);
+                            float const dist = pixelDistance(hsv_h, hsv_s, hsv_v, mean_h0[i], mean_s0[i], mean_v0[i]);
+                            if ((dist_min < 0.0f) || (dist < dist_min))
+                            {
+                                mean_h[i] = hsv_h;
+                                mean_s[i] = hsv_s;
+                                mean_v[i] = hsv_v;
+                                mean_y[i] = y;
+                                mean_x[i] = x;
+                                dist_min = dist;
+                            }
+                        }
+                    }
+                }
+                mask_line += mask_stride;
+                mask_zones_line += mask_zones_stride;
+            }
+            mean_h0[i] = mean_h[i];
+            mean_s0[i] = mean_s[i];
+            mean_v0[i] = mean_v[i];
+        }
+
+        /* init clusters map */
         mask_line = mask.data();
         for (unsigned int y = 0; y < h; y++)
         {
@@ -1768,6 +1817,7 @@ void hsvKMeansInPlace(
             clusters_line += clusters_stride;
         }
 
+        /* iteration clusters map */
         for (unsigned int itr = 0; itr < 50; itr++)
         {
             for (int i = 0; i < sfull; i++)
@@ -1800,6 +1850,7 @@ void hsvKMeansInPlace(
                 mask_zones_line += mask_zones_stride;
                 clusters_line += clusters_stride;
             }
+            clusters_line = clusters.data();
             uint32_t changes = 0;
             for (int i = 0; i < sfull; i++)
             {
@@ -1816,35 +1867,12 @@ void hsvKMeansInPlace(
                     mean_s[i] = mean_s0[i];
                     mean_v[i] = mean_v0[i];
 
-                    mask_zones_line = mask_zones.data();
-                    mask_line = mask.data();
-                    float dist_min = -1.0f;
-                    for (unsigned int y = 0; y < h; y++)
-                    {
-                        QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
-                        for (unsigned int x = 0; x < w; x++)
-                        {
-                            if (mask_zones_line[x >> 5] & (msb >> (x & 31)))
-                            {
-                                if ((i > fgcount) ^ (mask_line[x >> 5] & (msb >> (x & 31))))
-                                {
-                                    float const hsv_h = qRed(rowh[x]);
-                                    float const hsv_s = qGreen(rowh[x]);
-                                    float const hsv_v = qBlue(rowh[x]);
-                                    float const dist = pixelDistance(hsv_h, hsv_s, hsv_v, mean_h0[i], mean_s0[i], mean_v0[i]);
-                                    if ((dist_min < 0.0f) || (dist < dist_min))
-                                    {
-                                        mean_h[i] = hsv_h;
-                                        mean_s[i] = hsv_s;
-                                        mean_v[i] = hsv_v;
-                                        dist_min = dist;
-                                    }
-                                }
-                            }
-                        }
-                        mask_line += mask_stride;
-                        mask_zones_line += mask_zones_stride;
-                    }
+                    unsigned int y0 = mean_y[i];
+                    unsigned int x0 = mean_x[i];
+                    uint32_t indx = y0 * clusters_stride + x0;
+                    int const cluster = clusters_line[indx];
+                    mean_len[cluster]--;
+                    clusters_line[indx] = i;
                     mean_len[i] = 1;
                     changes++;
                 }
