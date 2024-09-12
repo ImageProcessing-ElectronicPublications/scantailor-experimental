@@ -166,7 +166,9 @@ int main(int argc, char** argv)
     }
 
     QString const translation("scantailor-experimental_"+QLocale::system().name());
-    QTranslator translator;
+    QString const translation_qtbase("qtbase_"+QLocale::system().name());
+    QTranslator translator, translator_qtbase;
+    bool found_translation = false, found_translation_qtbase = false;
 
     // Try loading translations from different paths.
     QStringList const translation_dirs(
@@ -186,15 +188,26 @@ int main(int argc, char** argv)
             absolute_path += path;
         }
         absolute_path += QChar('/');
-        absolute_path += translation;
 
-        if (translator.load(absolute_path))
-        {
-            break;
+        if(!found_translation) {
+            if (translator.load(absolute_path+translation))
+            {
+                found_translation = true;
+            }
         }
+
+        if(!found_translation_qtbase) {
+            if (translator_qtbase.load(absolute_path+translation_qtbase))
+            {
+                found_translation_qtbase = true;
+            }
+        }
+
+        if(found_translation && found_translation_qtbase) break;
     }
 
     app.installTranslator(&translator);
+    app.installTranslator(&translator_qtbase);
 
     // Plugin search paths.
     QStringList const plugin_dirs(

@@ -551,6 +551,14 @@ ENDIF()
         )
     ENDIF()
     
+    #Qt's translations
+    FOREACH(qm_file ${QM_FILES})
+	    STRING(REGEX REPLACE "^.*scantailor-experimental_" "${Qt_DIR}/translations/qtbase_" qtbase_qm_file "${qm_file}")
+        IF(EXISTS "${qtbase_qm_file}")
+            COPY_TO_BUILD_DIR( "${qtbase_qm_file}" SUBDIR translations )
+        ENDIF()
+    ENDFOREACH()
+    
     # Generate the target that will actually do the copying.
     GENERATE_COPY_TO_BUILD_DIR_TARGET(copy_to_build_dir)
     
