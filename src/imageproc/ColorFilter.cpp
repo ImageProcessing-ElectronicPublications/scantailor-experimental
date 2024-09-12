@@ -1324,13 +1324,15 @@ void paletteHSVcylinderGenerate(
     }
 }
 
-void paletteHSVcylinderToHSV(double* mean_h, double* mean_s, int const ncount)
+void paletteHSVcylinderToHSV(
+    double* mean_h, double* mean_s,
+    int const start, int const stop)
 {
-    if (ncount > 0)
+    if ((stop - start) > 0)
     {
         float ctorad = (float)(2.0 * M_PI / 256.0);
 
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             float const hsv_hsc = (mean_h[k] - 128.0f) * 2.0f;
             float const hsv_hss = (mean_s[k] - 128.0f) * 2.0f;
@@ -1344,19 +1346,20 @@ void paletteHSVcylinderToHSV(double* mean_h, double* mean_s, int const ncount)
 }
 
 void paletteHSVsaturation(
-    double* mean_s, float const coef_sat, int const ncount)
+    double* mean_s, float const coef_sat,
+    int const start, int const stop)
 {
-    if (ncount > 0)
+    if ((stop - start) > 0)
     {
         float min_sat = 512.0f;
         float max_sat = 0.0f;
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             min_sat = (mean_s[k] < min_sat) ? mean_s[k] : min_sat;
             max_sat = (mean_s[k] > max_sat) ? mean_s[k] : max_sat;
         }
         float d_sat = max_sat - min_sat;
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             float sat_new = (d_sat > 0.0f) ? ((mean_s[k] - min_sat) * 255.0f / d_sat) : 255.0f;
             sat_new = sat_new * coef_sat + mean_s[k] * (1.0f - coef_sat);
@@ -1366,20 +1369,20 @@ void paletteHSVsaturation(
 }
 
 void paletteYCbCrsaturation(
-    double* mean_cb, double* mean_cr,
-    float const coef_sat, int const ncount)
+    double* mean_cb, double* mean_cr, float const coef_sat,
+    int const start, int const stop)
 {
-    if (ncount > 0)
+    if ((stop - start) > 0)
     {
         float max_sat = 0.0f;
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             float tsat = (mean_cb[k] < 128.0f) ? (128.0f - mean_cb[k]) : (mean_cb[k] - 128.0f);
             max_sat = (tsat > max_sat) ? tsat : max_sat;
             tsat = (mean_cr[k] < 128.0f) ? (128.0f - mean_cr[k]) : (mean_cr[k] - 128.0f);
             max_sat = (tsat > max_sat) ? tsat : max_sat;
         }
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             float sat_cb = (max_sat > 0.0f) ? ((mean_cb[k] - 128.0f) * 128.0f / max_sat + 128.0f) : mean_cb[k];
             float sat_cr = (max_sat > 0.0f) ? ((mean_cr[k] - 128.0f) * 128.0f / max_sat + 128.0f) : mean_cr[k];
@@ -1392,19 +1395,20 @@ void paletteYCbCrsaturation(
 }
 
 void paletteHSVnorm(
-    double* mean_v, float const coef_norm, int const ncount)
+    double* mean_v, float const coef_norm,
+    int const start, int const stop)
 {
-    if (ncount > 0)
+    if ((stop - start) > 0)
     {
         float min_vol = 512.0f;
         float max_vol = 0.0f;
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             min_vol = (mean_v[k] < min_vol) ? mean_v[k] : min_vol;
             max_vol = (mean_v[k] > max_vol) ? mean_v[k] : max_vol;
         }
         float d_vol = max_vol - min_vol;
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = start; k < stop; k++)
         {
             float vol_new = (d_vol > 0.0f) ? ((mean_v[k] - min_vol) * 255.0f / d_vol) : 0.0f;
             vol_new = vol_new * coef_norm + mean_v[k] * (1.0f - coef_norm);
@@ -1419,7 +1423,7 @@ void paletteHSVtoRGB(
 {
     if (ncount > 0)
     {
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = 0; k < ncount; k++)
         {
             int r, g, b;
             float const hsv_h = mean_h[k];
@@ -1483,7 +1487,7 @@ void paletteHSLtoRGB(
         float const p2563 = 256.0f / 3.0f;
         float const p2566 = 256.0f / 6.0f;
         float const p25623 = 256.0f * 2.0f / 3.0f;
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = 0; k < ncount; k++)
         {
             int r, g, b;
             float const hsl_h = mean_h[k];
@@ -1518,7 +1522,7 @@ void paletteYCbCrtoRGB(
 {
     if (ncount > 0)
     {
-        for (int k = 0; k < (ncount + 2); k++)
+        for (int k = 0; k < ncount; k++)
         {
             int r, g, b;
             float const cb = mean_cb[k];
@@ -1574,6 +1578,9 @@ void hsvKMeansInPlace(
 
         int const bgcount = (int) (coef_bg * (float) ncount + 0.25f);
         int const fgcount = ncount - bgcount;
+        int const start = (fgcount > 0) ? 1 : 0;
+        int const sfull = ncount + 2;
+        int const stop = (bgcount > 0) ? (sfull - 1) : sfull;
 
         uint32_t const* mask_line = mask.data();
         int const mask_stride = mask.wordsPerLine();
@@ -1695,10 +1702,10 @@ void hsvKMeansInPlace(
         }
         mean_h0[0] = 128.0;
         mean_s0[0] = 128.0;
-        mean_v0[0] = 0.0;
+        mean_v0[0] = 128.0;
         mean_h0[ncount + 1] = 128.0;
         mean_s0[ncount + 1] = 128.0;
-        mean_v0[ncount + 1] = 255.0;
+        mean_v0[ncount + 1] = 128.0;
         for (int i = 0; i < (ncount + 2); i++)
         {
             mean_h[i] = mean_h0[i];
@@ -1763,7 +1770,7 @@ void hsvKMeansInPlace(
 
         for (unsigned int itr = 0; itr < 50; itr++)
         {
-            for (int i = 0; i < (ncount + 2); i++)
+            for (int i = 0; i < sfull; i++)
             {
                 mean_h[i] = 0.0;
                 mean_s[i] = 0.0;
@@ -1781,23 +1788,20 @@ void hsvKMeansInPlace(
                     if (mask_zones_line[x >> 5] & (msb >> (x & 31)))
                     {
                         int const cluster = clusters_line[x];
-                        if ((cluster > 0) && (cluster <= ncount))
-                        {
-                            float const hsv_h = qRed(rowh[x]);
-                            float const hsv_s = qGreen(rowh[x]);
-                            float const hsv_v = qBlue(rowh[x]);
-                            mean_h[cluster] += hsv_h;
-                            mean_s[cluster] += hsv_s;
-                            mean_v[cluster] += hsv_v;
-                            mean_len[cluster]++;
-                        }
+                        float const hsv_h = qRed(rowh[x]);
+                        float const hsv_s = qGreen(rowh[x]);
+                        float const hsv_v = qBlue(rowh[x]);
+                        mean_h[cluster] += hsv_h;
+                        mean_s[cluster] += hsv_s;
+                        mean_v[cluster] += hsv_v;
+                        mean_len[cluster]++;
                     }
                 }
                 mask_zones_line += mask_zones_stride;
                 clusters_line += clusters_stride;
             }
             uint32_t changes = 0;
-            for (int i = 0; i < (ncount + 2); i++)
+            for (int i = 0; i < sfull; i++)
             {
                 if (mean_len[i] > 0)
                 {
@@ -1901,7 +1905,7 @@ void hsvKMeansInPlace(
                         clusters_line[x] = indx_min;
                         changes++;
                     }
-                    
+
                 }
                 mask_line += mask_stride;
                 clusters_line += clusters_stride;
@@ -1915,39 +1919,39 @@ void hsvKMeansInPlace(
 
         if (color_space < 2)
         {
-            paletteHSVcylinderToHSV(mean_h, mean_s, ncount);
-            paletteHSVsaturation(mean_s, coef_sat, ncount);
+            paletteHSVcylinderToHSV(mean_h, mean_s, start, stop);
+            paletteHSVsaturation(mean_s, coef_sat, start, stop);
         }
         else
         {
-            paletteYCbCrsaturation(mean_h, mean_s, coef_sat, ncount);
+            paletteYCbCrsaturation(mean_h, mean_s, coef_sat, start, stop);
         }
-        paletteHSVnorm(mean_v, coef_norm, ncount);
+        paletteHSVnorm(mean_v, coef_norm, start, stop);
 
         switch (color_space)
         {
         case 0:
         {
             // HSV
-            paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+            paletteHSVtoRGB(mean_h, mean_s, mean_v, sfull);
             break;
         }
         case 1:
         {
             // HSL
-            paletteHSLtoRGB(mean_h, mean_s, mean_v, ncount);
+            paletteHSLtoRGB(mean_h, mean_s, mean_v, sfull);
             break;
         }
         case 2:
         {
             // YCbCr
-            paletteYCbCrtoRGB(mean_h, mean_s, mean_v, ncount);
+            paletteYCbCrtoRGB(mean_h, mean_s, mean_v, sfull);
             break;
         }
         default:
         {
             // HSV
-            paletteHSVtoRGB(mean_h, mean_s, mean_v, ncount);
+            paletteHSVtoRGB(mean_h, mean_s, mean_v, sfull);
             break;
         }
         }

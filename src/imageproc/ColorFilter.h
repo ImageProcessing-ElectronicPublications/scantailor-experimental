@@ -262,17 +262,20 @@ static void paletteHSVcylinderGenerate(
     int const ncount, float start_value = 128.0f);
 
 static void paletteHSVcylinderToHSV(
-    double* mean_h, double* mean_s, int const ncount);
+    double* mean_h, double* mean_s,
+    int const start, int const stop);
 
 static void paletteHSVsaturation(
-    double* mean_s, float const coef_sat, int const ncount);
+    double* mean_s, float const coef_sat,
+    int const start, int const stop);
 
 static void paletteYCbCrsaturation(
-    double* mean_cb, double* mean_cr,
-    float const coef_sat, int const ncount);
+    double* mean_cb, double* mean_cr, float const coef_sat,
+    int const start, int const stop);
 
 static void paletteHSVnorm(
-    double* mean_v, float const coef_norm, int const ncount);
+    double* mean_v, float const coef_norm,
+    int const start, int const stop);
 
 static void paletteHSVtoRGB(
     double* mean_h, double* mean_s, double* mean_v, int const ncount);
