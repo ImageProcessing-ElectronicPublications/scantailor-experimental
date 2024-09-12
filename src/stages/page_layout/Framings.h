@@ -29,7 +29,7 @@ namespace page_layout
 class Framings
 {
 public:
-    Framings() : m_framingw(0.12), m_framingh(0.08) {}
+    Framings() : m_framingw(0.24), m_framingh(0.16) {}
 
     Framings(double hor, double vert) : m_framingw(hor), m_framingh(vert) {}
 

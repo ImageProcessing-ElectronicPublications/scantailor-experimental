@@ -364,56 +364,59 @@ OutputGenerator::process(
     double norm_coef = color_options.normalizeCoef();
 
     // Color filters begin
-    colored(transformed_image, color_options);
-
-    if (norm_coef > 0.0)
-    {
-        QImage maybe_normalized;
-        // For background estimation we need a downscaled image of about 200x300 pixels.
-        // We can't just downscale image, as this background estimation we
-        // need to set outside pixels to black.
-        double const downscale_factor = 300.0 / std::max<int>(
-                                           300, std::max(m_outRect.width(), m_outRect.height())
-                                       );
-        auto downscaled_transform = m_ptrImageTransform->clone();
-        QTransform const downscale_only_transform(
-            downscaled_transform->scale(downscale_factor, downscale_factor)
-        );
-
-        QRect const downscaled_out_rect(downscale_only_transform.mapRect(m_outRect));
-        GrayImage const transformed_for_bg_estimation(
-            downscaled_transform->materialize(
-                gray_orig_image_factory(), downscaled_out_rect, Qt::black, accel_ops
-            )
-        );
-        QPolygonF const downscaled_region_of_intereset(
-            downscale_only_transform.map(
-                transformed_crop_area.intersected(QRectF(normalize_illumination_rect))
-            )
-        );
-
-//        imageGraySaveColors(image, gray, 1.0);
-        maybe_normalized = normalizeIlluminationGray(
-                               status, accel_ops, GrayImage(transformed_image),
-                               transformed_for_bg_estimation, norm_coef,
-                               downscaled_region_of_intereset, dbg
-                           );
-        if (orig_image.allGray())
-        {
-            transformed_image = QImage(maybe_normalized);
-        }
-        else
-        {
-            adjustBrightnessGrayscale(transformed_image, maybe_normalized);
-        }
-    }
-
-    unPaperFilterInPlace(transformed_image, color_options.unPaperIters(), color_options.unPaperCoef());
-
     GrayImage coloredSignificance(transformed_image);
-    if (render_params.needBinarization())
+    if (!m_outRect.isEmpty())
     {
-        coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
+        colored(transformed_image, color_options);
+
+        if (norm_coef > 0.0)
+        {
+            QImage maybe_normalized;
+            // For background estimation we need a downscaled image of about 200x300 pixels.
+            // We can't just downscale image, as this background estimation we
+            // need to set outside pixels to black.
+            double const downscale_factor = 300.0 / std::max<int>(
+                                               300, std::max(m_outRect.width(), m_outRect.height())
+                                           );
+            auto downscaled_transform = m_ptrImageTransform->clone();
+            QTransform const downscale_only_transform(
+                downscaled_transform->scale(downscale_factor, downscale_factor)
+            );
+
+            QRect const downscaled_out_rect(downscale_only_transform.mapRect(m_outRect));
+            GrayImage const transformed_for_bg_estimation(
+                downscaled_transform->materialize(
+                    gray_orig_image_factory(), downscaled_out_rect, Qt::black, accel_ops
+                )
+            );
+            QPolygonF const downscaled_region_of_intereset(
+                downscale_only_transform.map(
+                    transformed_crop_area.intersected(QRectF(normalize_illumination_rect))
+                )
+            );
+
+            // imageGraySaveColors(image, gray, 1.0);
+            maybe_normalized = normalizeIlluminationGray(
+                                   status, accel_ops, GrayImage(transformed_image),
+                                   transformed_for_bg_estimation, norm_coef,
+                                   downscaled_region_of_intereset, dbg
+                               );
+            if (orig_image.allGray())
+            {
+                transformed_image = QImage(maybe_normalized);
+            }
+            else
+            {
+                adjustBrightnessGrayscale(transformed_image, maybe_normalized);
+            }
+        }
+
+        unPaperFilterInPlace(transformed_image, color_options.unPaperIters(), color_options.unPaperCoef());
+
+        if (render_params.needBinarization())
+        {
+            coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
+        }
     }
 
     status.throwIfCancelled();
@@ -563,47 +566,15 @@ OutputGenerator::process(
     }
 
     QImage dst;
-    if (render_params.binaryOutput() || m_outRect.isEmpty())
+    if (m_outRect.isEmpty())
     {
         dst = bw_content.toQImage();
     }
     else
     {
-        applyFillZonesInPlace(transformed_image, fill_zones);
-        dst = QImage(transformed_image);
-
-        if (render_params.mixedOutput())
-        {
-            // We don't want speckles in non-B/W areas, as they would
-            // then get visualized on the Despeckling tab.
-            rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
-
-            status.throwIfCancelled();
-
-            if (dst.format() == QImage::Format_Indexed8)
-            {
-                combineMixed<uint8_t>(dst, bw_content, bw_mask);
-            }
-            else
-            {
-                assert(dst.format() == QImage::Format_RGB32
-                       || dst.format() == QImage::Format_ARGB32);
-
-                combineMixed<uint32_t>(dst, bw_content, bw_mask);
-            }
-        }
-        else
-        {
-            // It's "Color / Grayscale" mode, as we handle B/W above.
-            reserveBlackAndWhite(dst);
-        }
-
-        status.throwIfCancelled();
-
-
         if (render_params.whiteMargins())
         {
-            QImage margin = QImage(m_outRect.size(), dst.format());
+            QImage margin = QImage(m_outRect.size(), transformed_image.format());
 
             if (margin.format() == QImage::Format_Indexed8)
             {
@@ -627,58 +598,96 @@ OutputGenerator::process(
 
             if (!m_contentRect.isEmpty())
             {
-                drawOver(margin, m_contentRect, dst, m_contentRect);
+                drawOver(margin, m_contentRect, transformed_image, m_contentRect);
             }
-            dst = QImage(margin);
+            transformed_image = QImage(margin);
         }
-//        applyFillZonesInPlace(dst, fill_zones);
-    }
 
-    // KMeans based HSV
-    if (render_params.binaryOutput() || render_params.mixedOutput())
-    {
-        if (!m_contentRect.isEmpty() && (black_kmeans_options.kmeansCount() > 0))
+        if (render_params.binaryOutput())
         {
-            coloredMaskInPlace(transformed_image, bw_content, colored_mask);
+            dst = bw_content.toQImage();
+        }
+        else
+        {
+            applyFillZonesInPlace(transformed_image, fill_zones);
+            dst = QImage(transformed_image);
 
-            KmeansColorSpace const color_space = black_kmeans_options.kmeansColorSpace();
-            int color_space_val = 0; // HSV
-            switch (color_space)
+            if (render_params.mixedOutput())
             {
-            case HSV:
-            {
-                color_space_val = 0; // HSV
-                break;
+                // We don't want speckles in non-B/W areas, as they would
+                // then get visualized on the Despeckling tab.
+                rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
+
+                status.throwIfCancelled();
+
+                if (dst.format() == QImage::Format_Indexed8)
+                {
+                    combineMixed<uint8_t>(dst, bw_content, bw_mask);
+                }
+                else
+                {
+                    assert(dst.format() == QImage::Format_RGB32
+                           || dst.format() == QImage::Format_ARGB32);
+
+                    combineMixed<uint32_t>(dst, bw_content, bw_mask);
+                }
+                applyFillZonesInPlace(dst, fill_zones);
             }
-            case HSL:
+            else
             {
-                color_space_val = 1; // HSL
-                break;
-            }
-            case YCBCR:
-            {
-                color_space_val = 2; // YCbCr
-                break;
-            }
-            default:
-            {
-                color_space_val = 0; // HSV
-                break;
-            }
+                // It's "Color / Grayscale" mode, as we handle B/W above.
+                reserveBlackAndWhite(dst);
             }
 
-            hsvKMeansInPlace(
-                dst,
-                transformed_image,
-                bw_content,
-                bw_mask,
-                black_kmeans_options.kmeansCount(),
-                black_kmeans_options.kmeansValueStart(),
-                color_space_val,
-                black_kmeans_options.kmeansSat(),
-                black_kmeans_options.kmeansNorm(),
-                black_kmeans_options.kmeansBG());
-            maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology());
+            status.throwIfCancelled();
+        }
+
+        // KMeans based HSV
+        if (render_params.binaryOutput() || render_params.mixedOutput())
+        {
+            if (!m_contentRect.isEmpty() && (black_kmeans_options.kmeansCount() > 0))
+            {
+                coloredMaskInPlace(transformed_image, bw_content, colored_mask);
+
+                KmeansColorSpace const color_space = black_kmeans_options.kmeansColorSpace();
+                int color_space_val = 0; // HSV
+                switch (color_space)
+                {
+                case HSV:
+                {
+                    color_space_val = 0; // HSV
+                    break;
+                }
+                case HSL:
+                {
+                    color_space_val = 1; // HSL
+                    break;
+                }
+                case YCBCR:
+                {
+                    color_space_val = 2; // YCbCr
+                    break;
+                }
+                default:
+                {
+                    color_space_val = 0; // HSV
+                    break;
+                }
+                }
+
+                hsvKMeansInPlace(
+                    dst,
+                    transformed_image,
+                    bw_content,
+                    bw_mask,
+                    black_kmeans_options.kmeansCount(),
+                    black_kmeans_options.kmeansValueStart(),
+                    color_space_val,
+                    black_kmeans_options.kmeansSat(),
+                    black_kmeans_options.kmeansNorm(),
+                    black_kmeans_options.kmeansBG());
+                maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology());
+            }
         }
     }
     bw_content.release(); // Save memory.

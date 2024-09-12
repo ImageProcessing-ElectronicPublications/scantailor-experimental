@@ -456,7 +456,7 @@ Settings::Impl::Impl()
       m_defaultHardMargins(page_layout::Settings::defaultHardMargins()),
       m_defaultMatchSizeMode(MatchSizeMode::GROW_MARGINS),
       m_defaultAlignment(Alignment::TOP, Alignment::HCENTER),
-      m_defaultFramings(0.12, 0.08)
+      m_defaultFramings(0.24, 0.16)
 {
 }
 
