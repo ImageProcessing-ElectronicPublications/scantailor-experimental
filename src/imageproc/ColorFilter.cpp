@@ -1557,7 +1557,9 @@ void hsvKMeansInPlace(
     int const color_space,
     float const coef_sat,
     float const coef_norm,
-    float const coef_bg)
+    float const coef_bg,
+    bool const find_black,
+    bool const find_white)
 {
     if (dst.isNull() || image.isNull() || mask.isNull())
     {
@@ -1591,6 +1593,7 @@ void hsvKMeansInPlace(
         uint32_t const* mask_zones_line = mask_zones.data();
         int const mask_zones_stride = mask_zones.wordsPerLine();
 
+        /* RGB to CS */
         QImage hsv_img;
         switch (color_space)
         {
@@ -1960,6 +1963,61 @@ void hsvKMeansInPlace(
         }
         paletteHSVnorm(mean_v, coef_norm, start, stop);
 
+        /* find dominantes black and white */
+        int k_black = 0;
+        int k_white = sfull;
+        if (find_black)
+        {
+            float sv_min = 256.0f * 512.0f;
+            for (int k = start; k <= fgcount; k++)
+            {
+                float const value = mean_v[k] + 1.0f;
+                float sat = 1.0f;
+                if (color_space == 2)
+                {
+                    float const cb = mean_h[k] - 128.0f;
+                    float const cr = mean_s[k] - 128.0f;
+                    sat = sqrtf(cb * cb + cr * cr) + 1.0f;
+                }
+                else
+                {
+                    sat = mean_s[k] + 1.0f;
+                }
+                float const sv_k = value * sat;
+                if (sv_min > sv_k)
+                {
+                    sv_min = sv_k;
+                    k_black = k;
+                }
+            }
+        }
+        if (find_white)
+        {
+            float sv_max = 0.0f;
+            for (int k = (fgcount + 1); k < stop; k++)
+            {
+                float const value = mean_v[k] + 1.0f;
+                float sat = 1.0f;
+                if (color_space == 2)
+                {
+                    float const cb = mean_h[k] - 128.0f;
+                    float const cr = mean_s[k] - 128.0f;
+                    sat = sqrtf(cb * cb + cr * cr) + 1.0f;
+                }
+                else
+                {
+                    sat = mean_s[k] + 1.0f;
+                }
+                float const sv_k = value / sat;
+                if (sv_max < sv_k)
+                {
+                    sv_max = sv_k;
+                    k_white = k;
+                }
+            }
+        }
+
+        /* CS to RGB */
         switch (color_space)
         {
         case 0:
@@ -1986,6 +2044,20 @@ void hsvKMeansInPlace(
             paletteHSVtoRGB(mean_h, mean_s, mean_v, sfull);
             break;
         }
+        }
+
+        /* replace dominantes black and white */
+        if (find_black)
+        {
+            mean_h[k_black] = 0.0;
+            mean_s[k_black] = 0.0;
+            mean_v[k_black] = 0.0;
+        }
+        if (find_white)
+        {
+            mean_h[k_white] = 255.0;
+            mean_s[k_white] = 255.0;
+            mean_v[k_white] = 255.0;
         }
 
         mean_h[0] = 0.0;

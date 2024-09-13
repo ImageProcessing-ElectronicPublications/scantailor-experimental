@@ -1503,9 +1503,14 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выберите цветовое пространство в K-средних.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1138"/>
-        <source>Morphology of K-means.</source>
-        <translation>Морфология К-средних.</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1048"/>
+        <source>Find Black.</source>
+        <translation>Найти Чёрное.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
+        <source>Find White.</source>
+        <translation>Найти Белое.</translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1165"/>

@@ -1253,8 +1253,13 @@ Um die endgültige Größe der Seiten festzulegen, starten Sie die Stapelverarbe
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1138"/>
-        <source>Morphology of K-means.</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1048"/>
+        <source>Find Black.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
+        <source>Find White.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

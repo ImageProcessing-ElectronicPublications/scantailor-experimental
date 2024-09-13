@@ -317,8 +317,12 @@ OptionsWidget::OptionsWidget(
         this, SLOT(kmeansColorSpaceChanged(int))
     );
     connect(
-        kmeansMorphology, SIGNAL(valueChanged(int)),
-        this, SLOT(kmeansMorphologyChanged(int))
+        kmeansFindBlackCB, SIGNAL(clicked(bool)),
+        this, SLOT(kmeansFindBlackToggled(bool))
+    );
+    connect(
+        kmeansFindWhiteCB, SIGNAL(clicked(bool)),
+        this, SLOT(kmeansFindWhiteToggled(bool))
     );
     connect(
         applyKmeansButton, SIGNAL(clicked()),
@@ -988,16 +992,6 @@ OptionsWidget::kmeansValueStartChanged(int value)
 }
 
 void
-OptionsWidget::kmeansMorphologyChanged(int value)
-{
-    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
-    black_kmeans_options.setKmeansMorphology(value);
-    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
-    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-}
-
-void
 OptionsWidget::kmeansSatChanged(double value)
 {
     BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
@@ -1043,6 +1037,26 @@ OptionsWidget::kmeansColorSpaceChanged(int idx)
     KmeansColorSpace const color_space = (KmeansColorSpace) kmeansColorSpaceSelector->itemData(idx).toInt();
     BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
     black_kmeans_options.setKmeansColorSpace(color_space);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansFindBlackToggled(bool const checked)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setFindBlack(checked);
+    m_colorParams.setBlackKmeansOptions(black_kmeans_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::kmeansFindWhiteToggled(bool const checked)
+{
+    BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
+    black_kmeans_options.setFindWhite(checked);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit reloadRequested();
@@ -1280,7 +1294,8 @@ OptionsWidget::updateColorsDisplay()
         kmeansBG->setValue(black_kmeans_options.kmeansBG());
         coloredMaskCoef->setValue(black_kmeans_options.coloredMaskCoef());
         kmeansColorSpaceSelector->setCurrentIndex((int) black_kmeans_options.kmeansColorSpace());
-        kmeansMorphology->setValue(black_kmeans_options.kmeansMorphology());
+        kmeansFindBlackCB->setChecked(black_kmeans_options.getFindBlack());
+        kmeansFindWhiteCB->setChecked(black_kmeans_options.getFindWhite());
 
         coloredMaskCoef->setEnabled( false );
         if (black_kmeans_options.kmeansCount() > 0)
@@ -1294,7 +1309,8 @@ OptionsWidget::updateColorsDisplay()
                 coloredMaskCoef->setEnabled( true );
             }
             kmeansColorSpaceSelector->setEnabled( true );
-            kmeansMorphology->setEnabled( true );
+            kmeansFindBlackCB->setEnabled( true );
+            kmeansFindWhiteCB->setEnabled( true );
         }
         else
         {
@@ -1303,7 +1319,8 @@ OptionsWidget::updateColorsDisplay()
             kmeansNorm->setEnabled( false );
             kmeansBG->setEnabled( false );
             kmeansColorSpaceSelector->setEnabled( false );
-            kmeansMorphology->setEnabled( false );
+            kmeansFindBlackCB->setEnabled( false );
+            kmeansFindWhiteCB->setEnabled( false );
         }
 
         despecklePanelToggled(despecklePanelEmpty->isChecked());

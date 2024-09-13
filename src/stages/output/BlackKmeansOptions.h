@@ -100,13 +100,22 @@ public:
         m_kmeansColorSpace = val;
     }
 
-    int kmeansMorphology() const
+    bool getFindBlack() const
     {
-        return m_kmeansMorphology;
+        return m_findBlack;
     }
-    void setKmeansMorphology(int val)
+    void setFindBlack(bool val)
     {
-        m_kmeansMorphology = val;
+        m_findBlack = val;
+    }
+
+    bool getFindWhite() const
+    {
+        return m_findWhite;
+    }
+    void setFindWhite(bool val)
+    {
+        m_findWhite = val;
     }
 
     bool operator==(BlackKmeansOptions const& other) const;
@@ -120,7 +129,8 @@ private:
     double m_kmeansBG;
     double m_coloredMaskCoef;
     KmeansColorSpace m_kmeansColorSpace;
-    int m_kmeansMorphology;
+    bool m_findBlack;
+    bool m_findWhite;
 
     static KmeansColorSpace parseKmeansColorSpace(QString const& str);
 

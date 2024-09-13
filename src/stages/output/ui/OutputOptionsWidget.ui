@@ -1038,17 +1038,28 @@
             </widget>
            </item>
            <item row="3" column="2">
-            <widget class="QSpinBox" name="kmeansMorphology">
-             <property name="toolTip">
-              <string>Morphology of K-means.</string>
-             </property>
-             <property name="minimum">
-              <number>-16</number>
-             </property>
-             <property name="maximum">
-              <number>16</number>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="kmeansFindLayout">
+             <item>
+              <widget class="QCheckBox" name="kmeansFindBlackCB">
+               <property name="text">
+                <string>B</string>
+               </property>
+               <property name="toolTip">
+                <string>Find Black.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="kmeansFindWhiteCB">
+               <property name="text">
+                <string>W</string>
+               </property>
+               <property name="toolTip">
+                <string>Find White.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>

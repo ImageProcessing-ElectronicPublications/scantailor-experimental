@@ -141,7 +141,9 @@ private slots:
 
     void kmeansColorSpaceChanged(int idx);
 
-    void kmeansMorphologyChanged(int value);
+    void kmeansFindBlackToggled(bool checked);
+
+    void kmeansFindWhiteToggled(bool checked);
 
     void applyKmeansButtonClicked();
 

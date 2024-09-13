@@ -296,7 +296,9 @@ IMAGEPROC_EXPORT void hsvKMeansInPlace(
     int color_space = 0,
     float coef_sat = 0.0f,
     float coef_norm = 0.0f,
-    float coef_bg = 0.0f);
+    float coef_bg = 0.0f,
+    bool find_black = false,
+    bool find_white = false);
 
 IMAGEPROC_EXPORT void maskMorphologicalErode(
     QImage& image, BinaryImage const& mask, int radius = 0);

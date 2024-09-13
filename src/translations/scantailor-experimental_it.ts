@@ -1432,8 +1432,13 @@ Per determinarla, avvia l&apos;elaborazione automatica a &quot; o &quot; Conform
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1138"/>
-        <source>Morphology of K-means.</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1048"/>
+        <source>Find Black.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
+        <source>Find White.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

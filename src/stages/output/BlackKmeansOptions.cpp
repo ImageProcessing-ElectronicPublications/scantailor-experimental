@@ -32,7 +32,8 @@ BlackKmeansOptions::BlackKmeansOptions()
         m_kmeansBG(0.0),
         m_coloredMaskCoef(0.0),
         m_kmeansColorSpace(HSV),
-        m_kmeansMorphology(0)
+        m_findBlack(false),
+        m_findWhite(false)
 {
 }
 
@@ -44,7 +45,8 @@ BlackKmeansOptions::BlackKmeansOptions(QDomElement const& el)
         m_kmeansBG(el.attribute("kmeansBG").toDouble()),
         m_coloredMaskCoef(el.attribute("coloredMaskCoef").toDouble()),
         m_kmeansColorSpace(parseKmeansColorSpace(el.attribute("colorspace"))),
-        m_kmeansMorphology(el.attribute("kmeansMorphology").toInt())
+        m_findBlack(el.attribute("findBlack") == "1"),
+        m_findWhite(el.attribute("findWhite") == "1")
 {
     if (m_kmeansCount < 0)
     {
@@ -102,9 +104,13 @@ BlackKmeansOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("coloredMaskCoef", m_coloredMaskCoef);
     }
     el.setAttribute("colorspace", formatKmeansColorSpace(m_kmeansColorSpace));
-    if (m_kmeansMorphology != 0)
+    if (m_findBlack)
     {
-        el.setAttribute("kmeansMorphology", m_kmeansMorphology);
+        el.setAttribute("findBlack", "1");
+    }
+    if (m_findWhite)
+    {
+        el.setAttribute("findWhite", "1");
     }
     return el;
 }
@@ -140,7 +146,11 @@ BlackKmeansOptions::operator==(BlackKmeansOptions const& other) const
     {
         return false;
     }
-    if (m_kmeansMorphology != other.m_kmeansMorphology)
+    if (m_findBlack != other.m_findBlack)
+    {
+        return false;
+    }
+    if (m_findWhite != other.m_findWhite)
     {
         return false;
     }

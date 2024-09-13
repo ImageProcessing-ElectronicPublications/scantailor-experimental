@@ -685,8 +685,10 @@ OutputGenerator::process(
                     color_space_val,
                     black_kmeans_options.kmeansSat(),
                     black_kmeans_options.kmeansNorm(),
-                    black_kmeans_options.kmeansBG());
-                maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology());
+                    black_kmeans_options.kmeansBG(),
+                    black_kmeans_options.getFindBlack(),
+                    black_kmeans_options.getFindWhite());
+                /* deprecated: maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology()); */
             }
         }
     }

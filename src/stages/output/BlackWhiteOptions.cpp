@@ -100,7 +100,10 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     {
         el.setAttribute("autoPictureCoef", m_autoPictureCoef);
     }
-    el.setAttribute("autoPictureOff", m_autoPictureOff ? "1" : "0");
+    if (m_autoPictureOff)
+    {
+        el.setAttribute("autoPictureOff", "1");
+    }
     return el;
 }
 

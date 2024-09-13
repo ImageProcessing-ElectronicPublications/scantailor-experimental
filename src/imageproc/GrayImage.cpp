@@ -1361,15 +1361,14 @@ void grayDespeckleInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
-    GrayImage gmean;
     if ((radius > 0) && (coef != 0.0f))
     {
-        gmean = GrayImage(src);
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
+        GrayImage gmean = GrayImage(src);
         if (gmean.isNull())
         {
             return;
@@ -1466,15 +1465,14 @@ void grayAutoLevelInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
 
-         GrayImage gmean = gaussBlur(src, radius, radius);
+        GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
         {
             return;
@@ -1529,13 +1527,13 @@ void grayBalanceInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
         {
@@ -1673,13 +1671,13 @@ void grayOverBlurInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
         {
@@ -1756,13 +1754,13 @@ void grayRetinexInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
         {
@@ -1822,11 +1820,6 @@ void grayEqualizeInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     GrayImage gmean;
     if (radius > 0)
     {
@@ -1843,6 +1836,11 @@ void grayEqualizeInPlace(
 
     if (coef != 0.0f)
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
         uint8_t* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
@@ -1935,13 +1933,12 @@ void grayBlurInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
@@ -1985,13 +1982,12 @@ void graySigmaInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
@@ -2039,13 +2035,12 @@ void grayScreenInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
 
         GrayImage gmean = grayEqualize(src, radius, 1.0f, true);
         if (gmean.isNull())
@@ -2105,13 +2100,13 @@ void grayEdgeDivInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && ((kep != 0.0f) || (kbd != 0.0f)))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
         {
@@ -2212,13 +2207,13 @@ void grayRobustInPlace(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    uint8_t* src_line = src.data();
-    int const src_stride = src.stride();
-
     if ((radius > 0) && (coef != 0.0f))
     {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
         GrayImage gmean = gaussBlur(src, radius, radius);
         if (gmean.isNull())
         {
@@ -2258,7 +2253,6 @@ unsigned int grayDominantaValue(
     int const h = src.height();
     uint8_t const* src_line = src.data();
     int const src_stride = src.stride();
-
 
     uint64_t histogram[256] = {0};
     for (int y = 0; y < h; y++)

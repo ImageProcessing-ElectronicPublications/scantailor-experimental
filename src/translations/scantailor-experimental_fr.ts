@@ -1224,8 +1224,13 @@ Pour la déterminer, lancez le processus de traitement à l&apos;étape &quot;S�
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1138"/>
-        <source>Morphology of K-means.</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1048"/>
+        <source>Find Black.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
+        <source>Find White.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
