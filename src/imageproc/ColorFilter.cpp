@@ -995,12 +995,12 @@ void coloredDimmingFilterInPlace(
 
         for (unsigned int y = 0; y < h; y++)
         {
+            unsigned int indx = 0;
             for (unsigned int x = 0; x < w; x++)
             {
                 float ycbcr = gray_line[x];
                 for (unsigned int c = 0; c < cnum; c++)
                 {
-                    unsigned int const indx = x * cnum + c;
                     float const origin = image_line[indx];
                     float retval = origin;
                     retval *= (ycbcr + 1.0f);
@@ -1008,6 +1008,7 @@ void coloredDimmingFilterInPlace(
                     int val = (int) (retval + 0.5f);
                     val = (val < 0) ? 0 : (val < 255) ? val : 255;
                     image_line[indx] = (uint8_t) val;
+                    indx++;
                 }
             }
             image_line += image_stride;
@@ -1046,6 +1047,7 @@ void coloredMaskInPlace(
         uint32_t const msb = uint32_t(1) << 31;
         for (unsigned int y = 0; y < h; y++)
         {
+            unsigned int indx = 0;
             for (unsigned int x = 0; x < w; x++)
             {
                 if (content_line[x >> 5] & (msb >> (x & 31)))
@@ -1054,12 +1056,12 @@ void coloredMaskInPlace(
                     {
                         for (unsigned int c = 0; c < cnum; c++)
                         {
-                            unsigned int const indx = x * cnum + c;
-                            fgmean[c] += image_line[indx];
+                            fgmean[c] += image_line[indx + c];
                         }
                         count++;
                     }
                 }
+                indx += cnum;
             }
             image_line += image_stride;
             content_line += content_stride;
@@ -1070,6 +1072,7 @@ void coloredMaskInPlace(
             for (unsigned int c = 0; c < cnum; c++)
             {
                 fgmean[c] /= count;
+                fgmean[c] *= 0.5;
                 fgmean[c] += 0.5;
             }
 
@@ -1078,6 +1081,7 @@ void coloredMaskInPlace(
             mask_line = mask.data();
             for (unsigned int y = 0; y < h; y++)
             {
+                unsigned int indx = 0;
                 for (unsigned int x = 0; x < w; x++)
                 {
                     if (content_line[x >> 5] & (msb >> (x & 31)))
@@ -1086,11 +1090,11 @@ void coloredMaskInPlace(
                         {
                             for (unsigned int c = 0; c < cnum; c++)
                             {
-                                unsigned int const indx = x * cnum + c;
-                                image_line[indx] = (uint8_t) fgmean[c];
+                                image_line[indx + c] = (uint8_t) fgmean[c];
                             }
                         }
                     }
+                    indx += cnum;
                 }
                 image_line += image_stride;
                 content_line += content_stride;
