@@ -276,8 +276,14 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("unPaperIters", m_unPaperIters);
     }
     el.setAttribute("normalizeCoef", m_normalizeCoef);
-    el.setAttribute("whiteMargins", m_whiteMargins ? "1" : "0");
-    el.setAttribute("grayScale", m_grayScale ? "1" : "0");
+    if (m_whiteMargins)
+    {
+        el.setAttribute("whiteMargins", "1");
+    }
+    if (m_grayScale)
+    {
+        el.setAttribute("grayScale", "1");
+    }
     return el;
 }
 

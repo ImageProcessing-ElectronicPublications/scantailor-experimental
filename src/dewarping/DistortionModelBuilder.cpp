@@ -252,12 +252,9 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
     // Full RANCAS (zvezdochiot)
     for (int i = 0; i < (num_curves - 1); i++)
     {
-        for (int j = (num_curves - 1); j > i; j--)
+        for (int j = i + 1; j < num_curves; j++)
         {
-            if (i < j)
-            {
-                ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
-            }
+            ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
         }
     }
 

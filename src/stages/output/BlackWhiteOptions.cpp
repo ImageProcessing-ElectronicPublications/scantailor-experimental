@@ -77,7 +77,10 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.setAttribute("thresholdMethod", formatThresholdMethod(m_thresholdMethod));
     el.setAttribute("morphology", m_morphology ? "1" : "0");
-    el.setAttribute("negate", m_negate ? "1" : "0");
+    if (m_negate)
+    {
+        el.setAttribute("negate", "1");
+    }
     if (m_dimmingColoredCoef != 0.0)
     {
         el.setAttribute("dimmingColoredCoef", m_dimmingColoredCoef);

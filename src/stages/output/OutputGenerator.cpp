@@ -358,15 +358,25 @@ OutputGenerator::process(
 #endif
     );
 
-    ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
-    BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
-    BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
-    double norm_coef = color_options.normalizeCoef();
-
-    // Color filters begin
-    GrayImage coloredSignificance(transformed_image);
-    if (!m_outRect.isEmpty())
+    BinaryImage bw_content(m_outRect.size().expandedTo(QSize(1, 1)), WHITE);
+    QImage dst;
+    if (m_outRect.isEmpty())
     {
+        dst = bw_content.toQImage();
+    }
+    else
+    {
+		ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
+		BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
+		BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
+		double norm_coef = color_options.normalizeCoef();
+
+        GrayImage coloredSignificance;
+        BinaryImage colored_mask;
+        QImage maybe_smoothed;
+        BinaryImage bw_mask;
+
+        // Color filters begin
         colored(transformed_image, color_options);
 
         if (norm_coef > 0.0)
@@ -413,95 +423,88 @@ OutputGenerator::process(
 
         unPaperFilterInPlace(transformed_image, color_options.unPaperIters(), color_options.unPaperCoef());
 
+        coloredSignificance = GrayImage(transformed_image);
         if (render_params.needBinarization())
         {
             coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
         }
-    }
 
-    status.throwIfCancelled();
-    // Color filters end
+        status.throwIfCancelled();
+        // Color filters end
 
-    if (color_options.getflgGrayScale())
-    {
-        GrayImage gray(transformed_image);
-        transformed_image = gray.toQImage();
-    }
-
-    QImage maybe_smoothed;
-    // We only do smoothing if we are going to do binarization later.
-    if (render_params.needBinarization())
-    {
-        if (black_white_options.morphology())
+        // We only do smoothing if we are going to do binarization later.
+        if (render_params.needBinarization())
         {
-            maybe_smoothed = smoothToGrayscale(transformed_image, accel_ops);
-            if (dbg)
+            if (black_white_options.morphology())
             {
-                dbg->add(maybe_smoothed, "smoothed");
+                maybe_smoothed = smoothToGrayscale(transformed_image, accel_ops);
+                if (dbg)
+                {
+                    dbg->add(maybe_smoothed, "smoothed");
+                }
             }
-        }
-        else
-        {
-            maybe_smoothed = QImage(transformed_image);
-        }
-        coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
-    }
-
-    BinaryImage colored_mask;
-    if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_kmeans_options.coloredMaskCoef() > 0.0))
-    {
-        colored_mask = binarizeBiModal(coloredSignificance, (0.5 - black_kmeans_options.coloredMaskCoef()) * 256);
-    }
-    else
-    {
-        colored_mask = BinaryImage(transformed_image.size(), BLACK);
-    }
-    coloredSignificance = GrayImage(); // save memory
-
-    status.throwIfCancelled();
-
-    BinaryImage bw_mask;
-    BinaryImage bw_content(m_outRect.size().expandedTo(QSize(1, 1)), WHITE);
-    if (render_params.binaryOutput() || render_params.mixedOutput() || m_outRect.isEmpty())
-    {
-        if (!m_contentRect.isEmpty())
-        {
-            BinaryImage binarization_mask(bw_content.size(), BLACK);
-            binarization_mask.fillExcept(m_contentRect, WHITE);
-
-            bw_content = binarize(maybe_smoothed, binarization_mask);
-            maybe_smoothed = QImage();   // Save memory.
-            binarization_mask.release(); // Save memory.
-            if (dbg)
+            else
             {
-                dbg->add(bw_content, "binarized_and_cropped");
+                maybe_smoothed = QImage(transformed_image);
             }
-
-            status.throwIfCancelled();
-
-            morphologicalSmoothInPlace(bw_content, accel_ops);
-            if (dbg)
+            coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
+            if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_kmeans_options.coloredMaskCoef() > 0.0))
             {
-                dbg->add(bw_content, "edges_smoothed");
+                colored_mask = binarizeBiModal(coloredSignificance, (0.5 - black_kmeans_options.coloredMaskCoef()) * 256);
             }
-
-            status.throwIfCancelled();
-
-            // We want to keep despeckling the very last operation
-            // affecting the binary part of the output. That's because
-            // for "Deskpeckling" tab we will be reconstructing the input
-            // to this despeckling operation from the final output file.
-            // That's done to be able to "replay" the despeckling with
-            // different parameters. Unfortunately we do have that
-            // applyFillZonesInPlace() call below us, so the reconstruction
-            // is not accurate. Fortunately, that reconstruction is for
-            // visualization purposes only and that's the best we can do
-            // without caching the full-size input-to-despeckling images.
-            maybeDespeckleInPlace(bw_content, m_despeckleFactor, out_speckles_image, status, dbg);
+            else
+            {
+                colored_mask = BinaryImage(transformed_image.size(), BLACK);
+            }
+            coloredSignificance = GrayImage(); // save memory
         }
 
-        if (!m_outRect.isEmpty())
+        if (color_options.getflgGrayScale())
         {
+            GrayImage gray(transformed_image);
+            transformed_image = gray.toQImage();
+        }
+
+        status.throwIfCancelled();
+
+        if (render_params.binaryOutput() || render_params.mixedOutput())
+        {
+            if (!m_contentRect.isEmpty())
+            {
+                BinaryImage binarization_mask(bw_content.size(), BLACK);
+                binarization_mask.fillExcept(m_contentRect, WHITE);
+
+                bw_content = binarize(maybe_smoothed, binarization_mask);
+                maybe_smoothed = QImage();   // Save memory.
+                binarization_mask.release(); // Save memory.
+                if (dbg)
+                {
+                    dbg->add(bw_content, "binarized_and_cropped");
+                }
+
+                status.throwIfCancelled();
+
+                morphologicalSmoothInPlace(bw_content, accel_ops);
+                if (dbg)
+                {
+                    dbg->add(bw_content, "edges_smoothed");
+                }
+
+                status.throwIfCancelled();
+
+                // We want to keep despeckling the very last operation
+                // affecting the binary part of the output. That's because
+                // for "Deskpeckling" tab we will be reconstructing the input
+                // to this despeckling operation from the final output file.
+                // That's done to be able to "replay" the despeckling with
+                // different parameters. Unfortunately we do have that
+                // applyFillZonesInPlace() call below us, so the reconstruction
+                // is not accurate. Fortunately, that reconstruction is for
+                // visualization purposes only and that's the best we can do
+                // without caching the full-size input-to-despeckling images.
+                maybeDespeckleInPlace(bw_content, m_despeckleFactor, out_speckles_image, status, dbg);
+            }
+
             bw_mask = BinaryImage(transformed_image.size(), BLACK);
             if (render_params.mixedOutput())
             {
@@ -561,17 +564,9 @@ OutputGenerator::process(
             {
                 dbg->add(bw_mask, "colored_mask with zones");
             }
+            applyFillZonesInPlace(bw_content, fill_zones);
         }
-        applyFillZonesInPlace(bw_content, fill_zones);
-    }
 
-    QImage dst;
-    if (m_outRect.isEmpty())
-    {
-        dst = bw_content.toQImage();
-    }
-    else
-    {
         if (render_params.whiteMargins())
         {
             QImage margin = QImage(m_outRect.size(), transformed_image.format());
@@ -691,10 +686,10 @@ OutputGenerator::process(
                 /* deprecated: maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology()); */
             }
         }
+        bw_mask.release(); // Save memory.
+        colored_mask.release(); // Save memory.
     }
     bw_content.release(); // Save memory.
-    bw_mask.release(); // Save memory.
-    colored_mask.release(); // Save memory.
     transformed_image = QImage(); // Save memory.
 
     return dst;
