@@ -2940,21 +2940,26 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="64"/>
+        <location filename="../stages/page_split/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="65"/>
+        <location filename="../stages/page_split/Filter.cpp" line="67"/>
         <source>Order by split type</source>
         <translation>Сортировка по типу разреза</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <source>Order by split position</source>
+        <translation>Сортировка по позиции разреза</translation>
     </message>
     <message>
         <source>Order by split line count</source>
         <translation type="obsolete">Сортировка по числу резаков</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="75"/>
+        <location filename="../stages/page_split/Filter.cpp" line="78"/>
         <source>Split Pages</source>
         <translation>Разрезка страниц</translation>
     </message>

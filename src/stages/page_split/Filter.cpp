@@ -16,6 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stddef.h>
+#include <QString>
+#include <QObject>
+#include <QCoreApplication>
+#include <QDomElement>
 #include "Filter.h"
 #include "FilterUiInterface.h"
 #include "OptionsWidget.h"
@@ -31,13 +36,9 @@
 #include "Params.h"
 #include "CacheDrivenTask.h"
 #include "OrthogonalRotation.h"
-#include <QString>
-#include <QObject>
-#include <QCoreApplication>
-#include <QDomElement>
-#include <stddef.h>
 #include "CommandLine.h"
 #include "OrderBySplitTypeProvider.h"
+#include "OrderBySplitPosProvider.h"
 
 namespace page_split
 {
@@ -61,8 +62,10 @@ Filter::Filter(IntrusivePtr<ProjectPages> const& page_sequence,
 
     ProviderPtr const default_order;
     ProviderPtr const order_by_splitline(new OrderBySplitTypeProvider(m_ptrSettings));
+    ProviderPtr const order_by_splitpos(new OrderBySplitPosProvider(m_ptrSettings));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split type"), order_by_splitline));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split position"), order_by_splitpos));
 }
 
 Filter::~Filter()

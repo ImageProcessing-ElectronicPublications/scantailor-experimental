@@ -16,6 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
+#include <math.h>
+#include <assert.h>
+#include <boost/foreach.hpp>
+#include <QSizeF>
+#include <QPointF>
+#include <QLineF>
+#include <QRectF>
+#include <QPolygonF>
+#include <QTransform>
+#include <QDomElement>
+#include <QDomDocument>
 #include "PageLayout.h"
 #include "NumericTraits.h"
 #include "XmlMarshaller.h"
@@ -23,16 +35,6 @@
 #include "ToLineProjector.h"
 #include "imageproc/PolygonUtils.h"
 #include "../../foundation/MultipleTargetsSupport.h"
-#include <QPolygonF>
-#include <QSizeF>
-#include <QPointF>
-#include <QTransform>
-#include <QDomElement>
-#include <QDomDocument>
-#include <boost/foreach.hpp>
-#include <algorithm>
-#include <math.h>
-#include <assert.h>
 
 using namespace imageproc;
 
@@ -40,12 +42,12 @@ namespace page_split
 {
 
 PageLayout::PageLayout()
-    :	m_type(SINGLE_PAGE_UNCUT)
+    : m_type(SINGLE_PAGE_UNCUT)
 {
 }
 
 PageLayout::PageLayout(QRectF const& full_rect)
-    :	m_uncutOutline(full_rect),
+    : m_uncutOutline(full_rect),
       m_cutter1(full_rect.topLeft(), full_rect.bottomLeft()),
       m_cutter2(full_rect.topRight(), full_rect.bottomRight()),
       m_type(SINGLE_PAGE_UNCUT)
@@ -53,7 +55,7 @@ PageLayout::PageLayout(QRectF const& full_rect)
 }
 
 PageLayout::PageLayout(QRectF const& full_rect, QLineF const& cutter1, QLineF const& cutter2)
-    :	m_uncutOutline(full_rect),
+    : m_uncutOutline(full_rect),
       m_cutter1(cutter1),
       m_cutter2(cutter2),
       m_type(SINGLE_PAGE_CUT)
@@ -61,7 +63,7 @@ PageLayout::PageLayout(QRectF const& full_rect, QLineF const& cutter1, QLineF co
 }
 
 PageLayout::PageLayout(QRectF const full_rect, QLineF const& split_line)
-    :	m_uncutOutline(full_rect),
+    : m_uncutOutline(full_rect),
       m_cutter1(split_line),
       m_type(TWO_PAGES)
 {
@@ -70,7 +72,7 @@ PageLayout::PageLayout(QRectF const full_rect, QLineF const& split_line)
 PageLayout::PageLayout(
     QPolygonF const& outline, QLineF const& cutter1,
     QLineF const& cutter2, Type type)
-    :	m_uncutOutline(outline),
+    : m_uncutOutline(outline),
       m_cutter1(cutter1),
       m_cutter2(cutter2),
       m_type(type)
@@ -78,7 +80,7 @@ PageLayout::PageLayout(
 }
 
 PageLayout::PageLayout(QDomElement const& layout_el)
-    :	m_uncutOutline(
+    : m_uncutOutline(
           XmlUnmarshaller::polygonF(
               layout_el.namedItem("outline").toElement()
           )
@@ -552,6 +554,33 @@ PageLayout::maybeAddIntersectionPoint(
     {
         poly << intersection;
     }
+}
+
+double
+PageLayout::getSplitPosition() const
+{
+    QPointF center_cnt;
+    QPointF const center_l1 = m_cutter1.center();
+    QPointF const center_l2 = m_cutter2.center();
+
+    switch (m_type)
+    {
+    case SINGLE_PAGE_UNCUT:
+        return 0.5;
+    case SINGLE_PAGE_CUT:
+        center_cnt = center_l1 + center_l2;
+        center_cnt *= 0.5;
+        break;
+    case TWO_PAGES:
+        center_cnt = m_cutter1.center();
+        break;
+    }
+    double const left_cnt = center_cnt.x();
+    QRectF const full_rect = m_uncutOutline.boundingRect();
+    double const width_cnt = full_rect.width();
+    double const pos_cnt = (width_cnt != 0.0) ? (left_cnt / width_cnt) : 0.5;
+
+    return pos_cnt;
 }
 
 } // namespace page_split

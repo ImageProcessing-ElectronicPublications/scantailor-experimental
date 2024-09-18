@@ -2375,17 +2375,22 @@ Ar trebui să le eliminați din proiect.</translation>
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="64"/>
+        <location filename="../stages/page_split/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation type="unfinished">Ordonare naturală</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="65"/>
+        <location filename="../stages/page_split/Filter.cpp" line="67"/>
         <source>Order by split type</source>
         <translation type="unfinished">Ordonare după tipul despărțirii</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="75"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <source>Order by split position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="78"/>
         <source>Split Pages</source>
         <translation type="unfinished">Despărțire Pagini</translation>
     </message>

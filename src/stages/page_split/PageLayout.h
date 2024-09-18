@@ -19,11 +19,11 @@
 #ifndef PAGELAYOUT_H_
 #define PAGELAYOUT_H_
 
+#include <QString>
+#include <QLineF>
+#include <QPolygonF>
 #include "PageId.h"
 #include "LayoutType.h"
-#include <QPolygonF>
-#include <QLineF>
-#include <QString>
 
 class QRectF;
 class QTransform;
@@ -176,6 +176,8 @@ public:
      * Returns an affine-transformed version of this layout.
      */
     PageLayout transformed(QTransform const& xform) const;
+
+    double getSplitPosition() const;
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:

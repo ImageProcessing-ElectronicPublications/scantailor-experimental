@@ -86,10 +86,10 @@ DewarpingParams::getAngle() const
         QPointF point_r = point_tr + point_br;
         QPointF point_t = point_tl + point_tr;
         QPointF point_b = point_bl + point_br;
-        point_l /= 2.0f;
-        point_r /= 2.0f;
-        point_t /= 2.0f;
-        point_b /= 2.0f;
+        point_l *= 0.5f;
+        point_r *= 0.5f;
+        point_t *= 0.5f;
+        point_b *= 0.5f;
         QLineF line_lr(point_l, point_r);
         QLineF line_tb(point_t, point_b);
         double angle_lr = line_lr.angle();
@@ -97,7 +97,7 @@ DewarpingParams::getAngle() const
         double angle_tb = line_tb.angle() + 90.0;
         angle_tb -= (angle_tb > 180.0) ? 360.0 : 0.0;
         angle = angle_lr + angle_tb;
-        angle /= 2.0;
+        angle *= 0.5;
         angle += (angle < 0.0) ? 360.0 : 0.0;
         angle -= (angle > 360.0) ? 360.0 : 0.0;
         angle -= (angle > 180.0) ? 360.0 : 0.0;
@@ -120,10 +120,10 @@ DewarpingParams::getAngleOblique() const
         QPointF point_r = point_tr + point_br;
         QPointF point_t = point_tl + point_tr;
         QPointF point_b = point_bl + point_br;
-        point_l /= 2.0f;
-        point_r /= 2.0f;
-        point_t /= 2.0f;
-        point_b /= 2.0f;
+        point_l *= 0.5f;
+        point_r *= 0.5f;
+        point_t *= 0.5f;
+        point_b *= 0.5f;
         QLineF line_lr(point_l, point_r);
         QLineF line_tb(point_t, point_b);
         double angle_lr = line_lr.angle();

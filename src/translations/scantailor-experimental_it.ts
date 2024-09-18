@@ -2683,17 +2683,22 @@ text-indent:0px;&quot;&gt;Rimuovi i file selezionati dal progetto.&lt;/p&gt;&lt;
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="64"/>
+        <location filename="../stages/page_split/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation type="unfinished">Ordine naturale</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="65"/>
+        <location filename="../stages/page_split/Filter.cpp" line="67"/>
         <source>Order by split type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="75"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <source>Order by split position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="78"/>
         <source>Split Pages</source>
         <translation>Dividi pagine</translation>
     </message>

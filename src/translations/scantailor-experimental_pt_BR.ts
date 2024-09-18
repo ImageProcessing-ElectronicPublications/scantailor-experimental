@@ -2644,17 +2644,22 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="64"/>
+        <location filename="../stages/page_split/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation>Ordem Natural</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="65"/>
+        <location filename="../stages/page_split/Filter.cpp" line="67"/>
         <source>Order by split type</source>
         <translation>Ordenar por tipo de divisão</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="75"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <source>Order by split position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="78"/>
         <source>Split Pages</source>
         <translation>Dividir Paginas</translation>
     </message>

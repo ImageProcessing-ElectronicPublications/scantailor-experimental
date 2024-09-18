@@ -2630,17 +2630,22 @@ You should remove them from the project.</source>
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="64"/>
+        <location filename="../stages/page_split/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation>自然顺序</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="65"/>
+        <location filename="../stages/page_split/Filter.cpp" line="67"/>
         <source>Order by split type</source>
         <translation>按照分割类型排序</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="75"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <source>Order by split position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="78"/>
         <source>Split Pages</source>
         <translation>分割页面</translation>
     </message>
