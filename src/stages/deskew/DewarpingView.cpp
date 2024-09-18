@@ -62,19 +62,19 @@ DewarpingView::DewarpingView(
     dewarping::DepthPerception const& depth_perception,
     bool const fixed_number_of_control_points)
     :   ImageViewBase(
-          accel_ops, full_size_image.origImage(), downscaled_image,
-          ImagePresentation(
-              full_size_image.xform().transform(),
-              full_size_image.xform().transformedCropArea()
-          ),
-          QMarginsF(5.0, 5.0, 5.0, 5.0)
-      ),
-      m_pageId(page_id),
-      m_virtDisplayArea(full_size_image.xform().transformedCropArea()),
-      m_distortionModel(distortion_model),
-      m_depthPerception(depth_perception),
-      m_dragHandler(*this),
-      m_zoomHandler(*this)
+            accel_ops, full_size_image.origImage(), downscaled_image,
+            ImagePresentation(
+                full_size_image.xform().transform(),
+                full_size_image.xform().transformedCropArea()
+            ),
+            QMarginsF(5.0, 5.0, 5.0, 5.0)
+        ),
+        m_pageId(page_id),
+        m_virtDisplayArea(full_size_image.xform().transformedCropArea()),
+        m_distortionModel(distortion_model),
+        m_depthPerception(depth_perception),
+        m_dragHandler(*this),
+        m_zoomHandler(*this)
 {
     setMouseTracking(true);
 

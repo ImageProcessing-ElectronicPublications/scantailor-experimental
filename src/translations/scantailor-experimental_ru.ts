@@ -2540,6 +2540,31 @@ p, li { white-space: pre-wrap; }
         <source>Geometric Distortions</source>
         <translation>Геометрические искажения</translation>
     </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="61"/>
+        <source>Natural order</source>
+        <translation>Естественный порядок</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="62"/>
+        <source>Order by increasing angle</source>
+        <translation>Сортировка по возрастающему углу</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="63"/>
+        <source>Order by oblique</source>
+        <translation>Сортировка по скосу</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="64"/>
+        <source>Order by extension horizontally</source>
+        <translation>Сортировка по расширению горизонтально</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="65"/>
+        <source>Order by extension vertically</source>
+        <translation>Сортировка по расширению вертикально</translation>
+    </message>
 </context>
 <context>
     <name>deskew::ImageView</name>

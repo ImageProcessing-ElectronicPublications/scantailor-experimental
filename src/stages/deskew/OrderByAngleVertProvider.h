@@ -16,10 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCANTAILOR_VERSION_H_
-#define SCANTAILOR_VERSION_H_
+#ifndef DESKEW_ORDER_BY_ANGLE_VERT_PROVIDER_H_
+#define DESKEW_ORDER_BY_ANGLE_VERT_PROVIDER_H_
 
-#define STFAMILY "experimental"
-#define VERSION "1.2024.09.18" // Must be "x.x.x.x" or an empty string.
+#include "Settings.h"
+#include "IntrusivePtr.h"
+#include "PageOrderProvider.h"
+
+namespace deskew
+{
+
+class OrderByAngleVertProvider : public PageOrderProvider
+{
+public:
+    OrderByAngleVertProvider(IntrusivePtr<Settings> const& settings);
+
+    virtual bool precedes(
+        PageId const& lhs_page, bool lhs_incomplete,
+        PageId const& rhs_page, bool rhs_incomplete) const;
+private:
+    IntrusivePtr<Settings> m_ptrSettings;
+};
+
+} // namespace deskew
 
 #endif

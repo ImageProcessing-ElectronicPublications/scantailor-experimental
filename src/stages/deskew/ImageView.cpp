@@ -53,18 +53,18 @@ ImageView::ImageView(
     AffineTransformedImage const& full_size_image,
     ImagePixmapUnion const& downscaled_image,
     double const rotation_angle_deg)
-    :	ImageViewBase(
-          accel_ops, full_size_image.origImage(), downscaled_image,
-          ImagePresentation(
-              full_size_image.xform().transform(),
-              full_size_image.xform().transformedCropArea()
-          )
-      ),
-      m_handlePixmap(":/icons/aqua-sphere.png"),
-      m_dragHandler(*this),
-      m_zoomHandler(*this),
-      m_beforeRotationTransform(full_size_image.xform()),
-      m_rotationAngleDeg(0)
+    :    ImageViewBase(
+             accel_ops, full_size_image.origImage(), downscaled_image,
+             ImagePresentation(
+                 full_size_image.xform().transform(),
+                 full_size_image.xform().transformedCropArea()
+             )
+         ),
+         m_handlePixmap(":/icons/aqua-sphere.png"),
+         m_dragHandler(*this),
+         m_zoomHandler(*this),
+         m_beforeRotationTransform(full_size_image.xform()),
+         m_rotationAngleDeg(0)
 {
     setRotationAngle(rotation_angle_deg, /*preserve_scale=*/false);
 

@@ -2359,6 +2359,31 @@ p, li { white-space: pre-wrap; }
         <source>Geometric Distortions</source>
         <translation>Bildgeometrie korrigieren</translation>
     </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="61"/>
+        <source>Natural order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="62"/>
+        <source>Order by increasing angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="63"/>
+        <source>Order by oblique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="64"/>
+        <source>Order by extension horizontally</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="65"/>
+        <source>Order by extension vertically</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>deskew::ImageView</name>

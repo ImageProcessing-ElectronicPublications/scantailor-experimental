@@ -27,14 +27,14 @@ namespace deskew
 {
 
 RotationParams::RotationParams()
-    :	m_compensationAngleDeg(0)
-    ,	m_mode(MODE_AUTO)
-    ,	m_isValid(false)
+    :    m_compensationAngleDeg(0)
+    ,    m_mode(MODE_AUTO)
+    ,    m_isValid(false)
 {
 }
 
 RotationParams::RotationParams(QDomElement const& el)
-    :	m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    :    m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
     m_compensationAngleDeg = el.attribute("angle").toDouble(&m_isValid);
 }

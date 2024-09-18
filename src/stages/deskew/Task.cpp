@@ -26,7 +26,6 @@
 #include <QSize>
 #include <QPoint>
 #include <QRect>
-#include <QLineF>
 #include <QPainter>
 #include <QPolygonF>
 #include <QTransform>
@@ -192,10 +191,10 @@ Task::Task(IntrusivePtr<Filter> const& filter,
            IntrusivePtr<select_content::Task> const& next_task,
            PageId const& page_id, bool const batch_processing, bool const debug)
     :   m_ptrFilter(filter),
-      m_ptrSettings(settings),
-      m_ptrNextTask(next_task),
-      m_pageId(page_id),
-      m_batchProcessing(batch_processing)
+        m_ptrSettings(settings),
+        m_ptrNextTask(next_task),
+        m_pageId(page_id),
+        m_batchProcessing(batch_processing)
 {
     if (debug)
     {
@@ -425,24 +424,13 @@ Task::processPerspectiveDistortion(
             model_builder.tryBuildModel(m_ptrDbg.get(), &orig_image)
         );
 
+        QPointF point_tl, point_tr, point_bl, point_br;
         if (distortion_model.isValid())
         {
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::TOP_LEFT,
-                distortion_model.topCurve().polyline().front()
-            );
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::TOP_RIGHT,
-                distortion_model.topCurve().polyline().back()
-            );
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::BOTTOM_LEFT,
-                distortion_model.bottomCurve().polyline().front()
-            );
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::BOTTOM_RIGHT,
-                distortion_model.bottomCurve().polyline().back()
-            );
+            point_tl = distortion_model.topCurve().polyline().front();
+            point_tr = distortion_model.topCurve().polyline().back();
+            point_bl = distortion_model.bottomCurve().polyline().front();
+            point_br = distortion_model.bottomCurve().polyline().back();
         }
         else
         {
@@ -450,19 +438,15 @@ Task::processPerspectiveDistortion(
             QTransform const to_orig(orig_image_transform.transform().inverted());
             QRectF const transformed_box(orig_image_transform.transformedCropArea().boundingRect());
 
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::TOP_LEFT, to_orig.map(transformed_box.topLeft())
-            );
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::TOP_RIGHT, to_orig.map(transformed_box.topRight())
-            );
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::BOTTOM_LEFT, to_orig.map(transformed_box.bottomLeft())
-            );
-            params.perspectiveParams().setCorner(
-                PerspectiveParams::BOTTOM_RIGHT, to_orig.map(transformed_box.bottomRight())
-            );
+            point_tl = to_orig.map(transformed_box.topLeft());
+            point_tr = to_orig.map(transformed_box.topRight());
+            point_bl = to_orig.map(transformed_box.bottomLeft());
+            point_br = to_orig.map(transformed_box.bottomRight());
         }
+        params.perspectiveParams().setCorner(PerspectiveParams::TOP_LEFT, point_tl);
+        params.perspectiveParams().setCorner(PerspectiveParams::TOP_RIGHT, point_tr);
+        params.perspectiveParams().setCorner(PerspectiveParams::BOTTOM_LEFT, point_bl);
+        params.perspectiveParams().setCorner(PerspectiveParams::BOTTOM_RIGHT, point_br);
 
         params.perspectiveParams().setMode(MODE_AUTO);
 
@@ -539,19 +523,22 @@ Task::processWarpDistortion(
             QTransform const to_orig(orig_image_transform.transform().inverted());
             QRectF const transformed_box(orig_image_transform.transformedCropArea().boundingRect());
 
+            QPointF point_tl = to_orig.map(transformed_box.topLeft());
+            QPointF point_tr = to_orig.map(transformed_box.topRight());
+            QPointF point_bl = to_orig.map(transformed_box.bottomLeft());
+            QPointF point_br = to_orig.map(transformed_box.bottomRight());
+
             distortion_model.setTopCurve(
                 std::vector<QPointF>
             {
-                to_orig.map(transformed_box.topLeft()),
-                to_orig.map(transformed_box.topRight())
+                point_tl, point_tr
             }
             );
 
             distortion_model.setBottomCurve(
                 std::vector<QPointF>
             {
-                to_orig.map(transformed_box.bottomLeft()),
-                to_orig.map(transformed_box.bottomRight())
+                point_bl, point_br
             }
             );
 
@@ -645,15 +632,15 @@ Task::NoDistortionUiUpdater::NoDistortionUiUpdater(
     Params const& page_params,
     bool const batch_processing)
     :   m_ptrFilter(filter),
-      m_ptrAccelOps(accel_ops),
-      m_ptrDbg(std::move(dbg_img)),
-      m_fullSizeImage(full_size_image),
-      m_downscaledImage(
-          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-      ),
-      m_pageId(page_id),
-      m_pageParams(page_params),
-      m_batchProcessing(batch_processing)
+        m_ptrAccelOps(accel_ops),
+        m_ptrDbg(std::move(dbg_img)),
+        m_fullSizeImage(full_size_image),
+        m_downscaledImage(
+            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+        ),
+        m_pageId(page_id),
+        m_pageParams(page_params),
+        m_batchProcessing(batch_processing)
 {
 }
 
@@ -689,15 +676,15 @@ Task::RotationUiUpdater::RotationUiUpdater(
     Params const& page_params,
     bool const batch_processing)
     :   m_ptrFilter(filter),
-      m_ptrAccelOps(accel_ops),
-      m_ptrDbg(std::move(dbg_img)),
-      m_fullSizeImage(full_size_image),
-      m_downscaledImage(
-          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-      ),
-      m_pageId(page_id),
-      m_pageParams(page_params),
-      m_batchProcessing(batch_processing)
+        m_ptrAccelOps(accel_ops),
+        m_ptrDbg(std::move(dbg_img)),
+        m_fullSizeImage(full_size_image),
+        m_downscaledImage(
+            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+        ),
+        m_pageId(page_id),
+        m_pageParams(page_params),
+        m_batchProcessing(batch_processing)
 {
 }
 
@@ -742,15 +729,15 @@ Task::PerspectiveUiUpdater::PerspectiveUiUpdater(
     Params const& page_params,
     bool const batch_processing)
     :   m_ptrFilter(filter),
-      m_ptrAccelOps(accel_ops),
-      m_ptrDbg(std::move(dbg_img)),
-      m_fullSizeImage(full_size_image),
-      m_downscaledImage(
-          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-      ),
-      m_pageId(page_id),
-      m_pageParams(page_params),
-      m_batchProcessing(batch_processing)
+        m_ptrAccelOps(accel_ops),
+        m_ptrDbg(std::move(dbg_img)),
+        m_fullSizeImage(full_size_image),
+        m_downscaledImage(
+            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+        ),
+        m_pageId(page_id),
+        m_pageParams(page_params),
+        m_batchProcessing(batch_processing)
 {
 }
 
@@ -819,15 +806,15 @@ Task::DewarpingUiUpdater::DewarpingUiUpdater(
     Params const& page_params,
     bool const batch_processing)
     :   m_ptrFilter(filter),
-      m_ptrAccelOps(accel_ops),
-      m_ptrDbg(std::move(dbg_img)),
-      m_fullSizeImage(full_size_image),
-      m_downscaledImage(
-          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-      ),
-      m_pageId(page_id),
-      m_pageParams(page_params),
-      m_batchProcessing(batch_processing)
+        m_ptrAccelOps(accel_ops),
+        m_ptrDbg(std::move(dbg_img)),
+        m_fullSizeImage(full_size_image),
+        m_downscaledImage(
+            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+        ),
+        m_pageId(page_id),
+        m_pageParams(page_params),
+        m_batchProcessing(batch_processing)
 {
 }
 

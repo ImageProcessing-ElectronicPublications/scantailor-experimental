@@ -22,6 +22,10 @@ SET(
     Params.cpp Params.h
     ApplyDialog.cpp ApplyDialog.h
     Utils.cpp Utils.h
+    OrderByAngleProvider.cpp OrderByAngleProvider.h
+    OrderByAngleObliqueProvider.cpp OrderByAngleObliqueProvider.h
+    OrderByAngleHorProvider.cpp OrderByAngleHorProvider.h
+    OrderByAngleVertProvider.cpp OrderByAngleVertProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

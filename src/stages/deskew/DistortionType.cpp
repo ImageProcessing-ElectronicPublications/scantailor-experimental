@@ -33,7 +33,7 @@ static char const WARP[] = "warp";
 }
 
 DistortionType::DistortionType(Type type)
-    :	m_type(type)
+    :    m_type(type)
 {
 }
 

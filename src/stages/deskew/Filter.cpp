@@ -16,34 +16,54 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Filter.h"
-#include "FilterUiInterface.h"
-#include "OptionsWidget.h"
-#include "Task.h"
-#include "CacheDrivenTask.h"
-#include "Settings.h"
-#include "ProjectReader.h"
-#include "ProjectWriter.h"
-#include "PageId.h"
-#include "RelinkablePath.h"
-#include "AbstractRelinker.h"
+#include <assert.h>
 #include <QString>
 #include <QObject>
 #include <QCoreApplication>
 #include <QDomDocument>
 #include <QDomElement>
+#include "Filter.h"
+#include "FilterUiInterface.h"
+#include "OptionsWidget.h"
+#include "Task.h"
+#include "PageId.h"
+#include "Settings.h"
+#include "Params.h"
+#include "ProjectReader.h"
+#include "ProjectWriter.h"
+#include "CacheDrivenTask.h"
+#include "OrderByAngleProvider.h"
+#include "OrderByAngleObliqueProvider.h"
+#include "OrderByAngleHorProvider.h"
+#include "OrderByAngleVertProvider.h"
+#include "RelinkablePath.h"
+#include "AbstractRelinker.h"
 #include "CommandLine.h"
 
 namespace deskew
 {
 
 Filter::Filter(PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(new Settings)
+    : m_ptrSettings(new Settings),
+      m_selectedPageOrder(0)
 {
     if (CommandLine::get().isGui())
     {
         m_ptrOptionsWidget.reset(new OptionsWidget(m_ptrSettings, page_selection_accessor));
     }
+
+    typedef PageOrderOption::ProviderPtr ProviderPtr;
+
+    ProviderPtr const default_order;
+    ProviderPtr const order_by_angle(new OrderByAngleProvider(m_ptrSettings));
+    ProviderPtr const order_by_angle_oblique(new OrderByAngleObliqueProvider(m_ptrSettings));
+    ProviderPtr const order_by_angle_hor(new OrderByAngleHorProvider(m_ptrSettings));
+    ProviderPtr const order_by_angle_vert(new OrderByAngleVertProvider(m_ptrSettings));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by increasing angle"), order_by_angle));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by oblique"), order_by_angle_oblique));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by extension horizontally"), order_by_angle_hor));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by extension vertically"), order_by_angle_vert));
 }
 
 Filter::~Filter()
@@ -60,6 +80,25 @@ PageView
 Filter::getView() const
 {
     return PAGE_VIEW;
+}
+
+int
+Filter::selectedPageOrder() const
+{
+    return m_selectedPageOrder;
+}
+
+void
+Filter::selectPageOrder(int option)
+{
+    assert((unsigned)option < m_pageOrderOptions.size());
+    m_selectedPageOrder = option;
+}
+
+std::vector<PageOrderOption>
+Filter::pageOrderOptions() const
+{
+    return m_pageOrderOptions;
 }
 
 void
