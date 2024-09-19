@@ -188,6 +188,8 @@ private:
 
     static QString typeToString(Type type);
 
+    static QPolygonF trimPageOutline(QLineF line1, QLineF line2);
+
     static QLineF extendToCover(QLineF const& line, QPolygonF const& poly);
 
     static void ensureSameDirection(QLineF const& line1, QLineF& line2);

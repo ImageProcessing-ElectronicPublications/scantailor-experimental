@@ -292,6 +292,23 @@ PageLayout::inscribedCutterLine(int idx) const
 }
 
 QPolygonF
+PageLayout::trimPageOutline(QLineF line1, QLineF line2)
+{
+    QLineF const reverse_line1(line1.p2(), line1.p1());
+    QLineF const reverse_line2(line2.p2(), line2.p1());
+
+    QPolygonF poly;
+    poly << line1.p1();
+    maybeAddIntersectionPoint(poly, line1.normalVector(), line2.normalVector());
+    poly << line2.p1();
+    poly << line2.p2();
+    maybeAddIntersectionPoint(poly, reverse_line1.normalVector(), reverse_line2.normalVector());
+    poly << line1.p2();
+
+    return poly;
+}
+
+QPolygonF
 PageLayout::singlePageOutline() const
 {
     if (m_uncutOutline.size() < 4)
@@ -312,15 +329,8 @@ PageLayout::singlePageOutline() const
     QLineF const line1(extendToCover(m_cutter1, m_uncutOutline));
     QLineF line2(extendToCover(m_cutter2, m_uncutOutline));
     ensureSameDirection(line1, line2);
-    QLineF const reverse_line1(line1.p2(), line1.p1());
-    QLineF const reverse_line2(line2.p2(), line2.p1());
 
-    QPolygonF poly;
-    poly << line1.p1();
-    maybeAddIntersectionPoint(poly, line1.normalVector(), line2.normalVector());
-    poly << line2.p1() << line2.p2();
-    maybeAddIntersectionPoint(poly, reverse_line1.normalVector(), reverse_line2.normalVector());
-    poly << line1.p2();
+    QPolygonF poly = trimPageOutline(line1, line2);
 
     return PolygonUtils::round(m_uncutOutline).intersected(PolygonUtils::round(poly));
 }
@@ -345,15 +355,8 @@ PageLayout::leftPageOutline() const
     QLineF const line1(m_uncutOutline[0], m_uncutOutline[3]);
     QLineF line2(extendToCover(m_cutter1, m_uncutOutline));
     ensureSameDirection(line1, line2);
-    QLineF const reverse_line1(line1.p2(), line1.p1());
-    QLineF const reverse_line2(line2.p2(), line2.p1());
 
-    QPolygonF poly;
-    poly << line1.p1();
-    maybeAddIntersectionPoint(poly, line1.normalVector(), line2.normalVector());
-    poly << line2.p1() << line2.p2();
-    maybeAddIntersectionPoint(poly, reverse_line1.normalVector(), reverse_line2.normalVector());
-    poly << line1.p2();
+    QPolygonF poly = trimPageOutline(line1, line2);
 
     return PolygonUtils::round(m_uncutOutline).intersected(PolygonUtils::round(poly));
 }
@@ -378,15 +381,8 @@ PageLayout::rightPageOutline() const
     QLineF const line1(m_uncutOutline[1], m_uncutOutline[2]);
     QLineF line2(extendToCover(m_cutter1, m_uncutOutline));
     ensureSameDirection(line1, line2);
-    QLineF const reverse_line1(line1.p2(), line1.p1());
-    QLineF const reverse_line2(line2.p2(), line2.p1());
 
-    QPolygonF poly;
-    poly << line1.p1();
-    maybeAddIntersectionPoint(poly, line1.normalVector(), line2.normalVector());
-    poly << line2.p1() << line2.p2();
-    maybeAddIntersectionPoint(poly, reverse_line1.normalVector(), reverse_line2.normalVector());
-    poly << line1.p2();
+    QPolygonF poly = trimPageOutline(line1, line2);
 
     return PolygonUtils::round(m_uncutOutline).intersected(PolygonUtils::round(poly));
 }

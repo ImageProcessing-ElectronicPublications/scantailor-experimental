@@ -207,6 +207,8 @@ OptionsWidget::layoutTypeButtonToggled(bool const checked)
 
     assert(m_params);
 
+    scopeLabel->setChecked(false);
+
     LayoutType lt;
     ProjectPages::LayoutType plt = ProjectPages::ONE_PAGE_LAYOUT;
 
@@ -270,12 +272,8 @@ void
 OptionsWidget::modeToggled(bool const checked)
 {
     Settings::UpdateAction update;
-    LayoutType lt;
-    if (checked)
-    {
-        lt = AUTO_LAYOUT_TYPE;
-    }
-    else
+    LayoutType lt = AUTO_LAYOUT_TYPE;
+    if (!checked)
     {
         PageLayout::Type const layout_type = m_params->pageLayout().type();
 
