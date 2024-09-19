@@ -19,6 +19,8 @@
 #ifndef PAGE_SPLIT_OPTIONSWIDGET_H_
 #define PAGE_SPLIT_OPTIONSWIDGET_H_
 
+#include <boost/optional.hpp>
+#include <set>
 #include <QButtonGroup>
 #include "ui_PageSplitOptionsWidget.h"
 #include "FilterOptionsWidget.h"
@@ -31,8 +33,6 @@
 #include "PageSelectionAccessor.h"
 #include "Dependencies.h"
 #include "AutoManualMode.h"
-#include <boost/optional.hpp>
-#include <set>
 
 class ProjectPages;
 
@@ -62,7 +62,9 @@ public slots:
 private slots:
     void layoutTypeButtonToggled(bool checked);
 
-    void showChangeDialog();
+    void modeToggled(bool checked);
+
+    void showApplyDialog();
 
     void layoutTypeSet(
         std::set<PageId> const& pages,

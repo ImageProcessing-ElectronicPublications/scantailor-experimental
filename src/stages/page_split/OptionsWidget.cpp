@@ -16,6 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <boost/foreach.hpp>
+#include <assert.h>
+#include <QPixmap>
 #include "OptionsWidget.h"
 #include "Filter.h"
 #include "SplitModeDialog.h"
@@ -25,9 +28,6 @@
 #include "PageId.h"
 #include "ProjectPages.h"
 #include "ScopedIncDec.h"
-#include <QPixmap>
-#include <boost/foreach.hpp>
-#include <assert.h>
 
 namespace page_split
 {
@@ -36,7 +36,7 @@ OptionsWidget::OptionsWidget(
     IntrusivePtr<Settings> const& settings,
     IntrusivePtr<ProjectPages> const& page_sequence,
     PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(settings),
+    :   m_ptrSettings(settings),
       m_ptrPages(page_sequence),
       m_pageSelectionAccessor(page_selection_accessor),
       m_ignoreAutoManualToggle(0),
@@ -63,8 +63,12 @@ OptionsWidget::OptionsWidget(
         this, SLOT(layoutTypeButtonToggled(bool))
     );
     connect(
-        changeBtn, SIGNAL(clicked()),
-        this, SLOT(showChangeDialog())
+        scopeLabel, SIGNAL(clicked(bool)),
+        this, SLOT(modeToggled(bool))
+    );
+    connect(
+        applyBtn, SIGNAL(clicked()),
+        this, SLOT(showApplyDialog())
     );
     connect(
         autoBtn, SIGNAL(toggled(bool)),
@@ -111,12 +115,12 @@ OptionsWidget::preUpdateUI(PageId const& page_id)
 
     if (layout_type == AUTO_LAYOUT_TYPE)
     {
-        changeBtn->setEnabled(false);
+        applyBtn->setEnabled(false);
         scopeLabel->setText("?");
     }
     else
     {
-        changeBtn->setEnabled(true);
+        applyBtn->setEnabled(true);
         scopeLabel->setText(tr("Set manually"));
     }
 
@@ -140,9 +144,10 @@ OptionsWidget::postUpdateUI(Params const& params, bool layout_type_auto_detected
     m_params = params;
     m_layoutTypeAutoDetected = layout_type_auto_detected;
 
-    changeBtn->setEnabled(true);
+    applyBtn->setEnabled(true);
     autoBtn->setEnabled(true);
     manualBtn->setEnabled(true);
+    scopeLabel->setChecked(m_layoutTypeAutoDetected);
 
     if (params.splitLineMode() == MODE_AUTO)
     {
@@ -262,7 +267,38 @@ OptionsWidget::layoutTypeButtonToggled(bool const checked)
 }
 
 void
-OptionsWidget::showChangeDialog()
+OptionsWidget::modeToggled(bool const checked)
+{
+    Settings::UpdateAction update;
+    LayoutType lt;
+    if (checked)
+    {
+        lt = AUTO_LAYOUT_TYPE;
+    }
+    else
+    {
+        PageLayout::Type const layout_type = m_params->pageLayout().type();
+
+        switch (layout_type)
+        {
+        case PageLayout::SINGLE_PAGE_UNCUT:
+            lt = PAGE_PLUS_OFFCUT;
+            break;
+        case PageLayout::SINGLE_PAGE_CUT:
+            lt = PAGE_PLUS_OFFCUT;
+            break;
+        case PageLayout::TWO_PAGES:
+            lt = TWO_PAGES;
+            break;
+        }
+    }
+    update.setLayoutType(lt);
+    m_ptrSettings->updatePage(m_pageId.imageId(), update);
+    emit reloadRequested();
+}
+
+void
+OptionsWidget::showApplyDialog()
 {
     Settings::Record const record(m_ptrSettings->getPageRecord(m_pageId.imageId()));
     Params const* params = record.params();
