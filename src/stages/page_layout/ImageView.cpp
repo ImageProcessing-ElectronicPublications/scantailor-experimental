@@ -743,8 +743,8 @@ ImageView::recalcOuterRect()
 
     float const basew = m_outerRect.width();
     float const baseh = m_outerRect.height();
-    float const extraw = basew * m_framings.getFramingWidth();
-    float const extrah = baseh * m_framings.getFramingHeight();
+    float const extraw = basew * m_framings.getFramingWidth() * 0.5f;
+    float const extrah = baseh * m_framings.getFramingHeight() * 0.5f;
     m_extraRect = m_outerRect.adjusted(-extraw, -extrah, extraw, extrah);
 }
 
