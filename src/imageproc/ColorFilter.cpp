@@ -33,7 +33,7 @@
 #include "Grayscale.h"
 #include "GrayImage.h"
 #include "BinaryImage.h"
-#include "BinaryThreshold.h"
+#include "Binarize.h"
 #include "ColorFilter.h"
 
 namespace imageproc
@@ -128,7 +128,7 @@ void colorCurveFilterInPlace(
         int const image_stride = image.bytesPerLine();
         uint8_t pix_replace[256];
 
-        int thres = BinaryThreshold::otsuThreshold(image);
+        int thres = binarizeBiModalValue(GrayImage(image));
         thres <<= 8;
         for (unsigned int j = 0; j < 256; j++)
         {

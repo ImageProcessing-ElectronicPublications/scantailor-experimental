@@ -19,10 +19,10 @@
 #ifndef PAGE_LAYOUT_SETTINGS_H_
 #define PAGE_LAYOUT_SETTINGS_H_
 
+#include <memory>
 #include "NonCopyable.h"
 #include "RefCountable.h"
 #include "RelativeMargins.h"
-#include <memory>
 
 class PageId;
 class PageSequence;
@@ -162,6 +162,8 @@ public:
      *
      * The content size comes from the "Select Content" filter.
      */
+    QSizeF getContentSize(PageId const& page_id) const;
+
     AggregateSizeChanged setContentSize(
         PageId const& page_id, QSizeF const& content_size);
 

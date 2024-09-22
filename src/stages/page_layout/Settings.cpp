@@ -185,6 +185,8 @@ public:
     void setPageFramings(
         PageId const& page_id, Framings const& framings);
 
+    QSizeF getContentSize(PageId const& page_id) const;
+
     AggregateSizeChanged setContentSize(
         PageId const& page_id, QSizeF const& content_size);
 
@@ -358,6 +360,12 @@ void
 Settings::setPageFramings(PageId const& page_id, Framings const& framings)
 {
     m_ptrImpl->setPageFramings(page_id, framings);
+}
+
+QSizeF
+Settings::getContentSize(PageId const& page_id) const
+{
+    return m_ptrImpl->getContentSize(page_id);
 }
 
 Settings::AggregateSizeChanged
@@ -802,6 +810,22 @@ Settings::Impl::setPageFramings(
     else
     {
         m_items.modify(it, ModifyFramings(framings));
+    }
+}
+
+QSizeF
+Settings::Impl::getContentSize(PageId const& page_id) const
+{
+    QMutexLocker const locker(&m_mutex);
+
+    Container::iterator const it(m_items.find(page_id));
+    if (it == m_items.end())
+    {
+        return m_invalidSize;
+    }
+    else
+    {
+        return it->contentSize;
     }
 }
 

@@ -349,6 +349,7 @@ ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
     painter.drawRect(centerRectH);
     painter.drawRect(m_middleRect);
     painter.drawRect(m_innerRect);
+    painter.drawRect(m_extraRect);
 
     if (m_matchSizeMode.get() != MatchSizeMode::DISABLED)
     {

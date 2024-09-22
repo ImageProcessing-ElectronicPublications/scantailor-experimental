@@ -203,8 +203,6 @@ OptionsWidget::preUpdateUI(
 
     updateMarginsDisplay();
 
-    updateSizeDisplay();
-
     {
         ScopedIncDec<int> const guard(m_ignoreMatchSizeModeChanges);
 
@@ -245,6 +243,8 @@ OptionsWidget::postUpdateUI(bool have_content_box)
     marginsGroup->setEnabled(true);
     alignmentGroup->setEnabled(true);
 
+    updateSizeDisplay();
+
     missingContentBoxGroup->setVisible(!have_content_box);
 }
 
@@ -253,34 +253,44 @@ OptionsWidget::marginsSetExternally(RelativeMargins const& margins)
 {
     m_margins = margins;
 
-    updateSizeDisplay();
     updateMarginsDisplay();
+    updateSizeDisplay();
 }
 
 void
 OptionsWidget::extraWMarginChanged(double const val)
 {
+    if (m_ignoreMarginChanges)
+    {
+        return;
+    }
+
     extraWMarginSpinBox->setValue(val);
 
     m_framings.setFramingWidth(extraWMarginSpinBox->value() / 100.0);
 
-    updateSizeDisplay();
     updateMarginsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
+    updateSizeDisplay();
 }
 
 void
 OptionsWidget::extraHMarginChanged(double const val)
 {
+    if (m_ignoreMarginChanges)
+    {
+        return;
+    }
+
     extraHMarginSpinBox->setValue(val);
 
     m_framings.setFramingHeight(extraHMarginSpinBox->value() / 100.0);
 
-    updateSizeDisplay();
     updateMarginsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
+    updateSizeDisplay();
 }
 
 void
@@ -301,18 +311,13 @@ OptionsWidget::horMarginsChanged(double const val)
     m_margins.setLeft(leftMarginSpinBox->value() / 100.0);
     m_margins.setRight(rightMarginSpinBox->value() / 100.0);
 
- 
-    updateSizeDisplay();
     emit marginsSetLocally(m_margins);
+    updateSizeDisplay();
 }
 
 void
 OptionsWidget::vertMarginsChanged(double const val)
 {
-    if (m_ignoreMarginChanges)
-    {
-        return;
-    }
 
     if (m_topBottomLinked)
     {
@@ -325,8 +330,8 @@ OptionsWidget::vertMarginsChanged(double const val)
     m_margins.setBottom(bottomMarginSpinBox->value() / 100.0);
 
 
-    updateSizeDisplay();
     emit marginsSetLocally(m_margins);
+    updateSizeDisplay();
 }
 
 void
@@ -359,6 +364,7 @@ OptionsWidget::matchSizeDisabledToggled(bool selected)
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
+    updateSizeDisplay();
 }
 
 void
@@ -373,6 +379,7 @@ OptionsWidget::matchSizeMarginsToggled(bool selected)
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
+    updateSizeDisplay();
 }
 
 void
@@ -387,6 +394,7 @@ OptionsWidget::matchSizeScaleToggled(bool selected)
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
+    updateSizeDisplay();
 }
 
 void
@@ -516,8 +524,18 @@ OptionsWidget::updateSizeDisplay()
     QSizeF const agg_size = m_ptrSettings->getAggregateHardSize();
     float const exwidth = m_framings.getFramingWidth();
     float const exheight = m_framings.getFramingHeight();
-    float const agwidth = agg_size.width();
-    float const agheight = agg_size.height();
+    float agwidth = agg_size.width();
+    float agheight = agg_size.height();
+    if(m_matchSizeMode == MatchSizeMode::DISABLED)
+    {
+        QSizeF const content_size = m_ptrSettings->getContentSize(m_pageId);
+        RelativeMargins const hard_magrins = m_ptrSettings->getHardMargins(m_pageId);
+        double const pagewidthx = content_size.width();
+        double const pagewidthy = content_size.height() * 0.7071067811865475244;
+        double const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
+        agwidth = content_size.width() + pagewidth * (hard_magrins.left() + hard_magrins.right());
+        agheight = content_size.height() + pagewidth * (hard_magrins.top() + hard_magrins.bottom());
+    }
     int const outwidth = (int) (agwidth * (1.0f + exwidth) + 0.5f);
     int const outheight = (int) (agheight * (1.0f + exheight) + 0.5f);
     labelExtraWout->setText(tr(" = %1").arg(outwidth));
