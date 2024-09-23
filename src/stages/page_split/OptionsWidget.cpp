@@ -280,7 +280,7 @@ OptionsWidget::modeToggled(bool const checked)
         switch (layout_type)
         {
         case PageLayout::SINGLE_PAGE_UNCUT:
-            lt = PAGE_PLUS_OFFCUT;
+            lt = SINGLE_PAGE_UNCUT;
             break;
         case PageLayout::SINGLE_PAGE_CUT:
             lt = PAGE_PLUS_OFFCUT;
