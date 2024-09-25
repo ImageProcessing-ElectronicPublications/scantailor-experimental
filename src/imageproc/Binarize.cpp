@@ -408,6 +408,59 @@ BinaryImage binarizeDots(
     return bw_img;
 }  // binarizeDots
 
+BinaryImage binarizeImageToDots(
+    GrayImage const& src,
+    BinaryImage const& mask,
+    BinaryImage const& mask_bw)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    BinaryImage bw_img(binarizeDots(src));
+    if (bw_img.isNull())
+    {
+        return BinaryImage();
+    }
+
+    if (mask.isNull() || mask_bw.isNull())
+    {
+        return bw_img;
+    }
+
+    int const w = bw_img.width();
+    int const h = bw_img.height();
+
+    if ((w != mask.width()) || (h != mask.height()) || (w != mask_bw.width()) || (h != mask_bw.height()))
+    {
+        return bw_img;
+    }
+
+    uint32_t* bw_img_line = bw_img.data();
+    int const bw_img_stride = bw_img.wordsPerLine();
+    uint32_t const* mask_line = mask.data();
+    int const mask_stride = mask.wordsPerLine();
+    uint32_t const* mask_bw_line = mask_bw.data();
+    int const mask_bw_stride = mask_bw.wordsPerLine();
+
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            if (binaryGetBW(mask_bw_line, x))
+            {
+                binarySetBW(bw_img_line, x, binaryGetBW(mask_line, x));
+            }
+        }
+        bw_img_line += bw_img_stride;
+        mask_line += mask_stride;
+        mask_bw_line += mask_bw_stride;
+    }
+
+    return bw_img;
+}  // binarizeDots
+
 BinaryImage binarizeNiblack(
     GrayImage const& src, int const radius,
     double const k, int const delta,
@@ -418,6 +471,8 @@ BinaryImage binarizeNiblack(
         return BinaryImage();
     }
 
+    int const w = src.width();
+    int const h = src.height();
     GrayImage threshold_map(grayNiblackMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 

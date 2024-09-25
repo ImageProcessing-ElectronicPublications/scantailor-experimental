@@ -85,6 +85,11 @@ IMAGEPROC_EXPORT BinaryImage binarizeDots(
     GrayImage const& src, int delta = 0,
     unsigned char lower_bound = 0, unsigned char upper_bound = 255);
 
+IMAGEPROC_EXPORT BinaryImage binarizeImageToDots(
+    GrayImage const& src,
+    BinaryImage const& mask,
+    BinaryImage const& mask_bw);
+
 /**
   * \brief Image binarization using Niblack's local thresholding method.
   *

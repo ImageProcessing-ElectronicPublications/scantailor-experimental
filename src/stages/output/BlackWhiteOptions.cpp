@@ -35,7 +35,8 @@ BlackWhiteOptions::BlackWhiteOptions()
         m_thresholdRadius(50),
         m_thresholdCoef(0.3),
         m_autoPictureCoef(0.0),
-        m_autoPictureOff(false)
+        m_autoPictureOff(false),
+        m_pictureToDots8(false)
 {
 }
 
@@ -50,7 +51,8 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
         m_thresholdRadius(el.attribute("thresholdRadius").toInt()),
         m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
         m_autoPictureCoef(el.attribute("autoPictureCoef").toDouble()),
-        m_autoPictureOff(el.attribute("autoPictureOff") == "1")
+        m_autoPictureOff(el.attribute("autoPictureOff") == "1"),
+        m_pictureToDots8(el.attribute("pictureToDots8") == "1")
 {
     if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
     {
@@ -107,6 +109,10 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     {
         el.setAttribute("autoPictureOff", "1");
     }
+    if (m_pictureToDots8)
+    {
+        el.setAttribute("pictureToDots8", "1");
+    }
     return el;
 }
 
@@ -154,6 +160,10 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
         return false;
     }
     if (m_autoPictureOff != other.m_autoPictureOff)
+    {
+        return false;
+    }
+    if (m_pictureToDots8 != other.m_pictureToDots8)
     {
         return false;
     }

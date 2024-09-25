@@ -273,6 +273,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(autoPictureOffToggled(bool))
     );
     connect(
+        pictureToDots8CB, SIGNAL(clicked(bool)),
+        this, SLOT(pictureToDots8Toggled(bool))
+    );
+    connect(
         applyColorsModeButton, SIGNAL(clicked()),
         this, SLOT(applyColorsModeButtonClicked())
     );
@@ -930,6 +934,16 @@ OptionsWidget::autoPictureOffToggled(bool const checked)
 }
 
 void
+OptionsWidget::pictureToDots8Toggled(bool const checked)
+{
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    black_white_options.setPictureToDots8(checked);
+    m_colorParams.setBlackWhiteOptions(black_white_options);
+    m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit reloadRequested();
+}
+
+void
 OptionsWidget::applyColorsModeButtonClicked()
 {
     ApplyColorsDialog* dialog = new ApplyColorsDialog(
@@ -1284,6 +1298,7 @@ OptionsWidget::updateColorsDisplay()
         {
             autoPictureCoef->setValue(black_white_options.autoPictureCoef());
             autoPictureOffCB->setChecked(black_white_options.autoPictureOff());
+            pictureToDots8CB->setChecked(black_white_options.pictureToDots8());
         }
 
         kmeansPanelToggled(kmeansPanelEmpty->isChecked());

@@ -142,6 +142,15 @@ public:
         m_autoPictureOff = val;
     }
 
+    bool pictureToDots8() const
+    {
+        return m_pictureToDots8;
+    }
+    void setPictureToDots8(bool val)
+    {
+        m_pictureToDots8 = val;
+    }
+
     bool operator==(BlackWhiteOptions const& other) const;
 
     bool operator!=(BlackWhiteOptions const& other) const;
@@ -157,6 +166,7 @@ private:
     double m_thresholdCoef;
     double m_autoPictureCoef;
     bool m_autoPictureOff;
+    bool m_pictureToDots8;
 
     static ThresholdFilter parseThresholdMethod(QString const& str);
 

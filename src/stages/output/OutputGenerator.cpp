@@ -366,10 +366,10 @@ OutputGenerator::process(
     }
     else
     {
-		ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
-		BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
-		BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
-		double norm_coef = color_options.normalizeCoef();
+        ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
+        BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
+        BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
+        double norm_coef = color_options.normalizeCoef();
 
         GrayImage coloredSignificance;
         BinaryImage colored_mask;
@@ -609,24 +609,34 @@ OutputGenerator::process(
 
             if (render_params.mixedOutput())
             {
-                // We don't want speckles in non-B/W areas, as they would
-                // then get visualized on the Despeckling tab.
-                rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
-
-                status.throwIfCancelled();
-
-                if (dst.format() == QImage::Format_Indexed8)
+                if (!black_white_options.pictureToDots8())
                 {
-                    combineMixed<uint8_t>(dst, bw_content, bw_mask);
+                    // We don't want speckles in non-B/W areas, as they would
+                    // then get visualized on the Despeckling tab.
+                    rasterOp<RopAnd<RopSrc, RopDst> >(bw_content, bw_mask);
+
+                    status.throwIfCancelled();
+
+                    if (dst.format() == QImage::Format_Indexed8)
+                    {
+                        combineMixed<uint8_t>(dst, bw_content, bw_mask);
+                    }
+                    else
+                    {
+                        assert(dst.format() == QImage::Format_RGB32
+                               || dst.format() == QImage::Format_ARGB32);
+
+                        combineMixed<uint32_t>(dst, bw_content, bw_mask);
+                    }
+                    applyFillZonesInPlace(dst, fill_zones);
                 }
                 else
                 {
-                    assert(dst.format() == QImage::Format_RGB32
-                           || dst.format() == QImage::Format_ARGB32);
-
-                    combineMixed<uint32_t>(dst, bw_content, bw_mask);
+                    BinaryImage bw_dots = binarizeImageToDots(GrayImage(dst), bw_content, bw_mask);
+                    dst = bw_dots.toQImage();
+                    bw_content = BinaryImage(bw_dots);
+                    bw_mask = BinaryImage(dst.size(), BLACK);
                 }
-                applyFillZonesInPlace(dst, fill_zones);
             }
             else
             {

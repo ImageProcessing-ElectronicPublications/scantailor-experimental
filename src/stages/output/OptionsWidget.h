@@ -121,6 +121,8 @@ private slots:
 
     void autoPictureOffToggled(bool checked);
 
+    void pictureToDots8Toggled(bool checked);
+
     void applyColorsModeButtonClicked();
 
     void applyColorsModeConfirmed(std::set<PageId> const& pages);
