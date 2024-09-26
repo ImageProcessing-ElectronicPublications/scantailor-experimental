@@ -16,13 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "OrderByAreaProvider.h"
-#include "Params.h"
-#include "RelativeMargins.h"
-#include <QSizeF>
 #include <memory>
+#include <QSizeF>
+#include "../Params.h"
+#include "OrderByAreaProvider.h"
 
-namespace page_layout
+namespace select_content
 {
 
 OrderByAreaProvider::OrderByAreaProvider(IntrusivePtr<Settings> const& settings)
@@ -41,12 +40,12 @@ OrderByAreaProvider::precedes(
     QSizeF lhs_size;
     if (lhs_params.get())
     {
-        lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
+        lhs_size = lhs_params->contentSizePx();
     }
     QSizeF rhs_size;
     if (rhs_params.get())
     {
-        rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
+        rhs_size = rhs_params->contentSizePx();
     }
 
     bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();
@@ -63,4 +62,4 @@ OrderByAreaProvider::precedes(
     return lk < rk;
 }
 
-} // namespace page_layout
+} // namespace select_content

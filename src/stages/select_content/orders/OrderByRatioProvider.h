@@ -16,20 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PAGE_LAYOUT_ORDER_BY_AREA_PROVIDER_H_
-#define PAGE_LAYOUT_ORDER_BY_AREA_PROVIDER_H_
+#ifndef SELECT_CONTENT_ORDER_BY_RATIO_PROVIDER_H_
+#define SELECT_CONTENT_ORDER_BY_RATIO_PROVIDER_H_
 
-#include "Settings.h"
+#include "../Settings.h"
 #include "IntrusivePtr.h"
 #include "PageOrderProvider.h"
 
-namespace page_layout
+namespace select_content
 {
 
-class OrderByAreaProvider : public PageOrderProvider
+class OrderByRatioProvider : public PageOrderProvider
 {
 public:
-    OrderByAreaProvider(IntrusivePtr<Settings> const& settings);
+    OrderByRatioProvider(IntrusivePtr<Settings> const& settings);
 
     virtual bool precedes(
         PageId const& lhs_page, bool lhs_incomplete,
@@ -38,6 +38,6 @@ private:
     IntrusivePtr<Settings> m_ptrSettings;
 };
 
-} // namespace page_layout
+} // namespace select_content
 
 #endif

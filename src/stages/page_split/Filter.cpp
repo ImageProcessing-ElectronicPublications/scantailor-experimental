@@ -36,9 +36,9 @@
 #include "Params.h"
 #include "CacheDrivenTask.h"
 #include "OrthogonalRotation.h"
+#include "orders/OrderBySplitTypeProvider.h"
+#include "orders/OrderBySplitPosProvider.h"
 #include "CommandLine.h"
-#include "OrderBySplitTypeProvider.h"
-#include "OrderBySplitPosProvider.h"
 
 namespace page_split
 {

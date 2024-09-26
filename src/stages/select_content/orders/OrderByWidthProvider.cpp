@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "OrderByWidthProvider.h"
-#include "Params.h"
-#include <QSizeF>
 #include <memory>
+#include <QSizeF>
+#include "../Params.h"
+#include "OrderByWidthProvider.h"
 
 namespace select_content
 {

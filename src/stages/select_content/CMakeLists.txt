@@ -15,10 +15,10 @@ SET(
     Params.cpp Params.h
     Settings.cpp Settings.h
     Thumbnail.cpp Thumbnail.h
-    OrderByWidthProvider.cpp OrderByWidthProvider.h
-    OrderByHeightProvider.cpp OrderByHeightProvider.h
-    OrderByRatioProvider.cpp OrderByRatioProvider.h
-    OrderByAreaProvider.cpp OrderByAreaProvider.h
+    orders/OrderByWidthProvider.cpp orders/OrderByWidthProvider.h
+    orders/OrderByHeightProvider.cpp orders/OrderByHeightProvider.h
+    orders/OrderByRatioProvider.cpp orders/OrderByRatioProvider.h
+    orders/OrderByAreaProvider.cpp orders/OrderByAreaProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

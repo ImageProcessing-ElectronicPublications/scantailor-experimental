@@ -16,6 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <assert.h>
+#include <QString>
+#include <QObject>
+#include <QDomDocument>
+#include <QDomElement>
 #include "Filter.h"
 #include "FilterUiInterface.h"
 #include "OptionsWidget.h"
@@ -26,15 +31,10 @@
 #include "ProjectReader.h"
 #include "ProjectWriter.h"
 #include "CacheDrivenTask.h"
-#include "OrderByWidthProvider.h"
-#include "OrderByHeightProvider.h"
-#include "OrderByRatioProvider.h"
-#include "OrderByAreaProvider.h"
-#include <QString>
-#include <QObject>
-#include <QDomDocument>
-#include <QDomElement>
-#include <assert.h>
+#include "orders/OrderByWidthProvider.h"
+#include "orders/OrderByHeightProvider.h"
+#include "orders/OrderByRatioProvider.h"
+#include "orders/OrderByAreaProvider.h"
 #include "CommandLine.h"
 
 namespace select_content

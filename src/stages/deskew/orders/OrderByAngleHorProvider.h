@@ -16,20 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SELECT_CONTENT_ORDER_BY_RATIO_PROVIDER_H_
-#define SELECT_CONTENT_ORDER_BY_RATIO_PROVIDER_H_
+#ifndef DESKEW_ORDER_BY_ANGLE_HOR_PROVIDER_H_
+#define DESKEW_ORDER_BY_ANGLE_HOR_PROVIDER_H_
 
-#include "Settings.h"
+#include "../Settings.h"
 #include "IntrusivePtr.h"
 #include "PageOrderProvider.h"
 
-namespace select_content
+namespace deskew
 {
 
-class OrderByRatioProvider : public PageOrderProvider
+class OrderByAngleHorProvider : public PageOrderProvider
 {
 public:
-    OrderByRatioProvider(IntrusivePtr<Settings> const& settings);
+    OrderByAngleHorProvider(IntrusivePtr<Settings> const& settings);
 
     virtual bool precedes(
         PageId const& lhs_page, bool lhs_incomplete,
@@ -38,6 +38,6 @@ private:
     IntrusivePtr<Settings> m_ptrSettings;
 };
 
-} // namespace select_content
+} // namespace deskew
 
 #endif

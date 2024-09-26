@@ -19,7 +19,7 @@
 #ifndef SELECT_CONTENT_ORDER_BY_WIDTH_PROVIDER_H_
 #define SELECT_CONTENT_ORDER_BY_WIDTH_PROVIDER_H_
 
-#include "Settings.h"
+#include "../Settings.h"
 #include "IntrusivePtr.h"
 #include "PageOrderProvider.h"
 

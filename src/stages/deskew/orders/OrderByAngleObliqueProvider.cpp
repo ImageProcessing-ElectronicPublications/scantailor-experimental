@@ -17,19 +17,19 @@
 */
 
 #include <memory>
-#include "Params.h"
-#include "OrderByAngleVertProvider.h"
+#include "../Params.h"
+#include "OrderByAngleObliqueProvider.h"
 
 namespace deskew
 {
 
-OrderByAngleVertProvider::OrderByAngleVertProvider(IntrusivePtr<Settings> const& settings)
+OrderByAngleObliqueProvider::OrderByAngleObliqueProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderByAngleVertProvider::precedes(
+OrderByAngleObliqueProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -48,10 +48,10 @@ OrderByAngleVertProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngleVert();
+            lhs_angle = -lhs_params->perspectiveParams().getAngleOblique();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngleVert();
+            lhs_angle = -lhs_params->dewarpingParams().getAngleOblique();
             break;
         } // switch
     }
@@ -67,10 +67,10 @@ OrderByAngleVertProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngleVert();
+            rhs_angle = -rhs_params->perspectiveParams().getAngleOblique();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngleVert();
+            rhs_angle = -rhs_params->dewarpingParams().getAngleOblique();
             break;
         } // switch
     }

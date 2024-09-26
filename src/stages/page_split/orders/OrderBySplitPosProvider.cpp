@@ -17,23 +17,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "OrderBySplitTypeProvider.h"
-#include "Params.h"
-#include "PageLayout.h"
-#include <QSizeF>
 #include <memory>
 #include <assert.h>
+#include <QSizeF>
+#include "../Params.h"
+#include "../PageLayout.h"
+#include "OrderBySplitPosProvider.h"
 
 namespace page_split
 {
 
-OrderBySplitTypeProvider::OrderBySplitTypeProvider(IntrusivePtr<Settings> const& settings)
-    :	m_ptrSettings(settings)
+OrderBySplitPosProvider::OrderBySplitPosProvider(IntrusivePtr<Settings> const& settings)
+    :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderBySplitTypeProvider::precedes(
+OrderBySplitPosProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -58,34 +58,19 @@ OrderBySplitTypeProvider::precedes(
     Params const* lhs_params = lhs_record.params();
     Params const* rhs_params = rhs_record.params();
 
-    int lhs_layout_type = lhs_record.combinedLayoutType();
+    double lhs_layout_pos = 0.5;
     if (lhs_params)
     {
-        lhs_layout_type = lhs_params->pageLayout().toLayoutType();
-    }
-    if (lhs_layout_type == AUTO_LAYOUT_TYPE)
-    {
-        lhs_layout_type = 100; // To force it below pages with known layout.
+        lhs_layout_pos = lhs_params->pageLayout().getSplitPosition();
     }
 
-    int rhs_layout_type = rhs_record.combinedLayoutType();
+    double rhs_layout_pos = 0.5;
     if (rhs_params)
     {
-        rhs_layout_type = rhs_params->pageLayout().toLayoutType();
-    }
-    if (rhs_layout_type == AUTO_LAYOUT_TYPE)
-    {
-        rhs_layout_type = 100; // To force it below pages with known layout.
+        rhs_layout_pos = rhs_params->pageLayout().getSplitPosition();
     }
 
-    if (lhs_layout_type == rhs_layout_type)
-    {
-        return lhs_page < rhs_page;
-    }
-    else
-    {
-        return lhs_layout_type < rhs_layout_type;
-    }
+    return lhs_layout_pos < rhs_layout_pos;
 }
 
 } // namespace page_split

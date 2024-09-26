@@ -16,22 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "OrderByRatioProvider.h"
-#include "Params.h"
-#include "RelativeMargins.h"
-#include <QSizeF>
 #include <memory>
+#include <QSizeF>
+#include "../Params.h"
+#include "RelativeMargins.h"
+#include "OrderByHeightProvider.h"
 
 namespace page_layout
 {
 
-OrderByRatioProvider::OrderByRatioProvider(IntrusivePtr<Settings> const& settings)
+OrderByHeightProvider::OrderByHeightProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderByRatioProvider::precedes(
+OrderByHeightProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -58,9 +58,7 @@ OrderByRatioProvider::precedes(
         return lhs_valid;
     }
 
-    float const lk = (float)(lhs_size.width() + 1) / (float)(lhs_size.height() + 1);
-    float const rk = (float)(rhs_size.width() + 1) / (float)(rhs_size.height() + 1);
-    return lk < rk;
+    return lhs_size.height() < rhs_size.height();
 }
 
 } // namespace page_layout

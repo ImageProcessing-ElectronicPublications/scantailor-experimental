@@ -32,12 +32,12 @@
 #include "ProjectReader.h"
 #include "ProjectWriter.h"
 #include "CacheDrivenTask.h"
-#include "OrderByAngleProvider.h"
-#include "OrderByAngleObliqueProvider.h"
-#include "OrderByAngleHorProvider.h"
-#include "OrderByAngleVertProvider.h"
 #include "RelinkablePath.h"
 #include "AbstractRelinker.h"
+#include "orders/OrderByAngleProvider.h"
+#include "orders/OrderByAngleObliqueProvider.h"
+#include "orders/OrderByAngleHorProvider.h"
+#include "orders/OrderByAngleVertProvider.h"
 #include "CommandLine.h"
 
 namespace deskew

@@ -20,20 +20,20 @@
 #include <memory>
 #include <assert.h>
 #include <QSizeF>
-#include "Params.h"
-#include "PageLayout.h"
-#include "OrderBySplitPosProvider.h"
+#include "OrderBySplitTypeProvider.h"
+#include "../Params.h"
+#include "../PageLayout.h"
 
 namespace page_split
 {
 
-OrderBySplitPosProvider::OrderBySplitPosProvider(IntrusivePtr<Settings> const& settings)
-    :   m_ptrSettings(settings)
+OrderBySplitTypeProvider::OrderBySplitTypeProvider(IntrusivePtr<Settings> const& settings)
+    :	m_ptrSettings(settings)
 {
 }
 
 bool
-OrderBySplitPosProvider::precedes(
+OrderBySplitTypeProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -58,19 +58,34 @@ OrderBySplitPosProvider::precedes(
     Params const* lhs_params = lhs_record.params();
     Params const* rhs_params = rhs_record.params();
 
-    double lhs_layout_pos = 0.5;
+    int lhs_layout_type = lhs_record.combinedLayoutType();
     if (lhs_params)
     {
-        lhs_layout_pos = lhs_params->pageLayout().getSplitPosition();
+        lhs_layout_type = lhs_params->pageLayout().toLayoutType();
+    }
+    if (lhs_layout_type == AUTO_LAYOUT_TYPE)
+    {
+        lhs_layout_type = 100; // To force it below pages with known layout.
     }
 
-    double rhs_layout_pos = 0.5;
+    int rhs_layout_type = rhs_record.combinedLayoutType();
     if (rhs_params)
     {
-        rhs_layout_pos = rhs_params->pageLayout().getSplitPosition();
+        rhs_layout_type = rhs_params->pageLayout().toLayoutType();
+    }
+    if (rhs_layout_type == AUTO_LAYOUT_TYPE)
+    {
+        rhs_layout_type = 100; // To force it below pages with known layout.
     }
 
-    return lhs_layout_pos < rhs_layout_pos;
+    if (lhs_layout_type == rhs_layout_type)
+    {
+        return lhs_page < rhs_page;
+    }
+    else
+    {
+        return lhs_layout_type < rhs_layout_type;
+    }
 }
 
 } // namespace page_split

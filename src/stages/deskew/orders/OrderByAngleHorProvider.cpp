@@ -17,19 +17,19 @@
 */
 
 #include <memory>
-#include "Params.h"
-#include "OrderByAngleProvider.h"
+#include "../Params.h"
+#include "OrderByAngleHorProvider.h"
 
 namespace deskew
 {
 
-OrderByAngleProvider::OrderByAngleProvider(IntrusivePtr<Settings> const& settings)
+OrderByAngleHorProvider::OrderByAngleHorProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderByAngleProvider::precedes(
+OrderByAngleHorProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -45,13 +45,13 @@ OrderByAngleProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::ROTATION:
-            lhs_angle = -lhs_params->rotationParams().compensationAngleDeg();
+            lhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngle();
+            lhs_angle = -lhs_params->perspectiveParams().getAngleHor();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngle();
+            lhs_angle = -lhs_params->dewarpingParams().getAngleHor();
             break;
         } // switch
     }
@@ -64,13 +64,13 @@ OrderByAngleProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::ROTATION:
-            rhs_angle = -rhs_params->rotationParams().compensationAngleDeg();
+            rhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngle();
+            rhs_angle = -rhs_params->perspectiveParams().getAngleHor();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngle();
+            rhs_angle = -rhs_params->dewarpingParams().getAngleHor();
             break;
         } // switch
     }

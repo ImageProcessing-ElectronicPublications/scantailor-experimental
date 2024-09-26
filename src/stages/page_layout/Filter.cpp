@@ -39,11 +39,11 @@
 #include "ProjectReader.h"
 #include "ProjectWriter.h"
 #include "CacheDrivenTask.h"
-#include "OrderByWidthProvider.h"
-#include "OrderByHeightProvider.h"
-#include "OrderByRatioProvider.h"
-#include "OrderByAreaProvider.h"
 #include "Utils.h"
+#include "orders/OrderByWidthProvider.h"
+#include "orders/OrderByHeightProvider.h"
+#include "orders/OrderByRatioProvider.h"
+#include "orders/OrderByAreaProvider.h"
 #include "CommandLine.h"
 
 namespace page_layout

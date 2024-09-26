@@ -16,14 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SELECT_CONTENT_ORDER_BY_HEIGHT_PROVIDER_H_
-#define SELECT_CONTENT_ORDER_BY_HEIGHT_PROVIDER_H_
+#ifndef PAGE_LAYOUT_ORDER_BY_HEIGHT_PROVIDER_H_
+#define PAGE_LAYOUT_ORDER_BY_HEIGHT_PROVIDER_H_
 
-#include "Settings.h"
+#include "../Settings.h"
 #include "IntrusivePtr.h"
 #include "PageOrderProvider.h"
 
-namespace select_content
+namespace page_layout
 {
 
 class OrderByHeightProvider : public PageOrderProvider
@@ -38,6 +38,6 @@ private:
     IntrusivePtr<Settings> m_ptrSettings;
 };
 
-} // namespace select_content
+} // namespace page_layout
 
 #endif

@@ -20,8 +20,8 @@ SET(
     CacheDrivenTask.cpp CacheDrivenTask.h
     LayoutType.cpp LayoutType.h
     UnremoveButton.cpp UnremoveButton.h
-    OrderBySplitTypeProvider.cpp OrderBySplitTypeProvider.h
-    OrderBySplitPosProvider.cpp OrderBySplitPosProvider.h
+    orders/OrderBySplitTypeProvider.cpp orders/OrderBySplitTypeProvider.h
+    orders/OrderBySplitPosProvider.cpp orders/OrderBySplitPosProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

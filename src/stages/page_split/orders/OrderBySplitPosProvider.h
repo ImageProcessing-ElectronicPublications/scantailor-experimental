@@ -1,6 +1,7 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
     Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C)  Vadim Kuznetsov ()DikBSD <dikbsd@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,20 +17,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DESKEW_ORDER_BY_ANGLE_VERT_PROVIDER_H_
-#define DESKEW_ORDER_BY_ANGLE_VERT_PROVIDER_H_
+#ifndef PAGE_SPLIT_ORDER_BY_SPLIT_POS_PROVIDER_H_
+#define PAGE_SPLIT_ORDER_BY_SPLIT_POS_PROVIDER_H_
 
-#include "Settings.h"
+#include "../Settings.h"
 #include "IntrusivePtr.h"
 #include "PageOrderProvider.h"
 
-namespace deskew
+namespace page_split
 {
 
-class OrderByAngleVertProvider : public PageOrderProvider
+class OrderBySplitPosProvider : public PageOrderProvider
 {
 public:
-    OrderByAngleVertProvider(IntrusivePtr<Settings> const& settings);
+    OrderBySplitPosProvider(IntrusivePtr<Settings> const& settings);
 
     virtual bool precedes(
         PageId const& lhs_page, bool lhs_incomplete,
@@ -38,6 +39,6 @@ private:
     IntrusivePtr<Settings> m_ptrSettings;
 };
 
-} // namespace deskew
+} // namespace page_split
 
-#endif
+#endif //PAGE_SPLIT_ORDER_BY_SPLIT_POS_PROVIDER_H_

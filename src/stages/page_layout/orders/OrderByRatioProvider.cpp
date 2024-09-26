@@ -16,21 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "OrderByAreaProvider.h"
-#include "Params.h"
-#include <QSizeF>
 #include <memory>
+#include <QSizeF>
+#include "../Params.h"
+#include "RelativeMargins.h"
+#include "OrderByRatioProvider.h"
 
-namespace select_content
+namespace page_layout
 {
 
-OrderByAreaProvider::OrderByAreaProvider(IntrusivePtr<Settings> const& settings)
+OrderByRatioProvider::OrderByRatioProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderByAreaProvider::precedes(
+OrderByRatioProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -40,12 +41,12 @@ OrderByAreaProvider::precedes(
     QSizeF lhs_size;
     if (lhs_params.get())
     {
-        lhs_size = lhs_params->contentSizePx();
+        lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
     }
     QSizeF rhs_size;
     if (rhs_params.get())
     {
-        rhs_size = rhs_params->contentSizePx();
+        rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
     }
 
     bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();
@@ -57,9 +58,9 @@ OrderByAreaProvider::precedes(
         return lhs_valid;
     }
 
-    float const lk = (float)(lhs_size.width() + 1) * (float)(lhs_size.height() + 1);
-    float const rk = (float)(rhs_size.width() + 1) * (float)(rhs_size.height() + 1);
+    float const lk = (float)(lhs_size.width() + 1) / (float)(lhs_size.height() + 1);
+    float const rk = (float)(rhs_size.width() + 1) / (float)(rhs_size.height() + 1);
     return lk < rk;
 }
 
-} // namespace select_content
+} // namespace page_layout

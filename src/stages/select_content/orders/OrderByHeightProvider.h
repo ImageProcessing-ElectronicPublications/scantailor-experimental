@@ -16,20 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SELECT_CONTENT_ORDER_BY_AREA_PROVIDER_H_
-#define SELECT_CONTENT_ORDER_BY_AREA_PROVIDER_H_
+#ifndef SELECT_CONTENT_ORDER_BY_HEIGHT_PROVIDER_H_
+#define SELECT_CONTENT_ORDER_BY_HEIGHT_PROVIDER_H_
 
-#include "Settings.h"
+#include "../Settings.h"
 #include "IntrusivePtr.h"
 #include "PageOrderProvider.h"
 
 namespace select_content
 {
 
-class OrderByAreaProvider : public PageOrderProvider
+class OrderByHeightProvider : public PageOrderProvider
 {
 public:
-    OrderByAreaProvider(IntrusivePtr<Settings> const& settings);
+    OrderByHeightProvider(IntrusivePtr<Settings> const& settings);
 
     virtual bool precedes(
         PageId const& lhs_page, bool lhs_incomplete,
