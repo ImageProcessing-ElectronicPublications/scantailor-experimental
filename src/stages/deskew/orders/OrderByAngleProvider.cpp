@@ -45,13 +45,13 @@ OrderByAngleProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::ROTATION:
-            lhs_angle = -lhs_params->rotationParams().compensationAngleDeg();
+            lhs_angle = lhs_params->rotationParams().compensationAngleDeg();
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngle();
+            lhs_angle = lhs_params->perspectiveParams().getAngle();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngle();
+            lhs_angle = lhs_params->dewarpingParams().getAngle();
             break;
         } // switch
     }
@@ -64,13 +64,13 @@ OrderByAngleProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::ROTATION:
-            rhs_angle = -rhs_params->rotationParams().compensationAngleDeg();
+            rhs_angle = rhs_params->rotationParams().compensationAngleDeg();
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngle();
+            rhs_angle = rhs_params->perspectiveParams().getAngle();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngle();
+            rhs_angle = rhs_params->dewarpingParams().getAngle();
             break;
         } // switch
     }

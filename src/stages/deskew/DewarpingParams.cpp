@@ -101,6 +101,7 @@ DewarpingParams::getAngle() const
         angle += (angle < 0.0) ? 360.0 : 0.0;
         angle -= (angle > 360.0) ? 360.0 : 0.0;
         angle -= (angle > 180.0) ? 360.0 : 0.0;
+        angle = -angle;
     }
 
     return angle;
