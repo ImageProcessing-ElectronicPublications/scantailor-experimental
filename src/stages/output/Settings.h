@@ -64,6 +64,8 @@ public:
 
     void setBlackKmeansOptions(PageId const& page_id, BlackKmeansOptions const& black_kmeans_options);
 
+    void setMetricsOptions(PageId const& page_id, MetricsOptions const& metrics_options);
+
     void setDespeckleLevel(PageId const& page_id, DespeckleLevel level);
 
     void setDespeckleFactor(PageId const& page_id, double factor);

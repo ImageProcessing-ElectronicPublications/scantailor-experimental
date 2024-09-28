@@ -73,6 +73,7 @@
 #include "imageproc/AdjustBrightness.h"
 #include "imageproc/PolygonRasterizer.h"
 #include "imageproc/ColorFilter.h"
+#include "imageproc/ImageMetrics.h"
 #include "config.h"
 
 using namespace imageproc;
@@ -275,7 +276,7 @@ OutputGenerator::process(
     ZoneSet const& picture_zones, ZoneSet const& fill_zones,
     imageproc::BinaryImage* out_auto_picture_mask,
     imageproc::BinaryImage* out_speckles_image,
-    DebugImages* const dbg) const
+    DebugImages* const dbg)
 {
     assert(!orig_image.isNull());
 
@@ -358,6 +359,7 @@ OutputGenerator::process(
 #endif
     );
 
+    metrics = MetricsOptions(m_colorParams.getMetricsOptions());
     BinaryImage bw_content(m_outRect.size().expandedTo(QSize(1, 1)), WHITE);
     QImage dst;
     if (m_outRect.isEmpty())
@@ -376,6 +378,7 @@ OutputGenerator::process(
         QImage maybe_smoothed;
         BinaryImage bw_mask;
 
+        metrics.setMetricBWorigin(grayMetricBW(GrayImage(transformed_image)));
         // Color filters begin
         colored(transformed_image, color_options);
 
@@ -429,6 +432,8 @@ OutputGenerator::process(
             coloredSignificanceFilterInPlace(transformed_image, coloredSignificance, black_white_options.dimmingColoredCoef());
         }
 
+        metrics.setMetricBWfilters(grayMetricBW(GrayImage(transformed_image)));
+
         status.throwIfCancelled();
         // Color filters end
 
@@ -475,6 +480,7 @@ OutputGenerator::process(
                 binarization_mask.fillExcept(m_contentRect, WHITE);
 
                 bw_content = binarize(maybe_smoothed, binarization_mask);
+                metrics.setMetricBWthreshold(binaryMetricBW(bw_content));
                 maybe_smoothed = QImage();   // Save memory.
                 binarization_mask.release(); // Save memory.
                 if (dbg)
@@ -698,6 +704,8 @@ OutputGenerator::process(
         }
         bw_mask.release(); // Save memory.
         colored_mask.release(); // Save memory.
+
+        metrics.setMetricBWdestination(grayMetricBW(GrayImage(dst)));
     }
     bw_content.release(); // Save memory.
     transformed_image = QImage(); // Save memory.
@@ -1301,7 +1309,7 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
 }
 
 void
-OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_options) const
+OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_options)
 {
     // Color filters begin
     colorCurveFilterInPlace(image, color_options.curveCoef());
@@ -1340,6 +1348,8 @@ OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_optio
         grayGravureInPlace(gout, color_options.gravureSize(), color_options.gravureCoef());
 
         grayDots8InPlace(gout, color_options.dots8Size(), color_options.dots8Coef());
+
+        metrics.setMetricMSEfilters(grayMetricMSE(GrayImage(image),  gout));
 
         imageLevelSet(image, gout);
     }

@@ -80,6 +80,15 @@ public:
         m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     }
 
+    MetricsOptions const& getMetricsOptions() const
+    {
+        return m_colorParams.getMetricsOptions();
+    }
+    void setMetricsOptions(MetricsOptions const& metrics_options)
+    {
+        m_colorParams.setMetricsOptions(metrics_options);
+    }
+
     DespeckleLevel despeckleLevel() const
     {
         return m_despeckleLevel;

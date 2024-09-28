@@ -1371,6 +1371,127 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="metricsPanelEmpty">
+     <property name="text">
+      <string>Metrics</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="metricsPanel">
+     <property name="title">
+      <string>Metrics</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_metrics">
+      <item>
+       <widget class="QWidget" name="metricsOptions" native="true">
+        <layout class="QGridLayout" name="metricsSheetOptions">
+         <item row="0" column="0">
+          <widget class="QLabel" name="metricsMSEfiltersLabel">
+           <property name="text">
+            <string>MSE filters:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="metricsMSEfilters">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="metricsBWoriginLabel">
+           <property name="text">
+            <string>BW origin:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="metricsBWorigin">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="metricsBWfiltersLabel">
+           <property name="text">
+            <string>BW filters:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="metricsBWfilters">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="metricsBWthresholdLabel">
+           <property name="text">
+            <string>BW threshold:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="metricsBWthreshold">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="metricsBWdestinationLabel">
+           <property name="text">
+            <string>BW destination:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="metricsBWdestination">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="metricsBWdeltaLabel">
+           <property name="text">
+            <string>BW delta:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="metricsBWdelta">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

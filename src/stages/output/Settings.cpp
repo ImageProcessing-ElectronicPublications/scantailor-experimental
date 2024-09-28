@@ -218,6 +218,24 @@ Settings::setBlackKmeansOptions(PageId const& page_id, BlackKmeansOptions const&
 }
 
 void
+Settings::setMetricsOptions(PageId const& page_id, MetricsOptions const& metrics_options)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    PerPageParams::iterator const it(m_perPageParams.lower_bound(page_id));
+    if (it == m_perPageParams.end() || m_perPageParams.key_comp()(page_id, it->first))
+    {
+        Params params;
+        params.setMetricsOptions(metrics_options);
+        m_perPageParams.insert(it, PerPageParams::value_type(page_id, params));
+    }
+    else
+    {
+        it->second.setMetricsOptions(metrics_options);
+    }
+}
+
+void
 Settings::setDespeckleLevel(PageId const& page_id, DespeckleLevel level)
 {
     QMutexLocker const locker(&m_mutex);

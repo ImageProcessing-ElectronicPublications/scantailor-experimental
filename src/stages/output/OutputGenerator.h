@@ -67,7 +67,8 @@ class OutputGenerator
 public:
     OutputGenerator(
         std::shared_ptr<imageproc::AbstractImageTransform const> const& image_transform,
-        QRectF const& content_rect, QRectF const& outer_rect,
+        QRectF const& content_rect,
+        QRectF const& outer_rect,
         Params const& params);
 
     /**
@@ -102,7 +103,7 @@ public:
         ZoneSet const& picture_zones, ZoneSet const& fill_zones,
         imageproc::BinaryImage* out_auto_picture_mask = nullptr,
         imageproc::BinaryImage* out_speckles_image = nullptr,
-        DebugImages* dbg = nullptr) const;
+        DebugImages* dbg = nullptr);
 
     QSize outputImageSize() const;
 
@@ -126,6 +127,9 @@ public:
      * @brief Returns a mapper from output to original image coordinates.
      */
     std::function<QPointF(QPointF const&)> outputToOrigMapper() const;
+
+    MetricsOptions metrics;
+
 private:
     static QImage convertToRGBorRGBA(QImage const& src);
 
@@ -163,7 +167,7 @@ private:
         QImage const& image, imageproc::BinaryImage const& mask) const;
 
     void colored(
-        QImage& image, ColorGrayscaleOptions const& color_options) const;
+        QImage& image, ColorGrayscaleOptions const& color_options);
 
     void maybeDespeckleInPlace(
         imageproc::BinaryImage& image, double despeckle_factor,
@@ -205,6 +209,7 @@ private:
     void applyFillZonesInPlace(imageproc::BinaryImage& img, ZoneSet const& zones) const;
 
     std::shared_ptr<imageproc::AbstractImageTransform const> m_ptrImageTransform;
+
     ColorParams m_colorParams;
 
     /**

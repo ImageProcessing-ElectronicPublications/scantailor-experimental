@@ -16,6 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QString>
+#include <QFileInfo>
+#include <QRect>
+#include <QRectF>
+#include <QTransform>
 #include "CacheDrivenTask.h"
 #include "OutputGenerator.h"
 #include "PictureZoneComparator.h"
@@ -30,11 +35,6 @@
 #include "Utils.h"
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
-#include <QString>
-#include <QFileInfo>
-#include <QRect>
-#include <QRectF>
-#include <QTransform>
 
 using namespace imageproc;
 
@@ -44,7 +44,7 @@ namespace output
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<Settings> const& settings,
     OutputFileNameGenerator const& out_file_name_gen)
-    :	m_ptrSettings(settings),
+    : m_ptrSettings(settings),
       m_outFileNameGen(out_file_name_gen)
 {
 }
@@ -83,7 +83,7 @@ CacheDrivenTask::processScaled(
         QString const out_file_path(m_outFileNameGen.filePathFor(page_info.id()));
         Params const params(m_ptrSettings->getParams(page_info.id()));
 
-        OutputGenerator const generator(
+        OutputGenerator generator(
             full_size_image_transform, content_rect, outer_rect, params
         );
 

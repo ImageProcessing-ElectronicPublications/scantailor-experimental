@@ -158,6 +158,9 @@ private slots:
     void applyDespeckleButtonClicked();
 
     void applyDespeckleConfirmed(std::set<PageId> const& pages);
+
+    void metricsPanelToggled(bool checked);
+
 private:
     void despeckleLevelSelected(DespeckleLevel level);
 
@@ -168,6 +171,8 @@ private:
     void updateColorsDisplay();
 
     void updateScaleDisplay();
+
+    void updateMetricsDisplay();
 
     IntrusivePtr<Settings> m_ptrSettings;
     PageSelectionAccessor m_pageSelectionAccessor;

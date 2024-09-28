@@ -19,6 +19,8 @@
 #ifndef OUTPUT_TASK_H_
 #define OUTPUT_TASK_H_
 
+#include <memory>
+#include <QColor>
 #include "NonCopyable.h"
 #include "RefCountable.h"
 #include "FilterResult.h"
@@ -27,8 +29,6 @@
 #include "OutputFileNameGenerator.h"
 #include "CachingFactory.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <QColor>
-#include <memory>
 
 class DebugImagesImpl;
 class TaskStatus;

@@ -127,7 +127,7 @@ Task::Task(IntrusivePtr<Filter> const& filter,
            IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
            PageId const& page_id, OutputFileNameGenerator const& out_file_name_gen,
            ImageViewTab const last_tab, bool const batch, bool const debug)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrSettings(settings),
       m_ptrThumbnailCache(thumbnail_cache),
       m_pageId(page_id),
@@ -197,7 +197,7 @@ Task::processScaled(
     bool const need_speckles_image = params.despeckleLevel() != DESPECKLE_OFF
                                      && params.colorParams().colorMode() != ColorParams::COLOR_GRAYSCALE && !m_batchProcessing;
 
-    OutputGenerator const generator(
+    OutputGenerator generator(
         orig_image_transform, content_rect, outer_rect, params
     );
 
@@ -340,6 +340,12 @@ Task::processScaled(
                       write_speckles_file ? &speckles_img : nullptr,
                       m_ptrDbg.get()
                   );
+        Params params = m_ptrSettings->getParams(m_pageId);
+        ColorParams color_params(params.colorParams());
+        color_params.setMetricsOptions(generator.metrics);
+        m_ptrSettings->setColorParams(m_pageId, color_params);
+		OptionsWidget* const opt_widget = m_ptrFilter->optionsWidget();
+		opt_widget->preUpdateUI(m_pageId);
 
         if (write_speckles_file && speckles_img.isNull())
         {
@@ -522,7 +528,7 @@ Task::UiUpdater::UiUpdater(
     DespeckleState const& despeckle_state,
     DespeckleVisualization const& despeckle_visualization,
     bool const batch, bool const debug)
-    :	m_ptrFilter(filter),
+    :   m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_ptrSettings(settings),
       m_ptrDbg(std::move(dbg_img)),

@@ -22,6 +22,7 @@
 #include "ColorGrayscaleOptions.h"
 #include "BlackWhiteOptions.h"
 #include "BlackKmeansOptions.h"
+#include "MetricsOptions.h"
 
 class QDomDocument;
 class QDomElement;
@@ -78,6 +79,16 @@ public:
         m_kmeansOptions = opt;
     }
 
+    MetricsOptions const& getMetricsOptions() const
+    {
+        return m_metricsOptions;
+    }
+
+    void setMetricsOptions(MetricsOptions const& opt)
+    {
+        m_metricsOptions = opt;
+    }
+
 private:
     static ColorMode parseColorMode(QString const& str);
 
@@ -87,6 +98,7 @@ private:
     ColorGrayscaleOptions m_colorGrayscaleOptions;
     BlackWhiteOptions m_bwOptions;
     BlackKmeansOptions m_kmeansOptions;
+    MetricsOptions m_metricsOptions;
 };
 
 } // namespace output

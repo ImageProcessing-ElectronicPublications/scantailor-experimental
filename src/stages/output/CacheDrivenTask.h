@@ -19,11 +19,11 @@
 #ifndef OUTPUT_CACHEDRIVENTASK_H_
 #define OUTPUT_CACHEDRIVENTASK_H_
 
+#include <memory>
 #include "NonCopyable.h"
 #include "RefCountable.h"
 #include "IntrusivePtr.h"
 #include "OutputFileNameGenerator.h"
-#include <memory>
 
 class QRectF;
 class QPolygonF;

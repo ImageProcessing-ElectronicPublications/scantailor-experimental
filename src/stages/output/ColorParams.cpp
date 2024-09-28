@@ -25,10 +25,11 @@ namespace output
 {
 
 ColorParams::ColorParams(QDomElement const& el)
-    :	m_colorMode(parseColorMode(el.attribute("colorMode"))),
+    : m_colorMode(parseColorMode(el.attribute("colorMode"))),
       m_colorGrayscaleOptions(el.namedItem("color-or-grayscale").toElement()),
       m_bwOptions(el.namedItem("bw").toElement()),
-      m_kmeansOptions(el.namedItem("kmeans").toElement())
+      m_kmeansOptions(el.namedItem("kmeans").toElement()),
+      m_metricsOptions(el.namedItem("metrics").toElement())
 {
 }
 
@@ -40,6 +41,7 @@ ColorParams::toXml(QDomDocument& doc, QString const& name) const
     el.appendChild(m_colorGrayscaleOptions.toXml(doc, "color-or-grayscale"));
     el.appendChild(m_bwOptions.toXml(doc, "bw"));
     el.appendChild(m_kmeansOptions.toXml(doc, "kmeans"));
+    el.appendChild(m_metricsOptions.toXml(doc, "metrics"));
     return el;
 }
 

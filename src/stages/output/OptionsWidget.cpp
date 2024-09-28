@@ -383,6 +383,14 @@ OptionsWidget::OptionsWidget(
         applyDespeckleButton, SIGNAL(clicked()),
         this, SLOT(applyDespeckleButtonClicked())
     );
+    connect(
+        metricsPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(metricsPanelToggled(bool))
+    );
+    connect(
+        metricsPanel, SIGNAL(clicked(bool)),
+        this, SLOT(metricsPanelToggled(bool))
+    );
 
     thresholdSlider->setMinimum(-50);
     thresholdSlider->setMaximum(50);
@@ -404,6 +412,7 @@ OptionsWidget::preUpdateUI(PageId const& page_id)
     m_thisPageOutputSize.reset();
     updateColorsDisplay();
     updateScaleDisplay();
+    updateMetricsDisplay();
 }
 
 void
@@ -411,6 +420,7 @@ OptionsWidget::postUpdateUI(QSize const& output_size)
 {
     m_thisPageOutputSize = output_size;
     updateScaleDisplay();
+    updateMetricsDisplay();
 }
 
 void
@@ -1195,6 +1205,15 @@ OptionsWidget::applyDespeckleConfirmed(std::set<PageId> const& pages)
 }
 
 void
+OptionsWidget::metricsPanelToggled(bool const checked)
+{
+    metricsPanelEmpty->setVisible(!checked);
+    metricsPanelEmpty->setChecked(checked);
+    metricsPanel->setVisible(checked);
+    metricsPanel->setChecked(checked);
+}
+
+void
 OptionsWidget::reloadIfNecessary()
 {
     ZoneSet saved_picture_zones;
@@ -1381,6 +1400,21 @@ OptionsWidget::updateColorsDisplay()
     }
 
     colorModeSelector->blockSignals(false);
+
+    updateMetricsDisplay();
+}
+
+void
+OptionsWidget::updateMetricsDisplay()
+{
+    MetricsOptions metrics_options(m_colorParams.getMetricsOptions());
+
+    metricsMSEfilters->setText(tr("%1").arg(metrics_options.getMetricMSEfilters()));
+    metricsBWorigin->setText(tr("%1").arg(metrics_options.getMetricBWorigin()));
+    metricsBWfilters->setText(tr("%1").arg(metrics_options.getMetricBWfilters()));
+    metricsBWthreshold->setText(tr("%1").arg(metrics_options.getMetricBWthreshold()));
+    metricsBWdestination->setText(tr("%1").arg(metrics_options.getMetricBWdestination()));
+    metricsBWdelta->setText(tr("%1").arg(metrics_options.getMetricBWdestination() - metrics_options.getMetricBWorigin()));
 }
 
 void

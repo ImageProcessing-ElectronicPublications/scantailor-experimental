@@ -42,6 +42,7 @@ SET(
     SavGolKernel.cpp SavGolKernel.h
     SavGolFilter.cpp SavGolFilter.h
     ColorFilter.cpp ColorFilter.h
+    ImageMetrics.cpp ImageMetrics.h
     DrawOver.cpp DrawOver.h
     AdjustBrightness.cpp AdjustBrightness.h
     SEDM.cpp SEDM.h
