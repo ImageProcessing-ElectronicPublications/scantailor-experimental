@@ -16,6 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <memory>
+#include <QString>
+#include <QObject>
+#include <QCoreApplication>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QtGlobal>
 #include "Filter.h"
 #include "FilterUiInterface.h"
 #include "OptionsWidget.h"
@@ -28,13 +35,10 @@
 #include "ProjectWriter.h"
 #include "CacheDrivenTask.h"
 #include "../../Utils.h"
-#include <QString>
-#include <QObject>
-#include <QCoreApplication>
-#include <QDomDocument>
-#include <QDomElement>
-#include <QtGlobal>
-#include <memory>
+#include "orders/OrderByMSEfiltersProvider.h"
+#include "orders/OrderByBWoriginProvider.h"
+#include "orders/OrderByBWdestinationProvider.h"
+#include "orders/OrderByBWdeltaProvider.h"
 
 #include "CommandLine.h"
 #include "ImageViewTab.h"
@@ -44,7 +48,8 @@ namespace output
 
 Filter::Filter(
     PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(new Settings)
+    : m_ptrSettings(new Settings),
+      m_selectedPageOrder(0)
 {
     if (CommandLine::get().isGui())
     {
@@ -52,6 +57,19 @@ Filter::Filter(
             new OptionsWidget(m_ptrSettings, page_selection_accessor)
         );
     }
+
+    typedef PageOrderOption::ProviderPtr ProviderPtr;
+
+    ProviderPtr const default_order;
+    ProviderPtr const order_by_mse_filters(new OrderByMSEfiltersProvider(m_ptrSettings));
+    ProviderPtr const order_by_bw_origin(new OrderByBWoriginProvider(m_ptrSettings));
+    ProviderPtr const order_by_bw_destination(new OrderByBWdestinationProvider(m_ptrSettings));
+    ProviderPtr const order_by_bw_delta(new OrderByBWdeltaProvider(m_ptrSettings));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by MSE filters"), order_by_mse_filters));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by BW origin"), order_by_bw_origin));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by BW destination"), order_by_bw_destination));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by BW delta"), order_by_bw_delta));
 }
 
 Filter::~Filter()
@@ -68,6 +86,25 @@ PageView
 Filter::getView() const
 {
     return PAGE_VIEW;
+}
+
+int
+Filter::selectedPageOrder() const
+{
+    return m_selectedPageOrder;
+}
+
+void
+Filter::selectPageOrder(int option)
+{
+    assert((unsigned)option < m_pageOrderOptions.size());
+    m_selectedPageOrder = option;
+}
+
+std::vector<PageOrderOption>
+Filter::pageOrderOptions() const
+{
+    return m_pageOrderOptions;
 }
 
 void

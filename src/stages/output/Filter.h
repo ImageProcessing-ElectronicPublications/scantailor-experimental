@@ -19,6 +19,8 @@
 #ifndef OUTPUT_FILTER_H_
 #define OUTPUT_FILTER_H_
 
+#include <vector>
+#include <QCoreApplication>
 #include "NonCopyable.h"
 #include "AbstractFilter.h"
 #include "PageView.h"
@@ -27,6 +29,7 @@
 #include "SafeDeletingQObjectPtr.h"
 #include "PictureZonePropFactory.h"
 #include "FillZonePropFactory.h"
+#include "PageOrderOption.h"
 
 class PageId;
 class PageSelectionAccessor;
@@ -45,6 +48,7 @@ class Settings;
 class Filter : public AbstractFilter
 {
     DECLARE_NON_COPYABLE(Filter)
+    Q_DECLARE_TR_FUNCTIONS(output::Filter)
 public:
     Filter(PageSelectionAccessor const& page_selection_accessor);
 
@@ -53,6 +57,12 @@ public:
     virtual QString getName() const;
 
     virtual PageView getView() const;
+
+    virtual int selectedPageOrder() const;
+
+    virtual void selectPageOrder(int option);
+
+    virtual std::vector<PageOrderOption> pageOrderOptions() const;
 
     virtual void performRelinking(AbstractRelinker const& relinker);
 
@@ -92,6 +102,8 @@ private:
     SafeDeletingQObjectPtr<OptionsWidget> m_ptrOptionsWidget;
     PictureZonePropFactory m_pictureZonePropFactory;
     FillZonePropFactory m_fillZonePropFactory;
+    std::vector<PageOrderOption> m_pageOrderOptions;
+    int m_selectedPageOrder;
 };
 
 } // namespace output

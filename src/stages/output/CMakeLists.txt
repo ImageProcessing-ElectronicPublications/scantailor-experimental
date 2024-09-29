@@ -41,6 +41,10 @@ SET(
     DespeckleView.cpp DespeckleView.h
     DespeckleVisualization.cpp DespeckleVisualization.h
     DespeckleLevel.cpp DespeckleLevel.h
+    orders/OrderByMSEfiltersProvider.cpp orders/OrderByMSEfiltersProvider.h
+    orders/OrderByBWoriginProvider.cpp orders/OrderByBWoriginProvider.h
+    orders/OrderByBWdestinationProvider.cpp orders/OrderByBWdestinationProvider.h
+    orders/OrderByBWdeltaProvider.cpp orders/OrderByBWdeltaProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 
