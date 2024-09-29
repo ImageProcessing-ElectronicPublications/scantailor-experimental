@@ -1454,6 +1454,106 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Белые поля</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="436"/>
+        <source>Equalize illumination</source>
+        <translation>Выровнять освещение</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="285"/>
+        <source>Despeckle</source>
+        <translation>Удалять пятна</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="619"/>
+        <source>Dimming Colored</source>
+        <translation>Затемнение цветов</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="626"/>
+        <source>Value is -1.0 .. 2.0.</source>
+        <translation>Значение -1,0 .. 2,0.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="646"/>
+        <source>Threshold</source>
+        <translation>Порог</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="653"/>
+        <source>Select threshold method.</source>
+        <translation>Выберите пороговый метод.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="660"/>
+        <source>M</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="663"/>
+        <source>Morphology ON/OFF.</source>
+        <translation>Морфология ВКЛ/ВЫКЛ.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="673"/>
+        <source>Negate threshold.</source>
+        <translation>Негатив.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="580"/>
+        <source> - bounds:</source>
+        <translation> - границы:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="587"/>
+        <source>Lower bound.</source>
+        <translation>Нижняя граница.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="600"/>
+        <source>Upper bound.</source>
+        <translation>Верхняя граница.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
+        <source> - radius, coef.:</source>
+        <translation> - радиус, коэф.:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="694"/>
+        <source>Default value is 0.34.</source>
+        <translation>Знач. по умол. 0,34.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="727"/>
+        <source>Thinner</source>
+        <translation>Тоньше</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="791"/>
+        <source>Thicker</source>
+        <translation>Жирнее</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="806"/>
+        <source>autozones:</source>
+        <translation>автозоны:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="829"/>
+        <source>Off</source>
+        <translation>Выкл.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="832"/>
+        <source>Off autozones.</source>
+        <translation>Выключить автозоны.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="842"/>
+        <source>Picture to Dots8.</source>
+        <translation>Иллюстрации точками 8x8.</translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="977"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="990"/>
         <source>K-means</source>
@@ -1528,104 +1628,40 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Значение 0,0 .. 9,99.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="436"/>
-        <source>Equalize illumination</source>
-        <translation>Выровнять освещение</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1376"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1389"/>
+        <source>Metrics</source>
+        <translation>Метрики</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="285"/>
-        <source>Despeckle</source>
-        <translation>Удалять пятна</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1407"/>
+        <source>MSE filters:</source>
+        <translation>MSE фильтров:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="619"/>
-        <source>Dimming Colored</source>
-        <translation>Затемнение цветов</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1421"/>
+        <source>BW origin:</source>
+        <translation>BW исходного:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="626"/>
-        <source>Value is -1.0 .. 2.0.</source>
-        <translation>Значение -1,0 .. 2,0.</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1435"/>
+        <source>BW filters:</source>
+        <translation>BW фильтрованного:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="646"/>
-        <source>Threshold</source>
-        <translation>Порог</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1449"/>
+        <source>BW threshold:</source>
+        <translation>BW порога:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="653"/>
-        <source>Select threshold method.</source>
-        <translation>Выберите пороговый метод.</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1463"/>
+        <source>BW destination:</source>
+        <translation>BW результата:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="660"/>
-        <source>M</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="663"/>
-        <source>Morphology ON/OFF.</source>
-        <translation>Морфология ВКЛ/ВЫКЛ.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="673"/>
-        <source>Negate threshold.</source>
-        <translation>Обратный порог.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="580"/>
-        <source> - bounds:</source>
-        <translation> - границы:</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="587"/>
-        <source>Lower bound.</source>
-        <translation>Нижняя граница.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="600"/>
-        <source>Upper bound.</source>
-        <translation>Верхняя граница.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
-        <source> - radius, coef.:</source>
-        <translation> - радиус, коэф.:</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="694"/>
-        <source>Default value is 0.34.</source>
-        <translation>Знач. по умол. 0,34.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="788"/>
-        <source>Thinner</source>
-        <translation>Тоньше</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="852"/>
-        <source>Thicker</source>
-        <translation>Жирнее</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
-        <source>autozones:</source>
-        <translation>автозоны:</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
-        <source>Off</source>
-        <translation>Выкл.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
-        <source>Off autozones.</source>
-        <translation>Выключить автозоны.</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="970"/>
-        <source>Off autozones</source>
-        <translation>Выкл. автозоны</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1477"/>
+        <source>BW delta:</source>
+        <translation>BW разность:</translation>
     </message>
 </context>
 <context>
@@ -2669,6 +2705,31 @@ p, li { white-space: pre-wrap; }
         <location filename="../stages/output/Filter.cpp" line="64"/>
         <source>Output</source>
         <translation>Вывод</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="68"/>
+        <source>Natural order</source>
+        <translation>Естественный порядок</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="69"/>
+        <source>Order by MSE filters</source>
+        <translation>Сортировка по MSE фильтров</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="70"/>
+        <source>Order by BW origin</source>
+        <translation>Сортировка по BW исходного</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="71"/>
+        <source>Order by BW destination</source>
+        <translation>Сортировка по BW результата</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="72"/>
+        <source>Order by BW delta</source>
+        <translation>Сортировка по разности BW</translation>
     </message>
 </context>
 <context>

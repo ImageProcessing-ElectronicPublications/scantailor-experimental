@@ -1180,6 +1180,36 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="727"/>
+        <source>Thinner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="791"/>
+        <source>Thicker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="806"/>
+        <source>autozones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="829"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="832"/>
+        <source>Off autozones.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="842"/>
+        <source>Picture to Dots8.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="977"/>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="990"/>
         <source>K-means</source>
@@ -1283,28 +1313,39 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="788"/>
-        <source>Thinner</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1376"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1389"/>
+        <source>Metrics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="852"/>
-        <source>Thicker</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1407"/>
+        <source>MSE filters:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
-        <source>autozones:</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1421"/>
+        <source>BW origin:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
-        <source>Off</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1435"/>
+        <source>BW filters:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
-        <source>Off autozones.</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1449"/>
+        <source>BW threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1463"/>
+        <source>BW destination:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1477"/>
+        <source>BW delta:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2157,8 +2198,33 @@ You should remove them from the project.</source>
 <context>
     <name>output::Filter</name>
     <message>
-        <location filename="../stages/output/Filter.cpp" line="64"/>
+        <location filename="../stages/output/Filter.cpp" line="82"/>
         <source>Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="68"/>
+        <source>Natural order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="69"/>
+        <source>Order by MSE filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="70"/>
+        <source>Order by BW origin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="71"/>
+        <source>Order by BW destination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="72"/>
+        <source>Order by BW delta</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
