@@ -201,6 +201,7 @@ OptionsWidget::preUpdateUI(
         }
     }
 
+    updateFramingsDisplay();
     updateMarginsDisplay();
 
     {
@@ -269,7 +270,7 @@ OptionsWidget::extraWMarginChanged(double const val)
 
     m_framings.setFramingWidth(extraWMarginSpinBox->value() / 100.0);
 
-    updateMarginsDisplay();
+    updateFramingsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
     updateSizeDisplay();
@@ -287,7 +288,7 @@ OptionsWidget::extraHMarginChanged(double const val)
 
     m_framings.setFramingHeight(extraHMarginSpinBox->value() / 100.0);
 
-    updateMarginsDisplay();
+    updateFramingsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
     updateSizeDisplay();
@@ -328,7 +329,6 @@ OptionsWidget::vertMarginsChanged(double const val)
 
     m_margins.setTop(topMarginSpinBox->value() / 100.0);
     m_margins.setBottom(bottomMarginSpinBox->value() / 100.0);
-
 
     emit marginsSetLocally(m_margins);
     updateSizeDisplay();
@@ -510,12 +510,23 @@ OptionsWidget::updateMarginsDisplay()
 {
     ScopedIncDec<int> const ignore_scope(m_ignoreMarginChanges);
 
-    extraWMarginSpinBox->setValue(m_framings.getFramingWidth() * 100.0);
-    extraHMarginSpinBox->setValue(m_framings.getFramingHeight() * 100.0);
     topMarginSpinBox->setValue(m_margins.top() * 100.0);
     bottomMarginSpinBox->setValue(m_margins.bottom() * 100.0);
     leftMarginSpinBox->setValue(m_margins.left() * 100.0);
     rightMarginSpinBox->setValue(m_margins.right() * 100.0);
+}
+
+void
+OptionsWidget::updateLinkDisplay(QToolButton* button, bool const linked)
+{
+    button->setIcon(linked ? m_chainIcon : m_brokenChainIcon);
+}
+
+void
+OptionsWidget::updateFramingsDisplay()
+{
+    extraWMarginSpinBox->setValue(m_framings.getFramingWidth() * 100.0);
+    extraHMarginSpinBox->setValue(m_framings.getFramingHeight() * 100.0);
 }
 
 void
@@ -540,12 +551,6 @@ OptionsWidget::updateSizeDisplay()
     int const outheight = (int) (agheight * (1.0f + exheight) + 0.5f);
     labelExtraWout->setText(tr(" = %1").arg(outwidth));
     labelExtraHout->setText(tr(" = %1").arg(outheight));
-}
-
-void
-OptionsWidget::updateLinkDisplay(QToolButton* button, bool const linked)
-{
-    button->setIcon(linked ? m_chainIcon : m_brokenChainIcon);
 }
 
 void
