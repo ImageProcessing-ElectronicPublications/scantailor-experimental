@@ -36,12 +36,6 @@ OrderByBWdestinationProvider::precedes(
     Params const lhs_params(m_ptrSettings->getParams(lhs_page));
     Params const rhs_params(m_ptrSettings->getParams(rhs_page));
 
-    MetricsOptions const& lhs_metrics = lhs_params.getMetricsOptions();
-    MetricsOptions const& rhs_metrics = rhs_params.getMetricsOptions();
-
-    double lhs_bw = lhs_metrics.getMetricBWdestination();
-    double rhs_bw = rhs_metrics.getMetricBWdestination();
-
     bool const lhs_valid = !lhs_incomplete;
     bool const rhs_valid = !rhs_incomplete;
 
@@ -51,7 +45,20 @@ OrderByBWdestinationProvider::precedes(
         return lhs_valid;
     }
 
-    return (lhs_bw < rhs_bw);
+    MetricsOptions const& lhs_metrics = lhs_params.getMetricsOptions();
+    MetricsOptions const& rhs_metrics = rhs_params.getMetricsOptions();
+
+    double lhs_bw = lhs_metrics.getMetricBWdestination();
+    double rhs_bw = rhs_metrics.getMetricBWdestination();
+
+    if (lhs_bw == rhs_bw)
+    {
+        return (lhs_page < rhs_page);
+    }
+    else
+    {
+        return (lhs_bw < rhs_bw);
+    }
 }
 
 } // namespace deskew

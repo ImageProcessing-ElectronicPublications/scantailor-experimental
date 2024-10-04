@@ -80,8 +80,10 @@ DewarpingParams::getAngle() const
     {
         /* Conformal transform */
         float x[4], y[4], xc = 0.0f, yc = 0.0f, sx, sy, dx, dy;
-        float sumxx = 0.0f, sumyy = 0.0f, sumxy;
-        float sumxh, sumyh, sumxv, sumyv, sumd;
+        float sumxx = 0.0f, sumyy = 0.0f;
+        float sumxh = 0.0f, sumyh = 0.0f;
+        float sumxv = 0.0f, sumyv = 0.0f;
+        float sumxy, sumd;
         QPointF point_tl = m_distortionModel.topCurve().polyline().front();
         QPointF point_tr = m_distortionModel.topCurve().polyline().back();
         QPointF point_bl = m_distortionModel.bottomCurve().polyline().front();
@@ -105,6 +107,13 @@ DewarpingParams::getAngle() const
         {
             x[j] -= xc;
             y[j] -= yc;
+            float xy = x[j] * y[j];
+            x[j] = (x[j] < 0.0f) ? -x[j] : x[j];
+            y[j] = (y[j] < 0.0f) ? -y[j] : y[j];
+            sumxh += x[j];
+            sumyh += y[j];
+            sumxv += (xy < 0.0f) ? -x[j] : x[j];
+            sumyv += (xy < 0.0f) ? -y[j] : y[j];
             sumxx += x[j] * x[j];
             sumyy += y[j] * y[j];
         }
@@ -113,13 +122,9 @@ DewarpingParams::getAngle() const
         {
             sx = sqrtf(sumxx * 0.25f);
             sy = sqrtf(sumyy * 0.25f);
-            sumxh = x[1] - x[0] + x[3] - x[2];
-            sumyh = y[0] + y[1] - y[2] - y[3];
-            sumxv = x[0] + x[1] - x[2] - x[3];
-            sumyv = y[1] - y[0] + y[3] - y[2];
 
             dx = sumxh * sx + sumyh * sy;
-            dy = sumyv * sx - sumxv * sy;
+            dy = sumxv * sy - sumyv * sx;
             dx /= sumxy;
             dy /= sumxy;
 

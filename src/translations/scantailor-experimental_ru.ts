@@ -2572,32 +2572,42 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Компенсация наклона</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="56"/>
+        <location filename="../stages/deskew/Filter.cpp" line="82"/>
         <source>Geometric Distortions</source>
         <translation>Геометрические искажения</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="61"/>
+        <location filename="../stages/deskew/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="62"/>
+        <location filename="../stages/deskew/Filter.cpp" line="67"/>
+        <source>Order by type distortion</source>
+        <translation>Сортировка по типу искажения</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="68"/>
         <source>Order by increasing angle</source>
         <translation>Сортировка по возрастающему углу</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="63"/>
+        <location filename="../stages/deskew/Filter.cpp" line="69"/>
+        <source>Order by angle size</source>
+        <translation>Сортировка по величине угла</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="70"/>
         <source>Order by oblique</source>
         <translation>Сортировка по скосу</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="64"/>
+        <location filename="../stages/deskew/Filter.cpp" line="71"/>
         <source>Order by extension horizontally</source>
         <translation>Сортировка по расширению горизонтально</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="65"/>
+        <location filename="../stages/deskew/Filter.cpp" line="72"/>
         <source>Order by extension vertically</source>
         <translation>Сортировка по расширению вертикально</translation>
     </message>
@@ -3001,26 +3011,27 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="66"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="67"/>
+        <location filename="../stages/page_split/Filter.cpp" line="69"/>
         <source>Order by split type</source>
         <translation>Сортировка по типу разреза</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <location filename="../stages/page_split/Filter.cpp" line="70"/>
         <source>Order by split position</source>
         <translation>Сортировка по позиции разреза</translation>
     </message>
     <message>
-        <source>Order by split line count</source>
-        <translation type="obsolete">Сортировка по числу резаков</translation>
+        <location filename="../stages/page_split/Filter.cpp" line="71"/>
+        <source>Order by split offset size</source>
+        <translation>Сортировка по величине сдвига</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="78"/>
+        <location filename="../stages/page_split/Filter.cpp" line="81"/>
         <source>Split Pages</source>
         <translation>Разрезка страниц</translation>
     </message>

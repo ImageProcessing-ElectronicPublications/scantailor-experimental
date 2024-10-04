@@ -22,6 +22,7 @@ SET(
     UnremoveButton.cpp UnremoveButton.h
     orders/OrderBySplitTypeProvider.cpp orders/OrderBySplitTypeProvider.h
     orders/OrderBySplitPosProvider.cpp orders/OrderBySplitPosProvider.h
+    orders/OrderBySplitOffsetProvider.cpp orders/OrderBySplitOffsetProvider.h
 )
 SOURCE_GROUP("Sources" FILES ${sources})
 

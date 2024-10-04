@@ -36,6 +36,15 @@ OrderByAngleVertProvider::precedes(
     std::unique_ptr<Params> const lhs_params(m_ptrSettings->getPageParams(lhs_page));
     std::unique_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
 
+    bool const lhs_valid = !lhs_incomplete;
+    bool const rhs_valid = !rhs_incomplete;
+
+    if (lhs_valid != rhs_valid)
+    {
+        // Invalid (unknown) sizes go to the back.
+        return lhs_valid;
+    }
+
     double lhs_angle = 0.0;
     if (lhs_params.get())
     {
@@ -55,6 +64,7 @@ OrderByAngleVertProvider::precedes(
             break;
         } // switch
     }
+
     double rhs_angle = 0.0;
     if (rhs_params.get())
     {
@@ -75,16 +85,14 @@ OrderByAngleVertProvider::precedes(
         } // switch
     }
 
-    bool const lhs_valid = !lhs_incomplete;
-    bool const rhs_valid = !rhs_incomplete;
-
-    if (lhs_valid != rhs_valid)
+    if (lhs_angle == rhs_angle)
     {
-        // Invalid (unknown) sizes go to the back.
-        return lhs_valid;
+        return (lhs_page < rhs_page);
     }
-
-    return (lhs_angle < rhs_angle);
+    else
+    {
+        return (lhs_angle < rhs_angle);
+    }
 }
 
 } // namespace deskew

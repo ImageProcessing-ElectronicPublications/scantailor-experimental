@@ -18,18 +18,18 @@
 
 #include <memory>
 #include "../Params.h"
-#include "OrderByAngleObliqueProvider.h"
+#include "OrderByAngleAbsProvider.h"
 
 namespace deskew
 {
 
-OrderByAngleObliqueProvider::OrderByAngleObliqueProvider(IntrusivePtr<Settings> const& settings)
+OrderByAngleAbsProvider::OrderByAngleAbsProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderByAngleObliqueProvider::precedes(
+OrderByAngleAbsProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -54,16 +54,17 @@ OrderByAngleObliqueProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::ROTATION:
-            lhs_angle = 0.0;
+            lhs_angle = -lhs_params->rotationParams().compensationAngleDeg();
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngleOblique();
+            lhs_angle = lhs_params->perspectiveParams().getAngle();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngleOblique();
+            lhs_angle = lhs_params->dewarpingParams().getAngle();
             break;
         } // switch
     }
+    lhs_angle = (lhs_angle < 0.0) ? -lhs_angle : lhs_angle;
 
     double rhs_angle = 0.0;
     if (rhs_params.get())
@@ -74,16 +75,17 @@ OrderByAngleObliqueProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::ROTATION:
-            rhs_angle = 0.0;
+            rhs_angle = -rhs_params->rotationParams().compensationAngleDeg();
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngleOblique();
+            rhs_angle = rhs_params->perspectiveParams().getAngle();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngleOblique();
+            rhs_angle = rhs_params->dewarpingParams().getAngle();
             break;
         } // switch
     }
+    rhs_angle = (rhs_angle < 0.0) ? -rhs_angle : rhs_angle;
 
     if (lhs_angle == rhs_angle)
     {

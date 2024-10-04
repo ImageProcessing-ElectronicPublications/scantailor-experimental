@@ -36,12 +36,6 @@ OrderByMSEfiltersProvider::precedes(
     Params const lhs_params(m_ptrSettings->getParams(lhs_page));
     Params const rhs_params(m_ptrSettings->getParams(rhs_page));
 
-    MetricsOptions const& lhs_metrics = lhs_params.getMetricsOptions();
-    MetricsOptions const& rhs_metrics = rhs_params.getMetricsOptions();
-
-    double lhs_mse = lhs_metrics.getMetricMSEfilters();
-    double rhs_mse = rhs_metrics.getMetricMSEfilters();
-
     bool const lhs_valid = !lhs_incomplete;
     bool const rhs_valid = !rhs_incomplete;
 
@@ -51,7 +45,20 @@ OrderByMSEfiltersProvider::precedes(
         return lhs_valid;
     }
 
-    return (lhs_mse < rhs_mse);
+    MetricsOptions const& lhs_metrics = lhs_params.getMetricsOptions();
+    MetricsOptions const& rhs_metrics = rhs_params.getMetricsOptions();
+
+    double lhs_mse = lhs_metrics.getMetricMSEfilters();
+    double rhs_mse = rhs_metrics.getMetricMSEfilters();
+
+    if (lhs_mse == rhs_mse)
+    {
+        return (lhs_page < rhs_page);
+    }
+    else
+    {
+        return (lhs_mse < rhs_mse);
+    }
 }
 
 } // namespace deskew

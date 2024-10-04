@@ -80,11 +80,11 @@ OrderBySplitTypeProvider::precedes(
 
     if (lhs_layout_type == rhs_layout_type)
     {
-        return lhs_page < rhs_page;
+        return (lhs_page < rhs_page);
     }
     else
     {
-        return lhs_layout_type < rhs_layout_type;
+        return (lhs_layout_type < rhs_layout_type);
     }
 }
 

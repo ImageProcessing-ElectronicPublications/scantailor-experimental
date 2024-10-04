@@ -59,7 +59,8 @@ OrderByRatioProvider::precedes(
 
     float const lk = (float)(lhs_size.width() + 1) / (float)(lhs_size.height() + 1);
     float const rk = (float)(rhs_size.width() + 1) / (float)(rhs_size.height() + 1);
-    return lk < rk;
+
+    return (lk < rk);
 }
 
 } // namespace select_content

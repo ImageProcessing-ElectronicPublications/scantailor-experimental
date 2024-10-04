@@ -34,7 +34,9 @@
 #include "CacheDrivenTask.h"
 #include "RelinkablePath.h"
 #include "AbstractRelinker.h"
+#include "orders/OrderByTypeProvider.h"
 #include "orders/OrderByAngleProvider.h"
+#include "orders/OrderByAngleAbsProvider.h"
 #include "orders/OrderByAngleObliqueProvider.h"
 #include "orders/OrderByAngleHorProvider.h"
 #include "orders/OrderByAngleVertProvider.h"
@@ -55,12 +57,16 @@ Filter::Filter(PageSelectionAccessor const& page_selection_accessor)
     typedef PageOrderOption::ProviderPtr ProviderPtr;
 
     ProviderPtr const default_order;
+    ProviderPtr const order_by_type(new OrderByTypeProvider(m_ptrSettings));
     ProviderPtr const order_by_angle(new OrderByAngleProvider(m_ptrSettings));
+    ProviderPtr const order_by_angle_abs(new OrderByAngleAbsProvider(m_ptrSettings));
     ProviderPtr const order_by_angle_oblique(new OrderByAngleObliqueProvider(m_ptrSettings));
     ProviderPtr const order_by_angle_hor(new OrderByAngleHorProvider(m_ptrSettings));
     ProviderPtr const order_by_angle_vert(new OrderByAngleVertProvider(m_ptrSettings));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by type distortion"), order_by_type));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by increasing angle"), order_by_angle));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by angle size"), order_by_angle_abs));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by oblique"), order_by_angle_oblique));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by extension horizontally"), order_by_angle_hor));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by extension vertically"), order_by_angle_vert));

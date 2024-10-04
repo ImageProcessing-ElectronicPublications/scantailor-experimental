@@ -57,7 +57,7 @@ OrderByHeightProvider::precedes(
         return lhs_valid;
     }
 
-    return lhs_size.height() < rhs_size.height();
+    return (lhs_size.height() < rhs_size.height());
 }
 
 } // namespace select_content

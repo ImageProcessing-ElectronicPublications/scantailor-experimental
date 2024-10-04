@@ -22,7 +22,9 @@ SET(
     Params.cpp Params.h
     ApplyDialog.cpp ApplyDialog.h
     Utils.cpp Utils.h
+    orders/OrderByTypeProvider.cpp orders/OrderByTypeProvider.h
     orders/OrderByAngleProvider.cpp orders/OrderByAngleProvider.h
+    orders/OrderByAngleAbsProvider.cpp orders/OrderByAngleAbsProvider.h
     orders/OrderByAngleObliqueProvider.cpp orders/OrderByAngleObliqueProvider.h
     orders/OrderByAngleHorProvider.cpp orders/OrderByAngleHorProvider.h
     orders/OrderByAngleVertProvider.cpp orders/OrderByAngleVertProvider.h

@@ -19,15 +19,15 @@
 #ifndef PAGE_SPLIT_FILTER_H_
 #define PAGE_SPLIT_FILTER_H_
 
+#include <set>
+#include <QCoreApplication>
 #include "NonCopyable.h"
 #include "AbstractFilter.h"
 #include "PageView.h"
 #include "IntrusivePtr.h"
 #include "FilterResult.h"
 #include "SafeDeletingQObjectPtr.h"
-#include <set>
 #include "PageOrderOption.h"
-#include <QCoreApplication>
 
 class PageId;
 class ImageId;

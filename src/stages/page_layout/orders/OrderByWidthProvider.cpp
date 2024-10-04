@@ -58,7 +58,10 @@ OrderByWidthProvider::precedes(
         return lhs_valid;
     }
 
-    return lhs_size.width() < rhs_size.width();
+    float const lk = lhs_size.width();
+    float const rk = rhs_size.width();
+
+    return (lk < rk);
 }
 
 } // namespace page_layout

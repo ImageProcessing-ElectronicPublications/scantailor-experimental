@@ -22,18 +22,18 @@
 #include <QSizeF>
 #include "../Params.h"
 #include "../PageLayout.h"
-#include "OrderBySplitPosProvider.h"
+#include "OrderBySplitOffsetProvider.h"
 
 namespace page_split
 {
 
-OrderBySplitPosProvider::OrderBySplitPosProvider(IntrusivePtr<Settings> const& settings)
+OrderBySplitOffsetProvider::OrderBySplitOffsetProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderBySplitPosProvider::precedes(
+OrderBySplitOffsetProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -63,12 +63,16 @@ OrderBySplitPosProvider::precedes(
     {
         lhs_layout_pos = lhs_params->pageLayout().getSplitPosition();
     }
+    lhs_layout_pos -= 0.5;
+    lhs_layout_pos = (lhs_layout_pos < 0.0) ? -lhs_layout_pos : lhs_layout_pos;
 
     double rhs_layout_pos = 0.5;
     if (rhs_params)
     {
         rhs_layout_pos = rhs_params->pageLayout().getSplitPosition();
     }
+    rhs_layout_pos -= 0.5;
+    rhs_layout_pos = (rhs_layout_pos < 0.0) ? -rhs_layout_pos : rhs_layout_pos;
 
     if (lhs_layout_pos == rhs_layout_pos)
     {

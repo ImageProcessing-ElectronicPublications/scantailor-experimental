@@ -18,18 +18,18 @@
 
 #include <memory>
 #include "../Params.h"
-#include "OrderByAngleObliqueProvider.h"
+#include "OrderByTypeProvider.h"
 
 namespace deskew
 {
 
-OrderByAngleObliqueProvider::OrderByAngleObliqueProvider(IntrusivePtr<Settings> const& settings)
+OrderByTypeProvider::OrderByTypeProvider(IntrusivePtr<Settings> const& settings)
     :   m_ptrSettings(settings)
 {
 }
 
 bool
-OrderByAngleObliqueProvider::precedes(
+OrderByTypeProvider::precedes(
     PageId const& lhs_page, bool const lhs_incomplete,
     PageId const& rhs_page, bool const rhs_incomplete) const
 {
@@ -45,53 +45,53 @@ OrderByAngleObliqueProvider::precedes(
         return lhs_valid;
     }
 
-    double lhs_angle = 0.0;
+    int lhs_type = 0;
     if (lhs_params.get())
     {
         switch (lhs_params->distortionType().get())
         {
         case DistortionType::NONE:
-            lhs_angle = 0.0;
+            lhs_type = 0;
             break;
         case DistortionType::ROTATION:
-            lhs_angle = 0.0;
+            lhs_type = 1;
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngleOblique();
+            lhs_type = 2;
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngleOblique();
+            lhs_type = 3;
             break;
         } // switch
     }
 
-    double rhs_angle = 0.0;
+    int rhs_type = 0;
     if (rhs_params.get())
     {
         switch (rhs_params->distortionType().get())
         {
         case DistortionType::NONE:
-            rhs_angle = 0.0;
+            rhs_type = 0;
             break;
         case DistortionType::ROTATION:
-            rhs_angle = 0.0;
+            rhs_type = 1;
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngleOblique();
+            rhs_type = 2;
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngleOblique();
+            rhs_type = 3;
             break;
         } // switch
     }
 
-    if (lhs_angle == rhs_angle)
+    if (lhs_type == rhs_type)
     {
         return (lhs_page < rhs_page);
     }
     else
     {
-        return (lhs_angle < rhs_angle);
+        return (lhs_type < rhs_type);
     }
 }
 

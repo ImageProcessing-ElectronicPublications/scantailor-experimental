@@ -1,6 +1,7 @@
 /*
     Scan Tailor - Interactive post-processing tool for scanned pages.
     Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Copyright (C)  Vadim Kuznetsov ()DikBSD <dikbsd@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,10 +17,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SCANTAILOR_VERSION_H_
-#define SCANTAILOR_VERSION_H_
+#ifndef PAGE_SPLIT_ORDER_BY_SPLIT_OFFSET_PROVIDER_H_
+#define PAGE_SPLIT_ORDER_BY_SPLIT_OFFSET_PROVIDER_H_
 
-#define STFAMILY "experimental"
-#define VERSION "1.2024.10.04" // Must be "x.x.x.x" or an empty string.
+#include "../Settings.h"
+#include "IntrusivePtr.h"
+#include "PageOrderProvider.h"
 
-#endif
+namespace page_split
+{
+
+class OrderBySplitOffsetProvider : public PageOrderProvider
+{
+public:
+    OrderBySplitOffsetProvider(IntrusivePtr<Settings> const& settings);
+
+    virtual bool precedes(
+        PageId const& lhs_page, bool lhs_incomplete,
+        PageId const& rhs_page, bool rhs_incomplete) const;
+private:
+    IntrusivePtr<Settings> m_ptrSettings;
+};
+
+} // namespace page_split
+
+#endif //PAGE_SPLIT_ORDER_BY_SPLIT_OFFSET_PROVIDER_H_

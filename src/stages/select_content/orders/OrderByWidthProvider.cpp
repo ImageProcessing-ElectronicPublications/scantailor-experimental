@@ -57,7 +57,7 @@ OrderByWidthProvider::precedes(
         return lhs_valid;
     }
 
-    return lhs_size.width() < rhs_size.width();
+    return (lhs_size.width() < rhs_size.width());
 }
 
 } // namespace select_content

@@ -2115,32 +2115,42 @@ You should remove them from the project.</source>
 <context>
     <name>deskew::Filter</name>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="56"/>
+        <location filename="../stages/deskew/Filter.cpp" line="82"/>
         <source>Geometric Distortions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="61"/>
+        <location filename="../stages/deskew/Filter.cpp" line="66"/>
         <source>Natural order</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="62"/>
+        <location filename="../stages/deskew/Filter.cpp" line="67"/>
+        <source>Order by type distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="68"/>
         <source>Order by increasing angle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="63"/>
+        <location filename="../stages/deskew/Filter.cpp" line="69"/>
+        <source>Order by angle size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="70"/>
         <source>Order by oblique</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="64"/>
+        <location filename="../stages/deskew/Filter.cpp" line="71"/>
         <source>Order by extension horizontally</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="65"/>
+        <location filename="../stages/deskew/Filter.cpp" line="72"/>
         <source>Order by extension vertically</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2409,22 +2419,27 @@ You should remove them from the project.</source>
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="66"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
         <source>Natural order</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="67"/>
+        <location filename="../stages/page_split/Filter.cpp" line="69"/>
         <source>Order by split type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <location filename="../stages/page_split/Filter.cpp" line="70"/>
         <source>Order by split position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="78"/>
+        <location filename="../stages/page_split/Filter.cpp" line="71"/>
+        <source>Order by split offset size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="81"/>
         <source>Split Pages</source>
         <translation type="unfinished"></translation>
     </message>

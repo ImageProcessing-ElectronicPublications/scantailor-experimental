@@ -38,6 +38,7 @@
 #include "OrthogonalRotation.h"
 #include "orders/OrderBySplitTypeProvider.h"
 #include "orders/OrderBySplitPosProvider.h"
+#include "orders/OrderBySplitOffsetProvider.h"
 #include "CommandLine.h"
 
 namespace page_split
@@ -61,11 +62,13 @@ Filter::Filter(IntrusivePtr<ProjectPages> const& page_sequence,
     typedef PageOrderOption::ProviderPtr ProviderPtr;
 
     ProviderPtr const default_order;
-    ProviderPtr const order_by_splitline(new OrderBySplitTypeProvider(m_ptrSettings));
-    ProviderPtr const order_by_splitpos(new OrderBySplitPosProvider(m_ptrSettings));
+    ProviderPtr const order_by_split_line(new OrderBySplitTypeProvider(m_ptrSettings));
+    ProviderPtr const order_by_split_pos(new OrderBySplitPosProvider(m_ptrSettings));
+    ProviderPtr const order_by_split_offset(new OrderBySplitOffsetProvider(m_ptrSettings));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
-    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split type"), order_by_splitline));
-    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split position"), order_by_splitpos));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split type"), order_by_split_line));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split position"), order_by_split_pos));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by split offset size"), order_by_split_offset));
 }
 
 Filter::~Filter()

@@ -58,7 +58,10 @@ OrderByHeightProvider::precedes(
         return lhs_valid;
     }
 
-    return lhs_size.height() < rhs_size.height();
+    float const lk = lhs_size.height();
+    float const rk = rhs_size.height();
+
+    return (lk < rk);
 }
 
 } // namespace page_layout
