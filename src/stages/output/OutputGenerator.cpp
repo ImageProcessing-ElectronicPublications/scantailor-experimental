@@ -389,8 +389,8 @@ OutputGenerator::process(
             // We can't just downscale image, as this background estimation we
             // need to set outside pixels to black.
             double const downscale_factor = 300.0 / std::max<int>(
-                                               300, std::max(m_outRect.width(), m_outRect.height())
-                                           );
+                                                300, std::max(m_outRect.width(), m_outRect.height())
+                                            );
             auto downscaled_transform = m_ptrImageTransform->clone();
             QTransform const downscale_only_transform(
                 downscaled_transform->scale(downscale_factor, downscale_factor)

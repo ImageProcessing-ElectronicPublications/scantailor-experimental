@@ -33,18 +33,18 @@ namespace imageproc
 {
 
 InfluenceMap::InfluenceMap()
-    :    m_pData(0),
-         m_size(),
-         m_stride(0),
-         m_maxLabel(0)
+    : m_pData(0),
+      m_size(),
+      m_stride(0),
+      m_maxLabel(0)
 {
 }
 
 InfluenceMap::InfluenceMap(ConnectivityMap const& cmap)
-    :    m_pData(0),
-         m_size(),
-         m_stride(0),
-         m_maxLabel(0)
+    : m_pData(0),
+      m_size(),
+      m_stride(0),
+      m_maxLabel(0)
 {
     if (cmap.size().isEmpty())
     {
@@ -56,10 +56,10 @@ InfluenceMap::InfluenceMap(ConnectivityMap const& cmap)
 
 InfluenceMap::InfluenceMap(
     ConnectivityMap const& cmap, BinaryImage const& mask)
-    :    m_pData(0),
-         m_size(),
-         m_stride(0),
-         m_maxLabel(0)
+    : m_pData(0),
+      m_size(),
+      m_stride(0),
+      m_maxLabel(0)
 {
     if (cmap.size().isEmpty())
     {
@@ -74,11 +74,11 @@ InfluenceMap::InfluenceMap(
 }
 
 InfluenceMap::InfluenceMap(InfluenceMap const& other)
-    :    m_data(other.m_data),
-         m_pData(0),
-         m_size(other.size()),
-         m_stride(other.stride()),
-         m_maxLabel(other.m_maxLabel)
+    : m_data(other.m_data),
+      m_pData(0),
+      m_size(other.size()),
+      m_stride(other.stride()),
+      m_maxLabel(other.m_maxLabel)
 {
     if (!m_size.isEmpty())
     {

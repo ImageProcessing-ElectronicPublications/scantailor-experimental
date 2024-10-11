@@ -31,7 +31,7 @@ SplitModeDialog::SplitModeDialog(
     LayoutType const layout_type,
     PageLayout::Type const auto_detected_layout_type,
     bool const auto_detected_layout_type_valid)
-    :	QDialog(parent),
+    : QDialog(parent),
       m_pages(page_selection_accessor.allPages()),
       m_selectedPages(page_selection_accessor.selectedPages()),
       m_curPage(cur_page),

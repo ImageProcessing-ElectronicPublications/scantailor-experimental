@@ -26,7 +26,7 @@ namespace output
 ApplyColorsDialog::ApplyColorsDialog(
     QWidget* parent, PageId const& cur_page,
     PageSelectionAccessor const& page_selection_accessor)
-    :	QDialog(parent),
+    : QDialog(parent),
       m_pages(page_selection_accessor.allPages()),
       m_selectedPages(page_selection_accessor.selectedPages()),
       m_curPage(cur_page),

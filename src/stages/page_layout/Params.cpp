@@ -41,7 +41,7 @@ Params::Params(
 }
 
 Params::Params(QDomElement const& el)
-    :    m_hardMargins(
+    : m_hardMargins(
           XmlUnmarshaller::relativeMargins(
               el.namedItem("hardMargins").toElement()
           )

@@ -77,7 +77,7 @@ Task::Task(
     IntrusivePtr<Settings> const& settings,
     IntrusivePtr<page_split::Task> const& next_task,
     bool const batch_processing)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrNextTask(next_task),
       m_ptrSettings(settings),
       m_imageId(image_id),
@@ -138,7 +138,7 @@ Task::UiUpdater::UiUpdater(
     OrthogonalRotation const& rotation,
     ImageId const& image_id,
     bool const batch_processing)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_transformedImage(transformed_image),
       m_downscaledImage(

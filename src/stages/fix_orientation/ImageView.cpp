@@ -31,7 +31,7 @@ ImageView::ImageView(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     imageproc::AffineTransformedImage const& rotated_image,
     ImagePixmapUnion const& downscaled_image)
-    :	ImageViewBase(
+    : ImageViewBase(
           accel_ops, rotated_image.origImage(), downscaled_image,
           ImagePresentation(
               rotated_image.xform().transform(),

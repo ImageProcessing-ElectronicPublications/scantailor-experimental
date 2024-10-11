@@ -91,17 +91,17 @@ private:
 };
 
 BinaryImage::BinaryImage()
-    :    m_pData(0),
-         m_width(0),
-         m_height(0),
-         m_wpl(0)
+    : m_pData(0),
+      m_width(0),
+      m_height(0),
+      m_wpl(0)
 {
 }
 
 BinaryImage::BinaryImage(int const width, int const height)
-    :    m_width(width),
-         m_height(height),
-         m_wpl((width + 31) / 32)
+    : m_width(width),
+      m_height(height),
+      m_wpl((width + 31) / 32)
 {
     if (m_width > 0 && m_height > 0)
     {
@@ -114,9 +114,9 @@ BinaryImage::BinaryImage(int const width, int const height)
 }
 
 BinaryImage::BinaryImage(QSize const size)
-    :    m_width(size.width()),
-         m_height(size.height()),
-         m_wpl((size.width() + 31) / 32)
+    : m_width(size.width()),
+      m_height(size.height()),
+      m_wpl((size.width() + 31) / 32)
 {
     if (m_width > 0 && m_height > 0)
     {
@@ -129,9 +129,9 @@ BinaryImage::BinaryImage(QSize const size)
 }
 
 BinaryImage::BinaryImage(int const width, int const height, BWColor const color)
-    :    m_width(width),
-         m_height(height),
-         m_wpl((width + 31) / 32)
+    : m_width(width),
+      m_height(height),
+      m_wpl((width + 31) / 32)
 {
     if (m_width > 0 && m_height > 0)
     {
@@ -145,9 +145,9 @@ BinaryImage::BinaryImage(int const width, int const height, BWColor const color)
 }
 
 BinaryImage::BinaryImage(QSize const size, BWColor const color)
-    :    m_width(size.width()),
-         m_height(size.height()),
-         m_wpl((size.width() + 31) / 32)
+    : m_width(size.width()),
+      m_height(size.height()),
+      m_wpl((size.width() + 31) / 32)
 {
     if (m_width > 0 && m_height > 0)
     {
@@ -161,18 +161,18 @@ BinaryImage::BinaryImage(QSize const size, BWColor const color)
 }
 
 BinaryImage::BinaryImage(int const width, int const height, SharedData* const data)
-    :    m_pData(data),
-         m_width(width),
-         m_height(height),
-         m_wpl((width + 31) / 32)
+    : m_pData(data),
+      m_width(width),
+      m_height(height),
+      m_wpl((width + 31) / 32)
 {
 }
 
 BinaryImage::BinaryImage(BinaryImage const& other)
-    :    m_pData(other.m_pData),
-         m_width(other.m_width),
-         m_height(other.m_height),
-         m_wpl(other.m_wpl)
+    : m_pData(other.m_pData),
+      m_width(other.m_width),
+      m_height(other.m_height),
+      m_wpl(other.m_wpl)
 {
     if (m_pData)
     {
@@ -181,10 +181,10 @@ BinaryImage::BinaryImage(BinaryImage const& other)
 }
 
 BinaryImage::BinaryImage(QImage const& image, BinaryThreshold const threshold)
-    :    m_pData(0),
-         m_width(0),
-         m_height(0),
-         m_wpl(0)
+    : m_pData(0),
+      m_width(0),
+      m_height(0),
+      m_wpl(0)
 {
     QRect const image_rect(image.rect());
 
@@ -218,10 +218,10 @@ BinaryImage::BinaryImage(QImage const& image, BinaryThreshold const threshold)
 
 BinaryImage::BinaryImage(
     QImage const& image, QRect const& rect, BinaryThreshold const threshold)
-    :    m_pData(0),
-         m_width(0),
-         m_height(0),
-         m_wpl(0)
+    : m_pData(0),
+      m_width(0),
+      m_height(0),
+      m_wpl(0)
 {
     if (rect.isEmpty())
     {

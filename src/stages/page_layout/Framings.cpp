@@ -25,8 +25,8 @@ namespace page_layout
 {
 
 Framings::Framings(QDomElement const& el)
-      : m_framingw(el.attribute("framingWidth").toDouble()),
-        m_framingh(el.attribute("framingHeight").toDouble())
+    : m_framingw(el.attribute("framingWidth").toDouble()),
+      m_framingh(el.attribute("framingHeight").toDouble())
 {
 }
 

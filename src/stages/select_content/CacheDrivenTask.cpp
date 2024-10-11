@@ -35,7 +35,7 @@ namespace select_content
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<Settings> const& settings,
     IntrusivePtr<page_layout::CacheDrivenTask> const& next_task)
-    :	m_ptrSettings(settings),
+    : m_ptrSettings(settings),
       m_ptrNextTask(next_task)
 {
 }

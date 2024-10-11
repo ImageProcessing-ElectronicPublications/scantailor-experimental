@@ -32,7 +32,7 @@ namespace output
 
 DespeckleState::DespeckleState(
     QImage const& output, BinaryImage const& speckles, double factor)
-    :	m_speckles(speckles),
+    : m_speckles(speckles),
       m_despeckleFactor(factor)
 {
     m_everythingMixed = overlaySpeckles(output, speckles);

@@ -332,7 +332,7 @@ VertLineFinder::buildWeightTable(unsigned weight_table[])
 
 VertLineFinder::QualityLine::QualityLine(
     QPointF const& top, QPointF const& bottom, unsigned const quality)
-    :	m_quality(quality)
+    : m_quality(quality)
 {
     if (top.x() < bottom.x())
     {
@@ -356,7 +356,7 @@ VertLineFinder::QualityLine::toQLine() const
 /*======================= VertLineFinder::LineGroup ========================*/
 
 VertLineFinder::LineGroup::LineGroup(QualityLine const& line)
-    :	m_leader(line),
+    : m_leader(line),
       m_left(line.left().x()),
       m_right(line.right().x())
 {

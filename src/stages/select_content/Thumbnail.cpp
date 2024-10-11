@@ -34,7 +34,7 @@ Thumbnail::Thumbnail(
     QSizeF const& max_display_size, PageId const& page_id,
     imageproc::AbstractImageTransform const& full_size_image_transform,
     ContentBox const& content_box)
-    :	ThumbnailBase(
+    : ThumbnailBase(
           thumbnail_cache, max_display_size,
           page_id, full_size_image_transform
       )

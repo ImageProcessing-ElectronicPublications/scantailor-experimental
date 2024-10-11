@@ -115,7 +115,7 @@ DespeckleView::DespeckleView(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     DespeckleState const& despeckle_state,
     DespeckleVisualization const& visualization, bool debug)
-    :	m_ptrAccelOps(accel_ops),
+    : m_ptrAccelOps(accel_ops),
       m_despeckleState(despeckle_state),
       m_pProcessingIndicator(new ProcessingIndicationWidget(this)),
       m_despeckleFactor(despeckle_state.factor()),
@@ -277,7 +277,7 @@ DespeckleView::DespeckleTask::DespeckleTask(
     DespeckleState const& despeckle_state,
     IntrusivePtr<TaskCancelHandle> const& cancel_handle,
     double const factor, bool const debug)
-    :	m_ptrOwner(owner),
+    : m_ptrOwner(owner),
       m_ptrAccelOps(accel_ops),
       m_despeckleState(despeckle_state),
       m_ptrCancelHandle(cancel_handle),
@@ -328,7 +328,7 @@ DespeckleView::DespeckleResult::DespeckleResult(
     DespeckleState const& despeckle_state,
     DespeckleVisualization const& visualization,
     std::unique_ptr<DebugImagesImpl>& debug_images)
-    :	m_ptrOwner(owner),
+    : m_ptrOwner(owner),
       m_ptrCancelHandle(cancel_handle),
       m_despeckleState(despeckle_state),
       m_visualization(visualization)

@@ -42,7 +42,7 @@ namespace select_content
 
 Filter::Filter(
     PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(new Settings),
+    : m_ptrSettings(new Settings),
       m_selectedPageOrder(0)
 {
     if (CommandLine::get().isGui())

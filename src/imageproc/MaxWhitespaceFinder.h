@@ -358,10 +358,10 @@ PriorityStorageImpl<QualityCompare>::popHeap(
 template<typename QualityCompare>
 MaxWhitespaceFinder::MaxWhitespaceFinder(
     QualityCompare const comp, BinaryImage const& img, QSize const min_size)
-    :    m_integralImg(img.size()),
-         m_ptrQueuedRegions(
-             new max_whitespace_finder::PriorityStorageImpl<QualityCompare>(comp)),
-         m_minSize(min_size)
+    : m_integralImg(img.size()),
+      m_ptrQueuedRegions(
+          new max_whitespace_finder::PriorityStorageImpl<QualityCompare>(comp)),
+      m_minSize(min_size)
 {
     init(img);
 }

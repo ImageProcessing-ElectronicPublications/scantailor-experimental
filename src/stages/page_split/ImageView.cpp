@@ -42,7 +42,7 @@ ImageView::ImageView(
     ImagePixmapUnion const& downscaled_image,
     PageLayout const& layout, IntrusivePtr<ProjectPages> const& pages,
     ImageId const& image_id, bool left_half_removed, bool right_half_removed)
-    :	ImageViewBase(
+    : ImageViewBase(
           accel_ops, full_size_image.origImage(), downscaled_image,
           ImagePresentation(
               full_size_image.xform().transform(),

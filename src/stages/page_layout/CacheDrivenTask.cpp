@@ -41,7 +41,7 @@ namespace page_layout
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<output::CacheDrivenTask> const& next_task,
     IntrusivePtr<Settings> const& settings)
-    :    m_ptrNextTask(next_task)
+    : m_ptrNextTask(next_task)
     ,    m_ptrSettings(settings)
 {
 }

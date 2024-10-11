@@ -125,7 +125,7 @@ inline uint32_t threshold4(uint32_t const top, uint32_t const bottom)
 
 
 ReduceThreshold::ReduceThreshold(BinaryImage const& image)
-    :    m_image(image)
+    : m_image(image)
 {
 }
 

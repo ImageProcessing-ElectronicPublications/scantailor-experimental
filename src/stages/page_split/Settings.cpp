@@ -27,7 +27,7 @@ namespace page_split
 {
 
 Settings::Settings()
-    :	m_defaultLayoutType(AUTO_LAYOUT_TYPE)
+    : m_defaultLayoutType(AUTO_LAYOUT_TYPE)
 {
 }
 
@@ -260,7 +260,7 @@ Settings::conditionalUpdate(
 /*======================= Settings::BaseRecord ======================*/
 
 Settings::BaseRecord::BaseRecord()
-    :	m_params(PageLayout(), Dependencies(), MODE_AUTO),
+    : m_params(PageLayout(), Dependencies(), MODE_AUTO),
       m_layoutType(AUTO_LAYOUT_TYPE),
       m_paramsValid(false),
       m_layoutTypeValid(false)
@@ -314,14 +314,14 @@ Settings::BaseRecord::hasLayoutTypeConflict(LayoutType const layout_type) const
 /*========================= Settings::Record ========================*/
 
 Settings::Record::Record(LayoutType const default_layout_type)
-    :	m_defaultLayoutType(default_layout_type)
+    : m_defaultLayoutType(default_layout_type)
 {
 }
 
 Settings::Record::Record(
     BaseRecord const& base_record,
     LayoutType const default_layout_type)
-    :	BaseRecord(base_record),
+    : BaseRecord(base_record),
       m_defaultLayoutType(default_layout_type)
 {
 }

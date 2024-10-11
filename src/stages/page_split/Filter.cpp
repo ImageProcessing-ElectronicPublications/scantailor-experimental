@@ -46,7 +46,7 @@ namespace page_split
 
 Filter::Filter(IntrusivePtr<ProjectPages> const& page_sequence,
                PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrPages(page_sequence),
+    : m_ptrPages(page_sequence),
       m_ptrSettings(new Settings),
       m_selectedPageOrder(0)
 {

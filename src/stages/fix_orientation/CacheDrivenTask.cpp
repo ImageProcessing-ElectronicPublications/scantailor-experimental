@@ -35,7 +35,7 @@ namespace fix_orientation
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<Settings> const& settings,
     IntrusivePtr<page_split::CacheDrivenTask> const& next_task)
-    :	m_ptrNextTask(next_task),
+    : m_ptrNextTask(next_task),
       m_ptrSettings(settings)
 {
 }

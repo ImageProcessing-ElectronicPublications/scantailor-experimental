@@ -27,13 +27,13 @@ namespace output
 {
 
 OutputFileParams::OutputFileParams()
-    :	m_size(-1),
+    : m_size(-1),
       m_mtime(0)
 {
 }
 
 OutputFileParams::OutputFileParams(QFileInfo const& file_info)
-    :	m_size(-1),
+    : m_size(-1),
       m_mtime(0)
 {
     if (file_info.exists())
@@ -44,7 +44,7 @@ OutputFileParams::OutputFileParams(QFileInfo const& file_info)
 }
 
 OutputFileParams::OutputFileParams(QDomElement const& el)
-    :	m_size(-1),
+    : m_size(-1),
       m_mtime(0)
 {
     if (el.hasAttribute("size"))

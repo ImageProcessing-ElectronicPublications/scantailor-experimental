@@ -44,11 +44,11 @@ int const SkewFinder::DEFAULT_FINE_REDUCTION = 1;
 double const SkewFinder::LOW_SCORE = 1000.0;
 
 SkewFinder::SkewFinder()
-    :    m_maxAngle(DEFAULT_MAX_ANGLE),
-         m_accuracy(DEFAULT_ACCURACY),
-         m_resolutionRatio(1.0),
-         m_coarseReduction(DEFAULT_COARSE_REDUCTION),
-         m_fineReduction(DEFAULT_FINE_REDUCTION)
+    : m_maxAngle(DEFAULT_MAX_ANGLE),
+      m_accuracy(DEFAULT_ACCURACY),
+      m_resolutionRatio(1.0),
+      m_coarseReduction(DEFAULT_COARSE_REDUCTION),
+      m_fineReduction(DEFAULT_FINE_REDUCTION)
 {
 }
 

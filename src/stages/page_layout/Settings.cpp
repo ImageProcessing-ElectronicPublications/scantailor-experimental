@@ -58,11 +58,11 @@ public:
     Framings framings;
 
     Item(PageId const& page_id,
-        RelativeMargins const& hard_margins,
-        QSizeF const& content_size,
-        MatchSizeMode const& match_size_mode,
-        Alignment const& alignment,
-        Framings const& framings);
+         RelativeMargins const& hard_margins,
+         QSizeF const& content_size,
+         MatchSizeMode const& match_size_mode,
+         Alignment const& alignment,
+         Framings const& framings);
 
     double hardWidth() const;
 
@@ -258,7 +258,7 @@ private:
 /*=============================== Settings ==================================*/
 
 Settings::Settings()
-    :    m_ptrImpl(new Impl())
+    : m_ptrImpl(new Impl())
 {
 }
 
@@ -456,7 +456,7 @@ Settings::Item::influenceHardHeight() const
 /*============================= Settings::Impl ==============================*/
 
 Settings::Impl::Impl()
-    :    m_items(),
+    : m_items(),
       m_unorderedItems(m_items.get<SequencedTag>()),
       m_descWidthOrder(m_items.get<DescWidthTag>()),
       m_descHeightOrder(m_items.get<DescHeightTag>()),

@@ -37,15 +37,15 @@ RotationThumbnail::RotationThumbnail(
     QSizeF const& max_display_size, PageId const& page_id,
     AffineImageTransform const& full_size_image_transform,
     double compensation_angle_deg, bool draw_grid)
-    :    ThumbnailBase(
-             thumbnail_cache, max_display_size, page_id,
-             full_size_image_transform.adjusted(
-                 [compensation_angle_deg](AffineImageTransform& xform)
+    : ThumbnailBase(
+          thumbnail_cache, max_display_size, page_id,
+          full_size_image_transform.adjusted(
+              [compensation_angle_deg](AffineImageTransform& xform)
 {
     xform.rotate(compensation_angle_deg);
 }
-         )
-     )
+      )
+  )
 ,    m_drawGrid(draw_grid)
 {
 }

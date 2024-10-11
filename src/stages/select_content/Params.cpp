@@ -28,7 +28,7 @@ namespace select_content
 Params::Params(
     ContentBox const& content_box, QSizeF const& content_size_px,
     Dependencies const& deps, AutoManualMode const mode)
-    :	m_contentBox(content_box),
+    : m_contentBox(content_box),
       m_contentSizePx(content_size_px),
       m_deps(deps),
       m_mode(mode)
@@ -36,19 +36,19 @@ Params::Params(
 }
 
 Params::Params(Dependencies const& deps)
-    :	m_deps(deps)
+    : m_deps(deps)
 {
 }
 
 Params::Params(QDomElement const& filter_el)
-    :	m_contentBox(filter_el.namedItem("content-box").toElement())
-    ,	m_contentSizePx(
+    : m_contentBox(filter_el.namedItem("content-box").toElement())
+    ,    m_contentSizePx(
           XmlUnmarshaller::sizeF(
               filter_el.namedItem("content-size-px").toElement()
           )
       )
-    ,	m_deps(filter_el.namedItem("dependencies").toElement())
-    ,	m_mode(filter_el.attribute("mode") == "manual" ? MODE_MANUAL : MODE_AUTO)
+    ,    m_deps(filter_el.namedItem("dependencies").toElement())
+    ,    m_mode(filter_el.attribute("mode") == "manual" ? MODE_MANUAL : MODE_AUTO)
 {
 }
 

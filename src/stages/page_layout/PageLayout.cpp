@@ -58,9 +58,9 @@ PageLayout::PageLayout(
         double const pagewidthy = m_innerRect.height() * 0.7071067811865475244;
         double const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
         double const x_scale = aggregate_hard_size.width() /
-                              (m_innerRect.width() + (margins.left() + margins.right()) * pagewidth);
+                               (m_innerRect.width() + (margins.left() + margins.right()) * pagewidth);
         double const y_scale = aggregate_hard_size.height() /
-                              (m_innerRect.height() + (margins.top() + margins.bottom()) * pagewidth);
+                               (m_innerRect.height() + (margins.top() + margins.bottom()) * pagewidth);
 
         if (x_scale > 1.0 && y_scale > 1.0)
         {

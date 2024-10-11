@@ -57,10 +57,10 @@ Brick::Brick(QSize const& size, QPoint const& origin)
 }
 
 Brick::Brick(int min_x, int min_y, int max_x, int max_y)
-    :    m_minX(min_x),
-         m_maxX(max_x),
-         m_minY(min_y),
-         m_maxY(max_y)
+    : m_minX(min_x),
+      m_maxX(max_x),
+      m_minY(min_y),
+      m_maxY(max_y)
 {
 }
 

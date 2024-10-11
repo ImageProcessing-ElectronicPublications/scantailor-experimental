@@ -35,13 +35,13 @@ namespace imageproc
 class GrayImage;
 
 WatershedSegmentation::WatershedSegmentation()
-    :    m_maxLabel(0)
+    : m_maxLabel(0)
 {
 }
 
 WatershedSegmentation::WatershedSegmentation(
     GrayImage const& image, Connectivity const conn)
-    :    m_grid(image.width(), image.height(), /*padding=*/0)
+    : m_grid(image.width(), image.height(), /*padding=*/0)
     ,    m_maxLabel(0)
 {
     if (image.isNull())

@@ -34,7 +34,7 @@ namespace page_split
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<Settings> const& settings,
     IntrusivePtr<deskew::CacheDrivenTask> const& next_task)
-    :	m_ptrNextTask(next_task),
+    : m_ptrNextTask(next_task),
       m_ptrSettings(settings)
 {
 }

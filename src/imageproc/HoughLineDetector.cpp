@@ -59,8 +59,8 @@ public:
 HoughLineDetector::HoughLineDetector(
     QSize const& input_dimensions, double const distance_resolution,
     double const start_angle, double const angle_delta, int const num_angles)
-    :    m_distanceResolution(distance_resolution),
-         m_recipDistanceResolution(1.0 / distance_resolution)
+    : m_distanceResolution(distance_resolution),
+      m_recipDistanceResolution(1.0 / distance_resolution)
 {
     int const max_x = input_dimensions.width() - 1;
     int const max_y = input_dimensions.height() - 1;

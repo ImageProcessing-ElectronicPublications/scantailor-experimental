@@ -286,7 +286,7 @@ HoughTransform<T, Angle>::HoughTransform(
     QSize const& spatial_size, double distance_step,
     HoughAngleCollection<Angle> const& angles,
     T const hough_space_initial_value)
-    :    m_angles(angles.angles)
+    : m_angles(angles.angles)
     ,    m_spatialSize(spatial_size)
     ,    m_spatialOrigin(0.5 * spatial_size.width(), 0.5 * spatial_size.height())
     ,    m_distanceStep(distance_step)

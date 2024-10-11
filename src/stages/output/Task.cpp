@@ -344,8 +344,8 @@ Task::processScaled(
         ColorParams color_params(params.colorParams());
         color_params.setMetricsOptions(generator.metrics);
         m_ptrSettings->setColorParams(m_pageId, color_params);
-		OptionsWidget* const opt_widget = m_ptrFilter->optionsWidget();
-		opt_widget->preUpdateUI(m_pageId);
+        OptionsWidget* const opt_widget = m_ptrFilter->optionsWidget();
+        opt_widget->preUpdateUI(m_pageId);
 
         if (write_speckles_file && speckles_img.isNull())
         {
@@ -529,23 +529,23 @@ Task::UiUpdater::UiUpdater(
     DespeckleVisualization const& despeckle_visualization,
     bool const batch, bool const debug)
     :   m_ptrFilter(filter),
-      m_ptrAccelOps(accel_ops),
-      m_ptrSettings(settings),
-      m_ptrDbg(std::move(dbg_img)),
-      m_params(params),
-      m_pageId(page_id),
-      m_origImage(orig_image),
-      m_outputImage(output_image),
-      m_origToOutput(orig_to_output),
-      m_outputToOrig(output_to_orig),
-      m_downscaledOutputImage(ImageViewBase::createDownscaledImage(output_image, accel_ops)),
-      m_pictureMask(picture_mask),
-      m_cachedTransformedOrigImage(cached_transformed_orig_image),
-      m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image),
-      m_despeckleState(despeckle_state),
-      m_despeckleVisualization(despeckle_visualization),
-      m_batchProcessing(batch),
-      m_debug(debug)
+        m_ptrAccelOps(accel_ops),
+        m_ptrSettings(settings),
+        m_ptrDbg(std::move(dbg_img)),
+        m_params(params),
+        m_pageId(page_id),
+        m_origImage(orig_image),
+        m_outputImage(output_image),
+        m_origToOutput(orig_to_output),
+        m_outputToOrig(output_to_orig),
+        m_downscaledOutputImage(ImageViewBase::createDownscaledImage(output_image, accel_ops)),
+        m_pictureMask(picture_mask),
+        m_cachedTransformedOrigImage(cached_transformed_orig_image),
+        m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image),
+        m_despeckleState(despeckle_state),
+        m_despeckleVisualization(despeckle_visualization),
+        m_batchProcessing(batch),
+        m_debug(debug)
 {
 }
 

@@ -33,7 +33,7 @@ Dependencies::Dependencies()
 }
 
 Dependencies::Dependencies(QDomElement const& el)
-    :	m_imageSize(XmlUnmarshaller::size(el.namedItem("size").toElement())),
+    : m_imageSize(XmlUnmarshaller::size(el.namedItem("size").toElement())),
       m_rotation(el.namedItem("rotation").toElement()),
       m_layoutType(
           layoutTypeFromString(
@@ -46,7 +46,7 @@ Dependencies::Dependencies(QDomElement const& el)
 Dependencies::Dependencies(
     QSize const& image_size, OrthogonalRotation const rotation,
     LayoutType const layout_type)
-    :	m_imageSize(image_size),
+    : m_imageSize(image_size),
       m_rotation(rotation),
       m_layoutType(layout_type)
 {

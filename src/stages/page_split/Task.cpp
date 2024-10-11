@@ -104,7 +104,7 @@ Task::Task(
     IntrusivePtr<deskew::Task> const& next_task,
     PageInfo const& page_info,
     bool const batch_processing, bool const debug)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrSettings(settings),
       m_ptrPages(pages),
       m_ptrNextTask(next_task),
@@ -243,7 +243,7 @@ Task::UiUpdater::UiUpdater(
     Params const& params,
     bool const layout_type_auto_detected,
     bool const batch_processing)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_ptrPages(pages),
       m_ptrDbg(std::move(dbg_img)),

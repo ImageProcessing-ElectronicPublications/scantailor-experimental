@@ -41,7 +41,7 @@ Thumbnail::Thumbnail(
     AbstractImageTransform const& full_size_image_transform,
     PageLayout const& page_layout,
     Framings const& framings)
-    :    ThumbnailBase(
+    : ThumbnailBase(
           thumbnail_cache,
           max_display_size,
           page_id,

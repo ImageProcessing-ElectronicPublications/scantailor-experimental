@@ -43,7 +43,7 @@ namespace fix_orientation
 
 Filter::Filter(
     PageSelectionAccessor const& page_selection_accessor)
-    :	m_ptrSettings(new Settings)
+    : m_ptrSettings(new Settings)
 {
     if (CommandLine::get().isGui())
     {

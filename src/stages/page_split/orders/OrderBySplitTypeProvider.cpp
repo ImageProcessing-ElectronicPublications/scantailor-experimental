@@ -28,7 +28,7 @@ namespace page_split
 {
 
 OrderBySplitTypeProvider::OrderBySplitTypeProvider(IntrusivePtr<Settings> const& settings)
-    :	m_ptrSettings(settings)
+    : m_ptrSettings(settings)
 {
 }
 

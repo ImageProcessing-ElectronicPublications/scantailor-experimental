@@ -37,11 +37,11 @@ OptionsWidget::OptionsWidget(
     IntrusivePtr<ProjectPages> const& page_sequence,
     PageSelectionAccessor const& page_selection_accessor)
     :   m_ptrSettings(settings),
-      m_ptrPages(page_sequence),
-      m_pageSelectionAccessor(page_selection_accessor),
-      m_ignoreAutoManualToggle(0),
-      m_ignoreLayoutTypeToggle(0),
-      m_layoutTypeAutoDetected(false)
+        m_ptrPages(page_sequence),
+        m_pageSelectionAccessor(page_selection_accessor),
+        m_ignoreAutoManualToggle(0),
+        m_ignoreLayoutTypeToggle(0),
+        m_layoutTypeAutoDetected(false)
 {
     setupUi(this);
 

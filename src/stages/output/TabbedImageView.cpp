@@ -22,7 +22,7 @@ namespace output
 {
 
 TabbedImageView::TabbedImageView(QWidget* parent)
-    :	QTabWidget(parent)
+    : QTabWidget(parent)
 {
     connect(this, SIGNAL(currentChanged(int)), SLOT(tabChangedSlot(int)));
 }

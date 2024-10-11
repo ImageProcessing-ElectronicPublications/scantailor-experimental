@@ -72,16 +72,16 @@ OnDemandPictureZoneEditor::OnDemandPictureZoneEditor(
     PageId const& page_id, IntrusivePtr<Settings> const& settings,
     std::function<QPointF(QPointF const&)> const& orig_to_output,
     std::function<QPointF(QPointF const&)> const& output_to_orig)
-    :	m_ptrAccelOps(accel_ops)
-    ,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
-    ,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
-    ,	m_outputPictureMask(output_picture_mask)
-    ,	m_pageId(page_id)
-    ,	m_ptrSettings(settings)
-    ,	m_origToOutput(orig_to_output)
-    ,	m_outputToOrig(output_to_orig)
-    ,	m_pProcessingIndicator(new ProcessingIndicationWidget(this))
-    ,	m_backgroundTaskSubmitted(false)
+    : m_ptrAccelOps(accel_ops)
+    ,    m_cachedTransformedOrigImage(cached_transformed_orig_image)
+    ,    m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
+    ,    m_outputPictureMask(output_picture_mask)
+    ,    m_pageId(page_id)
+    ,    m_ptrSettings(settings)
+    ,    m_origToOutput(orig_to_output)
+    ,    m_outputToOrig(output_to_orig)
+    ,    m_pProcessingIndicator(new ProcessingIndicationWidget(this))
+    ,    m_backgroundTaskSubmitted(false)
 {
     addWidget(m_pProcessingIndicator);
 
@@ -137,9 +137,9 @@ OnDemandPictureZoneEditor::ImageTransformationTask::ImageTransformationTask(
     OnDemandPictureZoneEditor* owner,
     CachingFactory<QImage> const& cached_transformed_orig_image,
     CachingFactory<QImage> const& cached_downscaled_transformed_orig_image)
-    :	m_ptrOwner(owner)
-    ,	m_cachedTransformedOrigImage(cached_transformed_orig_image)
-    ,	m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
+    : m_ptrOwner(owner)
+    ,    m_cachedTransformedOrigImage(cached_transformed_orig_image)
+    ,    m_cachedDownscaledTransformedOrigImage(cached_downscaled_transformed_orig_image)
 {
 }
 
@@ -161,7 +161,7 @@ OnDemandPictureZoneEditor::ImageTransformationTask::operator()()
 
 OnDemandPictureZoneEditor::ImageTransformationResult::ImageTransformationResult(
     QPointer<OnDemandPictureZoneEditor> const& owner)
-    :	m_ptrOwner(owner)
+    : m_ptrOwner(owner)
 {
 }
 

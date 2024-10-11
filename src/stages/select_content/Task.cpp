@@ -78,7 +78,7 @@ Task::Task(IntrusivePtr<Filter> const& filter,
            IntrusivePtr<page_layout::Task> const& next_task,
            IntrusivePtr<Settings> const& settings,
            PageId const& page_id, bool const batch, bool const debug)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrNextTask(next_task),
       m_ptrSettings(settings),
       m_pageId(page_id),
@@ -190,7 +190,7 @@ Task::UiUpdater::UiUpdater(
     Params const& params, std::unique_ptr<DebugImagesImpl> dbg,
     std::shared_ptr<AbstractImageTransform const> const& orig_transform,
     AffineTransformedImage const& affine_transformed_image, bool const batch)
-    :	m_ptrFilter(filter),
+    : m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_pageId(page_id),
       m_params(params),

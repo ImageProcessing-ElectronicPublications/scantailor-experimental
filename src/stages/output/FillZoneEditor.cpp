@@ -65,7 +65,7 @@ FillZoneEditor::FillZoneEditor(
     boost::function<QPointF(QPointF const&)> const& orig_to_image,
     boost::function<QPointF(QPointF const&)> const& image_to_orig,
     PageId const& page_id, IntrusivePtr<Settings> const& settings)
-    :	ImageViewBase(
+    : ImageViewBase(
           accel_ops, image, downscaled_version,
           ImagePresentation(QTransform(), QRectF(image.rect())),
           OutputMargins()

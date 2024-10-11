@@ -260,11 +260,11 @@ PolygonRasterizer::fillExcept(
 
 PolygonRasterizer::Edge::Edge(
     QPointF const& top, QPointF const& bottom, int const vert_direction)
-    :    m_top(top),
-         m_bottom(bottom),
-         m_deltaX(bottom.x() - top.x()),
-         m_reDeltaY(1.0 / (bottom.y() - top.y())),
-         m_vertDirection(vert_direction)
+    : m_top(top),
+      m_bottom(bottom),
+      m_deltaX(bottom.x() - top.x()),
+      m_reDeltaY(1.0 / (bottom.y() - top.y())),
+      m_vertDirection(vert_direction)
 {
 }
 
@@ -299,9 +299,9 @@ PolygonRasterizer::Edge::xForY(double y) const
 PolygonRasterizer::Rasterizer::Rasterizer(
     QRect const& image_rect, QPolygonF const& poly,
     Qt::FillRule const fill_rule, bool const invert)
-    :    m_imageRect(image_rect),
-         m_fillRule(fill_rule),
-         m_invert(invert)
+    : m_imageRect(image_rect),
+      m_fillRule(fill_rule),
+      m_invert(invert)
 {
     QPainterPath path1;
     path1.setFillRule(fill_rule);

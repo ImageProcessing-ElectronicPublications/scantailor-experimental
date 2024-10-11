@@ -48,7 +48,7 @@ ImageView::ImageView(
     AffineTransformedImage const& affine_transformed_image,
     ImagePixmapUnion const& downscaled_image,
     ContentBox const& content_box)
-    :	ImageViewBase(
+    : ImageViewBase(
           accel_ops, affine_transformed_image.origImage(), downscaled_image,
           ImagePresentation(
               affine_transformed_image.xform().transform(),

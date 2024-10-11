@@ -45,10 +45,10 @@ DewarpingThumbnail::DewarpingThumbnail(
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
     dewarping::DepthPerception const& depth_perception)
-    :    ThumbnailBase(
-             thumbnail_cache, max_display_size,
-             page_id, full_size_image_transform
-         )
+    : ThumbnailBase(
+          thumbnail_cache, max_display_size,
+          page_id, full_size_image_transform
+      )
     ,    m_topCurve(top_curve)
     ,    m_bottomCurve(bottom_curve)
     ,    m_depthPerception(depth_perception)

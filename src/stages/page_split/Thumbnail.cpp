@@ -37,7 +37,7 @@ Thumbnail::Thumbnail(
     PageLayout const& layout,
     imageproc::AffineImageTransform const& full_size_image_transform,
     bool left_half_removed, bool right_half_removed)
-    :	ThumbnailBase(
+    : ThumbnailBase(
           thumbnail_cache, max_display_size, page_id,
           full_size_image_transform
       ),

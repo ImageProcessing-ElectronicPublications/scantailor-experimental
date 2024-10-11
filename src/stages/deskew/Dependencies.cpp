@@ -34,18 +34,18 @@ Dependencies::Dependencies()
 
 Dependencies::Dependencies(
     QPolygonF const& page_outline, OrthogonalRotation const rotation)
-    :    m_pageOutline(page_outline),
-         m_rotation(rotation)
+    : m_pageOutline(page_outline),
+      m_rotation(rotation)
 {
 }
 
 Dependencies::Dependencies(QDomElement const& deps_el)
-    :    m_pageOutline(
-             XmlUnmarshaller::polygonF(
-                 deps_el.namedItem("page-outline").toElement()
-             )
-         ),
-         m_rotation(deps_el.namedItem("rotation").toElement())
+    : m_pageOutline(
+          XmlUnmarshaller::polygonF(
+              deps_el.namedItem("page-outline").toElement()
+          )
+      ),
+      m_rotation(deps_el.namedItem("rotation").toElement())
 {
 }
 

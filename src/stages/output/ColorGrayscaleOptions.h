@@ -72,7 +72,7 @@ public:
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-     double curveCoef() const
+    double curveCoef() const
     {
         return m_curveCoef;
     }
@@ -98,7 +98,7 @@ public:
     {
         m_wienerSize = val;
     }
-   double wienerCoef() const
+    double wienerCoef() const
     {
         return m_wienerCoef;
     }

@@ -29,12 +29,12 @@ Dependencies::Dependencies()
 }
 
 Dependencies::Dependencies(QString const& transform_fingerprint)
-    :	m_transformFingerprint(transform_fingerprint)
+    : m_transformFingerprint(transform_fingerprint)
 {
 }
 
 Dependencies::Dependencies(QDomElement const& deps_el)
-    :	m_transformFingerprint(
+    : m_transformFingerprint(
           deps_el.namedItem(
               QStringLiteral("transform-fingerprint")
           ).toElement().text().trimmed().toLatin1()

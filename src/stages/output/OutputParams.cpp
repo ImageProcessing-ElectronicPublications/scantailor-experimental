@@ -32,7 +32,7 @@ OutputParams::OutputParams(
     OutputFileParams const& speckles_file_params,
     ZoneSet const& picture_zones,
     ZoneSet const& fill_zones)
-    :	m_outputImageParams(output_image_params),
+    : m_outputImageParams(output_image_params),
       m_outputFileParams(output_file_params),
       m_automaskFileParams(automask_file_params),
       m_specklesFileParams(speckles_file_params),
@@ -42,7 +42,7 @@ OutputParams::OutputParams(
 }
 
 OutputParams::OutputParams(QDomElement const& el)
-    :	m_outputImageParams(el.namedItem("image").toElement()),
+    : m_outputImageParams(el.namedItem("image").toElement()),
       m_outputFileParams(el.namedItem("file").toElement()),
       m_automaskFileParams(el.namedItem("automask").toElement()),
       m_specklesFileParams(el.namedItem("speckles").toElement()),

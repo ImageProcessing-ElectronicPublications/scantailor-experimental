@@ -1,19 +1,19 @@
 /*
-	Scan Tailor - Interactive post-processing tool for scanned pages.
-	Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
+    Scan Tailor - Interactive post-processing tool for scanned pages.
+    Copyright (C)  Joseph Artsimovich <joseph.artsimovich@gmail.com>
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ColorPickupInteraction.h"
@@ -40,7 +40,7 @@ namespace output
 
 ColorPickupInteraction::ColorPickupInteraction(
     EditableZoneSet& zones, ZoneInteractionContext& context)
-    :	m_rZones(zones),
+    : m_rZones(zones),
       m_rContext(context),
       m_dontDrawCircle(0)
 {
@@ -217,16 +217,16 @@ ColorPickupInteraction::bitUnmixColor(uint32_t const mixed)
  * uint32_t const bit23 = 1 << 23;
  * int const bit7 = 1 << 7;
  * for (int partition = 0; partition < 3; ++partition) {
- *		for (int sample = 0; sample < 256; ++sample) {
- *			uint32_t accum = 0;
- *			for (int bit = 0; bit < 8; ++bit) {
- *				if (sample & (bit7 >> bit)) {
- *					accum |= bit23 >> (bit * 3 + partition);
- *				}
- *			}
- *			m_sBitMixingLUT[partition][sample] = accum;
- *		}
- *	}
+ *        for (int sample = 0; sample < 256; ++sample) {
+ *            uint32_t accum = 0;
+ *            for (int bit = 0; bit < 8; ++bit) {
+ *                if (sample & (bit7 >> bit)) {
+ *                    accum |= bit23 >> (bit * 3 + partition);
+ *                }
+ *            }
+ *            m_sBitMixingLUT[partition][sample] = accum;
+ *        }
+ *    }
  * \endcode
  */
 uint32_t const ColorPickupInteraction::m_sBitMixingLUT[3][256] =
@@ -341,19 +341,19 @@ uint32_t const ColorPickupInteraction::m_sBitMixingLUT[3][256] =
  * uint32_t const bit23 = 1 << 23;
  * int const bit7 = 1 << 7;
  * for (int partition = 0; partition < 3; ++partition) {
- *		for (int sample = 0; sample < 256; ++sample) {
- *			uint32_t accum = 0;
- *			for (int bit = 0; bit < 8; ++bit) {
- *				if (sample & (bit7 >> bit)) {
- *					int const src_offset = bit + partition * 8;
- *					int const channel = src_offset % 3;
- *					int const dst_offset = src_offset / 3;
- *					accum |= bit23 >> (channel * 8 + dst_offset);
- *				}
- *			}
- *			m_sBitUnmixingLUT[partition][sample] = accum;
- *		}
- *	}
+ *        for (int sample = 0; sample < 256; ++sample) {
+ *            uint32_t accum = 0;
+ *            for (int bit = 0; bit < 8; ++bit) {
+ *                if (sample & (bit7 >> bit)) {
+ *                    int const src_offset = bit + partition * 8;
+ *                    int const channel = src_offset % 3;
+ *                    int const dst_offset = src_offset / 3;
+ *                    accum |= bit23 >> (channel * 8 + dst_offset);
+ *                }
+ *            }
+ *            m_sBitUnmixingLUT[partition][sample] = accum;
+ *        }
+ *    }
  * \endcode
  */
 uint32_t const ColorPickupInteraction::m_sBitUnmixingLUT[3][256] =

@@ -30,7 +30,7 @@ PhysSizeCalc::PhysSizeCalc()
 }
 
 PhysSizeCalc::PhysSizeCalc(ImageTransformation const& xform)
-    :	m_virtToPhys(xform.transformBack() * PhysicalTransformation(xform.origDpi()).pixelsToMM())
+    : m_virtToPhys(xform.transformBack() * PhysicalTransformation(xform.origDpi()).pixelsToMM())
 {
 }
 

@@ -25,7 +25,7 @@ Thumbnail::Thumbnail(
     IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
     QSizeF const& max_size, PageId const& page_id,
     imageproc::AbstractImageTransform const& full_size_image_transform)
-    :	ThumbnailBase(thumbnail_cache, max_size, page_id, full_size_image_transform)
+    : ThumbnailBase(thumbnail_cache, max_size, page_id, full_size_image_transform)
 {
 }
 

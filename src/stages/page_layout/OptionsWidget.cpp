@@ -319,6 +319,10 @@ OptionsWidget::horMarginsChanged(double const val)
 void
 OptionsWidget::vertMarginsChanged(double const val)
 {
+    if (m_ignoreMarginChanges)
+    {
+        return;
+    }
 
     if (m_topBottomLinked)
     {
