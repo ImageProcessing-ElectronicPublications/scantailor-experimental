@@ -271,7 +271,7 @@
      <item>
       <widget class="QComboBox" name="sortOptions">
        <property name="sizeAdjustPolicy">
-        <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+        <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
        </property>
       </widget>
      </item>
