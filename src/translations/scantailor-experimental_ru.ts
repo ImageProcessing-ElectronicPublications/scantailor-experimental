@@ -1640,26 +1640,31 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1421"/>
+        <source>MSE k-means:</source>
+        <translation>MSE к-средних:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1435"/>
         <source>BW origin:</source>
         <translation>BW исходного:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1435"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1449"/>
         <source>BW filters:</source>
         <translation>BW фильтрованного:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1449"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1463"/>
         <source>BW threshold:</source>
         <translation>BW порога:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1463"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1477"/>
         <source>BW destination:</source>
         <translation>BW результата:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1477"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1491"/>
         <source>BW delta:</source>
         <translation>BW разность:</translation>
     </message>

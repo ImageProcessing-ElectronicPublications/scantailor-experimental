@@ -1548,8 +1548,9 @@ void paletteYCbCrtoRGB(
     }
 }
 
-void hsvKMeansInPlace(
-    QImage& dst, QImage const& image,
+double hsvKMeansInPlace(
+    QImage& dst,
+    QImage const& image,
     BinaryImage const& mask,
     BinaryImage const& mask_zones,
     int const ncount,
@@ -1561,9 +1562,10 @@ void hsvKMeansInPlace(
     bool const find_black,
     bool const find_white)
 {
+    double mse = 0.0;
     if (dst.isNull() || image.isNull() || mask.isNull())
     {
-        return;
+        return mse;
     }
 
     if ((ncount > 0) && (ncount <= 254))
@@ -1579,7 +1581,7 @@ void hsvKMeansInPlace(
 
         if ((w != wi) || (h != hi) || (w != wm) || (h != hm) || (w != wmz) || (h != hmz))
         {
-            return;
+            return mse;
         }
 
         int const bgcount = (int) (coef_bg * (float) ncount + 0.25f);
@@ -1625,7 +1627,7 @@ void hsvKMeansInPlace(
 
         if (hsv_img.isNull())
         {
-            return;
+            return mse;
         }
 
         /* len clusters*/
@@ -1650,7 +1652,7 @@ void hsvKMeansInPlace(
         GrayImage clusters(image);
         if (clusters.isNull())
         {
-            return;
+            return mse;
         }
 
         uint8_t* clusters_line = clusters.data();
@@ -1952,6 +1954,7 @@ void hsvKMeansInPlace(
             }
         }
 
+        /* Norm abd Sat */
         if (color_space < 2)
         {
             paletteHSVcylinderToHSV(mean_h, mean_s, start, stop);
@@ -2066,20 +2069,35 @@ void hsvKMeansInPlace(
         mean_h[ncount + 1] = 255.0;
         mean_s[ncount + 1] = 255.0;
         mean_v[ncount + 1] = 255.0;
+
+        /* Replace pixels and metrics */
+        uint32_t cntkm = 0;
         mask_zones_line = mask_zones.data();
         clusters_line = clusters.data();
         for (unsigned int y = 0; y < h; y++)
         {
             QRgb *rowh = (QRgb*)hsv_img.constScanLine(y);
+            double msel = 0.0;
             for (unsigned int x = 0; x < w; x++)
             {
                 int r, g, b;
                 if (mask_zones_line[x >> 5] & (msb >> (x & 31)))
                 {
+                    int r0, g0, b0, dr, dg, db;
+                    QRgb const origin = image.pixel(x, y);
+                    r0 = qRed(origin);
+                    g0 = qGreen(origin);
+                    b0 = qBlue(origin);
                     int const cluster = clusters_line[x];
                     r = mean_h[cluster];
                     g = mean_s[cluster];
                     b = mean_v[cluster];
+                    dr = r0 - r;
+                    dg = g0 - g;
+                    db = b0 - b;
+                    double dt = dr * dr + dg * dg + db * db;
+                    msel += dt;
+                    cntkm++;
                 }
                 else
                 {
@@ -2090,12 +2108,16 @@ void hsvKMeansInPlace(
                 }
                 rowh[x] = qRgb(r, g, b);
             }
+            mse += msel;
             mask_zones_line += mask_zones_stride;
             clusters_line += clusters_stride;
         }
+        mse = (cntkm > 0) ? (sqrt(mse / cntkm / 3.0) / 255.0) : 0.0;
 
         dst = hsv_img;
     }
+
+    return mse;
 }
 
 void maskMorphologicalErode(

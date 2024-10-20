@@ -26,6 +26,7 @@ namespace output
 
 MetricsOptions::MetricsOptions()
     :   m_metricMSEfilters(0.0),
+        m_metricMSEkmeans(0.0),
         m_metricBWorigin(0.0),
         m_metricBWfilters(0.0),
         m_metricBWthreshold(0.0),
@@ -35,6 +36,7 @@ MetricsOptions::MetricsOptions()
 
 MetricsOptions::MetricsOptions(QDomElement const& el)
     :   m_metricMSEfilters(el.attribute("MSEfilters").toDouble()),
+        m_metricMSEkmeans(el.attribute("MSEkmeans").toDouble()),
         m_metricBWorigin(el.attribute("BWorigin").toDouble()),
         m_metricBWfilters(el.attribute("BWfilters").toDouble()),
         m_metricBWthreshold(el.attribute("BWthreshold").toDouble()),
@@ -48,6 +50,10 @@ MetricsOptions::toXml(QDomDocument& doc, QString const& name) const
     if (m_metricMSEfilters > 0.0)
     {
         el.setAttribute("MSEfilters", m_metricMSEfilters);
+    }
+    if (m_metricMSEkmeans > 0.0)
+    {
+        el.setAttribute("MSEkmeans", m_metricMSEkmeans);
     }
     if (m_metricBWorigin > 0.0)
     {
@@ -72,6 +78,10 @@ bool
 MetricsOptions::operator==(MetricsOptions const& other) const
 {
     if (m_metricMSEfilters != other.m_metricMSEfilters)
+    {
+        return false;
+    }
+    if (m_metricMSEkmeans != other.m_metricMSEkmeans)
     {
         return false;
     }

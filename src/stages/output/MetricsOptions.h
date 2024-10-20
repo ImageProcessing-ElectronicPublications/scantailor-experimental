@@ -44,6 +44,15 @@ public:
         m_metricMSEfilters = val;
     }
 
+    double getMetricMSEkmeans() const
+    {
+        return m_metricMSEkmeans;
+    }
+    void setMetricMSEkmeans(double val)
+    {
+        m_metricMSEkmeans = val;
+    }
+
     double getMetricBWorigin() const
     {
         return m_metricBWorigin;
@@ -85,6 +94,7 @@ public:
     bool operator!=(MetricsOptions const& other) const;
 private:
     double m_metricMSEfilters;
+    double m_metricMSEkmeans;
     double m_metricBWorigin;
     double m_metricBWfilters;
     double m_metricBWthreshold;

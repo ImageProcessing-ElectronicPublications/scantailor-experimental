@@ -1410,6 +1410,7 @@ OptionsWidget::updateMetricsDisplay()
     MetricsOptions metrics_options(m_colorParams.getMetricsOptions());
 
     metricsMSEfilters->setText(tr("%1").arg(metrics_options.getMetricMSEfilters()));
+    metricsMSEkmeans->setText(tr("%1").arg(metrics_options.getMetricMSEkmeans()));
     metricsBWorigin->setText(tr("%1").arg(metrics_options.getMetricBWorigin()));
     metricsBWfilters->setText(tr("%1").arg(metrics_options.getMetricBWfilters()));
     metricsBWthreshold->setText(tr("%1").arg(metrics_options.getMetricBWthreshold()));

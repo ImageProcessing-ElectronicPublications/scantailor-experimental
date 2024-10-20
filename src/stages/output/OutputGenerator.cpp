@@ -654,6 +654,7 @@ OutputGenerator::process(
         }
 
         // KMeans based HSV
+        double mse_kmeans = 0.0;
         if (render_params.binaryOutput() || render_params.mixedOutput())
         {
             if (!m_contentRect.isEmpty() && (black_kmeans_options.kmeansCount() > 0))
@@ -686,7 +687,7 @@ OutputGenerator::process(
                 }
                 }
 
-                hsvKMeansInPlace(
+                mse_kmeans = hsvKMeansInPlace(
                     dst,
                     transformed_image,
                     bw_content,
@@ -702,6 +703,8 @@ OutputGenerator::process(
                 /* deprecated: maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology()); */
             }
         }
+        metrics.setMetricMSEkmeans(mse_kmeans);
+
         bw_mask.release(); // Save memory.
         colored_mask.release(); // Save memory.
 

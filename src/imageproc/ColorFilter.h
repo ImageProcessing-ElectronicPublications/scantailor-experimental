@@ -286,7 +286,7 @@ static void paletteHSLtoRGB(
 static void paletteYCbCrtoRGB(
     double* mean_cb, double* mean_cr, double* mean_cy, int const ncount);
 
-IMAGEPROC_EXPORT void hsvKMeansInPlace(
+IMAGEPROC_EXPORT double hsvKMeansInPlace(
     QImage& dst,
     QImage const& image,
     BinaryImage const& mask,

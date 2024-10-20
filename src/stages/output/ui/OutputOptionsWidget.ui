@@ -1416,69 +1416,83 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="metricsBWoriginLabel">
+          <widget class="QLabel" name="metricsMSEkmeansLabel">
            <property name="text">
-            <string>BW origin:</string>
+            <string>MSE k-means:</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLabel" name="metricsBWorigin">
+          <widget class="QLabel" name="metricsMSEkmeans">
            <property name="text">
             <string>?</string>
            </property>
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QLabel" name="metricsBWfiltersLabel">
+          <widget class="QLabel" name="metricsBWoriginLabel">
            <property name="text">
-            <string>BW filters:</string>
+            <string>BW origin:</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="metricsBWfilters">
+          <widget class="QLabel" name="metricsBWorigin">
            <property name="text">
             <string>?</string>
            </property>
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QLabel" name="metricsBWthresholdLabel">
+          <widget class="QLabel" name="metricsBWfiltersLabel">
            <property name="text">
-            <string>BW threshold:</string>
+            <string>BW filters:</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="metricsBWthreshold">
+          <widget class="QLabel" name="metricsBWfilters">
            <property name="text">
             <string>?</string>
            </property>
           </widget>
          </item>
          <item row="4" column="0">
-          <widget class="QLabel" name="metricsBWdestinationLabel">
+          <widget class="QLabel" name="metricsBWthresholdLabel">
            <property name="text">
-            <string>BW destination:</string>
+            <string>BW threshold:</string>
            </property>
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QLabel" name="metricsBWdestination">
+          <widget class="QLabel" name="metricsBWthreshold">
            <property name="text">
             <string>?</string>
            </property>
           </widget>
          </item>
          <item row="5" column="0">
+          <widget class="QLabel" name="metricsBWdestinationLabel">
+           <property name="text">
+            <string>BW destination:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="metricsBWdestination">
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
           <widget class="QLabel" name="metricsBWdeltaLabel">
            <property name="text">
             <string>BW delta:</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="1">
           <widget class="QLabel" name="metricsBWdelta">
            <property name="text">
             <string>?</string>

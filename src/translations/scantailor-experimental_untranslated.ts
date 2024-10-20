@@ -1325,26 +1325,31 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1421"/>
-        <source>BW origin:</source>
+        <source>MSE k-means:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1435"/>
-        <source>BW filters:</source>
+        <source>BW origin:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1449"/>
-        <source>BW threshold:</source>
+        <source>BW filters:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1463"/>
-        <source>BW destination:</source>
+        <source>BW threshold:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1477"/>
+        <source>BW destination:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1491"/>
         <source>BW delta:</source>
         <translation type="unfinished"></translation>
     </message>
