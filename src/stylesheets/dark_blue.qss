@@ -458,6 +458,7 @@ QGroupBox#despecklePanel:indicator:checked,
 QGroupBox#filtersPanel:indicator:checked,
 QGroupBox#modePanel:indicator:checked,
 QGroupBox#kmeansPanel:indicator:checked,
+QGroupBox#metricsPanel:indicator:checked,
 QGroupBox#scalingPanel:indicator:checked
 {
     width: 1em;
@@ -470,6 +471,7 @@ QCheckBox#despecklePanelEmpty:indicator:unchecked,
 QCheckBox#filtersPanelEmpty:indicator:unchecked,
 QCheckBox#modePanelEmpty:indicator:unchecked,
 QCheckBox#kmeansPanelEmpty:indicator:unchecked,
+QCheckBox#metricsPanelEmpty:indicator:unchecked,
 QCheckBox#scalingPanelEmpty:indicator:unchecked
 {
     width: 1em;
@@ -481,6 +483,7 @@ QGroupBox#despecklePanel:indicator:checked:hover,
 QGroupBox#filtersPanel:indicator:checked:hover,
 QGroupBox#modePanel:indicator:checked:hover,
 QGroupBox#kmeansPanel:indicator:checked:hover,
+QGroupBox#metricsPanel:indicator:checked:hover,
 QGroupBox#scalingPanel:indicator:checked:hover
 {
     width: 1em;
@@ -492,6 +495,7 @@ QCheckBox#despecklePanelEmpty:indicator:unchecked:hover,
 QCheckBox#filtersPanelEmpty:indicator:unchecked:hover,
 QCheckBox#modePanelEmpty:indicator:unchecked:hover,
 QCheckBox#kmeansPanelEmpty:indicator:unchecked:hover,
+QCheckBox#metricsPanelEmpty:indicator:unchecked:hover,
 QCheckBox#scalingPanelEmpty:indicator:unchecked:hover
 {
     width: 1em;

@@ -123,7 +123,7 @@ public:
      * the size of other pages and whether it will affect the size of other pages.
      * \par
      * If no match size mode was specified, the default mode is returned,
-     * which is MatchSizeMode::GROW_MARGINS.
+     * which is MatchSizeMode::M_GROW_MARGINS.
      */
     MatchSizeMode getMatchSizeMode(PageId const& page_id) const;
 

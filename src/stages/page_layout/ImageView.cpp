@@ -351,7 +351,7 @@ ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
     painter.drawRect(m_innerRect);
     painter.drawRect(m_extraRect);
 
-    if (m_matchSizeMode.get() != MatchSizeMode::DISABLED)
+    if (m_matchSizeMode.get() != MatchSizeMode::M_DISABLED)
     {
         pen.setStyle(Qt::DashLine);
         painter.setPen(pen);
@@ -606,7 +606,7 @@ ImageView::dragFinished()
     RelativeMargins const margins(calcHardMargins());
     AggregateSizeChanged const agg_size_changed(commitHardMargins(margins));
 
-    if (m_matchSizeMode == MatchSizeMode::SCALE)
+    if (m_matchSizeMode == MatchSizeMode::M_SCALE)
     {
         // In this mode, adjusting the margins affects scaling applied to the image itself.
         recalcBoxesAndFit(margins);

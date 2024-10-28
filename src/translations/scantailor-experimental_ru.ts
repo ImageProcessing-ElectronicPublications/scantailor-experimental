@@ -1835,6 +1835,16 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выровнить размер путем масштабирования</translation>
     </message>
     <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="459"/>
+        <source>Affine</source>
+        <translation>Уместить</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="462"/>
+        <source>Match size by affine scaling</source>
+        <translation>Выровнить размер путем аффинного масштабирования</translation>
+    </message>
+    <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="644"/>
         <source>Missing content box</source>
         <translation>Отсутствует блок содержимого</translation>

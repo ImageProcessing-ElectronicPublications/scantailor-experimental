@@ -65,7 +65,7 @@ public:
     QRectF const extraRect(Framings const& framings) const;
 
     /**
-     * If match_size_mode passed into the constructor was set to SCALE,
+     * If match_size_mode passed into the constructor was set to M_SCALE,
      * the 3 rectangles already incorporate the appropriate scaling factor.
      * This method incorporates that scaling factor into the provided transform.
      */
@@ -80,8 +80,9 @@ private:
     /** Rectangle around content plus hard and soft margins, in transformed coordinates. */
     QRectF m_outerRect;
 
-    /** Scaling applied as a result of MatchSizeMode::SCALE. */
-    double m_scaleFactor;
+    /** Scaling applied as a result of MatchSizeMode::M_SCALE. */
+    double m_scaleFactor_X;
+    double m_scaleFactor_Y;
 
 };
 

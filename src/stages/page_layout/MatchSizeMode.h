@@ -32,13 +32,13 @@ public:
     enum Mode
     {
         /** The size of this page doesn't affect and is not affected by other pages. */
-        DISABLED,
+        M_DISABLED,
 
         /**
          * To match the size of the widest / tallest page, soft margins grow as necessary.
          * This page will also compete for the widest / tallest page title itself.
          */
-        GROW_MARGINS,
+        M_GROW_MARGINS,
 
         /**
          * To match the size of the widest / tallest page, this page's content as well as
@@ -46,10 +46,11 @@ public:
          * vertical directions are locked to each other, soft margins may need to grow
          * as well. This page will also compete for the widest / tallest page title itself.
          */
-        SCALE
+        M_SCALE,
+        M_AFFINE
     };
 
-    MatchSizeMode(Mode mode = DISABLED) : m_mode(mode) {}
+    MatchSizeMode(Mode mode = M_DISABLED) : m_mode(mode) {}
 
     MatchSizeMode(QDomElement const& el);
 

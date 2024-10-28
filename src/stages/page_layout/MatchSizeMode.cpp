@@ -30,16 +30,20 @@ MatchSizeMode::MatchSizeMode(QDomElement const& el)
 
     if (mode == "disabled")
     {
-        m_mode = DISABLED;
+        m_mode = M_DISABLED;
     }
     else if (mode == "scale")
     {
-        m_mode = SCALE;
+        m_mode = M_SCALE;
+    }
+    else if (mode == "affine")
+    {
+        m_mode = M_AFFINE;
     }
     else
     {
         // Default mode for backwards compatibility.
-        m_mode = GROW_MARGINS;
+        m_mode = M_GROW_MARGINS;
     }
 }
 
@@ -50,14 +54,17 @@ MatchSizeMode::toXml(QDomDocument& doc, QString const& name) const
 
     switch (m_mode)
     {
-    case DISABLED:
+    case M_DISABLED:
         mode = "disabled";
         break;
-    case GROW_MARGINS:
+    case M_GROW_MARGINS:
         mode = "margins";
         break;
-    case SCALE:
+    case M_SCALE:
         mode = "scale";
+        break;
+    case M_AFFINE:
+        mode = "affine";
         break;
     }
 

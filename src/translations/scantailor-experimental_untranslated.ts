@@ -1508,6 +1508,16 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Mar
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="459"/>
+        <source>Affine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="462"/>
+        <source>Match size by affine scaling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="644"/>
         <source>Missing content box</source>
         <translation type="unfinished"></translation>

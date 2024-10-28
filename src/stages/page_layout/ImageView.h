@@ -172,12 +172,12 @@ private:
 
     /**
      * AffineImageTransform extracted from \p affine_transformed_image constructor parameter.
-     * This doesn't take image scaling as a result of MatchSizeMode::SCALE into account.
+     * This doesn't take image scaling as a result of MatchSizeMode::M_SCALE into account.
      */
     imageproc::AffineImageTransform const m_unscaledAffineTransform;
 
     /**
-     * ContentBox in virtual image coordinates, prior to scaling by MatchSizeMode::SCALE.
+     * ContentBox in virtual image coordinates, prior to scaling by MatchSizeMode::M_SCALE.
      */
     QRectF const m_unscaledContentRect;
 
@@ -192,7 +192,7 @@ private:
 
     /**
      * Content box in virtual image coordinates, possibly scaled
-     * as a result of MatchSizeMode::SCALE.
+     * as a result of MatchSizeMode::M_SCALE.
      */
     QRectF m_innerRect;
 

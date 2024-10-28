@@ -39,11 +39,11 @@ public:
      *
      * \param hard_size_px Source size in pixels after applying AbstractImageTransform.
      * \param aggregate_hard_size_mm Target size in pixels after applying AbstractImageTransform
-     *        and optionally applying additional scaling according to MatchSizeMode::SCALE.
+     *        and optionally applying additional scaling according to MatchSizeMode::M_SCALE.
      * \param match_size_mode Determines whether and how to match the size of other pages.
      * \param alignment Determines how to grow margins to match the size of other pages.
      * \return Non-negative margins that extend \p hard_size_px to
-     *         \p aggregate_hard_size_px. If \p match_size_mode is MatchSizeMode::DISABLED,
+     *         \p aggregate_hard_size_px. If \p match_size_mode is MatchSizeMode::M_DISABLED,
      *         zero margins are returned.
      */
     static QMarginsF calcSoftMarginsPx(

@@ -33,7 +33,7 @@ Utils::calcSoftMarginsPx(
     QSizeF const& hard_size_px, QSizeF const& aggregate_hard_size_px,
     MatchSizeMode const& match_size_mode, Alignment const& alignment)
 {
-    if (match_size_mode.get() == MatchSizeMode::DISABLED)
+    if (match_size_mode.get() == MatchSizeMode::M_DISABLED)
     {
         // We are not aligning this page with others.
         return QMarginsF();
@@ -88,14 +88,17 @@ Utils::borderColorForMatchSizeMode(MatchSizeMode const& mode)
 
     switch (mode.get())
     {
-    case MatchSizeMode::DISABLED:
+    case MatchSizeMode::M_DISABLED:
         color = QColor(0x00, 0x52, 0xff);
         break;
-    case MatchSizeMode::GROW_MARGINS:
+    case MatchSizeMode::M_GROW_MARGINS:
         color = QColor(0xbe, 0x5b, 0xec);
         break;
-    case MatchSizeMode::SCALE:
+    case MatchSizeMode::M_SCALE:
         color = QColor(0xff, 0x80, 0x00);
+        break;
+    case MatchSizeMode::M_AFFINE:
+        color = QColor(0xff, 0x40, 0x40);
         break;
     }
 
@@ -109,14 +112,17 @@ Utils::backgroundColorForMatchSizeMode(MatchSizeMode const& mode)
 
     switch (mode.get())
     {
-    case MatchSizeMode::DISABLED:
+    case MatchSizeMode::M_DISABLED:
         color = QColor(0x58, 0x7f, 0xf4, 70);
         break;
-    case MatchSizeMode::GROW_MARGINS:
+    case MatchSizeMode::M_GROW_MARGINS:
         color = QColor(0xbb, 0x00, 0xff, 40);
         break;
-    case MatchSizeMode::SCALE:
+    case MatchSizeMode::M_SCALE:
         color = QColor(0xff, 0xa9, 0x00, 70);
+        break;
+    case MatchSizeMode::M_AFFINE:
+        color = QColor(0xff, 0x55, 0x55, 70);
         break;
     }
 

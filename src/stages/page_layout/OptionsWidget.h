@@ -127,6 +127,8 @@ private slots:
 
     void matchSizeScaleToggled(bool selected);
 
+    void matchSizeAffineToggled(bool selected);
+
     void alignmentButtonClicked();
 
     void showApplyFramingsDialog();

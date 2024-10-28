@@ -80,7 +80,7 @@ public:
      */
     bool alignedWithOthers() const
     {
-        return matchSizeMode.get() != MatchSizeMode::DISABLED;
+        return matchSizeMode.get() != MatchSizeMode::M_DISABLED;
     }
 };
 
@@ -443,13 +443,13 @@ Settings::Item::hardHeight() const
 double
 Settings::Item::influenceHardWidth() const
 {
-    return matchSizeMode.get() == MatchSizeMode::DISABLED ? 0.0 : hardWidth();
+    return matchSizeMode.get() == MatchSizeMode::M_DISABLED ? 0.0 : hardWidth();
 }
 
 double
 Settings::Item::influenceHardHeight() const
 {
-    return matchSizeMode.get() == MatchSizeMode::DISABLED ? 0.0 : hardHeight();
+    return matchSizeMode.get() == MatchSizeMode::M_DISABLED ? 0.0 : hardHeight();
 }
 
 
@@ -462,7 +462,7 @@ Settings::Impl::Impl()
       m_descHeightOrder(m_items.get<DescHeightTag>()),
       m_invalidSize(),
       m_defaultHardMargins(page_layout::Settings::defaultHardMargins()),
-      m_defaultMatchSizeMode(MatchSizeMode::GROW_MARGINS),
+      m_defaultMatchSizeMode(MatchSizeMode::M_GROW_MARGINS),
       m_defaultAlignment(Alignment::TOP, Alignment::HCENTER),
       m_defaultFramings(0.24, 0.16)
 {
@@ -908,7 +908,7 @@ Settings::Impl::getAggregateHardSize(
     MatchSizeMode const& match_size_mode) const
 {
     QSizeF influence_hard_size = QSize(0.0, 0.0);
-    if (match_size_mode.get() != MatchSizeMode::DISABLED)
+    if (match_size_mode.get() != MatchSizeMode::M_DISABLED)
     {
         influence_hard_size = hard_size;
     }

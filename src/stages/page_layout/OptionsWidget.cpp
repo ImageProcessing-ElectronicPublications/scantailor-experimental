@@ -161,6 +161,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(matchSizeScaleToggled(bool))
     );
     connect(
+        matchSizeAffineRb, SIGNAL(toggled(bool)),
+        this, SLOT(matchSizeAffineToggled(bool))
+    );
+    connect(
         applyAlignmentBtn, SIGNAL(clicked()),
         this, SLOT(showApplyAlignmentDialog())
     );
@@ -209,14 +213,17 @@ OptionsWidget::preUpdateUI(
 
         switch (match_size_mode.get())
         {
-        case MatchSizeMode::DISABLED:
+        case MatchSizeMode::M_DISABLED:
             matchSizeDisabledRb->setChecked(true);
             break;
-        case MatchSizeMode::GROW_MARGINS:
+        case MatchSizeMode::M_GROW_MARGINS:
             matchSizeMarginsRb->setChecked(true);
             break;
-        case MatchSizeMode::SCALE:
+        case MatchSizeMode::M_SCALE:
             matchSizeScaleRb->setChecked(true);
+            break;
+        case MatchSizeMode::M_AFFINE:
+            matchSizeAffineRb->setChecked(true);
             break;
         }
     }
@@ -364,7 +371,7 @@ OptionsWidget::matchSizeDisabledToggled(bool selected)
         return;
     }
 
-    m_matchSizeMode.set(MatchSizeMode::DISABLED);
+    m_matchSizeMode.set(MatchSizeMode::M_DISABLED);
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
@@ -379,7 +386,7 @@ OptionsWidget::matchSizeMarginsToggled(bool selected)
         return;
     }
 
-    m_matchSizeMode.set(MatchSizeMode::GROW_MARGINS);
+    m_matchSizeMode.set(MatchSizeMode::M_GROW_MARGINS);
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
@@ -394,7 +401,22 @@ OptionsWidget::matchSizeScaleToggled(bool selected)
         return;
     }
 
-    m_matchSizeMode.set(MatchSizeMode::SCALE);
+    m_matchSizeMode.set(MatchSizeMode::M_SCALE);
+
+    enableDisableAlignmentButtons();
+    emit matchSizeModeChanged(m_matchSizeMode);
+    updateSizeDisplay();
+}
+
+void
+OptionsWidget::matchSizeAffineToggled(bool selected)
+{
+    if (!selected || m_ignoreMatchSizeModeChanges)
+    {
+        return;
+    }
+
+    m_matchSizeMode.set(MatchSizeMode::M_AFFINE);
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
@@ -541,7 +563,7 @@ OptionsWidget::updateSizeDisplay()
     float const exheight = m_framings.getFramingHeight();
     float agwidth = agg_size.width();
     float agheight = agg_size.height();
-    if(m_matchSizeMode == MatchSizeMode::DISABLED)
+    if(m_matchSizeMode == MatchSizeMode::M_DISABLED)
     {
         QSizeF const content_size = m_ptrSettings->getContentSize(m_pageId);
         RelativeMargins const hard_magrins = m_ptrSettings->getHardMargins(m_pageId);
