@@ -19,15 +19,15 @@
 #ifndef DESKEW_SETTINGS_H_
 #define DESKEW_SETTINGS_H_
 
+#include <memory>
+#include <map>
+#include <set>
+#include <QMutex>
 #include "RefCountable.h"
 #include "NonCopyable.h"
 #include "PageId.h"
 #include "Params.h"
 #include "DistortionType.h"
-#include <QMutex>
-#include <memory>
-#include <map>
-#include <set>
 
 class AbstractRelinker;
 
@@ -64,6 +64,12 @@ public:
 
     void setDepthPerception(
         std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception);
+
+    void setCorrectCurves(
+        std::set<PageId> const& pages, dewarping::DepthPerception const& correct_curves);
+
+    void setCorrectAngle(
+        std::set<PageId> const& pages, dewarping::DepthPerception const& correct_angle);
 private:
     typedef std::map<PageId, Params> PerPageParams;
 

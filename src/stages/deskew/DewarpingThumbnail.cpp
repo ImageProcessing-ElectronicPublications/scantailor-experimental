@@ -49,9 +49,9 @@ DewarpingThumbnail::DewarpingThumbnail(
           thumbnail_cache, max_display_size,
           page_id, full_size_image_transform
       )
-    ,    m_topCurve(top_curve)
-    ,    m_bottomCurve(bottom_curve)
-    ,    m_depthPerception(depth_perception)
+    , m_topCurve(top_curve)
+    , m_bottomCurve(bottom_curve)
+    , m_depthPerception(depth_perception)
 {
     dewarping::DistortionModel distortion_model;
     distortion_model.setTopCurve(Curve(m_topCurve));
@@ -85,9 +85,15 @@ DewarpingThumbnail::paintOverImage(
     try
     {
         Utils::buildWarpVisualization(
-            m_topCurve, m_bottomCurve, m_depthPerception,
-            num_horizontal_curves, num_vertical_lines,
-            horizontal_curves, vertical_lines
+            m_topCurve,
+            m_bottomCurve,
+            m_depthPerception,
+            m_depthPerception,
+            m_depthPerception,
+            num_horizontal_curves,
+            num_vertical_lines,
+            horizontal_curves,
+            vertical_lines
         );
 
         for (auto const& curve : horizontal_curves)

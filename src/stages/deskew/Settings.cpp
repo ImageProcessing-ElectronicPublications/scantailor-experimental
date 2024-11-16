@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <boost/foreach.hpp>
+#include <QMutexLocker>
 #include "Settings.h"
 #include "RelinkablePath.h"
 #include "AbstractRelinker.h"
 #include "DistortionType.h"
 #include "../../Utils.h"
-#include <QMutexLocker>
-#include <boost/foreach.hpp>
 
 namespace deskew
 {
@@ -137,6 +137,50 @@ Settings::setDepthPerception(
         {
             Params params((Dependencies()));
             params.dewarpingParams().setDepthPerception(depth_perception);
+            Utils::mapSetValue(m_perPageParams, page_id, params);
+        }
+    }
+}
+
+void
+Settings::setCorrectCurves(
+    std::set<PageId> const& pages, dewarping::DepthPerception const& correct_curves)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    for (PageId const& page_id : pages)
+    {
+        PerPageParams::iterator it = m_perPageParams.find(page_id);
+        if (it != m_perPageParams.end())
+        {
+            it->second.dewarpingParams().setCorrectCurves(correct_curves);
+        }
+        else
+        {
+            Params params((Dependencies()));
+            params.dewarpingParams().setCorrectCurves(correct_curves);
+            Utils::mapSetValue(m_perPageParams, page_id, params);
+        }
+    }
+}
+
+void
+Settings::setCorrectAngle(
+    std::set<PageId> const& pages, dewarping::DepthPerception const& correct_angle)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    for (PageId const& page_id : pages)
+    {
+        PerPageParams::iterator it = m_perPageParams.find(page_id);
+        if (it != m_perPageParams.end())
+        {
+            it->second.dewarpingParams().setCorrectAngle(correct_angle);
+        }
+        else
+        {
+            Params params((Dependencies()));
+            params.dewarpingParams().setCorrectAngle(correct_angle);
             Utils::mapSetValue(m_perPageParams, page_id, params);
         }
     }

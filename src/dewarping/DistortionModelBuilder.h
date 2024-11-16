@@ -116,8 +116,10 @@ private:
     QImage visualizeTrimmedPolylines(
         QImage const& background, std::vector<TracedCurve> const& curves) const;
 
-    QImage visualizeModel(QImage const& background,
-                          std::vector<TracedCurve> const& curves, RansacModel const& model) const;
+    QImage visualizeModel(
+        QImage const& background,
+        std::vector<TracedCurve> const& curves,
+        RansacModel const& model) const;
 
     Vec2d m_downDirection;
     Vec2d m_rightDirection;

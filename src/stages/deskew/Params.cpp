@@ -26,16 +26,16 @@ namespace deskew
 
 Params::Params(Dependencies const& deps)
     : m_distortionType(defaultDistortionType())
-    ,    m_deps(deps)
+    , m_deps(deps)
 {
 }
 
 Params::Params(QDomElement const& deskew_el)
     : m_distortionType(deskew_el.attribute("distortionType"))
-    ,    m_rotationParams(deskew_el.namedItem("rotation").toElement())
-    ,    m_perspectiveParams(deskew_el.namedItem("perspective").toElement())
-    ,    m_dewarpingParams(deskew_el.namedItem("warp").toElement())
-    ,    m_deps(deskew_el.namedItem("dependencies").toElement())
+    , m_rotationParams(deskew_el.namedItem("rotation").toElement())
+    , m_perspectiveParams(deskew_el.namedItem("perspective").toElement())
+    , m_dewarpingParams(deskew_el.namedItem("warp").toElement())
+    , m_deps(deskew_el.namedItem("dependencies").toElement())
 {
 }
 

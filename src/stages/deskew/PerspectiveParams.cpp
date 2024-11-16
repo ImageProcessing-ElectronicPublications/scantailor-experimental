@@ -33,12 +33,12 @@ namespace deskew
 {
 
 PerspectiveParams::PerspectiveParams()
-    :   m_mode(MODE_AUTO)
+    : m_mode(MODE_AUTO)
 {
 }
 
 PerspectiveParams::PerspectiveParams(QDomElement const& el)
-    :   m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    : m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
     m_corners[TOP_LEFT] = XmlUnmarshaller::pointF(el.namedItem("tl").toElement());
     m_corners[TOP_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("tr").toElement());

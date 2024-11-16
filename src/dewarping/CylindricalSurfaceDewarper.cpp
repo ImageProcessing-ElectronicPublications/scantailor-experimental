@@ -16,12 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CylindricalSurfaceDewarper.h"
-#include "ToLineProjector.h"
-#include "NumericTraits.h"
-#include "ToVec.h"
-#include "ToPoint.h"
-#include "../foundation/MultipleTargetsSupport.h"
+#include <cmath>
+#include <cassert>
+#include <stdexcept>
+#include <string>
+#include <boost/foreach.hpp>
 #include <Eigen/Core>
 #include <Eigen/QR>
 #include <QLineF>
@@ -29,10 +28,12 @@
 #include <QDebug>
 #include <boost/foreach.hpp>
 #include <algorithm>
-#include <cmath>
-#include <cassert>
-#include <stdexcept>
-#include <string>
+#include "CylindricalSurfaceDewarper.h"
+#include "ToLineProjector.h"
+#include "NumericTraits.h"
+#include "ToVec.h"
+#include "ToPoint.h"
+#include "../foundation/MultipleTargetsSupport.h"
 
 /*
 Naming conventions:
@@ -95,11 +96,13 @@ CylindricalSurfaceDewarper::CylindricalSurfaceDewarper(
     std::vector<QPointF> const& img_directrix1,
     std::vector<QPointF> const& img_directrix2,
     double depth_perception,
-    double curve_correct)
+    double curve_correct,
+    double curve_angle)
     :   m_pln2img(calcPlnToImgHomography(img_directrix1, img_directrix2)),
       m_img2pln(m_pln2img.inv()),
       m_depthPerception(depth_perception),
       m_curveCorrect(curve_correct),
+      m_curveAngle(curve_angle),
       m_plnStraightLineY(
           calcPlnStraightLineY(img_directrix1, img_directrix2, m_pln2img, m_img2pln)
       ),
@@ -114,6 +117,10 @@ CylindricalSurfaceDewarper::Generatrix
 CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
 {
     double const pln_x = m_arcLengthMapper.arcLenToX(crv_x, state.m_arcLengthHint);
+
+    double const lin_y1 = -0.02 * (m_curveAngle - 2.0);
+    double const lin_y2 = -lin_y1;
+    double const lin_y = lin_y1 + (lin_y2 - lin_y1) * pln_x;
 
     Vector2d const pln_top_pt(pln_x, 0);
     Vector2d const pln_bottom_pt(pln_x, 1);
@@ -135,7 +142,7 @@ CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
     double const img_directrix12fd_proj = img_directrix12f_proj - pln_straight_line_y;
     //double const curve_coef = 1.0 + 0.5 * (m_curveCorrect - 2.0);
     double const curve_coef = (m_curveCorrect < 2.0) ? (1.0 / (3.0 - m_curveCorrect)) : (m_curveCorrect - 1.0);
-    double const img_directrix12fds_proj = img_directrix12fd_proj * curve_coef;
+    double const img_directrix12fds_proj = img_directrix12fd_proj * curve_coef + lin_y;
     double const img_directrix12fs_proj = img_directrix12fds_proj + pln_straight_line_y;
     QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12fs_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
@@ -163,6 +170,10 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     double const pln_x = m_img2pln(toVec(img_pt))[0];
     double const crv_x = m_arcLengthMapper.xToArcLen(pln_x, state.m_arcLengthHint);
 
+    double const lin_y1 = -0.02 * (m_curveAngle - 2.0);
+    double const lin_y2 = -lin_y1;
+    double const lin_y = lin_y1 + (lin_y2 - lin_y1) * pln_x;
+
     Vector2d const pln_top_pt(pln_x, 0);
     Vector2d const pln_bottom_pt(pln_x, 1);
     QPointF const img_top_pt(toPoint(m_pln2img(pln_top_pt)));
@@ -183,7 +194,7 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     double const img_directrix12fd_proj = img_directrix12f_proj - pln_straight_line_y;
     //double const curve_coef = 1.0 + 0.5 * (m_curveCorrect - 2.0);
     double const curve_coef = (m_curveCorrect < 2.0) ? (1.0 / (3.0 - m_curveCorrect)) : (m_curveCorrect - 1.0);
-    double const img_directrix12fds_proj = img_directrix12fd_proj * curve_coef;
+    double const img_directrix12fds_proj = img_directrix12fd_proj * curve_coef + lin_y;
     double const img_directrix12fs_proj = img_directrix12fds_proj + pln_straight_line_y;
     QPointF const img_straight_line_pt(toPoint(m_pln2img(Vector2d(pln_x, img_directrix12fs_proj))));
     double const img_straight_line_proj(projector.projectionScalar(img_straight_line_pt));
@@ -384,7 +395,7 @@ CylindricalSurfaceDewarper::CoupledPolylinesIterator::CoupledPolylinesIterator(
     std::vector<QPointF> const& img_directrix2,
     HomographicTransform<2, double> const& pln2img,
     HomographicTransform<2, double> const& img2pln)
-    :   m_seq1It(img_directrix1.begin()),
+    : m_seq1It(img_directrix1.begin()),
       m_seq2It(img_directrix2.begin()),
       m_seq1End(img_directrix1.end()),
       m_seq2End(img_directrix2.end()),

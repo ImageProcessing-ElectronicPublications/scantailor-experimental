@@ -16,13 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "DewarpingImageTransform.h"
-#include "RoundingHasher.h"
-#include "ToVec.h"
-#include "ToLineProjector.h"
-#include "LineBoundedByPolygon.h"
-#include "imageproc/AffineImageTransform.h"
-#include "imageproc/AffineTransformedImage.h"
+#include <algorithm>
+#include <iterator>
+#include <utility>
+#include <memory>
+#include <limits>
+#include <cmath>
+#include <cassert>
+#include <map>
+#include <boost/optional.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 #include <Eigen/Core>
 #include <Eigen/LU>
 #include <QImage>
@@ -36,16 +39,13 @@
 #include <QTransform>
 #include <QColor>
 #include <QString>
-#include <boost/optional.hpp>
-#include <boost/range/adaptor/reversed.hpp>
-#include <algorithm>
-#include <iterator>
-#include <utility>
-#include <memory>
-#include <limits>
-#include <cmath>
-#include <cassert>
-#include <map>
+#include "DewarpingImageTransform.h"
+#include "RoundingHasher.h"
+#include "ToVec.h"
+#include "ToLineProjector.h"
+#include "LineBoundedByPolygon.h"
+#include "imageproc/AffineImageTransform.h"
+#include "imageproc/AffineTransformedImage.h"
 
 using namespace Eigen;
 using namespace imageproc;
@@ -116,17 +116,19 @@ DewarpingImageTransform::DewarpingImageTransform(
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
     DepthPerception const& depth_perception,
-    DepthPerception const& curve_correct)
-    :   m_origSize(orig_size)
-    ,   m_topPolyline(top_curve)
-    ,   m_bottomPolyline(bottom_curve)
-    ,   m_depthPerception(depth_perception)
-    ,   m_curveCorrect(curve_correct)
-    ,   m_dewarper(top_curve, bottom_curve, depth_perception.value(), curve_correct.value())
-    ,   m_intrinsicScaleX(1.0)
-    ,   m_intrinsicScaleY(1.0)
-    ,   m_userScaleX(1.0)
-    ,   m_userScaleY(1.0)
+    DepthPerception const& curve_correct,
+    DepthPerception const& curve_angle)
+    : m_origSize(orig_size)
+    , m_topPolyline(top_curve)
+    , m_bottomPolyline(bottom_curve)
+    , m_depthPerception(depth_perception)
+    , m_curveCorrect(curve_correct)
+    , m_curveAngle(curve_angle)
+    , m_dewarper(top_curve, bottom_curve, depth_perception.value(), curve_correct.value(), curve_angle.value())
+    , m_intrinsicScaleX(1.0)
+    , m_intrinsicScaleY(1.0)
+    , m_userScaleX(1.0)
+    , m_userScaleY(1.0)
 {
     // These two lines don't depend on each other and therefore can go in any order.
     m_origCropArea = constrainCropArea(orig_crop_area);

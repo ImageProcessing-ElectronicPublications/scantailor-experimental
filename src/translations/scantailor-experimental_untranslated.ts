@@ -266,13 +266,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="296"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="306"/>
+        <source>Correction model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="312"/>
         <source>Depth perception</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="334"/>
+        <source>Middle curves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="356"/>
+        <source>Middle angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="393"/>
         <source>Apply to ...</source>
         <translation type="unfinished"></translation>
     </message>

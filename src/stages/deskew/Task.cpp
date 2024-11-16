@@ -190,11 +190,11 @@ Task::Task(IntrusivePtr<Filter> const& filter,
            IntrusivePtr<Settings> const& settings,
            IntrusivePtr<select_content::Task> const& next_task,
            PageId const& page_id, bool const batch_processing, bool const debug)
-    :   m_ptrFilter(filter),
-        m_ptrSettings(settings),
-        m_ptrNextTask(next_task),
-        m_pageId(page_id),
-        m_batchProcessing(batch_processing)
+    : m_ptrFilter(filter),
+      m_ptrSettings(settings),
+      m_ptrNextTask(next_task),
+      m_pageId(page_id),
+      m_batchProcessing(batch_processing)
 {
     if (debug)
     {
@@ -470,7 +470,8 @@ Task::processPerspectiveDistortion(
                 orig_image_transform.origCropArea(),
                 top_curve, bottom_curve,
                 dewarping::DepthPerception(),
-                0.0
+                dewarping::DepthPerception(),
+                dewarping::DepthPerception()
             )
         );
         return m_ptrNextTask->process(
@@ -563,7 +564,8 @@ Task::processWarpDistortion(
                 params.dewarpingParams().distortionModel().topCurve().polyline(),
                 params.dewarpingParams().distortionModel().bottomCurve().polyline(),
                 params.dewarpingParams().depthPerception(),
-                params.dewarpingParams().depthPerception()
+                params.dewarpingParams().correctCurves(),
+                params.dewarpingParams().correctAngle()
             )
         );
         return m_ptrNextTask->process(
@@ -631,16 +633,16 @@ Task::NoDistortionUiUpdater::NoDistortionUiUpdater(
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
-    :   m_ptrFilter(filter),
-        m_ptrAccelOps(accel_ops),
-        m_ptrDbg(std::move(dbg_img)),
-        m_fullSizeImage(full_size_image),
-        m_downscaledImage(
-            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-        ),
-        m_pageId(page_id),
-        m_pageParams(page_params),
-        m_batchProcessing(batch_processing)
+    : m_ptrFilter(filter),
+      m_ptrAccelOps(accel_ops),
+      m_ptrDbg(std::move(dbg_img)),
+      m_fullSizeImage(full_size_image),
+      m_downscaledImage(
+          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+      ),
+      m_pageId(page_id),
+      m_pageParams(page_params),
+      m_batchProcessing(batch_processing)
 {
 }
 
@@ -675,16 +677,16 @@ Task::RotationUiUpdater::RotationUiUpdater(
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
-    :   m_ptrFilter(filter),
-        m_ptrAccelOps(accel_ops),
-        m_ptrDbg(std::move(dbg_img)),
-        m_fullSizeImage(full_size_image),
-        m_downscaledImage(
-            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-        ),
-        m_pageId(page_id),
-        m_pageParams(page_params),
-        m_batchProcessing(batch_processing)
+    : m_ptrFilter(filter),
+      m_ptrAccelOps(accel_ops),
+      m_ptrDbg(std::move(dbg_img)),
+      m_fullSizeImage(full_size_image),
+      m_downscaledImage(
+          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+      ),
+      m_pageId(page_id),
+      m_pageParams(page_params),
+      m_batchProcessing(batch_processing)
 {
 }
 
@@ -728,16 +730,16 @@ Task::PerspectiveUiUpdater::PerspectiveUiUpdater(
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
-    :   m_ptrFilter(filter),
-        m_ptrAccelOps(accel_ops),
-        m_ptrDbg(std::move(dbg_img)),
-        m_fullSizeImage(full_size_image),
-        m_downscaledImage(
-            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-        ),
-        m_pageId(page_id),
-        m_pageParams(page_params),
-        m_batchProcessing(batch_processing)
+    : m_ptrFilter(filter),
+      m_ptrAccelOps(accel_ops),
+      m_ptrDbg(std::move(dbg_img)),
+      m_fullSizeImage(full_size_image),
+      m_downscaledImage(
+          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+      ),
+      m_pageId(page_id),
+      m_pageParams(page_params),
+      m_batchProcessing(batch_processing)
 {
 }
 
@@ -778,9 +780,15 @@ Task::PerspectiveUiUpdater::updateUI(FilterUiInterface* ui)
     distortion_model.setBottomCurve(Curve(bottom_curve));
 
     DewarpingView* view = new DewarpingView(
-        m_ptrAccelOps, m_fullSizeImage, m_downscaledImage, m_pageId, distortion_model,
+        m_ptrAccelOps,
+        m_fullSizeImage,
+        m_downscaledImage,
+        m_pageId,
+        distortion_model,
 
         // Doesn't matter when curves are flat.
+        DepthPerception(),
+        DepthPerception(),
         DepthPerception(),
 
         // Prevent the user from introducing curvature.
@@ -805,16 +813,16 @@ Task::DewarpingUiUpdater::DewarpingUiUpdater(
     PageId const& page_id,
     Params const& page_params,
     bool const batch_processing)
-    :   m_ptrFilter(filter),
-        m_ptrAccelOps(accel_ops),
-        m_ptrDbg(std::move(dbg_img)),
-        m_fullSizeImage(full_size_image),
-        m_downscaledImage(
-            ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
-        ),
-        m_pageId(page_id),
-        m_pageParams(page_params),
-        m_batchProcessing(batch_processing)
+    : m_ptrFilter(filter),
+      m_ptrAccelOps(accel_ops),
+      m_ptrDbg(std::move(dbg_img)),
+      m_fullSizeImage(full_size_image),
+      m_downscaledImage(
+          ImageViewBase::createDownscaledImage(full_size_image.origImage(), accel_ops)
+      ),
+      m_pageId(page_id),
+      m_pageParams(page_params),
+      m_batchProcessing(batch_processing)
 {
 }
 
@@ -835,9 +843,14 @@ Task::DewarpingUiUpdater::updateUI(FilterUiInterface* ui)
     }
 
     DewarpingView* view = new DewarpingView(
-        m_ptrAccelOps, m_fullSizeImage, m_downscaledImage, m_pageId,
+        m_ptrAccelOps,
+        m_fullSizeImage,
+        m_downscaledImage,
+        m_pageId,
         m_pageParams.dewarpingParams().distortionModel(),
         m_pageParams.dewarpingParams().depthPerception(),
+        m_pageParams.dewarpingParams().correctCurves(),
+        m_pageParams.dewarpingParams().correctAngle(),
         /*fixed_number_of_control_points=*/false
     );
     ui->setImageWidget(view, ui->TRANSFER_OWNERSHIP, m_ptrDbg.get());
@@ -849,6 +862,14 @@ Task::DewarpingUiUpdater::updateUI(FilterUiInterface* ui)
     QObject::connect(
         opt_widget, SIGNAL(depthPerceptionSetByUser(double)),
         view, SLOT(depthPerceptionChanged(double))
+    );
+    QObject::connect(
+        opt_widget, SIGNAL(correctCurvesSetByUser(double)),
+        view, SLOT(correctCurvesChanged(double))
+    );
+    QObject::connect(
+        opt_widget, SIGNAL(correctAngleSetByUser(double)),
+        view, SLOT(correctAngleChanged(double))
     );
 }
 

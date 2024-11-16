@@ -38,12 +38,13 @@ namespace deskew
 
 double const OptionsWidget::MAX_ANGLE = 45.0;
 
-OptionsWidget::OptionsWidget(IntrusivePtr<Settings> const& settings,
-                             PageSelectionAccessor const& page_selection_accessor)
-    :   m_ptrSettings(settings)
-    ,   m_pageParams(Dependencies())
-    ,   m_ignoreSignalsFromUiControls(0)
-    ,   m_pageSelectionAccessor(page_selection_accessor)
+OptionsWidget::OptionsWidget(
+    IntrusivePtr<Settings> const& settings,
+    PageSelectionAccessor const& page_selection_accessor)
+    : m_ptrSettings(settings)
+    , m_pageParams(Dependencies())
+    , m_ignoreSignalsFromUiControls(0)
+    , m_pageSelectionAccessor(page_selection_accessor)
 {
     using namespace dewarping;
 
@@ -74,6 +75,34 @@ OptionsWidget::OptionsWidget(IntrusivePtr<Settings> const& settings,
     connect(
         ui.depthPerceptionSlider, SIGNAL(sliderReleased()),
         SLOT(depthPerceptionSliderReleased())
+    );
+    ui.correctCurvesSlider->setMinimum(
+        depthPerceptionToSlider(DepthPerception::minValue())
+    );
+    ui.correctCurvesSlider->setMaximum(
+        depthPerceptionToSlider(DepthPerception::maxValue())
+    );
+    connect(
+        ui.correctCurvesSlider, SIGNAL(valueChanged(int)),
+        SLOT(correctCurvesSliderMoved(int))
+    );
+    connect(
+        ui.correctCurvesSlider, SIGNAL(sliderReleased()),
+        SLOT(correctCurvesSliderReleased())
+    );
+    ui.correctAngleSlider->setMinimum(
+        depthPerceptionToSlider(DepthPerception::minValue())
+    );
+    ui.correctAngleSlider->setMaximum(
+        depthPerceptionToSlider(DepthPerception::maxValue())
+    );
+    connect(
+        ui.correctAngleSlider, SIGNAL(valueChanged(int)),
+        SLOT(correctAngleSliderMoved(int))
+    );
+    connect(
+        ui.correctAngleSlider, SIGNAL(sliderReleased()),
+        SLOT(correctAngleSliderReleased())
     );
     connect(
         ui.applyDepthPerceptionBtn, SIGNAL(clicked()),
@@ -193,6 +222,8 @@ OptionsWidget::depthPerceptionAppliedTo(std::set<PageId> const& pages)
     }
 
     m_ptrSettings->setDepthPerception(pages, m_pageParams.dewarpingParams().depthPerception());
+    m_ptrSettings->setCorrectCurves(pages, m_pageParams.dewarpingParams().correctCurves());
+    m_ptrSettings->setCorrectAngle(pages, m_pageParams.dewarpingParams().correctAngle());
 
     for (PageId const& page_id : pages)
     {
@@ -209,6 +240,8 @@ OptionsWidget::depthPerceptionAppliedToAllPages(std::set<PageId> const& pages)
     }
 
     m_ptrSettings->setDepthPerception(pages, m_pageParams.dewarpingParams().depthPerception());
+    m_ptrSettings->setCorrectCurves(pages, m_pageParams.dewarpingParams().correctCurves());
+    m_ptrSettings->setCorrectAngle(pages, m_pageParams.dewarpingParams().correctAngle());
     emit invalidateAllThumbnails();
 }
 
@@ -295,6 +328,10 @@ OptionsWidget::postUpdateUI(Params const& page_params)
     {
         double const depth_perception = page_params.dewarpingParams().depthPerception().value();
         ui.depthPerceptionSlider->setValue(depthPerceptionToSlider(depth_perception));
+        double const correct_curves = page_params.dewarpingParams().correctCurves().value();
+        ui.correctCurvesSlider->setValue(depthPerceptionToSlider(correct_curves));
+        double const correct_angle = page_params.dewarpingParams().correctAngle().value();
+        ui.correctAngleSlider->setValue(depthPerceptionToSlider(correct_angle));
     }
 }
 
@@ -446,6 +483,48 @@ OptionsWidget::depthPerceptionSliderReleased()
 }
 
 void
+OptionsWidget::correctCurvesSliderMoved(int value)
+{
+    double const correct_curves = sliderToDepthPerception(value);
+    m_pageParams.dewarpingParams().setCorrectCurves(correct_curves);
+    m_ptrSettings->setPageParams(m_pageId, m_pageParams);
+
+    emit correctCurvesSetByUser(correct_curves);
+
+    if (!ui.correctCurvesSlider->isSliderDown())
+    {
+        emit invalidateThumbnail(m_pageId);
+    }
+}
+
+void
+OptionsWidget::correctCurvesSliderReleased()
+{
+    emit invalidateThumbnail(m_pageId);
+}
+
+void
+OptionsWidget::correctAngleSliderMoved(int value)
+{
+    double const correct_angle = sliderToDepthPerception(value);
+    m_pageParams.dewarpingParams().setCorrectAngle(correct_angle);
+    m_ptrSettings->setPageParams(m_pageId, m_pageParams);
+
+    emit correctAngleSetByUser(correct_angle);
+
+    if (!ui.correctAngleSlider->isSliderDown())
+    {
+        emit invalidateThumbnail(m_pageId);
+    }
+}
+
+void
+OptionsWidget::correctAngleSliderReleased()
+{
+    emit invalidateThumbnail(m_pageId);
+}
+
+void
 OptionsWidget::setupDistortionTypeButtons()
 {
     static_assert(
@@ -566,13 +645,13 @@ OptionsWidget::degreesToSpinBox(double const degrees)
 int
 OptionsWidget::depthPerceptionToSlider(double depth_perception)
 {
-    return qRound(depth_perception * 10);
+    return qRound(depth_perception * 100.0);
 }
 
 double
 OptionsWidget::sliderToDepthPerception(int slider_value)
 {
-    return slider_value / 10.0;
+    return slider_value / 100.0;
 }
 
 } // namespace deskew

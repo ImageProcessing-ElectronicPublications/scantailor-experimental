@@ -60,21 +60,25 @@ DewarpingView::DewarpingView(
     PageId const& page_id,
     dewarping::DistortionModel const& distortion_model,
     dewarping::DepthPerception const& depth_perception,
+    dewarping::DepthPerception const& correct_curves,
+    dewarping::DepthPerception const& correct_angle,
     bool const fixed_number_of_control_points)
-    :   ImageViewBase(
-            accel_ops, full_size_image.origImage(), downscaled_image,
-            ImagePresentation(
-                full_size_image.xform().transform(),
-                full_size_image.xform().transformedCropArea()
-            ),
-            QMarginsF(5.0, 5.0, 5.0, 5.0)
-        ),
-        m_pageId(page_id),
-        m_virtDisplayArea(full_size_image.xform().transformedCropArea()),
-        m_distortionModel(distortion_model),
-        m_depthPerception(depth_perception),
-        m_dragHandler(*this),
-        m_zoomHandler(*this)
+    : ImageViewBase(
+          accel_ops, full_size_image.origImage(), downscaled_image,
+          ImagePresentation(
+              full_size_image.xform().transform(),
+              full_size_image.xform().transformedCropArea()
+          ),
+          QMarginsF(5.0, 5.0, 5.0, 5.0)
+      ),
+      m_pageId(page_id),
+      m_virtDisplayArea(full_size_image.xform().transformedCropArea()),
+      m_distortionModel(distortion_model),
+      m_depthPerception(depth_perception),
+      m_correctCurves(correct_curves),
+      m_correctAngle(correct_angle),
+      m_dragHandler(*this),
+      m_zoomHandler(*this)
 {
     setMouseTracking(true);
 
@@ -259,6 +263,20 @@ DewarpingView::depthPerceptionChanged(double val)
 }
 
 void
+DewarpingView::correctCurvesChanged(double val)
+{
+    m_correctCurves.setValue(val);
+    update();
+}
+
+void
+DewarpingView::correctAngleChanged(double val)
+{
+    m_correctAngle.setValue(val);
+    update();
+}
+
+void
 DewarpingView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
     painter.setRenderHint(QPainter::Antialiasing);
@@ -288,8 +306,12 @@ DewarpingView::onPaint(QPainter& painter, InteractionState const& interaction)
                 m_distortionModel.topCurve().polyline(),
                 m_distortionModel.bottomCurve().polyline(),
                 m_depthPerception,
-                num_horizontal_curves, num_vertical_lines,
-                horizontal_curves, vertical_lines
+                m_correctCurves,
+                m_correctAngle,
+                num_horizontal_curves,
+                num_vertical_lines,
+                horizontal_curves,
+                vertical_lines
             );
 
             for (auto const& curve : horizontal_curves)

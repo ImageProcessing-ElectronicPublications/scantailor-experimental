@@ -28,8 +28,8 @@ namespace deskew
 
 RotationParams::RotationParams()
     : m_compensationAngleDeg(0)
-    ,    m_mode(MODE_AUTO)
-    ,    m_isValid(false)
+    , m_mode(MODE_AUTO)
+    , m_isValid(false)
 {
 }
 

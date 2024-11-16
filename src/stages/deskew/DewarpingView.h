@@ -70,6 +70,8 @@ public:
         PageId const& page_id,
         dewarping::DistortionModel const& distortion_model,
         dewarping::DepthPerception const& depth_perception,
+        dewarping::DepthPerception const& correct_curves,
+        dewarping::DepthPerception const& correct_angle,
         bool fixed_number_of_control_points);
 
     virtual ~DewarpingView();
@@ -77,6 +79,10 @@ signals:
     void distortionModelChanged(dewarping::DistortionModel const& model);
 public slots:
     void depthPerceptionChanged(double val);
+
+    void correctCurvesChanged(double val);
+
+    void correctAngleChanged(double val);
 protected:
     virtual void onPaint(QPainter& painter, InteractionState const& interaction);
 private:
@@ -103,6 +109,8 @@ private:
     QPolygonF m_virtDisplayArea;
     dewarping::DistortionModel m_distortionModel;
     dewarping::DepthPerception m_depthPerception;
+    dewarping::DepthPerception m_correctCurves;
+    dewarping::DepthPerception m_correctAngle;
     InteractiveXSpline m_topSpline;
     InteractiveXSpline m_bottomSpline;
     DragHandler m_dragHandler;

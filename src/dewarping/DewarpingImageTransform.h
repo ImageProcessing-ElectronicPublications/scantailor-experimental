@@ -59,7 +59,8 @@ public:
         std::vector<QPointF> const& top_curve,
         std::vector<QPointF> const& bottom_curve,
         DepthPerception const& depth_perception,
-        DepthPerception const& curve_correct);
+        DepthPerception const& curve_correct,
+        DepthPerception const& curve_angle);
 
     virtual ~DewarpingImageTransform();
 
@@ -118,6 +119,7 @@ private:
     std::vector<QPointF> m_bottomPolyline;
     DepthPerception m_depthPerception;
     DepthPerception m_curveCorrect;
+    DepthPerception m_curveAngle;
     CylindricalSurfaceDewarper m_dewarper;
 
     /**

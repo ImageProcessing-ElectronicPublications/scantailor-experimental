@@ -55,6 +55,8 @@ public:
         std::vector<QPointF> const& top_curve,
         std::vector<QPointF> const& bottom_curve,
         dewarping::DepthPerception const& depth_perception,
+        dewarping::DepthPerception const& correct_curves,
+        dewarping::DepthPerception const& correct_angle,
         unsigned num_horizontal_curves, unsigned num_vertical_lines,
         std::vector<std::vector<QPointF>>& out_horizontal_curves,
         std::vector<QLineF>& out_vertical_lines);

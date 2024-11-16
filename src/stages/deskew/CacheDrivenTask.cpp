@@ -43,8 +43,8 @@ namespace deskew
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<Settings> const& settings,
     IntrusivePtr<select_content::CacheDrivenTask> const& next_task)
-    :   m_ptrNextTask(next_task),
-        m_ptrSettings(settings)
+    : m_ptrNextTask(next_task),
+      m_ptrSettings(settings)
 {
 }
 
@@ -117,6 +117,7 @@ CacheDrivenTask::process(
                                 image_transform.origCropArea(),
                                 top_curve, bottom_curve,
                                 dewarping::DepthPerception(),
+                                dewarping::DepthPerception(),
                                 dewarping::DepthPerception()
                             );
             break;
@@ -128,7 +129,8 @@ CacheDrivenTask::process(
                                 params->dewarpingParams().distortionModel().topCurve().polyline(),
                                 params->dewarpingParams().distortionModel().bottomCurve().polyline(),
                                 params->dewarpingParams().depthPerception(),
-                                params->dewarpingParams().depthPerception()
+                                params->dewarpingParams().correctCurves(),
+                                params->dewarpingParams().correctAngle()
                             );
             break;
         }

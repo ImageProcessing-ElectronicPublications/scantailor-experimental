@@ -41,9 +41,9 @@ RotationThumbnail::RotationThumbnail(
           thumbnail_cache, max_display_size, page_id,
           full_size_image_transform.adjusted(
               [compensation_angle_deg](AffineImageTransform& xform)
-{
-    xform.rotate(compensation_angle_deg);
-}
+              {
+                  xform.rotate(compensation_angle_deg);
+              }
       )
   )
 ,    m_drawGrid(draw_grid)

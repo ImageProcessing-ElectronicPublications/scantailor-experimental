@@ -16,6 +16,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
+#include <exception>
+#include <iterator>
+#include <limits>
+#include <cmath>
+#include <cassert>
+#include <boost/foreach.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <QTransform>
+#include <QImage>
+#include <QPainter>
+#include <QPen>
+#include <QColor>
+#include <QDebug>
 #include "DistortionModelBuilder.h"
 #include "DistortionModel.h"
 #include "CylindricalSurfaceDewarper.h"
@@ -27,21 +42,6 @@
 #include "VecNT.h"
 #include "ToVec.h"
 #include "../foundation/MultipleTargetsSupport.h"
-#include <QTransform>
-#include <QImage>
-#include <QPainter>
-#include <QPen>
-#include <QColor>
-#include <QDebug>
-#include <boost/foreach.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <algorithm>
-#include <exception>
-#include <iterator>
-#include <limits>
-#include <cmath>
-#include <cassert>
 
 using namespace imageproc;
 
@@ -55,8 +55,10 @@ struct DistortionModelBuilder::TracedCurve
     XSpline extendedSpline;
     double order; // Lesser values correspond to upper curves.
 
-    TracedCurve(std::vector<QPointF> const& trimmed_polyline,
-                XSpline const& extended_spline, double ord)
+    TracedCurve(
+        std::vector<QPointF> const& trimmed_polyline,
+        XSpline const& extended_spline,
+        double ord)
         : trimmedPolyline(trimmed_polyline),
           extendedPolyline(extended_spline.toPolyline()),
           extendedSpline(extended_spline), order(ord) {}
@@ -116,7 +118,7 @@ public:
 
 
 DistortionModelBuilder::DistortionModelBuilder(Vec2d const& down_direction)
-    :   m_downDirection(down_direction),
+    : m_downDirection(down_direction),
       m_rightDirection(down_direction[1], -down_direction[0])
 {
     assert(down_direction.squaredNorm() > 0);
@@ -212,11 +214,10 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
 
     ransac.buildAndAssessModel(&ordered_curves.front(), &ordered_curves.back());
 
-/*
     // (Tulon)
     // First let's try to combine each of the 5 top-most lines
     // with each of the 3 bottom-most ones.
-    int const exhaustive_search_threshold = 5;
+    int const exhaustive_search_threshold = 16; // 5 <- 16 -- zvezdochiot
     for (int i = 0; i < std::min<int>(exhaustive_search_threshold, num_curves); ++i)
     {
         for (int j = std::max<int>(0, num_curves - exhaustive_search_threshold); j < num_curves; ++j)
@@ -247,8 +248,8 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
             ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
         }
     }
-*/
 
+/*
     // Full RANCAS (zvezdochiot)
     for (int i = 0; i < (num_curves - 1); i++)
     {
@@ -257,7 +258,7 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
             ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
         }
     }
-
+*/
     if (dbg && dbg_background)
     {
         dbg->add(visualizeTrimmedPolylines(*dbg_background, ordered_curves), "trimmed_polylines");
@@ -481,7 +482,11 @@ try
 
     double const depth_perception = 2.0; // Doesn't matter much here.
     CylindricalSurfaceDewarper const dewarper(
-        top_curve->extendedPolyline, bottom_curve->extendedPolyline, depth_perception, depth_perception
+        top_curve->extendedPolyline,
+        bottom_curve->extendedPolyline,
+        depth_perception,
+        depth_perception,
+        depth_perception
     );
 
     // CylindricalSurfaceDewarper maps the curved quadrilateral to a unit
@@ -611,7 +616,8 @@ DistortionModelBuilder::visualizeTrimmedPolylines(
 
 QImage
 DistortionModelBuilder::visualizeModel(
-    QImage const& background, std::vector<TracedCurve> const& curves,
+    QImage const& background,
+    std::vector<TracedCurve> const& curves,
     RansacModel const& model) const
 {
     QImage canvas(background.convertToFormat(QImage::Format_RGB32));

@@ -34,7 +34,10 @@ Utils::buildWarpVisualization(
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
     dewarping::DepthPerception const& depth_perception,
-    unsigned num_horizontal_curves, unsigned num_vertical_lines,
+    dewarping::DepthPerception const& correct_curves,
+    dewarping::DepthPerception const& correct_angle,
+    unsigned num_horizontal_curves,
+    unsigned num_vertical_lines,
     std::vector<std::vector<QPointF>>& out_horizontal_curves,
     std::vector<QLineF>& out_vertical_lines)
 {
@@ -47,7 +50,11 @@ Utils::buildWarpVisualization(
     out_vertical_lines.reserve(num_vertical_lines);
 
     CylindricalSurfaceDewarper const dewarper(
-        top_curve, bottom_curve, depth_perception.value(), depth_perception.value()
+        top_curve,
+        bottom_curve,
+        depth_perception.value(),
+        correct_curves.value(),
+        correct_angle.value()
     );
     CylindricalSurfaceDewarper::State state;
 

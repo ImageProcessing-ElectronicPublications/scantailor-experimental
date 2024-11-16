@@ -59,7 +59,6 @@ public:
     {
         return m_mode;
     }
-
     void setMode(AutoManualMode mode)
     {
         m_mode = mode;
@@ -69,7 +68,6 @@ public:
     {
         return m_distortionModel;
     }
-
     void setDistortionModel(dewarping::DistortionModel const& distortion_model)
     {
         m_distortionModel = distortion_model;
@@ -79,14 +77,33 @@ public:
     {
         return m_depthPerception;
     }
-
     void setDepthPerception(dewarping::DepthPerception const& depth_perception)
     {
         m_depthPerception = depth_perception;
     }
+
+    dewarping::DepthPerception const& correctCurves() const
+    {
+        return m_correctCurves;
+    }
+    void setCorrectCurves(dewarping::DepthPerception const& correct_curves)
+    {
+        m_correctCurves = correct_curves;
+    }
+
+    dewarping::DepthPerception const& correctAngle() const
+    {
+        return m_correctAngle;
+    }
+    void setCorrectAngle(dewarping::DepthPerception const& correct_angle)
+    {
+        m_correctAngle = correct_angle;
+    }
 private:
     dewarping::DistortionModel m_distortionModel;
     dewarping::DepthPerception m_depthPerception;
+    dewarping::DepthPerception m_correctCurves;
+    dewarping::DepthPerception m_correctAngle;
     AutoManualMode m_mode;
 };
 

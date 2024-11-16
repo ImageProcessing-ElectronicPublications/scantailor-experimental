@@ -53,6 +53,10 @@ signals:
     void manualDeskewAngleSet(double degrees);
 
     void depthPerceptionSetByUser(double depth_perception);
+
+    void correctCurvesSetByUser(double correct_curves);
+
+    void correctAngleSetByUser(double correct_angle);
 public slots:
     void manualDeskewAngleSetExternally(double degrees);
 
@@ -78,6 +82,14 @@ private slots:
     void depthPerceptionSliderMoved(int value);
 
     void depthPerceptionSliderReleased();
+
+    void correctCurvesSliderMoved(int value);
+
+    void correctCurvesSliderReleased();
+
+    void correctAngleSliderMoved(int value);
+
+    void correctAngleSliderReleased();
 
     void showApplyDistortionTypeDialog();
 

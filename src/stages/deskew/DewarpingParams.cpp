@@ -35,9 +35,11 @@ DewarpingParams::DewarpingParams()
 }
 
 DewarpingParams::DewarpingParams(QDomElement const& el)
-    :   m_distortionModel(el.namedItem("distortion-model").toElement())
-    ,   m_depthPerception(el.attribute("depthPerception"))
-    ,   m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+    : m_distortionModel(el.namedItem("distortion-model").toElement())
+    , m_depthPerception(el.attribute("depthPerception"))
+    , m_correctCurves(el.attribute("correctCurves"))
+    , m_correctAngle(el.attribute("correctAngle"))
+    , m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
 }
 
@@ -68,6 +70,8 @@ DewarpingParams::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.appendChild(m_distortionModel.toXml(doc, "distortion-model"));
     el.setAttribute("depthPerception", m_depthPerception.toString());
+    el.setAttribute("correctCurves", m_correctCurves.toString());
+    el.setAttribute("correctAngle", m_correctAngle.toString());
     el.setAttribute("mode", m_mode == MODE_MANUAL ? "manual" : "auto");
     return el;
 }

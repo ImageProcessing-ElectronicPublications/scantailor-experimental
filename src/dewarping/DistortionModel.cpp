@@ -35,8 +35,8 @@ DistortionModel::DistortionModel()
 }
 
 DistortionModel::DistortionModel(QDomElement const& el)
-    :	m_topCurve(el.namedItem("top-curve").toElement()),
-      m_bottomCurve(el.namedItem("bottom-curve").toElement())
+    : m_topCurve(el.namedItem("top-curve").toElement())
+    , m_bottomCurve(el.namedItem("bottom-curve").toElement())
 {
 }
 
