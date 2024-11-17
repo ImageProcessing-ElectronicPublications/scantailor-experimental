@@ -19,13 +19,13 @@
 #ifndef PAGE_LAYOUT_IMAGEVIEW_H_
 #define PAGE_LAYOUT_IMAGEVIEW_H_
 
+#include <memory>
 #include <QTransform>
 #include <QSizeF>
 #include <QRectF>
 #include <QPointF>
 #include <QPoint>
 #include <QPainterPath>
-#include <memory>
 #include "ImageViewBase.h"
 #include "ImagePixmapUnion.h"
 #include "InteractionHandler.h"
@@ -63,7 +63,8 @@ class ImageView :
 public:
     ImageView(
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
-        IntrusivePtr<Settings> const& settings, PageId const& page_id,
+        IntrusivePtr<Settings> const& settings,
+        PageId const& page_id,
         std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_transform,
         imageproc::AffineTransformedImage const& affine_transformed_image,
         ImagePixmapUnion const& downscaled_image,

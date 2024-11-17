@@ -50,7 +50,8 @@ namespace page_layout
 
 ImageView::ImageView(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
-    IntrusivePtr<Settings> const& settings, PageId const& page_id,
+    IntrusivePtr<Settings> const& settings,
+    PageId const& page_id,
     std::shared_ptr<AbstractImageTransform const> const& orig_transform,
     AffineTransformedImage const& affine_transformed_image,
     ImagePixmapUnion const& downscaled_image,
@@ -606,7 +607,7 @@ ImageView::dragFinished()
     RelativeMargins const margins(calcHardMargins());
     AggregateSizeChanged const agg_size_changed(commitHardMargins(margins));
 
-    if (m_matchSizeMode == MatchSizeMode::M_SCALE)
+    if ((m_matchSizeMode == MatchSizeMode::M_SCALE) || (m_matchSizeMode == MatchSizeMode::M_AFFINE))
     {
         // In this mode, adjusting the margins affects scaling applied to the image itself.
         recalcBoxesAndFit(margins);
@@ -713,7 +714,7 @@ RelativeMargins
 ImageView::calcHardMargins() const
 {
     double pagewidth = m_innerRect.width();
-    double pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
+    double const pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
     pagewidth = (pagewidth < pagewidthheight) ? pagewidthheight : pagewidth;
     double const scale = 1.0 / pagewidth;
     return RelativeMargins(

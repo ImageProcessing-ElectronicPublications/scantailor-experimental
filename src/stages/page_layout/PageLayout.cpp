@@ -50,49 +50,73 @@ PageLayout::PageLayout(
     // we would get with zero hard margins and MatchSizeMode::M_GROW_MARGINS.
     bool const have_content_box = !unscaled_content_rect.isEmpty();
 
-    if (have_content_box && (match_size_mode.get() == MatchSizeMode::M_SCALE || match_size_mode.get() == MatchSizeMode::M_AFFINE))
-    {
-        // aggregate_size = content_size * scale + margins * width * scale
-        // Solving for scale:
-        // scale = aggregate_size / (content_size + margins * width)
-        double const agwidth = aggregate_hard_size.width();
-        double const agheight = aggregate_hard_size.height();
-        double const aghx = agheight * 0.7071067811865475244;
-        double const agsize = (agwidth < aghx) ? agwidth : aghx;
-        double const agx = (agwidth - (margins.left() + margins.right()) * agsize);
-        double const agy = (agheight - (margins.top() + margins.bottom()) * agsize);
-        double const x_scale = (agx > 0.0) ? (agx / m_innerRect.width()) : 1.0;
-        double const y_scale = (agy > 0.0) ? (agy / m_innerRect.height()) : 1.0;
-        if (match_size_mode.get() == MatchSizeMode::M_SCALE)
-        {
-            if (x_scale > 1.0 && y_scale > 1.0)
-            {
-                m_scaleFactor_X = std::min(x_scale, y_scale);
-            }
-            else if (x_scale < 1.0 && y_scale < 1.0)
-            {
-                m_scaleFactor_X = std::max(x_scale, y_scale);
-            }
-            m_scaleFactor_Y = m_scaleFactor_X;
-        }
-        else
-        {
-            m_scaleFactor_X = x_scale;
-            m_scaleFactor_Y = y_scale;
-        }
-
-        // The rectangle needs to be both shifted and scaled,
-        // as that's what AbstractImageTransform::scale() does,
-        // which we call in absorbScalingIntoTransform().
-        QPointF const p_tl = m_innerRect.topLeft();
-        QPointF const p_br = m_innerRect.bottomRight();
-        QPointF const p_tl_s(p_tl.x() * m_scaleFactor_X, p_tl.y() * m_scaleFactor_Y);
-        QPointF const p_br_s(p_br.x() * m_scaleFactor_X, p_br.y() * m_scaleFactor_Y);
-        m_innerRect = QRectF(p_tl_s, p_br_s);
-    }
-
     if (have_content_box)
     {
+        double const agwidth = aggregate_hard_size.width();
+        double const agheight = aggregate_hard_size.height();
+        double const pagew = m_innerRect.width();
+        double const pageh = m_innerRect.height();
+        double const margins_w = margins.left() + margins.right();
+        double const margins_h = margins.top() + margins.bottom();
+        if ((match_size_mode.get() == MatchSizeMode::M_SCALE) || (match_size_mode.get() == MatchSizeMode::M_AFFINE))
+        {
+            double const pagewidthx = pagew;
+            double const pagewidthy = pageh * 0.7071067811865475244;
+            double const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
+            double const pagewm = pagew + margins_w * pagewidth;
+            double const pagehm = pageh + margins_h * pagewidth;
+            if (match_size_mode.get() == MatchSizeMode::M_SCALE)
+            {
+                // aggregate_size = content_size * scale + margins * width * scale
+                // Solving for scale:
+                // scale = aggregate_size / (content_size + margins * width)
+                double const x_scale = (pagewm > 0.0) ? (agwidth / pagewm) : 1.0;
+                double const y_scale = (pagehm > 0.0) ? (agheight / pagehm) : 1.0;
+
+                if (x_scale > 1.0 && y_scale > 1.0)
+                {
+                    m_scaleFactor_X = std::min(x_scale, y_scale);
+                }
+                else if (x_scale < 1.0 && y_scale < 1.0)
+                {
+                    m_scaleFactor_X = std::max(x_scale, y_scale);
+                }
+                m_scaleFactor_Y = m_scaleFactor_X;
+            }
+            else
+            {
+                double const pgx = (pagewm < agwidth) ? agwidth : pagewm;
+                double const pgy = (pagehm < agheight) ? agheight : pagehm;
+                double const cgx = pgx / (1.0 + margins_w);
+                double const cgy = pgy / (1.0 + margins_h * 0.7071067811865475244);
+                double const cghx = cgy * 0.7071067811865475244;
+                double const cgsize = (cgx < cghx) ? cghx : cgx;
+                double const margins_ws = margins_w * cgsize;
+                double const margins_hs = margins_h * cgsize;
+                double const agx = pgx - margins_ws;
+                double const agy = pgy - margins_hs;
+
+                double const x_scale = (agx > 0.0) ? (agx / pagew) : 1.0;
+                double const y_scale = (agy > 0.0) ? (agy / pageh) : 1.0;
+
+                m_scaleFactor_X = x_scale;
+                m_scaleFactor_Y = y_scale;
+            }
+            // The rectangle needs to be both shifted and scaled,
+            // as that's what AbstractImageTransform::scale() does,
+            // which we call in absorbScalingIntoTransform().
+            QPointF const p_tl = m_innerRect.topLeft();
+            QPointF const p_br = m_innerRect.bottomRight();
+            double const p_tl_xs = p_tl.x() * m_scaleFactor_X;
+            double const p_tl_ys = p_tl.y() * m_scaleFactor_Y;
+            double const p_br_xs = p_br.x() * m_scaleFactor_X;
+            double const p_br_ys = p_br.y() * m_scaleFactor_Y;
+
+            QPointF const p_tl_s(p_tl_xs, p_tl_ys);
+            QPointF const p_br_s(p_br_xs, p_br_ys);
+            m_innerRect = QRectF(p_tl_s, p_br_s);
+        }
+
         m_middleRect = margins.extendContentRect(m_innerRect);
     }
     else

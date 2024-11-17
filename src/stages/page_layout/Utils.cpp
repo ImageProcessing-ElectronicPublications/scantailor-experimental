@@ -16,22 +16,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Utils.h"
-#include "MatchSizeMode.h"
-#include "Alignment.h"
 #include <QColor>
 #include <QPointF>
 #include <QSizeF>
 #include <QRectF>
 #include <QMarginsF>
+#include "Utils.h"
+#include "MatchSizeMode.h"
+#include "Alignment.h"
 
 namespace page_layout
 {
 
 QMarginsF
 Utils::calcSoftMarginsPx(
-    QSizeF const& hard_size_px, QSizeF const& aggregate_hard_size_px,
-    MatchSizeMode const& match_size_mode, Alignment const& alignment)
+    QSizeF const& hard_size_px,
+    QSizeF const& aggregate_hard_size_px,
+    MatchSizeMode const& match_size_mode,
+    Alignment const& alignment)
 {
     if (match_size_mode.get() == MatchSizeMode::M_DISABLED)
     {
