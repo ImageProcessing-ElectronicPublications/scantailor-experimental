@@ -30,7 +30,8 @@ modules:
   - name: scantailor-experimental
     buildsystem: cmake-ninja
     config-opts:
-      - '-DCMAKE_PREFIX_PATH=/app/Eigen3;/app/boost -DST_LICENSE_DEPS_DIR=/app/license_deps_dir'
+      - '-DCMAKE_PREFIX_PATH=/app/Eigen3;/app/boost'
+      - '-DST_LICENSE_DEPS_DIR=/app/license_deps_dir'
     sources:
       - type: dir
         path: ../../
