@@ -5,8 +5,8 @@ This file is in UTF-8 encoding.
 Ранние версии Scan Tailor поддерживали как Visual Studio так и MinGW.
 С какого-то момента времени, поддержка MinGW была убрана, с целью снизить
 усилия по сопровождению кода. Кроме того Scan Tailor начал использовать
-некоторые возможности стандарта C++11, из-за чего версии Visual Studio
-до 2013 перестали поддерживаться.
+некоторые возможности стандарта C++17, из-за чего версии Visual Studio
+до 2017 перестали официально поддерживаться.
 
 
                             Скачиваем необходимый софт
@@ -14,8 +14,8 @@ This file is in UTF-8 encoding.
 Первым делом, нам понадобится нижеследующий софт.  Если не указано обратного,
 всегда берите последние стабильные версии.
 
-1. Visual Studio Express 2013 for Windows Desktop.
-   Сайт: http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products
+1. Visual Studio 2017 Community for Windows Desktop или новее.
+   Сайт: https://visualstudio.microsoft.com/
 2. CMake >= 2.8.9
    Сайт: http://www.cmake.org
 3. jpeg library
@@ -36,25 +36,28 @@ This file is in UTF-8 encoding.
    далее в этом документе.  Если вы не собираетесь распространять ваши сборки
    Scan Tailor'а и не собираетесь открывать им файлы из сомнительных источников,
    тогда можете и не патчить libtiff.
-7. Qt5 >= 5.3 (протестировано с Qt 5.3.2, 5.4.1)
+7. Qt5 >= 5.3 (протестировано с Qt 5.12.12, 6.8.1)
    Cайт: http://qt-project.org/
    Скачивать можно любую бинарную версию (используемый компилятор не важен),
    или даже версию только с исходниками. В любом случае будет сделана
    специальная сборка Qt, но в первом случае надо будет собирать не так
    много вещей, как во втором.
-8. ActivePerl (нужно для сборки Qt5)
-   Сайт: http://www.activestate.com/activeperl/downloads
-   Рекомендуется ставить 32-битную версию. Будет или нет работать 64-битная -
-   никто не проверял. При установке убедитесь, что опция "Add Perl to the PATH
+8. Strawberry Perl (нужно для сборки Qt)
+   Сайт: https://strawberryperl.com/
+   При установке убедитесь, что опция "Add Perl to the PATH
    environment variable" включена.
-9. Boost (протестировано с 1.56.0)
+9. Boost (протестировано с 1.86.0)
    Сайт: http://boost.org/
    Качайте boost в любом формате, при условии что вы знаете, как этот формат
    распаковывать.
-10. Eigen3 (протестировано с 3.2.5)
+10. Eigen3 (протестировано с 3.4.0)
    Сайт: http://eigen.tuxfamily.org/
-11. NSIS 2.x (протестировано с 2.46)
+11. NSIS 3.x (протестировано с 3.09)
    Сайт: http://nsis.sourceforge.net/
+   Также следует скачать плагин https://nsis.sourceforge.io/NsProcess_plugin и установить в папку с nsis:
+   * Папку `NsProcess.zip\Include` копируем в `c:\Program Files (x86)\NSIS\`.
+   * Файл `NsProcess.zip\Plugin\nsProcess.dll` копируем в `c:\Program Files (x86)\NSIS\Plugins\x86-ansi\`.
+   * Файл `NsProcess.zip\Plugin\nsProcessW.dll` копируем в `c:\Program Files (x86)\NSIS\Plugins\x86-unicode` и переименовываем в `nsProcess.dll`.
 
    
                                     Инструкции
@@ -66,128 +69,27 @@ This file is in UTF-8 encoding.
    scantailor в директорию сборки.  В результате должна получиться примерно
    такая структура директорий:
    C:\build
-     | boost_1_56_0
-     | eigen-eigen-bdd17ee3b1b3
-     | jpeg-9
-     | libpng-1.6.2
-     | scantailor-0.9.11
-     | tiff-4.0.2
-     | zlib-1.2.8
+     | boost_1_86_0
+     | eigen-3.4.0
+     | jpeg-9e
+     | libpng-1.6.44
+     | scantailor
+     | tiff-4.7.0
+     | zlib-1.3.1
    
    Если брали версию Qt без инсталлятора, распаковываем ее сюда же.
    В противном случае ставим Qt в директорию, предлагаемую инсталлятором.
    ВАЖНО: инсталлятору нужно указать, чтобы ставил также и исходники
    (Source Components).
    
-   Установите также Visual Studio и ActivePerl.
+   Установите также Visual Studio, Strawberry Perl.
    
    Если не знаете, чем распаковывать .tar.gz файлы, попробуйте вот этим:
    http://www.7-zip.org/
    
-3. Установить Visual Studio, ActivePerl и CMake.
+3. Установить Visual Studio, Strawberry Perl, NSIS и CMake.
 
-4. Создать там еще пару директорий:
-     | scantailor-build
-     | scantailor-deps-build
+4. Соберите зависимости (boost, jpeg, libpng, tiff, zlib, Qt)
+   Вы также можете использовать vcpkg вместе с CMake для скачивания и сборки зависимостей, если не хотите делать это руками.
 
-5. Запустить CMake и указать следующее:
-
-   Where is the source code: C:\build\scantailor-0.9.11\packaging\windows\build-deps
-   Where to build the binaries: C:\build\scantailor-deps-build
-
-   Жмем "Configure".  Выбираем тип проекта "Visual Studio 12" или
-   "Visual Studio 12 Win64" для 64-битной сборки. Имейте в виду, что 64-битную
-   сборку можно собрать только на 64-битной версии Windows. Visual Studio 12 -
-   это то же самое, что Visual Studio 2013. Если какие-то пути не были найдены,
-   указываем их вручную и жмем "Configure" опять. Если все прошло нормально,
-   кнопка "Generate" станет активной. Жмем на нее. Имейте в виду, что иногда
-   нужно нажимать "Configure" несколько раз, прежде чем кнопка "Generate"
-   станет активной.
-
-6. На этом шаге мы соберем зависимости Scan Tailor'а.  Этот шаг самый длинный
-   (может занять несколько часов), но к счастью его нужно сделать только один раз,
-   то есть вам не придется переделывать этот шаг для сборки других версий
-   Scan Tailor'а.
-   
-   Идем в C:\build\scantailor-deps-build и открываем файл
-   "Scan Tailor Dependencies.sln". Он откроется в Visual Studio.
-   ВАЖНО: Установите тип сборки в RelWithDebInfo. Если оставите Debug
-   (выбор по умолчанию), ваши сборки не будут запускаться на других
-   компьютерах. Несмотря на выставленный RelWithDebInfo, некоторые библиотеки
-   (Qt, boost) будут собраны и в отладочной и в оптимизированной конфиругации.
-   При сборке самого Scan Tailor'а, нужная конфигурация библиотек будет выбрана
-   автоматически.
-   
-   Теперь делаем Build -> Build Solution
-   
-   Убедитесь, что сборка прошла успещно, то есть количество ошибок (errors)
-   должно быть нулевым. На предупреждения (warnings) можно не обращать внимания.   
-
-7. Опять запускаем CMake и указываем следующее:
-
-   Where is the source code: C:\build\scantailor-0.9.11
-   Where to build the binaries: C:\build\scantailor-build
-
-   Жмем "Configure", потом "Generate" - так же, как на шаге 5.
-
-8. Теперь соберем сам Scan Tailor. При повторной сборки той же версии
-   (возможно измененной), начинать можно сразу с этот шага (он же и последний).
-   Для сборки другой версии, начинаем с шага 7.
-   
-   Идем в C:\build\scantailor-build и открываем файл "Scan Tailor.sln".
-   Он откроется в Visual Studio. Выбераем желаемый тип сборки. Сборки типа
-   Debug не будут запускаться на других компьютерах.
-   
-   Теперь делаем Build -> Build Solution
-
-   Если все прошло как надо, в директории C:\build\scantailor-build появится
-   готовый файл инсталлятора, под именем scantailor-VERSION-install.exe, где
-   вместо VERSION будет версия сборки, которая берется из файла version.h
-   в корне дерева исходников.
-
-
-                              Патчим libtiff
-
-Эти инструкции предполагают, что вы взяли Debian'овские патчи к libtiff:
-http://packages.debian.org/source/sid/tiff
-Там вы найдете и оригинальные исходники libtiff (имя файла типа
-tiff_4.0.2.orig.tar.gz) и набор патчей для него (имя файла типа
-tiff_4.0.2-6.debian.tar.gz). Скачайте оба и следуйте инструкциям:
-
-1. Скачать и установить утилиту коммандной строки Patch:
-   http://gnuwin32.sourceforge.net/packages/patch.htm
-
-   Лучше берите версию с инсталлятором.  В этом случае CMake сможет
-   самостоятельно найти путь к patch.exe
-
-2. Распаковать оригинальные исходники libtiff в C:\build, чтобы получилась
-   такая структура директорий:
-   C:\build
-     | tiff-4.0.2
-     +-- build
-       | config
-       | contrib
-       | ...
-
-   Набор патчей распаковываем внутрь директории "tiff-*.*.*", чтобы получить
-   директорию "debian" на одном уровне с "build", "config" и "contrib".
-
-3. Создать еще одну поддиректорию в C:\build
-   Назовем ее "tiff-patch-dir".
-
-4. Запустить CMake и указать следующее:
-
-   Where is the source code: C:\build\scantailor-0.9.11\packaging\windows\patch_libtiff
-   Where to build the binaries: C:\build\tiff-patch-dir
-
-   Жмем "Configure", затем "Generate", как описано в предыдущей секции, пункт 5.
-
-5. Идем в C:\build\tiff-patch-dir и открываем файл "patch_libtiff.sln".
-   Он откроется в Visual Studio. Тип сборки в данном случае значения не имеет.
-   
-   Теперь делаем Build -> Build Solution
-
-   Если ошибок не было, значит вы успешно пропатчили libtiff.  Если когда-либо
-   вам понадобится пропатчить его снова, сначала придется привести его в
-   исходное состояние, то есть заново распаковать его из .tar.gz файла и
-   снести директорию "debian".
+5. Соберите scantailor (укажите пути к собранным boost, eigen, jpeg, libpng, scantailor, tiff, zlib, Qt)
