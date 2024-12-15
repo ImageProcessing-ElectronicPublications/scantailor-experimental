@@ -12,21 +12,25 @@ modules:
         sha256: b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626
     build-commands:
       - mkdir /app/Eigen3
+      - mkdir -p /app/license_deps_dir
+      - cp ./COPYING.MPL2 /app/license_deps_dir/eigen-3.4.0.txt
       - cp -r ./* /app/Eigen3
   - name: boost
     buildsystem: simple
     sources:
       - type: archive
-        url: https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.bz2
+        url: https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.bz2
         sha256: 7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617
     build-commands:
       - mkdir /app/boost
+      - mkdir -p /app/license_deps_dir
+      - cp ./LICENSE_1_0.txt /app/license_deps_dir/boost_1_86_0.txt
       - ./bootstrap.sh --prefix=/app/boost --with-libraries=test,system
       - ./b2 -j $FLATPAK_BUILDER_N_JOBS install
   - name: scantailor-experimental
     buildsystem: cmake-ninja
     config-opts:
-      - '-DCMAKE_PREFIX_PATH=/app/Eigen3;/app/boost'
+      - '-DCMAKE_PREFIX_PATH=/app/Eigen3;/app/boost -DST_LICENSE_DEPS_DIR=/app/license_deps_dir'
     sources:
       - type: dir
         path: ../../
@@ -41,4 +45,5 @@ cleanup:
   - '/Eigen3'
   - '/bin/scantailor-experimental-cli'
   - '/lib'
+  - '/license_deps_dir'
 
