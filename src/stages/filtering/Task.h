@@ -16,21 +16,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SELECT_CONTENT_TASK_H_
-#define SELECT_CONTENT_TASK_H_
+#ifndef TASK_H
+#define TASK_H
 
 #include "NonCopyable.h"
 #include "RefCountable.h"
 #include "FilterResult.h"
-#include "CachingFactory.h"
 #include "PageId.h"
+#include "CachingFactory.h"
+#include "imageproc/AffineTransformedImage.h"
 #include "acceleration/AcceleratableOperations.h"
-#include <QSizeF>
-#include <QRectF>
+#include <boost/optional.hpp>
 #include <memory>
 
 class TaskStatus;
-class DebugImagesImpl;
+class ContentBox;
 class QImage;
 
 namespace imageproc
@@ -39,25 +39,23 @@ class GrayImage;
 class AbstractImageTransform;
 }
 
-namespace filtering
+namespace page_layout
 {
 class Task;
 }
 
-namespace select_content
+namespace filtering
 {
 
 class Filter;
-class Settings;
 
 class Task : public RefCountable
 {
-    DECLARE_NON_COPYABLE(Task)
+	DECLARE_NON_COPYABLE(Task)
 public:
     Task(IntrusivePtr<Filter> const& filter,
-         IntrusivePtr<filtering::Task> const& next_task,
-         IntrusivePtr<Settings> const& settings,
-         PageId const& page_id, bool batch, bool debug);
+        IntrusivePtr<page_layout::Task> const& next_task,
+        PageId const& page_id, bool batch, bool debug);
 
     virtual ~Task();
 
@@ -66,18 +64,18 @@ public:
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         QImage const& orig_image,
         CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-        std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform);
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& orig_image_transform,
+        boost::optional<imageproc::AffineTransformedImage> pre_transformed_image,
+        ContentBox const& content_box);
 private:
     class UiUpdater;
 
     IntrusivePtr<Filter> m_ptrFilter;
-    IntrusivePtr<filtering::Task> m_ptrNextTask;
-    IntrusivePtr<Settings> m_ptrSettings;
-    std::unique_ptr<DebugImagesImpl> m_ptrDbg;
+    IntrusivePtr<page_layout::Task> m_ptrNextTask;
     PageId m_pageId;
     bool m_batchProcessing;
 };
 
-} // namespace select_content
+} // filtering
 
-#endif
+#endif // TASK_H

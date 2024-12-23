@@ -58,6 +58,8 @@
 #include "stages/select_content/Filter.h"
 #include "stages/select_content/Task.h"
 #include "stages/select_content/CacheDrivenTask.h"
+#include "stages/filtering/Filter.h"
+#include "stages/filtering/Task.h"
 #include "stages/page_layout/Settings.h"
 #include "stages/page_layout/Filter.h"
 #include "stages/page_layout/Task.h"
@@ -136,6 +138,7 @@ ConsoleBatch::createCompositeTask(
     IntrusivePtr<page_split::Task> page_split_task;
     IntrusivePtr<deskew::Task> deskew_task;
     IntrusivePtr<select_content::Task> select_content_task;
+    IntrusivePtr<filtering::Task> filtering_task;
     IntrusivePtr<page_layout::Task> page_layout_task;
     IntrusivePtr<output::Task> output_task;
 
@@ -157,10 +160,17 @@ ConsoleBatch::createCompositeTask(
                            );
         debug = false;
     }
+    if (last_filter_idx >= m_ptrStages->filteringFilterIdx())
+    {
+        filtering_task = m_ptrStages->filteringFilter()->createTask(
+            page.id(), page_layout_task, batch, debug
+        );
+        debug = false;
+    }
     if (last_filter_idx >= m_ptrStages->selectContentFilterIdx())
     {
         select_content_task = m_ptrStages->selectContentFilter()->createTask(
-                                  page.id(), page_layout_task, batch, debug
+                                  page.id(), filtering_task, batch, debug
                               );
         debug = false;
     }

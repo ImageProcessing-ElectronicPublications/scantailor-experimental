@@ -196,7 +196,7 @@ Filter::loadSettings(ProjectReader const& reader, QDomElement const& filters_el)
 IntrusivePtr<Task>
 Filter::createTask(
     PageId const& page_id,
-    IntrusivePtr<page_layout::Task> const& next_task,
+    IntrusivePtr<filtering::Task> const& next_task,
     bool batch, bool debug)
 {
     return IntrusivePtr<Task>(
@@ -209,7 +209,7 @@ Filter::createTask(
 
 IntrusivePtr<CacheDrivenTask>
 Filter::createCacheDrivenTask(
-    IntrusivePtr<page_layout::CacheDrivenTask> const& next_task)
+    IntrusivePtr<filtering::CacheDrivenTask> const& next_task)
 {
     return IntrusivePtr<CacheDrivenTask>(
                new CacheDrivenTask(m_ptrSettings, next_task)

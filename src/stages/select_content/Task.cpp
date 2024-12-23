@@ -32,7 +32,7 @@
 #include "imageproc/AbstractImageTransform.h"
 #include "imageproc/AffineImageTransform.h"
 #include "imageproc/AffineTransformedImage.h"
-#include "stages/page_layout/Task.h"
+#include "stages/filtering/Task.h"
 #include <QObject>
 #include <QTransform>
 #include <QDebug>
@@ -75,7 +75,7 @@ private:
 
 
 Task::Task(IntrusivePtr<Filter> const& filter,
-           IntrusivePtr<page_layout::Task> const& next_task,
+           IntrusivePtr<filtering::Task> const& next_task,
            IntrusivePtr<Settings> const& settings,
            PageId const& page_id, bool const batch, bool const debug)
     : m_ptrFilter(filter),

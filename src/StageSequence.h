@@ -27,6 +27,7 @@
 #include "stages/page_split/Filter.h"
 #include "stages/deskew/Filter.h"
 #include "stages/select_content/Filter.h"
+#include "stages/filtering/Filter.h"
 #include "stages/page_layout/Filter.h"
 #include "stages/output/Filter.h"
 #include <vector>
@@ -84,6 +85,11 @@ public:
         return m_ptrSelectContentFilter;
     }
 
+    IntrusivePtr<filtering::Filter> const& filteringFilter() const
+    {
+        return m_ptrFilteringFilter;
+    }
+
     IntrusivePtr<page_layout::Filter> const& pageLayoutFilter() const
     {
         return m_ptrPageLayoutFilter;
@@ -114,6 +120,11 @@ public:
         return m_selectContentFilterIdx;
     }
 
+    int filteringFilterIdx() const
+    {
+        return m_filteringFilterIdx;
+    }
+
     int pageLayoutFilterIdx() const
     {
         return m_pageLayoutFilterIdx;
@@ -128,6 +139,7 @@ private:
     IntrusivePtr<page_split::Filter> m_ptrPageSplitFilter;
     IntrusivePtr<deskew::Filter> m_ptrDeskewFilter;
     IntrusivePtr<select_content::Filter> m_ptrSelectContentFilter;
+    IntrusivePtr<filtering::Filter> m_ptrFilteringFilter;
     IntrusivePtr<page_layout::Filter> m_ptrPageLayoutFilter;
     IntrusivePtr<output::Filter> m_ptrOutputFilter;
     std::vector<FilterPtr> m_filters;
@@ -135,6 +147,7 @@ private:
     int m_pageSplitFilterIdx;
     int m_deskewFilterIdx;
     int m_selectContentFilterIdx;
+    int m_filteringFilterIdx;
     int m_pageLayoutFilterIdx;
     int m_outputFilterIdx;
 };

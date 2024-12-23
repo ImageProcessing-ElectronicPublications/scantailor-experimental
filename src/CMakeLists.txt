@@ -187,7 +187,7 @@ ADD_EXECUTABLE(scantailor-experimental WIN32 ${gui_only_sources} ${resource_sour
 TARGET_LINK_LIBRARIES(
     scantailor-experimental
     acceleration page_layout output
-    fix_orientation page_split deskew select_content stcore
+    fix_orientation page_split deskew select_content filtering stcore
     dewarping zones interaction imageproc math foundation
     ${EXTRA_LIBS}
 )
@@ -200,7 +200,7 @@ ADD_EXECUTABLE(scantailor-experimental-cli ${cli_only_sources} ${common_ui_sourc
 TARGET_LINK_LIBRARIES(
     scantailor-experimental-cli
     acceleration page_layout output
-    fix_orientation page_split deskew select_content stcore
+    fix_orientation page_split deskew select_content filtering stcore
     dewarping zones interaction imageproc math foundation
     ${EXTRA_LIBS}
 )

@@ -74,6 +74,9 @@
 #include "stages/select_content/Filter.h"
 #include "stages/select_content/Task.h"
 #include "stages/select_content/CacheDrivenTask.h"
+#include "stages/filtering/Filter.h"
+#include "stages/filtering/Task.h"
+#include "stages/filtering/CacheDrivenTask.h"
 #include "stages/page_layout/Filter.h"
 #include "stages/page_layout/Task.h"
 #include "stages/page_layout/CacheDrivenTask.h"
@@ -2210,6 +2213,7 @@ MainWindow::createCompositeTask(
     IntrusivePtr<page_split::Task> page_split_task;
     IntrusivePtr<deskew::Task> deskew_task;
     IntrusivePtr<select_content::Task> select_content_task;
+    IntrusivePtr<filtering::Task> filtering_task;
     IntrusivePtr<page_layout::Task> page_layout_task;
     IntrusivePtr<output::Task> output_task;
 
@@ -2232,10 +2236,17 @@ MainWindow::createCompositeTask(
                            );
         debug = false;
     }
+    if (last_filter_idx >= m_ptrStages->filteringFilterIdx())
+    {
+        filtering_task = m_ptrStages->filteringFilter()->createTask(
+            page.id(), page_layout_task, batch, debug
+        );
+        debug = false;
+    }
     if (last_filter_idx >= m_ptrStages->selectContentFilterIdx())
     {
         select_content_task = m_ptrStages->selectContentFilter()->createTask(
-                                  page.id(), page_layout_task, batch, debug
+                                  page.id(), filtering_task, batch, debug
                               );
         debug = false;
     }
@@ -2278,6 +2289,7 @@ MainWindow::createCompositeCacheDrivenTask(int const last_filter_idx)
     IntrusivePtr<page_split::CacheDrivenTask> page_split_task;
     IntrusivePtr<deskew::CacheDrivenTask> deskew_task;
     IntrusivePtr<select_content::CacheDrivenTask> select_content_task;
+    IntrusivePtr<filtering::CacheDrivenTask> filtering_task;
     IntrusivePtr<page_layout::CacheDrivenTask> page_layout_task;
     IntrusivePtr<output::CacheDrivenTask> output_task;
 
@@ -2291,10 +2303,15 @@ MainWindow::createCompositeCacheDrivenTask(int const last_filter_idx)
         page_layout_task = m_ptrStages->pageLayoutFilter()
                            ->createCacheDrivenTask(output_task);
     }
+    if (last_filter_idx >= m_ptrStages->filteringFilterIdx())
+    {
+        filtering_task = m_ptrStages->filteringFilter()
+            ->createCacheDrivenTask(page_layout_task);
+    }
     if (last_filter_idx >= m_ptrStages->selectContentFilterIdx())
     {
         select_content_task = m_ptrStages->selectContentFilter()
-                              ->createCacheDrivenTask(page_layout_task);
+                              ->createCacheDrivenTask(filtering_task);
     }
     if (last_filter_idx >= m_ptrStages->deskewFilterIdx())
     {

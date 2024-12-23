@@ -25,7 +25,7 @@
 #include "filter_dc/AbstractFilterDataCollector.h"
 #include "filter_dc/ThumbnailCollector.h"
 #include "filter_dc/ContentBoxCollector.h"
-#include "stages/page_layout/CacheDrivenTask.h"
+#include "stages/filtering/CacheDrivenTask.h"
 
 using namespace imageproc;
 
@@ -34,7 +34,7 @@ namespace select_content
 
 CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<Settings> const& settings,
-    IntrusivePtr<page_layout::CacheDrivenTask> const& next_task)
+    IntrusivePtr<filtering::CacheDrivenTask> const& next_task)
     : m_ptrSettings(settings),
       m_ptrNextTask(next_task)
 {

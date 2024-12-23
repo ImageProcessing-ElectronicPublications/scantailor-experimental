@@ -16,15 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SELECT_CONTENT_CACHEDRIVENTASK_H_
-#define SELECT_CONTENT_CACHEDRIVENTASK_H_
+#ifndef FILTERING_CACHEDRIVENTASK_H_
+#define FILTERING_CACHEDRIVENTASK_H_
 
 #include "NonCopyable.h"
 #include "RefCountable.h"
 #include "IntrusivePtr.h"
+#include "ContentBox.h"
 #include <memory>
 
-class QSizeF;
 class PageInfo;
 class AbstractFilterDataCollector;
 
@@ -33,33 +33,30 @@ namespace imageproc
 class AbstractImageTransform;
 }
 
-namespace filtering
+namespace page_layout
 {
 class CacheDrivenTask;
 }
 
-namespace select_content
+namespace filtering
 {
-
-class Settings;
 
 class CacheDrivenTask : public RefCountable
 {
-    DECLARE_NON_COPYABLE(CacheDrivenTask)
+	DECLARE_NON_COPYABLE(CacheDrivenTask)
 public:
-    CacheDrivenTask(IntrusivePtr<Settings> const& settings,
-                    IntrusivePtr<filtering::CacheDrivenTask> const& next_task);
+	CacheDrivenTask(IntrusivePtr<page_layout::CacheDrivenTask> const& next_task);
 
     virtual ~CacheDrivenTask();
 
-    void process(PageInfo const& page_info,
-                 std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
-                 AbstractFilterDataCollector* collector);
+    void process(
+        PageInfo const& page_info, AbstractFilterDataCollector* collector,
+        std::shared_ptr<imageproc::AbstractImageTransform const> const& full_size_image_transform,
+        ContentBox const& content_box);
 private:
-    IntrusivePtr<Settings> m_ptrSettings;
-    IntrusivePtr<filtering::CacheDrivenTask> m_ptrNextTask;
+    IntrusivePtr<page_layout::CacheDrivenTask> m_ptrNextTask;
 };
 
-} // namespace select_content
+} // filtering
 
 #endif

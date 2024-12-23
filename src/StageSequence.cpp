@@ -26,6 +26,7 @@ StageSequence::StageSequence(IntrusivePtr<ProjectPages> const& pages,
       m_ptrPageSplitFilter(new page_split::Filter(pages, page_selection_accessor)),
       m_ptrDeskewFilter(new deskew::Filter(page_selection_accessor)),
       m_ptrSelectContentFilter(new select_content::Filter(page_selection_accessor)),
+      m_ptrFilteringFilter(new filtering::Filter(page_selection_accessor)),
       m_ptrPageLayoutFilter(new page_layout::Filter(pages, page_selection_accessor)),
       m_ptrOutputFilter(new output::Filter(page_selection_accessor))
 {
@@ -40,6 +41,9 @@ StageSequence::StageSequence(IntrusivePtr<ProjectPages> const& pages,
 
     m_selectContentFilterIdx = m_filters.size();
     m_filters.push_back(m_ptrSelectContentFilter);
+
+    m_filteringFilterIdx = m_filters.size();
+    m_filters.push_back(m_ptrFilteringFilter);
 
     m_pageLayoutFilterIdx = m_filters.size();
     m_filters.push_back(m_ptrPageLayoutFilter);

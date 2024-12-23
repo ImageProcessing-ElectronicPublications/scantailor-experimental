@@ -2773,6 +2773,14 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>filtering::Filter</name>
+    <message>
+        <location filename="../stages/filtering/Filter.cpp" line="37"/>
+        <source>Filtering</source>
+        <translation>Фильтры</translation>
+    </message>
+</context>
+<context>
     <name>output::OptionsWidget</name>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="62"/>

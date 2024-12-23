@@ -33,7 +33,7 @@ class PageId;
 class PageSelectionAccessor;
 class QString;
 
-namespace page_layout
+namespace filtering
 {
 class Task;
 class CacheDrivenTask;
@@ -78,11 +78,11 @@ public:
 
     IntrusivePtr<Task> createTask(
         PageId const& page_id,
-        IntrusivePtr<page_layout::Task> const& next_task,
+        IntrusivePtr<filtering::Task> const& next_task,
         bool batch, bool debug);
 
     IntrusivePtr<CacheDrivenTask> createCacheDrivenTask(
-        IntrusivePtr<page_layout::CacheDrivenTask> const& next_task);
+        IntrusivePtr<filtering::CacheDrivenTask> const& next_task);
 
     OptionsWidget* optionsWidget()
     {
