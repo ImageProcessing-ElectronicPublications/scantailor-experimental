@@ -89,7 +89,7 @@ SET(
     OrthogonalRotation.cpp OrthogonalRotation.h
     WorkerThreadPool.cpp WorkerThreadPool.h
     LoadFileTask.cpp LoadFileTask.h
-    FilterOptionsWidget.h
+    FilterOptionsWidget.cpp FilterOptionsWidget.h
     TaskStatus.h FilterUiInterface.h
     ProjectReader.cpp ProjectReader.h
     ProjectWriter.cpp ProjectWriter.h
