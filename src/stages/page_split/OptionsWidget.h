@@ -52,6 +52,8 @@ public:
 
     virtual ~OptionsWidget();
 
+    bool disconnectAll(void);
+
     void preUpdateUI(PageId const& page_id);
 
     void postUpdateUI(Params const& params, bool layout_type_auto_detected);

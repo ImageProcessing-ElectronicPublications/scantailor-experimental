@@ -33,7 +33,7 @@ public:
     {
         if (m_pObj)
         {
-            m_pObj->disconnect();
+            m_pObj->disconnectAll();
             m_pObj->deleteLater();
         }
     }

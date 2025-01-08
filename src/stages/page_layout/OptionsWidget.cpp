@@ -183,6 +183,22 @@ OptionsWidget::~OptionsWidget()
 {
 }
 
+bool OptionsWidget::disconnectAll(void)
+{
+    bool result = true;
+
+    if(!FilterOptionsWidget::disconnectAll()) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::leftRightLinkToggled(bool)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::topBottomLinkToggled(bool)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::matchSizeModeChanged(MatchSizeMode const&)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::alignmentChanged(Alignment const&)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::framingsChanged(Framings const&)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::marginsSetLocally(RelativeMargins const&)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::aggregateHardSizeChanged()), 0, 0)) result = false;
+
+    return result;
+}
+
 void
 OptionsWidget::preUpdateUI(
     PageId const& page_id,

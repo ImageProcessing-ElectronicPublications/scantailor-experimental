@@ -26,6 +26,14 @@
 class FilterOptionsWidget : public QWidget
 {
     Q_OBJECT
+
+public:
+
+    /**
+     * Disconnects all signals in the rignt way
+     */
+    virtual bool disconnectAll(void);
+
 signals:
     /**
      * \brief To be emitted by subclasses when they want to reload the page.

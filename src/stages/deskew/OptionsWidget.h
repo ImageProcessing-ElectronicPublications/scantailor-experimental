@@ -49,6 +49,8 @@ public:
                   PageSelectionAccessor const& page_selection_accessor);
 
     virtual ~OptionsWidget();
+
+    bool disconnectAll(void);
 signals:
     void manualDeskewAngleSet(double degrees);
 

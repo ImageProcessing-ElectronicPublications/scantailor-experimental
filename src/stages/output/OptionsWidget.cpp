@@ -401,6 +401,16 @@ OptionsWidget::~OptionsWidget()
 {
 }
 
+bool OptionsWidget::disconnectAll(void)
+{
+    bool result = true;
+
+    if(!FilterOptionsWidget::disconnectAll()) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::despeckleLevelChanged(double, bool*)), 0, 0)) result = false;
+
+    return result;
+}
+
 void
 OptionsWidget::preUpdateUI(PageId const& page_id)
 {

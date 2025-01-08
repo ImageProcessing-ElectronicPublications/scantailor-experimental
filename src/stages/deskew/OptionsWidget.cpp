@@ -140,6 +140,19 @@ OptionsWidget::~OptionsWidget()
 {
 }
 
+bool OptionsWidget::disconnectAll(void)
+{
+    bool result = true;
+
+    if(!FilterOptionsWidget::disconnectAll()) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::manualDeskewAngleSet(double)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::depthPerceptionSetByUser(double)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::correctCurvesSetByUser(double)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::correctAngleSetByUser(double)), 0, 0)) result = false;
+
+    return result;
+}
+
 void
 OptionsWidget::showApplyDistortionTypeDialog()
 {

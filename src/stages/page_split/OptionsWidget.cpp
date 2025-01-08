@@ -80,6 +80,16 @@ OptionsWidget::~OptionsWidget()
 {
 }
 
+bool OptionsWidget::disconnectAll(void)
+{
+    bool result = true;
+
+    if(!FilterOptionsWidget::disconnectAll()) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::pageLayoutSetLocally(PageLayout const&)), 0, 0)) result = false;
+
+    return result;
+}
+
 void
 OptionsWidget::preUpdateUI(PageId const& page_id)
 {
