@@ -57,7 +57,9 @@ class DewarpingImageTransform::ConstrainedCropAreaBuilder
 {
 public:
     ConstrainedCropAreaBuilder(QPolygonF const& orig_crop_area,
-                               double min_density, double max_density, CylindricalSurfaceDewarper const& dewarper);
+                               double min_density,
+                               double max_density,
+                               CylindricalSurfaceDewarper const& dewarper);
 
     /**
      * Sample crv_x values in a certain range with dynamically adjusted step size.
@@ -145,7 +147,7 @@ DewarpingImageTransform::fingerprint() const
     RoundingHasher hash(QCryptographicHash::Sha1);
 
     hash << "DewarpingImageTransform";
-    hash << m_origSize << m_origCropArea << m_depthPerception.value();
+    hash << m_origSize << m_origCropArea << m_depthPerception.value() << m_curveCorrect.value() << m_curveAngle.value();
 
     for (QPointF const& pt : m_topPolyline)
     {
@@ -208,13 +210,19 @@ DewarpingImageTransform::toAffine(
     QSize const dst_size(dewarped_rect.toRect().size());
     QRectF const model_domain(
         -dewarped_rect.topLeft(),
-        QSizeF(m_intrinsicScaleX * m_userScaleX, m_intrinsicScaleY * m_userScaleY)
+        QSizeF(m_intrinsicScaleX * m_userScaleX,
+        m_intrinsicScaleY * m_userScaleY)
     );
     auto const minmax_densities = calcMinMaxDensities();
 
     QImage const dewarped_image = accel_ops->dewarp(
-                                      image, dst_size, m_dewarper, model_domain, outside_color,
-                                      minmax_densities.first, minmax_densities.second
+                                      image,
+                                      dst_size,
+                                      m_dewarper,
+                                      model_domain,
+                                      outside_color,
+                                      minmax_densities.first,
+                                      minmax_densities.second
                                   );
 
     AffineImageTransform affine_transform(dst_size);
@@ -254,7 +262,8 @@ DewarpingImageTransform::toAffine() const
 
 QImage
 DewarpingImageTransform::materialize(QImage const& image,
-                                     QRect const& target_rect, QColor const& outside_color,
+                                     QRect const& target_rect,
+                                     QColor const& outside_color,
                                      std::shared_ptr<AcceleratableOperations> const& accel_ops) const
 {
     assert(!image.isNull());
@@ -265,8 +274,13 @@ DewarpingImageTransform::materialize(QImage const& image,
     auto const minmax_densities = calcMinMaxDensities();
 
     return accel_ops->dewarp(
-               image, target_rect.size(), m_dewarper, model_domain, outside_color,
-               minmax_densities.first, minmax_densities.second
+               image,
+               target_rect.size(),
+               m_dewarper,
+               model_domain,
+               outside_color,
+               minmax_densities.first,
+               minmax_densities.second
            );
 }
 
@@ -336,20 +350,20 @@ DewarpingImageTransform::setupIntrinsicScale()
     double const epsilon = 0.01;
 
     Vector2d const top_left_p1(toVec(m_topPolyline.front()));
-    Vector2d const top_left_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 0))));
-    Vector2d const top_left_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(0, epsilon))));
+    Vector2d const top_left_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 0.0))));
+    Vector2d const top_left_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(0.0, epsilon))));
 
     Vector2d const top_right_p1(toVec(m_topPolyline.back()));
-    Vector2d const top_right_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(1 - epsilon, 0))));
-    Vector2d const top_right_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(1, epsilon))));
+    Vector2d const top_right_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0 - epsilon, 0.0))));
+    Vector2d const top_right_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0, epsilon))));
 
     Vector2d const bottom_left_p1(toVec(m_bottomPolyline.front()));
-    Vector2d const bottom_left_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 1))));
-    Vector2d const bottom_left_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(0, 1 - epsilon))));
+    Vector2d const bottom_left_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 1.0))));
+    Vector2d const bottom_left_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(0.0, 1.0 - epsilon))));
 
     Vector2d const bottom_right_p1(toVec(m_bottomPolyline.back()));
-    Vector2d const bottom_right_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(1 - epsilon, 1))));
-    Vector2d const bottom_right_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(1, 1 - epsilon))));
+    Vector2d const bottom_right_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0 - epsilon, 1.0))));
+    Vector2d const bottom_right_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0, 1.0 - epsilon))));
 
     Matrix2d corners[4];
     corners[0] << top_left_p2 - top_left_p1, top_left_p3 - top_left_p1;
@@ -362,7 +376,7 @@ DewarpingImageTransform::setupIntrinsicScale()
     // the case, but let's assume it is. First of all, let's select a corner
     // with the highest lozenge area.
     int best_corner = 0;
-    double largest_area = -1;
+    double largest_area = -1.0;
     for (int i = 0; i < 4; ++i)
     {
         double const area = fabs(corners[i].determinant());
@@ -478,7 +492,7 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::sampleCrvXRange(
     double const backwards_direction = -forward_direction;
     double direction = forward_direction;
     double step_size = 0.1;
-    double const min_step_size = step_size / 8;
+    double const min_step_size = step_size / 8.0;
 
     struct LastSegment
     {
@@ -521,7 +535,7 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::sampleCrvXRange(
 QPolygonF
 DewarpingImageTransform::ConstrainedCropAreaBuilder::build() const
 {
-    QPolygonF new_crop_area(m_vertSegments.size() * 2);
+    QPolygonF new_crop_area(m_vertSegments.size() * 2.0);
 
     int i1 = 0;
     int i2 = new_crop_area.size() - 1;
