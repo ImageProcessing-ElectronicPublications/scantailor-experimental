@@ -179,7 +179,7 @@ namespace gauss_blur_impl
 class IMAGEPROC_EXPORT FilterParams
 {
 public:
-    float a1, a2, a3, B;
+    float a1, a2, a3, A, B;
 
     FilterParams(float sigma);
 private:
@@ -223,7 +223,7 @@ void gaussBlurGeneric(QSize const size, float const h_sigma, float const v_sigma
         return;
     }
 
-    if (h_sigma < 0 || v_sigma < 0)
+    if (h_sigma < 0.0f || v_sigma < 0.0f)
     {
         throw std::invalid_argument("gaussBlur: stddev can't be negative");
     }
@@ -251,7 +251,7 @@ void gaussBlurGeneric(QSize const size, float const h_sigma, float const v_sigma
             SrcIt inp_it = input + x;
             float pixel = float_reader(*inp_it);
             float* p_w = &w[3];
-            p_w[-1] = p_w[-2] = p_w[-3] = pixel / p.B;
+            p_w[-1] = p_w[-2] = p_w[-3] = pixel * p.A;
 
             for (int y = 0; y < height; ++y)
             {
@@ -262,7 +262,8 @@ void gaussBlurGeneric(QSize const size, float const h_sigma, float const v_sigma
             }
 
             // Backward pass.
-            calcBackwardPassInitialConditions(p, p_w, pixel);
+            //calcBackwardPassInitialConditions(p, p_w, pixel);
+            p_w[0] = p_w[1] = p_w[2] = p_w[-1] * p.A;
             float* p_int = intermediate_image.data() + x + height * intermediate_stride;
             for (int y = height - 1; y >= 0; --y)
             {
@@ -286,7 +287,7 @@ void gaussBlurGeneric(QSize const size, float const h_sigma, float const v_sigma
             // Forward pass.
             float* p_int = intermediate_line;
             float* p_w = &w[3];
-            p_w[-1] = p_w[-2] = p_w[-3] = intermediate_line[0] / p.B;
+            p_w[-1] = p_w[-2] = p_w[-3] = intermediate_line[0] * p.A;
             for (int x = 0; x < width; ++x)
             {
                 *p_w = *p_int + p.a1 * p_w[-1] + p.a2 * p_w[-2] + p.a3 * p_w[-3];
@@ -295,7 +296,8 @@ void gaussBlurGeneric(QSize const size, float const h_sigma, float const v_sigma
             }
 
             // Backward pass.
-            calcBackwardPassInitialConditions(p, p_w, p_int[-1]);
+            //calcBackwardPassInitialConditions(p, p_w, p_int[-1]);
+            p_w[0] = p_w[1] = p_w[2] = p_w[-1] * p.A;
             DstIt out_it = output_line + (width - 1);
             for (int x = width - 1; x >= 0; --x)
             {
@@ -325,13 +327,13 @@ void anisotropicGaussBlurGeneric(
         return;
     }
 
-    if (dir_x * dir_x + dir_y * dir_y < 1e-6)
+    if (dir_x * dir_x + dir_y * dir_y < 1e-6f)
     {
         throw std::invalid_argument(
             "anisotropicGaussBlur: (dir_x, dir_y) is too close to a null vector"
         );
     }
-    else if (dir_sigma < 0 || ortho_dir_sigma < 0)
+    else if (dir_sigma < 0.0f || ortho_dir_sigma < 0.0f)
     {
         throw std::invalid_argument("anisotropicGaussBlur: stddev can't be negative");
     }
@@ -402,7 +404,7 @@ void anisotropicGaussBlurGeneric(
             SrcIt inp_it = input_line;
             float pixel = *inp_it;
             float* p_w = &w[3];
-            p_w[-1] = p_w[-2] = p_w[-3] = pixel / p.B;
+            p_w[-1] = p_w[-2] = p_w[-3] = pixel * p.A;
             for (int x = 0; x < width; ++x)
             {
                 pixel = float_reader(*inp_it);
@@ -436,7 +438,7 @@ void anisotropicGaussBlurGeneric(
             SrcIt inp_it = input + x;
             float pixel = float_reader(*inp_it);
             float* p_w = &w[3];
-            p_w[-1] = p_w[-2] = p_w[-3] = pixel / p.B;
+            p_w[-1] = p_w[-2] = p_w[-3] = pixel * p.A;
 
             for (int y = 0; y < height; ++y)
             {
@@ -491,7 +493,7 @@ void anisotropicGaussBlurGeneric(
         }
         else
         {
-            dx = 1.f / vdp.tan_phi;
+            dx = 1.0f / vdp.tan_phi;
             sigma_phi = vdp.sigma_phi;
         }
 
@@ -576,7 +578,7 @@ void anisotropicGaussBlurGeneric(
             float pixel = (1.0f - coord.alpha) * intermediate_line[coord.lower_bound + x_offset]
                           + coord.alpha * intermediate_line[coord.lower_bound + x_offset + 1];
             float* p_w = &w[3];
-            p_w[-1] = p_w[-2] = p_w[-3] = pixel / p.B;
+            p_w[-1] = p_w[-2] = p_w[-3] = pixel * p.A;
 
             for (int y = y0;; ++y, intermediate_line += intermediate_stride)
             {
@@ -727,7 +729,7 @@ void anisotropicGaussBlurGeneric(
                           + coord.alpha *
                           intermediate_col[(coord.lower_bound + y_offset + 1) * intermediate_stride];
             float* p_w = &w[3];
-            p_w[-1] = p_w[-2] = p_w[-3] = pixel / p.B;
+            p_w[-1] = p_w[-2] = p_w[-3] = pixel * p.A;
 
             for (int x = x0;; ++x, ++intermediate_col)
             {

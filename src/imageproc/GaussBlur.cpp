@@ -52,6 +52,7 @@ FilterParams::FilterParams(float sigma)
     a2 = b2 / b0;
     a3 = b3 / b0;
     B = 1.0f - (a1 + a2 + a3);
+    A = 1.0f / B;
 }
 
 float
@@ -124,12 +125,12 @@ void
 calcBackwardPassInitialConditions(FilterParams const& p, float* w_end, float future_signal_val)
 {
     // Formula 15 in [2].
-    float const u_plus = future_signal_val / p.B;
-    float const v_plus = u_plus / p.B;
+    float const u_plus = future_signal_val * p.A;
+    float const v_plus = u_plus * p.A;
 
     // Formula 3 in [2].
     Matrix3f M;
-    M(0, 0) = -p.a3 * p.a1 + 1.0 - p.a3 * p.a3 - p.a2;
+    M(0, 0) = -p.a3 * p.a1 + 1.0f - p.a3 * p.a3 - p.a2;
     M(0, 1) = (p.a3 + p.a1) * (p.a2 + p.a3 * p.a1);
     M(0, 2) = p.a3 * (p.a1 + p.a3 * p.a2);
     M(1, 0) = p.a1 + p.a3 * p.a2;
