@@ -16,16 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cmath>
+#include <utility>
+#include <cassert>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
 #include "DetectVerticalBounds.h"
 #include "NumericTraits.h"
 #include "ToLineProjector.h"
 #include "LineIntersectionScalar.h"
 #include "imageproc/Constants.h"
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <cmath>
-#include <utility>
-#include <cassert>
 
 using namespace imageproc;
 
@@ -42,7 +42,8 @@ enum LeftRightSide
 };
 
 QLineF findVerticalBound(std::vector<QLineF> const& chords,
-                         double const dist_threshold, LeftRightSide const side)
+                         double const dist_threshold,
+                         LeftRightSide const side)
 {
     if (chords.size() < 2)
     {
@@ -125,7 +126,8 @@ QLineF findVerticalBound(std::vector<QLineF> const& chords,
 } // anonymous namespace
 
 std::pair<QLineF, QLineF> detectVerticalBounds(
-    std::list<std::vector<QPointF>> const& curves, double const dist_threshold)
+    std::list<std::vector<QPointF>> const& curves,
+    double const dist_threshold)
 {
     std::vector<QLineF> chords;
     chords.reserve(curves.size());

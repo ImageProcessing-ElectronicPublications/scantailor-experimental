@@ -302,15 +302,16 @@ DistortionModelBuilder::centroid(std::vector<QPointF> const& polyline)
         return Vec2d(polyline.front());
     }
 
-    Vec2d accum(0, 0);
-    double total_weight = 0;
+    Vec2d accum(0.0, 0.0);
+    double total_weight = 0.0;
 
     for (int i = 1; i < num_points; ++i)
     {
         QLineF const segment(polyline[i - 1], polyline[i]);
         Vec2d const center(0.5 * (segment.p1() + segment.p2()));
         double const weight = segment.length();
-        accum += center * weight;
+        Vec2d const delta(center * weight);
+        accum += delta;
         total_weight += weight;
     }
 
@@ -320,7 +321,7 @@ DistortionModelBuilder::centroid(std::vector<QPointF> const& polyline)
     }
     else
     {
-        return accum / total_weight;
+        return Vec2d(accum / total_weight);
     }
 }
 
@@ -574,7 +575,7 @@ DistortionModelBuilder::visualizeTrimmedPolylines(
 
     int const width = background.width();
     int const height = background.height();
-    double const stroke_width = sqrt(double(width * width + height * height)) / 500;
+    double const stroke_width = sqrt(double(width * width + height * height)) / 500.0;
 
     // Extend / trim bounds.
     QLineF bound1(m_bound1);
@@ -603,7 +604,7 @@ DistortionModelBuilder::visualizeTrimmedPolylines(
     painter.setPen(Qt::NoPen);
     BOOST_FOREACH(TracedCurve const& curve, curves)
     {
-        QRectF rect(0, 0, stroke_width, stroke_width);
+        QRectF rect(0.0, 0.0, stroke_width, stroke_width);
         BOOST_FOREACH(QPointF const& knot, curve.trimmedPolyline)
         {
             rect.moveCenter(knot);
@@ -626,7 +627,7 @@ DistortionModelBuilder::visualizeModel(
 
     int const width = background.width();
     int const height = background.height();
-    double const stroke_width = sqrt(double(width * width + height * height)) / 500;
+    double const stroke_width = sqrt(double(width * width + height * height)) / 500.0;
 
     // Extend / trim bounds.
     QLineF bound1(m_bound1);

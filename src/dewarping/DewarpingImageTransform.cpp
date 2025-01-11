@@ -126,7 +126,11 @@ DewarpingImageTransform::DewarpingImageTransform(
     , m_depthPerception(depth_perception)
     , m_curveCorrect(curve_correct)
     , m_curveAngle(curve_angle)
-    , m_dewarper(top_curve, bottom_curve, depth_perception.value(), curve_correct.value(), curve_angle.value())
+    , m_dewarper(top_curve,
+                 bottom_curve,
+                 depth_perception.value(),
+                 curve_correct.value(),
+                 curve_angle.value())
     , m_intrinsicScaleX(1.0)
     , m_intrinsicScaleY(1.0)
     , m_userScaleX(1.0)
@@ -147,7 +151,11 @@ DewarpingImageTransform::fingerprint() const
     RoundingHasher hash(QCryptographicHash::Sha1);
 
     hash << "DewarpingImageTransform";
-    hash << m_origSize << m_origCropArea << m_depthPerception.value() << m_curveCorrect.value() << m_curveAngle.value();
+    hash << m_origSize
+         << m_origCropArea
+         << m_depthPerception.value()
+         << m_curveCorrect.value()
+         << m_curveAngle.value();
 
     for (QPointF const& pt : m_topPolyline)
     {
@@ -200,7 +208,8 @@ DewarpingImageTransform::scale(double xscale, double yscale)
 
 AffineTransformedImage
 DewarpingImageTransform::toAffine(
-    QImage const& image, QColor const& outside_color,
+    QImage const& image,
+    QColor const& outside_color,
     std::shared_ptr<AcceleratableOperations> const& accel_ops) const
 {
     assert(!image.isNull());
@@ -261,15 +270,18 @@ DewarpingImageTransform::toAffine() const
 }
 
 QImage
-DewarpingImageTransform::materialize(QImage const& image,
-                                     QRect const& target_rect,
-                                     QColor const& outside_color,
-                                     std::shared_ptr<AcceleratableOperations> const& accel_ops) const
+DewarpingImageTransform::materialize(
+    QImage const& image,
+    QRect const& target_rect,
+    QColor const& outside_color,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops) const
 {
     assert(!image.isNull());
     assert(!target_rect.isEmpty());
 
-    QRectF model_domain(0, 0, m_intrinsicScaleX * m_userScaleX, m_intrinsicScaleY * m_userScaleY);
+    QRectF model_domain(0, 0,
+        m_intrinsicScaleX * m_userScaleX,
+        m_intrinsicScaleY * m_userScaleY);
     model_domain.translate(-target_rect.topLeft());
     auto const minmax_densities = calcMinMaxDensities();
 
@@ -289,7 +301,8 @@ DewarpingImageTransform::forwardMapper() const
 {
     auto dewarper(std::make_shared<CylindricalSurfaceDewarper>(m_dewarper));
     QTransform post_transform;
-    post_transform.scale(m_intrinsicScaleX * m_userScaleX, m_intrinsicScaleY * m_userScaleY);
+    post_transform.scale(m_intrinsicScaleX * m_userScaleX,
+                         m_intrinsicScaleY * m_userScaleY);
 
     return [=](QPointF const& pt)
     {
@@ -435,7 +448,8 @@ DewarpingImageTransform::constrainCropArea(QPolygonF const& orig_crop_area) cons
     double const min_density = minmax_densities.first;
     double const max_density = minmax_densities.second;
 
-    ConstrainedCropAreaBuilder builder(orig_crop_area, min_density, max_density, m_dewarper);
+    ConstrainedCropAreaBuilder builder(orig_crop_area,
+        min_density, max_density, m_dewarper);
 
     builder.sampleCrvXRange(0.0 + 0.3, 0.0 - 0.6, -1.0);
     builder.sampleCrvXRange(1.0 - 0.3, 1.0 + 0.6, 1.0);
@@ -469,7 +483,8 @@ DewarpingImageTransform::calcMinMaxDensities() const
     auto const minmax_densities = std::minmax_element(
                                       std::begin(corner_densities), std::end(corner_densities)
                                   );
-    return std::make_pair(0.6 * *minmax_densities.first, 1.4 * *minmax_densities.second);
+/*    return std::make_pair(0.6 * *minmax_densities.first, 1.4 * *minmax_densities.second); // Tulon */
+    return std::make_pair(0.5 * *minmax_densities.first, 2.0 * *minmax_densities.second); // zvezdochiot (2025-01-11)
 }
 
 
@@ -509,7 +524,8 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::sampleCrvXRange(
     {
 
         auto segment_it = processGeneratrix(
-                              crv_x, m_dewarper.mapGeneratrix(crv_x, m_dewarpingState)
+                              crv_x,
+                              m_dewarper.mapGeneratrix(crv_x, m_dewarpingState)
                           );
         if (segment_it == m_vertSegments.end())
         {
@@ -522,7 +538,9 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::sampleCrvXRange(
             if (last_segment)
             {
                 maybeAddExtraVerticalSegments(
-                    last_segment->crv_x, last_segment->length, segment_it->first, segment_len
+                    last_segment->crv_x,
+                    last_segment->length,
+                    segment_it->first, segment_len
                 );
             }
 
@@ -653,7 +671,8 @@ DewarpingImageTransform::ConstrainedCropAreaBuilder::maybeAddExtraVerticalSegmen
 
     double const mid_crv_x = 0.5 * (segment1_crv_x + segment2_crv_x);
     auto const segment_it = processGeneratrix(
-                                mid_crv_x, m_dewarper.mapGeneratrix(mid_crv_x, m_dewarpingState)
+                                mid_crv_x,
+                                m_dewarper.mapGeneratrix(mid_crv_x, m_dewarpingState)
                             );
     if (segment_it == m_vertSegments.end())
     {

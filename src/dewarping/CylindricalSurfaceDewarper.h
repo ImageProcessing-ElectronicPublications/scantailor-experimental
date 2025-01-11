@@ -19,15 +19,15 @@
 #ifndef DEWARPING_CYLINDRICAL_SURFACE_DEWARPER_H_
 #define DEWARPING_CYLINDRICAL_SURFACE_DEWARPER_H_
 
-#include "dewarping_config.h"
-#include "HomographicTransform.h"
-#include "PolylineIntersector.h"
-#include "ArcLengthMapper.h"
-#include <boost/array.hpp>
 #include <vector>
 #include <utility>
 #include <QPointF>
 #include <QLineF>
+#include <boost/array.hpp>
+#include "dewarping_config.h"
+#include "HomographicTransform.h"
+#include "PolylineIntersector.h"
+#include "ArcLengthMapper.h"
 
 namespace dewarping
 {
