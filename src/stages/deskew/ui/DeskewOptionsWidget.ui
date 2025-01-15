@@ -301,7 +301,7 @@
            <double>1.0</double>
           </property>
           <property name="maximum">
-           <double>9999.99</double>
+           <double>99999.9</double>
           </property>
           <property name="singleStep">
            <double>1.0</double>
