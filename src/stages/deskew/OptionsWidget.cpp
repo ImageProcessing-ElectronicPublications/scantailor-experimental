@@ -57,6 +57,18 @@ OptionsWidget::OptionsWidget(
     ui.angleSpinBox->adjustSize();
     setSpinBoxUnknownState();
     connect(
+        ui.photoCheckBox, SIGNAL(clicked(bool)),
+        this, SLOT(photoToggled(bool))
+    );
+    connect(
+        ui.focusSpinBox, SIGNAL(valueChanged(double)),
+        this, SLOT(focusSpinBoxChanged(double))
+    );
+    connect(
+        ui.applySourceBtn, SIGNAL(clicked()),
+        SLOT(showApplySourceDialog())
+    );
+    connect(
         ui.angleSpinBox, SIGNAL(valueChanged(double)),
         this, SLOT(spinBoxValueChanged(double))
     );
@@ -332,6 +344,20 @@ OptionsWidget::postUpdateUI(Params const& page_params)
 
     setupUiForDistortionType(page_params.distortionType());
 
+    if ((page_params.distortionType() == DistortionType::WARP) || (page_params.distortionType() == DistortionType::PERSPECTIVE))
+    {
+        bool const photo = page_params.sourceParams().photo();
+        ui.photoCheckBox->setChecked(photo);
+        double const focus = page_params.sourceParams().focus();
+        ui.focusSpinBox->setValue(focus);
+        ui.focusSpinBox->setEnabled(photo);
+        ui.sourcePanel->setVisible( true );
+    }
+    else
+    {
+        ui.sourcePanel->setVisible( false );
+    }
+
     if (page_params.distortionType() == DistortionType::ROTATION)
     {
         double const angle = page_params.rotationParams().compensationAngleDeg();
@@ -402,6 +428,62 @@ OptionsWidget::warpDistortionToggled(bool checked)
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
     setupUiForDistortionType(DistortionType::WARP);
     emit reloadRequested();
+}
+
+void
+OptionsWidget::photoToggled(bool const checked)
+{
+    if (m_ignoreSignalsFromUiControls)
+    {
+        return;
+    }
+
+    m_pageParams.sourceParams().setPhoto(checked);
+    m_ptrSettings->setPageParams(m_pageId, m_pageParams);
+    ui.focusSpinBox->setEnabled(checked);
+}
+
+void
+OptionsWidget::focusSpinBoxChanged(double const value)
+{
+    if (m_ignoreSignalsFromUiControls)
+    {
+        return;
+    }
+
+    m_pageParams.sourceParams().setFocus(value);
+    m_ptrSettings->setPageParams(m_pageId, m_pageParams);
+}
+
+void
+OptionsWidget::showApplySourceDialog()
+{
+    ApplyDialog* dialog = new ApplyDialog(
+        this, m_pageId, m_pageSelectionAccessor
+    );
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowTitle(tr("Apply Source"));
+
+    connect(
+        dialog, SIGNAL(appliedTo(std::set<PageId> const&)),
+        this, SLOT(sourceAppliedTo(std::set<PageId> const&))
+    );
+    connect(
+        dialog, SIGNAL(appliedToAllPages(std::set<PageId> const&)),
+        this, SLOT(sourceAppliedTo(std::set<PageId> const&))
+    );
+    dialog->show();
+}
+
+void
+OptionsWidget::sourceAppliedTo(std::set<PageId> const& pages)
+{
+    if (pages.empty())
+    {
+        return;
+    }
+
+    m_ptrSettings->setSource(pages, m_pageParams.sourceParams());
 }
 
 void

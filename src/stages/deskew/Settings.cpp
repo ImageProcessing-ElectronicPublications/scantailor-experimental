@@ -121,6 +121,28 @@ Settings::setDistortionType(
 }
 
 void
+Settings::setSource(
+    std::set<PageId> const& pages, SourceParams const& source)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    for (PageId const& page_id : pages)
+    {
+        PerPageParams::iterator it = m_perPageParams.find(page_id);
+        if (it != m_perPageParams.end())
+        {
+            it->second.setSourceParams(source);
+        }
+        else
+        {
+            Params params((Dependencies()));
+            params.setSourceParams(source);
+            Utils::mapSetValue(m_perPageParams, page_id, params);
+        }
+    }
+}
+
+void
 Settings::setDepthPerception(
     std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception)
 {

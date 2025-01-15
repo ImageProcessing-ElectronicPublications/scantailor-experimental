@@ -115,7 +115,9 @@ CacheDrivenTask::process(
             new_transform = std::make_shared<DewarpingImageTransform>(
                                 image_transform.origSize(),
                                 image_transform.origCropArea(),
-                                top_curve, bottom_curve,
+                                top_curve,
+                                bottom_curve,
+                                ((params->sourceParams().photo()) ? params->sourceParams().focus() : 0.0),
                                 dewarping::DepthPerception(),
                                 dewarping::DepthPerception(),
                                 dewarping::DepthPerception()
@@ -128,6 +130,7 @@ CacheDrivenTask::process(
                                 image_transform.origSize(), image_transform.origCropArea(),
                                 params->dewarpingParams().distortionModel().topCurve().polyline(),
                                 params->dewarpingParams().distortionModel().bottomCurve().polyline(),
+                                ((params->sourceParams().photo()) ? params->sourceParams().focus() : 0.0),
                                 params->dewarpingParams().depthPerception(),
                                 params->dewarpingParams().correctCurves(),
                                 params->dewarpingParams().correctAngle()

@@ -17,6 +17,7 @@ SET(
     Dependencies.cpp Dependencies.h
     DistortionType.cpp DistortionType.h
     RotationParams.cpp RotationParams.h
+    SourceParams.cpp SourceParams.h
     PerspectiveParams.cpp PerspectiveParams.h
     DewarpingParams.cpp DewarpingParams.h
     Params.cpp Params.h

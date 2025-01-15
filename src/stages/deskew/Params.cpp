@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Params.h"
-#include "../../Utils.h"
 #include <QDomDocument>
 #include <QDomElement>
+#include "Params.h"
+#include "../../Utils.h"
 
 namespace deskew
 {
@@ -33,6 +33,7 @@ Params::Params(Dependencies const& deps)
 Params::Params(QDomElement const& deskew_el)
     : m_distortionType(deskew_el.attribute("distortionType"))
     , m_rotationParams(deskew_el.namedItem("rotation").toElement())
+    , m_sourceParams(deskew_el.namedItem("source").toElement())
     , m_perspectiveParams(deskew_el.namedItem("perspective").toElement())
     , m_dewarpingParams(deskew_el.namedItem("warp").toElement())
     , m_deps(deskew_el.namedItem("dependencies").toElement())
@@ -93,6 +94,7 @@ Params::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.setAttribute("distortionType", m_distortionType.toString());
     el.appendChild(m_rotationParams.toXml(doc, "rotation"));
+    el.appendChild(m_sourceParams.toXml(doc, "source"));
     el.appendChild(m_perspectiveParams.toXml(doc, "perspective"));
     el.appendChild(m_dewarpingParams.toXml(doc, "warp"));
     el.appendChild(m_deps.toXml(doc, "dependencies"));

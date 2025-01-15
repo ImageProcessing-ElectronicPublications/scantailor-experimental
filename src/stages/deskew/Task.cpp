@@ -468,7 +468,9 @@ Task::processPerspectiveDistortion(
             std::make_shared<DewarpingImageTransform>(
                 orig_image_transform.origSize(),
                 orig_image_transform.origCropArea(),
-                top_curve, bottom_curve,
+                top_curve,
+                bottom_curve,
+                ((params.sourceParams().photo()) ? params.sourceParams().focus() : 0.0),
                 dewarping::DepthPerception(),
                 dewarping::DepthPerception(),
                 dewarping::DepthPerception()
@@ -563,6 +565,7 @@ Task::processWarpDistortion(
                 orig_image_transform.origSize(), orig_image_transform.origCropArea(),
                 params.dewarpingParams().distortionModel().topCurve().polyline(),
                 params.dewarpingParams().distortionModel().bottomCurve().polyline(),
+                ((params.sourceParams().photo()) ? params.sourceParams().focus() : 0.0),
                 params.dewarpingParams().depthPerception(),
                 params.dewarpingParams().correctCurves(),
                 params.dewarpingParams().correctAngle()

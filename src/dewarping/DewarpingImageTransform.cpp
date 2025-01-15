@@ -28,6 +28,7 @@
 #include <boost/range/adaptor/reversed.hpp>
 #include <Eigen/Core>
 #include <Eigen/LU>
+#include <Eigen/Dense>
 #include <QImage>
 #include <QPointF>
 #include <QRect>
@@ -39,6 +40,7 @@
 #include <QTransform>
 #include <QColor>
 #include <QString>
+#include <QDebug>
 #include "DewarpingImageTransform.h"
 #include "RoundingHasher.h"
 #include "ToVec.h"
@@ -117,12 +119,14 @@ DewarpingImageTransform::DewarpingImageTransform(
     QPolygonF const& orig_crop_area,
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
+    double const& focus,
     DepthPerception const& depth_perception,
     DepthPerception const& curve_correct,
     DepthPerception const& curve_angle)
     : m_origSize(orig_size)
     , m_topPolyline(top_curve)
     , m_bottomPolyline(bottom_curve)
+    , m_focus(focus)
     , m_depthPerception(depth_perception)
     , m_curveCorrect(curve_correct)
     , m_curveAngle(curve_angle)
@@ -153,6 +157,7 @@ DewarpingImageTransform::fingerprint() const
     hash << "DewarpingImageTransform";
     hash << m_origSize
          << m_origCropArea
+         << m_focus
          << m_depthPerception.value()
          << m_curveCorrect.value()
          << m_curveAngle.value();
@@ -359,62 +364,92 @@ int const DewarpingImageTransform::INTRINSIC_SCALE_ALGO_VERSION = 1;
 void
 DewarpingImageTransform::setupIntrinsicScale()
 {
-    // Fraction of width or height of dewarping quardilateral.
-    double const epsilon = 0.01;
+    Vector2d const top_left(toVec(m_topPolyline.front()));
+    Vector2d const top_right(toVec(m_topPolyline.back()));
+    Vector2d const bottom_left(toVec(m_bottomPolyline.front()));
+    Vector2d const bottom_right(toVec(m_bottomPolyline.back()));
 
-    Vector2d const top_left_p1(toVec(m_topPolyline.front()));
-    Vector2d const top_left_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 0.0))));
-    Vector2d const top_left_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(0.0, epsilon))));
-
-    Vector2d const top_right_p1(toVec(m_topPolyline.back()));
-    Vector2d const top_right_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0 - epsilon, 0.0))));
-    Vector2d const top_right_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0, epsilon))));
-
-    Vector2d const bottom_left_p1(toVec(m_bottomPolyline.front()));
-    Vector2d const bottom_left_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 1.0))));
-    Vector2d const bottom_left_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(0.0, 1.0 - epsilon))));
-
-    Vector2d const bottom_right_p1(toVec(m_bottomPolyline.back()));
-    Vector2d const bottom_right_p2(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0 - epsilon, 1.0))));
-    Vector2d const bottom_right_p3(toVec(m_dewarper.mapToWarpedSpace(QPointF(1.0, 1.0 - epsilon))));
-
-    Matrix2d corners[4];
-    corners[0] << top_left_p2 - top_left_p1, top_left_p3 - top_left_p1;
-    corners[1] << top_right_p2 - top_right_p1, top_right_p3 - top_right_p1;
-    corners[2] << bottom_left_p2 - bottom_left_p1, bottom_left_p3 - bottom_left_p1;
-    corners[3] << bottom_right_p2 - bottom_right_p1, bottom_right_p3 - bottom_right_p1;
-
-    // We assume a small square at a corner of a dewarped image maps
-    // to a lozenge-shaped area in warped coordinates. That's not necessarily
-    // the case, but let's assume it is. First of all, let's select a corner
-    // with the highest lozenge area.
-    int best_corner = 0;
-    double largest_area = -1.0;
-    for (int i = 0; i < 4; ++i)
+    if (m_focus > 0.0)
     {
-        double const area = fabs(corners[i].determinant());
-        if (area > largest_area)
-        {
-            largest_area = area;
-            best_corner = i;
-        }
+        double const pcx = m_origSize.width() * 0.5;
+        double const pcy = m_origSize.height() * 0.5;
+
+        Vector3d pm1 = {top_left[0] - pcx, top_left[1] - pcy, m_focus};
+        Vector3d pm2 = {top_right[0] - pcx, top_right[1] - pcy, m_focus};
+        Vector3d pm3 = {bottom_left[0] - pcx, bottom_left[1] - pcy, m_focus};
+        Vector3d pm4 = {bottom_right[0] - pcx, bottom_right[1] - pcy, m_focus};
+
+        double const pk2 = double(pm1.cross(pm4).dot(pm3)) /
+                           double(pm2.cross(pm4).dot(pm3));
+
+        double const pk3 = double(pm1.cross(pm4).dot(pm2)) /
+                           double(pm3.cross(pm4).dot(pm2));
+
+        Vector3d pn2 = pk2 * pm2 - pm1;
+        Vector3d pn3 = pk3 * pm3 - pm1;
+
+        double const w_h = sqrt(abs(pn2.dot(pn2) / pn3.dot(pn3)));
+
+        double const arc_length = m_dewarper.directrixArcLength();
+        double const w_h_curves = w_h * arc_length;
+        double const w_h_sqrt = (w_h_curves > 0.0) ? sqrt(w_h_curves) : 1.0;
+
+        m_intrinsicScaleX = 1000.0 * w_h_sqrt;
+        m_intrinsicScaleY = 1000.0 / w_h_sqrt;
     }
+    else
+    {
+        // Fraction of width or height of dewarping quardilateral.
+        double const epsilon = 0.01;
 
-    // See the comments in the beginning of the function on how
-    // we define pixel densities.
-    double const warped_h_density = corners[best_corner].col(0).norm();
-    double const warped_v_density = corners[best_corner].col(1).norm();
+        Vector2d const top_left_dx(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 0))));
+        Vector2d const top_left_dy(toVec(m_dewarper.mapToWarpedSpace(QPointF(0, epsilon))));
 
-    // CylindricalSurfaceDewarper maps a curved quadrilateral into a unit square.
-    // Therefore, without post scaling, dewarped pixel density is exactly
-    // epsilon x epsilon.
-    double const dewarped_h_density = epsilon;
-    double const dewarped_v_density = epsilon;
+        Vector2d const top_right_dx(toVec(m_dewarper.mapToWarpedSpace(QPointF(1 - epsilon, 0))));
+        Vector2d const top_right_dy(toVec(m_dewarper.mapToWarpedSpace(QPointF(1, epsilon))));
 
-    // Now we are ready to calculate the initial scale.
-    // We still need to normalize the area though.
-    m_intrinsicScaleX = warped_h_density / dewarped_h_density;
-    m_intrinsicScaleY = warped_v_density / dewarped_v_density;
+        Vector2d const bottom_left_dx(toVec(m_dewarper.mapToWarpedSpace(QPointF(epsilon, 1))));
+        Vector2d const bottom_left_dy(toVec(m_dewarper.mapToWarpedSpace(QPointF(0, 1 - epsilon))));
+
+        Vector2d const bottom_right_dx(toVec(m_dewarper.mapToWarpedSpace(QPointF(1 - epsilon, 1))));
+        Vector2d const bottom_right_dy(toVec(m_dewarper.mapToWarpedSpace(QPointF(1, 1 - epsilon))));
+
+        Matrix2d corners[4];
+        corners[0] << top_left_dx - top_left, top_left_dy - top_left;
+        corners[1] << top_right_dx - top_right, top_right_dy - top_right;
+        corners[2] << bottom_left_dx - bottom_left, bottom_left_dy - bottom_left;
+        corners[3] << bottom_right_dx - bottom_right, bottom_right_dy - bottom_right;
+
+        // We assume a small square at a corner of a dewarped image maps
+        // to a lozenge-shaped area in warped coordinates. That's not necessarily
+        // the case, but let's assume it is. First of all, let's select a corner
+        // with the highest lozenge area.
+        int best_corner = 0;
+        double largest_area = -1.0;
+        for (int i = 0; i < 4; ++i)
+        {
+            double const area = fabs(corners[i].determinant());
+            if (area > largest_area)
+            {
+                largest_area = area;
+                best_corner = i;
+            }
+        }
+
+        // See the comments in the beginning of the function on how
+        // we define pixel densities.
+        double const warped_h_density = corners[best_corner].col(0).norm();
+        double const warped_v_density = corners[best_corner].col(1).norm();
+
+        // CylindricalSurfaceDewarper maps a curved quadrilateral into a unit square.
+        // Therefore, without post scaling, dewarped pixel density is exactly
+        // epsilon x epsilon.
+        double const dewarped_h_density = epsilon;
+        double const dewarped_v_density = epsilon;
+
+        m_intrinsicScaleX = warped_h_density / dewarped_h_density;
+        m_intrinsicScaleY = warped_v_density / dewarped_v_density;
+    }
 
     // Area of convex polygon formula taken from:
     // http://mathworld.wolfram.com/PolygonArea.html

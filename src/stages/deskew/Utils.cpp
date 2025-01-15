@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
+#include <cassert>
+#include <QPointF>
+#include <QLineF>
 #include "Utils.h"
 #include "dewarping/DepthPerception.h"
 #include "dewarping/CylindricalSurfaceDewarper.h"
-#include <QPointF>
-#include <QLineF>
-#include <vector>
-#include <cassert>
 
 using namespace dewarping;
 

@@ -491,6 +491,7 @@ OptionsWidget::curveCoefChanged(double value)
     color_options.setCurveCoef(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -501,6 +502,7 @@ OptionsWidget::sqrCoefChanged(double value)
     color_options.setSqrCoef(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -645,6 +647,7 @@ OptionsWidget::colorFilterSizeChanged(int value)
     }
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -705,6 +708,7 @@ OptionsWidget::colorFilterCoefChanged(double value)
     }
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -715,6 +719,7 @@ OptionsWidget::normalizeCoefChanged(double value)
     color_options.setNormalizeCoef(value);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -725,6 +730,7 @@ OptionsWidget::whiteMarginsToggled(bool const checked)
     color_options.setWhiteMargins(checked);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -775,6 +781,7 @@ OptionsWidget::colorModeChanged(int const idx)
     m_colorParams.setColorMode((ColorParams::ColorMode)mode);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     updateColorsDisplay();
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -785,6 +792,7 @@ OptionsWidget::grayScaleToggled(bool const checked)
     color_options.setflgGrayScale(checked);
     m_colorParams.setColorGrayscaleOptions(color_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -797,6 +805,7 @@ OptionsWidget::thresholdMethodChanged(int idx)
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
 //    updateColorsDisplay();
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -807,6 +816,7 @@ OptionsWidget::morphologyToggled(bool const checked)
     black_white_options.setMorphology(checked);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -817,6 +827,7 @@ OptionsWidget::negateToggled(bool const checked)
     black_white_options.setNegate(checked);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -878,9 +889,8 @@ OptionsWidget::bwThresholdChanged()
     opt.setThresholdAdjustment(value);
     m_colorParams.setBlackWhiteOptions(opt);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-    emit reloadRequested();
-
     emit invalidateThumbnail(m_pageId);
+    emit reloadRequested();
 }
 
 void
@@ -890,6 +900,7 @@ OptionsWidget::dimmingColoredCoefChanged(double value)
     black_white_options.setDimmingColoredCoef(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -900,6 +911,7 @@ OptionsWidget::thresholdBoundLowerChanged(int value)
     black_white_options.setThresholdBoundLower(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -910,6 +922,7 @@ OptionsWidget::thresholdBoundUpperChanged(int value)
     black_white_options.setThresholdBoundUpper(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -920,6 +933,7 @@ OptionsWidget::thresholdRadiusChanged(int value)
     black_white_options.setThresholdRadius(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -930,6 +944,7 @@ OptionsWidget::thresholdCoefChanged(double value)
     black_white_options.setThresholdCoef(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -940,6 +955,7 @@ OptionsWidget::autoPictureCoefChanged(double value)
     black_white_options.setAutoPictureCoef(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -950,6 +966,7 @@ OptionsWidget::autoPictureOffToggled(bool const checked)
     black_white_options.setAutoPictureOff(checked);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -960,6 +977,7 @@ OptionsWidget::pictureToDots8Toggled(bool const checked)
     black_white_options.setPictureToDots8(checked);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1012,6 +1030,7 @@ OptionsWidget::kmeansCountChanged(int value)
     black_kmeans_options.setKmeansCount(value);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1022,6 +1041,7 @@ OptionsWidget::kmeansValueStartChanged(int value)
     black_kmeans_options.setKmeansValueStart(value);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1032,6 +1052,7 @@ OptionsWidget::kmeansSatChanged(double value)
     black_kmeans_options.setKmeansSat(value);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1042,6 +1063,7 @@ OptionsWidget::kmeansNormChanged(double value)
     black_kmeans_options.setKmeansNorm(value);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1052,6 +1074,7 @@ OptionsWidget::kmeansBGChanged(double value)
     black_kmeans_options.setKmeansBG(value);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1062,6 +1085,7 @@ OptionsWidget::coloredMaskCoefChanged(double value)
     black_kmeans_options.setColoredMaskCoef(value);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1073,6 +1097,7 @@ OptionsWidget::kmeansColorSpaceChanged(int idx)
     black_kmeans_options.setKmeansColorSpace(color_space);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1083,6 +1108,7 @@ OptionsWidget::kmeansFindBlackToggled(bool const checked)
     black_kmeans_options.setFindBlack(checked);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1093,6 +1119,7 @@ OptionsWidget::kmeansFindWhiteToggled(bool const checked)
     black_kmeans_options.setFindWhite(checked);
     m_colorParams.setBlackKmeansOptions(black_kmeans_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 
@@ -1163,6 +1190,7 @@ OptionsWidget::despeckleLevelSelected(DespeckleLevel const level)
 
     m_ptrSettings->setDespeckleLevel(m_pageId, level);
     m_ptrSettings->setDespeckleFactor(m_pageId, m_despeckleFactor);
+    emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
 }
 

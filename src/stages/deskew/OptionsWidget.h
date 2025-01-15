@@ -77,6 +77,14 @@ private slots:
 
     void warpDistortionToggled(bool checked);
 
+    void photoToggled(bool checked);
+
+    void focusSpinBoxChanged(double value);
+
+    void showApplySourceDialog();
+
+    void sourceAppliedTo(std::set<PageId> const& pages);
+
     void spinBoxValueChanged(double skew_degrees);
 
     void modeChanged(bool auto_mode);

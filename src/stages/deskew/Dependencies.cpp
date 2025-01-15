@@ -16,12 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDomDocument>
+#include <QDomElement>
 #include "Dependencies.h"
 #include "XmlMarshaller.h"
 #include "XmlUnmarshaller.h"
 #include "imageproc/PolygonUtils.h"
-#include <QDomDocument>
-#include <QDomElement>
 
 using namespace imageproc;
 

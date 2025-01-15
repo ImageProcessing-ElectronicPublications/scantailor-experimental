@@ -261,6 +261,26 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="261"/>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="282"/>
+        <source>Photo: focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="285"/>
+        <source>Scanner / Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="295"/>
+        <source>Focus (default = 1400)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="251"/>
         <source>Rotation angle</source>
         <translation type="unfinished"></translation>

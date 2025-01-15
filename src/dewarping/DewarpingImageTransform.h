@@ -58,6 +58,7 @@ public:
         QPolygonF const& orig_crop_area,
         std::vector<QPointF> const& top_curve,
         std::vector<QPointF> const& bottom_curve,
+        double const& focus,
         DepthPerception const& depth_perception,
         DepthPerception const& curve_correct,
         DepthPerception const& curve_angle);
@@ -117,6 +118,7 @@ private:
     QPolygonF m_origCropArea;
     std::vector<QPointF> m_topPolyline;
     std::vector<QPointF> m_bottomPolyline;
+    double m_focus;
     DepthPerception m_depthPerception;
     DepthPerception m_curveCorrect;
     DepthPerception m_curveAngle;

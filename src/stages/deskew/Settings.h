@@ -62,6 +62,9 @@ public:
     void setDistortionType(
         std::set<PageId> const& pages, DistortionType const& distortion_type);
 
+    void setSource(
+        std::set<PageId> const& pages, SourceParams const& source);
+
     void setDepthPerception(
         std::set<PageId> const& pages, dewarping::DepthPerception const& depth_perception);
 

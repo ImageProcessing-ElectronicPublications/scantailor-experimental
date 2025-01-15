@@ -19,13 +19,14 @@
 #ifndef DESKEW_PARAMS_H_
 #define DESKEW_PARAMS_H_
 
+#include <QString>
+#include <QPolygonF>
 #include "DistortionType.h"
 #include "RotationParams.h"
+#include "SourceParams.h"
 #include "PerspectiveParams.h"
 #include "DewarpingParams.h"
 #include "Dependencies.h"
-#include <QString>
-#include <QPolygonF>
 
 class QDomDocument;
 class QDomElement;
@@ -63,6 +64,21 @@ public:
     RotationParams const& rotationParams() const
     {
         return m_rotationParams;
+    }
+
+    SourceParams& sourceParams()
+    {
+        return m_sourceParams;
+    }
+
+    SourceParams const& sourceParams() const
+    {
+        return m_sourceParams;
+    }
+
+    void setSourceParams(SourceParams source)
+    {
+        m_sourceParams = source;
     }
 
     PerspectiveParams& perspectiveParams()
@@ -108,6 +124,7 @@ public:
 private:
     DistortionType m_distortionType;
     RotationParams m_rotationParams;
+    SourceParams m_sourceParams;
     PerspectiveParams m_perspectiveParams;
     DewarpingParams m_dewarpingParams;
     Dependencies m_deps;

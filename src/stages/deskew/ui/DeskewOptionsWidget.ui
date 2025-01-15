@@ -256,6 +256,117 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="sourcePanel">
+     <property name="title">
+      <string>Source</string>
+     </property>
+     <layout class="QVBoxLayout" name="sourceVerticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="sourceHorizontalLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>65</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="photoCheckBox">
+          <property name="text">
+           <string>Photo: focus</string>
+          </property>
+          <property name="toolTip">
+           <string>Scanner / Photo</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="focusSpinBox">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="toolTip">
+           <string>Focus (default = 1400)</string>
+          </property>
+          <property name="decimals">
+           <double>1</double>
+          </property>
+          <property name="minimum">
+           <double>1.0</double>
+          </property>
+          <property name="maximum">
+           <double>9999.99</double>
+          </property>
+          <property name="singleStep">
+           <double>1.0</double>
+          </property>
+          <property name="value">
+           <double>1400.0</double>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>65</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="sourceHorizontalLayoutApply">
+        <item>
+         <spacer name="sourceHorizontalSpacerApply">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="applySourceBtn">
+          <property name="text">
+           <string>Apply to ...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="rotationPanel">
      <property name="title">
       <string>Rotation angle</string>
@@ -372,6 +483,7 @@
         </property>
        </widget>
       </item>
+
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_10">
         <item>
@@ -409,6 +521,7 @@
         </item>
        </layout>
       </item>
+
      </layout>
     </widget>
    </item>
