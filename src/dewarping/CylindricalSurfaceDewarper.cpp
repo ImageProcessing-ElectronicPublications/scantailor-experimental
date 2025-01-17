@@ -384,7 +384,10 @@ CylindricalSurfaceDewarper::initArcLengthMapper(
         double const y1 = projector.projectionScalar(img_line1_pt);
         double const y2 = projector.projectionScalar(img_line2_pt);
 
-        double elevation = m_depthPerception * (1.0 - (y2 - y1));
+        double const bx = 0.5 * ((y2 + y1) - 1.0);
+        double const by = 1.0 - (y2 - y1);
+        double const bxy = (bx + by);
+        double elevation = m_depthPerception * bxy;
         elevation = qBound(-0.5, elevation, 0.5);
 
         m_arcLengthMapper.addSample(pln_x, elevation);
