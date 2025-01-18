@@ -371,13 +371,17 @@ DewarpingImageTransform::setupIntrinsicScale()
 
     if (m_focus > 0.0)
     {
-        double const pcx = m_origSize.width() * 0.5;
-        double const pcy = m_origSize.height() * 0.5;
+        double const width = m_origSize.width();
+        double const height = m_origSize.height();
+        double const wh = (width < height) ? width : height;
+        double const focus = m_focus * wh;
+        double const pcx = width * 0.5;
+        double const pcy = height * 0.5;
 
-        Vector3d pm1 = {top_left[0] - pcx, top_left[1] - pcy, m_focus};
-        Vector3d pm2 = {top_right[0] - pcx, top_right[1] - pcy, m_focus};
-        Vector3d pm3 = {bottom_left[0] - pcx, bottom_left[1] - pcy, m_focus};
-        Vector3d pm4 = {bottom_right[0] - pcx, bottom_right[1] - pcy, m_focus};
+        Vector3d pm1 = {top_left[0] - pcx, top_left[1] - pcy, focus};
+        Vector3d pm2 = {top_right[0] - pcx, top_right[1] - pcy, focus};
+        Vector3d pm3 = {bottom_left[0] - pcx, bottom_left[1] - pcy, focus};
+        Vector3d pm4 = {bottom_right[0] - pcx, bottom_right[1] - pcy, focus};
 
         double const pk2 = double(pm1.cross(pm4).dot(pm3)) /
                            double(pm2.cross(pm4).dot(pm3));
@@ -389,7 +393,6 @@ DewarpingImageTransform::setupIntrinsicScale()
         Vector3d pn3 = pk3 * pm3 - pm1;
 
         double const w_h = sqrt(abs(pn2.dot(pn2) / pn3.dot(pn3)));
-
         double const arc_length = m_dewarper.directrixArcLength();
         double const w_h_curves = w_h * arc_length;
         double const w_h_sqrt = (w_h_curves > 0.0) ? sqrt(w_h_curves) : 1.0;

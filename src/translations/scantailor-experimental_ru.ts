@@ -311,8 +311,8 @@ Andrey Bergman - Регулировка загрузки системы.
     </message>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="282"/>
-        <source>Photo: focus</source>
-        <translation>Фото: фокус</translation>
+        <source>Photo: FOV</source>
+        <translation>Фото: FOV</translation>
     </message>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="285"/>
@@ -321,8 +321,8 @@ Andrey Bergman - Регулировка загрузки системы.
     </message>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="295"/>
-        <source>Focus (default = 1400)</source>
-        <translation>Фокус (по умолчанию = 1400)</translation>
+        <source>FOV (default = 1.4)</source>
+        <translation>FOV (по умолчанию = 1.4)</translation>
     </message>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="251"/>

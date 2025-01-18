@@ -267,7 +267,7 @@
     </message>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="282"/>
-        <source>Photo: focus</source>
+        <source>Photo: FOV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -277,7 +277,7 @@
     </message>
     <message>
         <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="295"/>
-        <source>Focus (default = 1400)</source>
+        <source>FOV (default = 1.4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

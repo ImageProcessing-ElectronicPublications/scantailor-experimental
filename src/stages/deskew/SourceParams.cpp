@@ -25,7 +25,7 @@ namespace deskew
 {
 
 SourceParams::SourceParams()
-    : m_focus(1400.0)
+    : m_focus(1.4)
     , m_photo(false)
 {
 }
@@ -40,7 +40,7 @@ SourceParams::SourceParams(QDomElement const& el)
     : m_photo(el.attribute("photo") == "1")
 {
     double focus = el.attribute("focus").toDouble();
-    m_focus = (focus > 0.0) ? focus : 1400.0;
+    m_focus = (focus < 0.0) ? 0.0 : focus;
 }
 
 QDomElement

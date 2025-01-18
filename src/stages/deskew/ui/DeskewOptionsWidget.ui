@@ -279,7 +279,7 @@
         <item>
          <widget class="QCheckBox" name="photoCheckBox">
           <property name="text">
-           <string>Photo: focus</string>
+           <string>Photo: FOV</string>
           </property>
           <property name="toolTip">
            <string>Scanner / Photo</string>
@@ -292,22 +292,22 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="toolTip">
-           <string>Focus (default = 1400)</string>
+           <string>FOV (default = 1.4)</string>
           </property>
           <property name="decimals">
-           <double>1</double>
+           <double>3</double>
           </property>
           <property name="minimum">
-           <double>1.0</double>
+           <double>0.0</double>
           </property>
           <property name="maximum">
-           <double>99999.9</double>
+           <double>99.999</double>
           </property>
           <property name="singleStep">
-           <double>1.0</double>
+           <double>0.01</double>
           </property>
           <property name="value">
-           <double>1400.0</double>
+           <double>1.4</double>
           </property>
          </widget>
         </item>

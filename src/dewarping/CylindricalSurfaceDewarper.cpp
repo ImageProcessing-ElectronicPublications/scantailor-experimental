@@ -386,7 +386,8 @@ CylindricalSurfaceDewarper::initArcLengthMapper(
 
         double const bx = 0.5 * ((y2 + y1) - 1.0);
         double const by = 1.0 - (y2 - y1);
-        double const bxy = (bx + by);
+        double const bb = 1.0 / sqrt(2.0 * (1.0 + bx * bx + by * by));
+        double const bxy = (bx + by) * bb;
         double elevation = m_depthPerception * bxy;
         elevation = qBound(-0.5, elevation, 0.5);
 
