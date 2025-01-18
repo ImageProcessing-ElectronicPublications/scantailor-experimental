@@ -108,7 +108,7 @@ public:
 private:
     class CoupledPolylinesIterator;
 
-    static HomographicTransform<2, double> calcPlnToImgHomography(
+    HomographicTransform<2, double> calcPlnToImgHomography(
         std::vector<QPointF> const& img_directrix1,
         std::vector<QPointF> const& img_directrix2);
 
@@ -138,6 +138,7 @@ private:
     ArcLengthMapper m_arcLengthMapper;
     PolylineIntersector m_imgDirectrix1Intersector;
     PolylineIntersector m_imgDirectrix2Intersector;
+    double m_h_w;
 };
 
 } // namespace dewarping

@@ -98,17 +98,18 @@ CylindricalSurfaceDewarper::CylindricalSurfaceDewarper(
     double depth_perception,
     double curve_correct,
     double curve_angle)
-    :   m_pln2img(calcPlnToImgHomography(img_directrix1, img_directrix2)),
-      m_img2pln(m_pln2img.inv()),
-      m_depthPerception(depth_perception),
-      m_curveCorrect(curve_correct),
-      m_curveAngle(curve_angle),
-      m_plnStraightLineY(
+    : m_pln2img(calcPlnToImgHomography(img_directrix1, img_directrix2))
+    , m_img2pln(m_pln2img.inv())
+    , m_depthPerception(depth_perception)
+    , m_curveCorrect(curve_correct)
+    , m_curveAngle(curve_angle)
+    , m_plnStraightLineY(
           calcPlnStraightLineY(img_directrix1, img_directrix2, m_pln2img, m_img2pln)
-      ),
-      m_directrixArcLength(1.0),
-      m_imgDirectrix1Intersector(img_directrix1),
-      m_imgDirectrix2Intersector(img_directrix2)
+      )
+    , m_directrixArcLength(1.0)
+    , m_imgDirectrix1Intersector(img_directrix1)
+    , m_imgDirectrix2Intersector(img_directrix2)
+    , m_h_w(1.0)
 {
     initArcLengthMapper(img_directrix1, img_directrix2);
 }
@@ -237,11 +238,24 @@ CylindricalSurfaceDewarper::calcPlnToImgHomography(
     std::vector<QPointF> const& img_directrix1,
     std::vector<QPointF> const& img_directrix2)
 {
+    QPointF const tl = img_directrix1.front();
+    QPointF const tr = img_directrix1.back();
+    QPointF const bl = img_directrix2.front();
+    QPointF const br = img_directrix2.back();
+    QPointF const top = tr - tl;
+    QPointF const bottom = br - bl;
+    QPointF const left = bl - tl;
+    QPointF const right = br - tr;
+    double const width2 = QPointF::dotProduct(top, top) + QPointF::dotProduct(bottom, bottom);
+    double const height2 = QPointF::dotProduct(left, left) + QPointF::dotProduct(right, right);
+    double const h_w_2 = (width2 > 0.0) ? (height2 / width2) : 1.0;
+    m_h_w = sqrt(h_w_2);
+
     boost::array<std::pair<QPointF, QPointF>, 4> pairs;
-    pairs[0] = std::make_pair(QPointF(0, 0), img_directrix1.front());
-    pairs[1] = std::make_pair(QPointF(1, 0), img_directrix1.back());
-    pairs[2] = std::make_pair(QPointF(0, 1), img_directrix2.front());
-    pairs[3] = std::make_pair(QPointF(1, 1), img_directrix2.back());
+    pairs[0] = std::make_pair(QPointF(0, 0), tl);
+    pairs[1] = std::make_pair(QPointF(1, 0), tr);
+    pairs[2] = std::make_pair(QPointF(0, 1), bl);
+    pairs[3] = std::make_pair(QPointF(1, 1), br);
 
     return fourPoint2DHomography(pairs);
 }
@@ -319,7 +333,7 @@ CylindricalSurfaceDewarper::fourPoint2DHomography(
     Matrix<double, 8, 1> const h(qr.solve(b));
     Matrix3d H;
     H << h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7], 1.0;
-    
+
     return HomographicTransform<2, double>(H);
 }
 
@@ -384,9 +398,9 @@ CylindricalSurfaceDewarper::initArcLengthMapper(
         double const y1 = projector.projectionScalar(img_line1_pt);
         double const y2 = projector.projectionScalar(img_line2_pt);
 
-        double const bx = 0.5 * ((y2 + y1) - 1.0);
+        double const bx = 0.5 * ((y2 + y1) - 1.0) * m_h_w;
         double const by = 1.0 - (y2 - y1);
-        double const bb = 1.0 / sqrt(2.0 * (1.0 + bx * bx + by * by));
+        double const bb = 0.5 / sqrt(1.0 + bx * bx + by * by);
         double const bxy = (bx + by) * bb;
         double elevation = m_depthPerception * bxy;
         elevation = qBound(-0.5, elevation, 0.5);
