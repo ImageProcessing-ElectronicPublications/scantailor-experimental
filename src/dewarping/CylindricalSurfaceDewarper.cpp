@@ -109,7 +109,6 @@ CylindricalSurfaceDewarper::CylindricalSurfaceDewarper(
     , m_directrixArcLength(1.0)
     , m_imgDirectrix1Intersector(img_directrix1)
     , m_imgDirectrix2Intersector(img_directrix2)
-    , m_h_w(1.0)
 {
     initArcLengthMapper(img_directrix1, img_directrix2);
 }
@@ -242,14 +241,6 @@ CylindricalSurfaceDewarper::calcPlnToImgHomography(
     QPointF const tr = img_directrix1.back();
     QPointF const bl = img_directrix2.front();
     QPointF const br = img_directrix2.back();
-    QPointF const top = tr - tl;
-    QPointF const bottom = br - bl;
-    QPointF const left = bl - tl;
-    QPointF const right = br - tr;
-    double const width2 = QPointF::dotProduct(top, top) + QPointF::dotProduct(bottom, bottom);
-    double const height2 = QPointF::dotProduct(left, left) + QPointF::dotProduct(right, right);
-    double const h_w_2 = (width2 > 0.0) ? (height2 / width2) : 1.0;
-    m_h_w = sqrt(h_w_2);
 
     boost::array<std::pair<QPointF, QPointF>, 4> pairs;
     pairs[0] = std::make_pair(QPointF(0, 0), tl);
@@ -380,6 +371,13 @@ CylindricalSurfaceDewarper::initArcLengthMapper(
     QPointF img_curve2_pt;
     double prev_pln_x = NumericTraits<double>::min();
     double pln_x;
+
+    Matrix<double, 3, 3> const& coeff = m_pln2img.mat();
+    double const cm0 = coeff(2, 0) * coeff(2, 0);
+    double const cm1 = coeff(2, 1) * coeff(2, 1);
+    double const cnorm = cm0 + cm1;
+    double const coeff_h_w = (cnorm > 0.0) ? (cm1 / cnorm) : 1.0;
+
     while (it.next(img_curve1_pt, img_curve2_pt, pln_x))
     {
         if (pln_x <= prev_pln_x)
@@ -398,11 +396,10 @@ CylindricalSurfaceDewarper::initArcLengthMapper(
         double const y1 = projector.projectionScalar(img_line1_pt);
         double const y2 = projector.projectionScalar(img_line2_pt);
 
-        double const bx = 0.5 * ((y2 + y1) - 1.0) * m_h_w;
+        double const bx = 0.5 * ((y2 + y1) - 1.0) * coeff_h_w;
         double const by = 1.0 - (y2 - y1);
-        double const bb = 0.5 / sqrt(1.0 + bx * bx + by * by);
-        double const bxy = (bx + by) * bb;
-        double elevation = m_depthPerception * bxy;
+        double const bxy = bx + by;
+        double elevation = m_depthPerception / (1.0 + coeff_h_w) * bxy;
         elevation = qBound(-0.5, elevation, 0.5);
 
         m_arcLengthMapper.addSample(pln_x, elevation);
