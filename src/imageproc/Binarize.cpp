@@ -184,8 +184,10 @@ void binarizeNegate(BinaryImage& src)
 }  // binarizeNegate
 
 unsigned int binarizeBiModalValue(
-    GrayImage const& src, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     unsigned int threshold = 128;
     if (src.isNull())
@@ -195,72 +197,16 @@ unsigned int binarizeBiModalValue(
 
     unsigned int const w = src.width();
     unsigned int const h = src.height();
-    uint8_t const* gray_line = src.data();
-    unsigned int const gray_stride = src.stride();
-    unsigned int const histsize = 256;
-    uint64_t im, iw, ib, histogram[histsize] = {0};
-    unsigned int k, Tn;
-    double Tw, Tb;
-    unsigned int Tmin = 255, Tmax = 0, Ti;
-    double part = 0.5 + (double) delta / 256.0;
-    part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
-
-    for (unsigned int y = 0; y < h; y++)
-    {
-        for (unsigned int x = 0; x < w; x++)
-        {
-            unsigned char pixel = gray_line[x];
-            pixel = (pixel < bound_lower) ? bound_lower : (pixel < bound_upper) ? pixel : bound_upper;
-            histogram[pixel]++;
-        }
-        gray_line += gray_stride;
-    }
-
-    Ti = 0;
-    while (Ti < Tmin)
-    {
-        Tmin = (histogram[Ti] > 0) ? Ti : Tmin;
-        Ti++;
-    }
-    Ti = 255;
-    while (Ti > Tmax)
-    {
-        Tmax = (histogram[Ti] > 0) ? Ti : Tmax;
-        Ti--;
-    }
-
-    threshold = (unsigned int) (part * Tmax + (1.0 - part) * Tmin + 0.5);
-    Tn = threshold + 1;
-    while (threshold != Tn)
-    {
-        Tn = threshold;
-        Tb = Tw = 0.0;
-        ib = iw = 0;
-        for (k = 0; k < histsize; k++)
-        {
-            im = histogram[k];
-            if (k < threshold)
-            {
-                Tb += (double) (im * k);
-                ib += im;
-            }
-            else
-            {
-                Tw += (double) (im * k);
-                iw += im;
-            }
-        }
-        Tb = (ib > 0) ? (Tb / ib) : Tmin;
-        Tw = (iw > 0) ? (Tw / iw) : Tmax;
-        threshold = (unsigned int) (part * Tw + (1.0 - part) * Tb + 0.5);
-    }
+    threshold = grayBiModalTiledValue(src, 0, 0, w, h, delta, bound_lower, bound_upper);
 
     return threshold;
 }  // binarizeBiModalValue
 
 BinaryImage binarizeBiModal(
-    GrayImage const& src, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -480,8 +426,8 @@ BinaryImage binarizeBMTiled(
 
     int const w = src.width();
     int const h = src.height();
-    GrayImage threshold_map(grayBiModalTiledMap(src, radius, coef));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(grayBiModalTiledMap(src, radius, coef, delta, bound_lower, bound_upper));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }

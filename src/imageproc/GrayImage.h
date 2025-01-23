@@ -148,13 +148,17 @@ inline bool operator!=(GrayImage const& lhs, GrayImage const& rhs)
  * mean, deviation, max, contrast
  */
 IMAGEPROC_EXPORT GrayImage grayMapMean(
-    GrayImage const& src, int radius = 100);
+    GrayImage const& src,
+    int radius = 100);
 IMAGEPROC_EXPORT GrayImage grayMapDeviation(
-    GrayImage const& src, int radius = 100);
+    GrayImage const& src,
+    int radius = 100);
 IMAGEPROC_EXPORT GrayImage grayMapMax(
-    GrayImage const& src, int radius = 100);
+    GrayImage const& src,
+    int radius = 100);
 IMAGEPROC_EXPORT GrayImage grayMapContrast(
-    GrayImage const& src, int radius = 100);
+    GrayImage const& src,
+    int radius = 100);
 
 /**
  * \brief Threshold Map Images:
@@ -164,54 +168,89 @@ IMAGEPROC_EXPORT unsigned int grayBiModalTiledValue(
     unsigned int const x1,
     unsigned int const y1,
     unsigned int const x2,
-    unsigned int const y2);
+    unsigned int const y2,
+    int delta = 0,
+    unsigned char bound_lower = 0,
+    unsigned char bound_upper = 255);
 IMAGEPROC_EXPORT GrayImage grayBiModalTiledMap(
     GrayImage const& src,
     int radius = 50,
-    double k = 0.75);
+    double k = 0.75,
+    int delta = 0,
+    unsigned char bound_lower = 0,
+    unsigned char bound_upper = 255);
 IMAGEPROC_EXPORT GrayImage grayNiblackMap(
-    GrayImage const& src, int radius = 100, double k = 0.20);
+    GrayImage const& src,
+    int radius = 100,
+    double k = 0.20);
 IMAGEPROC_EXPORT GrayImage graySauvolaMap(
-    GrayImage const& src, int radius = 100, double k = 0.34);
+    GrayImage const& src,
+    int radius = 100,
+    double k = 0.34);
 IMAGEPROC_EXPORT GrayImage grayWolfMap(
-    GrayImage const& src, int radius = 100, double k = 0.30);
+    GrayImage const& src,
+    int radius = 100,
+    double k = 0.30);
 IMAGEPROC_EXPORT GrayImage grayBradleyMap(
-    GrayImage const& src, int radius = 100, double k = 0.2);
+    GrayImage const& src,
+    int radius = 100,
+    double k = 0.2);
 IMAGEPROC_EXPORT GrayImage grayGradMap(
-    GrayImage const& src, int radius = 10, double coef = 0.75);
+    GrayImage const& src,
+    int radius = 10,
+    double coef = 0.75);
 IMAGEPROC_EXPORT GrayImage graySinghMap(
-    GrayImage const& src, int radius = 100, double k = 0.2);
+    GrayImage const& src,
+    int radius = 100,
+    double k = 0.2);
 IMAGEPROC_EXPORT GrayImage grayWANMap(
-    GrayImage const& src, int radius = 100, double k = 0.2);
+    GrayImage const& src,
+    int radius = 100,
+    double k = 0.2);
 IMAGEPROC_EXPORT GrayImage grayMScaleMap(
-    GrayImage const& src, int radius = 10, double coef = 0.5);
+    GrayImage const& src,
+    int radius = 10,
+    double coef = 0.5);
 IMAGEPROC_EXPORT GrayImage grayEngravingMap(
-    GrayImage const& src, int radius = 20, float coef = 0.20f);
+    GrayImage const& src,
+    int radius = 20,
+    float coef = 0.20f);
 IMAGEPROC_EXPORT GrayImage grayDotsMap(
-    GrayImage const& src, int delta = 0);
+    GrayImage const& src,
+    int delta = 0);
 
 /**
  * threshold MAPs as filters
  */
 void grayMapOverlay(
-    GrayImage& src, GrayImage& gover, float coef = 0.0f);
+    GrayImage& src,
+    GrayImage& gover,
+    float coef = 0.0f);
 
 /**
  * @brief Engraving GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayGravure(
-    GrayImage const& src, int radius = 15, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 15,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayGravureInPlace(
-    GrayImage& src, int radius = 15, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 15,
+    float coef = 0.0f);
 
 /**
  * @brief Dots 8x8 GrayImage.
  * Modification: used GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayDots8(
-    GrayImage const& src, int radius = 17, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 17,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayDots8InPlace(
-    GrayImage& src, int radius = 17, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 17,
+    float coef = 0.0f);
 
 /**
  * @brief Applies the Wiener filter to a grayscale image.
@@ -222,98 +261,142 @@ IMAGEPROC_EXPORT void grayDots8InPlace(
  * @return The filtered image.
  */
 IMAGEPROC_EXPORT GrayImage grayWiener(
-    GrayImage const& src, int radius = 3, float noise_sigma = 0.01f);
+    GrayImage const& src,
+    int radius = 3,
+    float noise_sigma = 0.01f);
 
 /**
  * @brief An in-place version of grayWiener().
  * @see grayWiener()
  */
 IMAGEPROC_EXPORT void grayWienerInPlace(
-    GrayImage& src, int radius = 3, float noise_sigma = 0.01f);
+    GrayImage& src,
+    int radius = 3,
+    float noise_sigma = 0.01f);
 
 /**
  * @brief KNN denoiser GrayImage based BoxBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayKnnDenoiser(
-    GrayImage const& src, int radius = 1, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 1,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayKnnDenoiserInPlace(
-    GrayImage& src, int radius = 1, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 1,
+    float coef = 0.0f);
 
 /**
  * @brief Despeckle GrayImage.
  */
 IMAGEPROC_EXPORT GrayImage grayDespeckle(
-    GrayImage const& src, int radius = 7, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 7,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayDespeckleInPlace(
-    GrayImage& src, int radius = 7, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 7,
+    float coef = 0.0f);
 
 /**
  * @brief Auto Level GrayImage.
  * Modification: used GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayAutoLevel(
-    GrayImage const& src, int radius = 10, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 10,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayAutoLevelInPlace(
-    GrayImage& src, int radius = 10, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 10,
+    float coef = 0.0f);
 
 /**
  * @brief Balance GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayBalance(
-    GrayImage const& src, int radius = 23, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 23,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayBalanceInPlace(
-    GrayImage& src, int radius = 23, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 23,
+    float coef = 0.0f);
 
 /**
  * @brief OverBlur GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayOverBlur(
-    GrayImage const& src, int radius = 49, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 49,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayOverBlurInPlace(
-    GrayImage& src, int radius = 49, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 49,
+    float coef = 0.0f);
 
 /**
  * @brief Retinex GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayRetinex(
-    GrayImage const& src, int radius = 31, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 31,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayRetinexInPlace(
-    GrayImage& src, int radius = 31, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 31,
+    float coef = 0.0f);
 
 /**
  * @brief Equalize GrayImage.
  * Modification: used GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayEqualize(
-    GrayImage const& src, int radius = 1, float coef = 0.0f,
+    GrayImage const& src,
+    int radius = 1,
+    float coef = 0.0f,
     bool flg_blur = false);
 IMAGEPROC_EXPORT void grayEqualizeInPlace(
-    GrayImage& src, int radius = 1, float coef = 0.0f,
+    GrayImage& src,
+    int radius = 1,
+    float coef = 0.0f,
     bool flg_blur = false);
 
 /**
  * @brief Sigma (blur manipulation) GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage graySigma(
-    GrayImage const& src, int radius = 29, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 29,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void graySigmaInPlace(
-    GrayImage& src, int radius = 29, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 29,
+    float coef = 0.0f);
 
 /**
  * @brief Blur GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayBlur(
-    GrayImage const& src, int radius = 1, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 1,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayBlurInPlace(
-    GrayImage& src, int radius = 1, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 1,
+    float coef = 0.0f);
 
 /**
  * @brief Screen GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayScreen(
-    GrayImage const& src, int radius = 5, float coef = 0.0f);
+    GrayImage const& src,
+    int radius = 5,
+    float coef = 0.0f);
 IMAGEPROC_EXPORT void grayScreenInPlace(
-    GrayImage& src, int radius = 5, float coef = 0.0f);
+    GrayImage& src,
+    int radius = 5,
+    float coef = 0.0f);
 
 /**
  * \brief Image prefilter EdgeDiv (EdgePlus & BlurDiv) for local/global thresholding method.
@@ -321,11 +404,15 @@ IMAGEPROC_EXPORT void grayScreenInPlace(
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".
  */
 IMAGEPROC_EXPORT GrayImage grayEdgeDiv(
-    GrayImage const& src, int radius = 10,
-    double kep = 0.5, double kdb = 0.5);
+    GrayImage const& src,
+    int radius = 10,
+    double kep = 0.5,
+    double kdb = 0.5);
 IMAGEPROC_EXPORT void grayEdgeDivInPlace(
-    GrayImage& src, int radius = 10,
-    double kep = 0.5, double kdb = 0.5);
+    GrayImage& src,
+    int radius = 10,
+    double kep = 0.5,
+    double kdb = 0.5);
 /**
  * \brief Image prefilter Robust's for local thresholding method.
  *
@@ -334,9 +421,13 @@ IMAGEPROC_EXPORT void grayEdgeDivInPlace(
  * https://www.researchgate.net/publication/226333284_Robust_document_binarization_with_OFF_center-surround_cells
  */
 IMAGEPROC_EXPORT GrayImage grayRobust(
-    GrayImage const& src, int radius = 10, float coef = 0.2f);
+    GrayImage const& src,
+    int radius = 10,
+    float coef = 0.2f);
 IMAGEPROC_EXPORT void grayRobustInPlace(
-    GrayImage& src, int radius = 10, float coef = 0.2f);
+    GrayImage& src,
+    int radius = 10,
+    float coef = 0.2f);
 
 /**
  * @brief Dominanta GrayImage.

@@ -383,7 +383,7 @@ GrayImage grayMapContrast(
 }  // grayMapContrast
 
 /*
- * bimodaltiled = k * BML + (1 - k) * BMG
+ * bimodaltiled = k * BML + (1 - k) * BMG, k = 0.75
  *     BML = bilinescale(bimodalvalue(I(w x w)), w = 2 * r + 1, r = 50
  *     BMG = bimodalvalue(I)
  */
@@ -392,7 +392,10 @@ unsigned int grayBiModalTiledValue(
     unsigned int const x1,
     unsigned int const y1,
     unsigned int const x2,
-    unsigned int const y2)
+    unsigned int const y2,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     unsigned int const histsize = 256;
     unsigned int threshold = histsize / 2;
@@ -409,7 +412,8 @@ unsigned int grayBiModalTiledValue(
     unsigned int k, Tn;
     double Tw, Tb;
     int Tmin = 255, Tmax = 0, Ti;
-    double part = 0.5;
+    double part = 0.5 + (double) delta / 256.0;
+    part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
 
     unsigned int const x1w = (x1 < 0) ? 0 : ((x1 < w) ? x1 : w);
     unsigned int const y1w = (y1 < 0) ? 0 : ((y1 < h) ? y1 : h);
@@ -424,7 +428,8 @@ unsigned int grayBiModalTiledValue(
         {
             for (unsigned int x = x1w; x < x2w; x++)
             {
-                unsigned char const pixel = src_line[x];
+                unsigned char pixel = src_line[x];
+                pixel = (pixel < bound_lower) ? bound_lower : (pixel < bound_upper) ? pixel : bound_upper;
                 histogram[pixel]++;
             }
             src_line += src_stride;
@@ -442,6 +447,7 @@ unsigned int grayBiModalTiledValue(
             Tmax = (histogram[Ti] > 0) ? Ti : Tmax;
             Ti--;
         }
+        Tmax++;
 
         threshold = (unsigned int) (part * Tmax + (1.0 - part) * Tmin + 0.5);
         Tn = threshold + 1;
@@ -476,7 +482,10 @@ unsigned int grayBiModalTiledValue(
 GrayImage grayBiModalTiledMap(
     GrayImage const& src,
     int const radius,
-    double const coef)
+    double const coef,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -492,7 +501,7 @@ GrayImage grayBiModalTiledMap(
 
     int const w = src.width();
     int const h = src.height();
-    unsigned int bmg = grayBiModalTiledValue(src, 0, 0, w, h);
+    unsigned int bmg = grayBiModalTiledValue(src, 0, 0, w, h, delta, bound_lower, bound_upper);
 
     if (radius > 0)
     {
@@ -518,7 +527,7 @@ GrayImage grayBiModalTiledMap(
                 int const x1 = wx * wsize;
                 int const x2 = ((x1 + wsize) < w) ? (x1 + wsize) : w;
 
-                int const t = grayBiModalTiledValue(gray, x1, y1, x2, y2);
+                int const t = grayBiModalTiledValue(gray, x1, y1, x2, y2, delta, bound_lower, bound_upper);
 
                 tlocal_line[wx] = (uint8_t) t;
             }
