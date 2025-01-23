@@ -204,7 +204,6 @@ unsigned int binarizeBiModalValue(
     unsigned int Tmin = 255, Tmax = 0, Ti;
     double part = 0.5 + (double) delta / 256.0;
     part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
-    double const partval = part * (double) histsize;
 
     for (unsigned int y = 0; y < h; y++)
     {
@@ -230,17 +229,8 @@ unsigned int binarizeBiModalValue(
         Ti--;
     }
 
-    Tb = 0.0;
-    for (k = 0; k < histsize; k++)
-    {
-        Tb += histogram[k];
-    }
-    Tb /= w;
-    Tb /= h;
-
-    // threshold = (unsigned int) (partval + 0.5);
-    threshold = (unsigned int) (Tb + 0.5);
-    Tn = 0;
+    threshold = (unsigned int) (part * Tmax + (1.0 - part) * Tmin + 0.5);
+    Tn = threshold + 1;
     while (threshold != Tn)
     {
         Tn = threshold;

@@ -443,15 +443,8 @@ unsigned int grayBiModalTiledValue(
             Ti--;
         }
 
-        Tb = 0.0;
-        for (k = 0; k < histsize; k++)
-        {
-            Tb += histogram[k];
-        }
-        Tb /= wsize;
-
-        threshold = (unsigned int) (Tb + 0.5);
-        Tn = 0;
+        threshold = (unsigned int) (part * Tmax + (1.0 - part) * Tmin + 0.5);
+        Tn = threshold + 1;
         while (threshold != Tn)
         {
             Tn = threshold;
