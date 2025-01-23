@@ -1223,6 +1223,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeDots(gray, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_BMTILED:
+        {
+            binarized = binarizeBMTiled(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         case T_NIBLACK:
         {
             binarized = binarizeNiblack(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);

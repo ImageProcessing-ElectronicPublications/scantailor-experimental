@@ -188,6 +188,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_DOTS8;
     }
+    else if (str == "bmtiled")
+    {
+        return T_BMTILED;
+    }
     else if (str == "niblack")
     {
         return T_NIBLACK;
@@ -268,6 +272,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_DOTS8:
         str = "dots8";
+        break;
+    case T_BMTILED:
+        str = "bmtiled";
         break;
     case T_NIBLACK:
         str = "niblack";

@@ -91,6 +91,17 @@ IMAGEPROC_EXPORT BinaryImage binarizeImageToDots(
     BinaryImage const& mask_bw);
 
 /**
+  * \brief Image binarization using tiled BiModal thresholding method.
+  */
+IMAGEPROC_EXPORT BinaryImage binarizeBMTiled(
+    GrayImage const& src,
+    int radius = 50,
+    double k = 0.75,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
   * \brief Image binarization using Niblack's local thresholding method.
   *
   * \see Help -> About -> References -> [9]

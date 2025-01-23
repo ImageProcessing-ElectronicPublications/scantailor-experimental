@@ -71,6 +71,7 @@ GrayImage grayMapMean(
     {
         return GrayImage();
     }
+
     if (radius > 0)
     {
         int const w = src.width();
@@ -137,6 +138,7 @@ GrayImage grayMapDeviation(
     {
         return GrayImage();
     }
+
     if (radius > 0)
     {
         int const w = src.width();
@@ -379,6 +381,206 @@ GrayImage grayMapContrast(
 
     return gray;
 }  // grayMapContrast
+
+/*
+ * bimodaltiled = k * BML + (1 - k) * BMG
+ *     BML = bilinescale(bimodalvalue(I(w x w)), w = 2 * r + 1, r = 50
+ *     BMG = bimodalvalue(I)
+ */
+unsigned int grayBiModalTiledValue(
+    GrayImage const& src,
+    unsigned int const x1,
+    unsigned int const y1,
+    unsigned int const x2,
+    unsigned int const y2)
+{
+    unsigned int const histsize = 256;
+    unsigned int threshold = histsize / 2;
+    if (src.isNull())
+    {
+        return threshold;
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    uint8_t const* src_line = src.data();
+    unsigned int const src_stride = src.stride();
+    uint64_t im, iw, ib, histogram[histsize] = {0};
+    unsigned int k, Tn;
+    double Tw, Tb;
+    int Tmin = 255, Tmax = 0, Ti;
+    double part = 0.5;
+
+    unsigned int const x1w = (x1 < 0) ? 0 : ((x1 < w) ? x1 : w);
+    unsigned int const y1w = (y1 < 0) ? 0 : ((y1 < h) ? y1 : h);
+    unsigned int const x2w = (x2 < 0) ? 0 : ((x2 < w) ? x2 : w);
+    unsigned int const y2w = (y2 < 0) ? 0 : ((y2 < h) ? y2 : h);
+    uint64_t const wsize = (y2w - y1w) * (x2w - x1w);
+
+    if (wsize > 0)
+    {
+        src_line += y1w * src_stride;
+        for (unsigned int y = y1w; y < y2w; y++)
+        {
+            for (unsigned int x = x1w; x < x2w; x++)
+            {
+                unsigned char const pixel = src_line[x];
+                histogram[pixel]++;
+            }
+            src_line += src_stride;
+        }
+
+        Ti = 0;
+        while (Ti < Tmin)
+        {
+            Tmin = (histogram[Ti] > 0) ? Ti : Tmin;
+            Ti++;
+        }
+        Ti = 255;
+        while (Ti > Tmax)
+        {
+            Tmax = (histogram[Ti] > 0) ? Ti : Tmax;
+            Ti--;
+        }
+
+        Tb = 0.0;
+        for (k = 0; k < histsize; k++)
+        {
+            Tb += histogram[k];
+        }
+        Tb /= wsize;
+
+        threshold = (unsigned int) (Tb + 0.5);
+        Tn = 0;
+        while (threshold != Tn)
+        {
+            Tn = threshold;
+            Tb = Tw = 0.0;
+            ib = iw = 0;
+            for (k = 0; k < histsize; k++)
+            {
+                im = histogram[k];
+                if (k < threshold)
+                {
+                    Tb += (double) (im * k);
+                    ib += im;
+                }
+                else
+                {
+                    Tw += (double) (im * k);
+                    iw += im;
+                }
+            }
+            Tb = (ib > 0) ? (Tb / ib) : Tmin;
+            Tw = (iw > 0) ? (Tw / iw) : Tmax;
+            threshold = (unsigned int) (part * Tw + (1.0 - part) * Tb + 0.5);
+        }
+    }
+
+    return threshold;
+}  // grayBiModalTiledValue
+
+GrayImage grayBiModalTiledMap(
+    GrayImage const& src,
+    int const radius,
+    double const coef)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gray = GrayImage(src);
+    if (gray.isNull())
+    {
+        return GrayImage();
+    }
+    uint8_t* gray_line = gray.data();
+    int const gray_stride = gray.stride();
+
+    int const w = src.width();
+    int const h = src.height();
+    unsigned int bmg = grayBiModalTiledValue(src, 0, 0, w, h);
+
+    if (radius > 0)
+    {
+        int const wsize = 2 * radius + 1;
+        int const ww = (w + wsize - 1) / wsize;
+        int const wh = (h + wsize - 1) / wsize;
+
+        GrayImage tlocal = GrayImage(QSize(ww, wh));
+        if (tlocal.isNull())
+        {
+            return GrayImage();
+        }
+
+        uint8_t* tlocal_line = tlocal.data();
+        int const tlocal_stride = tlocal.stride();
+
+        for (int wy = 0; wy < wh; wy++)
+        {
+            int const y1 = wy * wsize;
+            int const y2 = ((y1 + wsize) < h) ? (y1 + wsize) : h;
+            for (int wx = 0; wx < ww; wx++)
+            {
+                int const x1 = wx * wsize;
+                int const x2 = ((x1 + wsize) < w) ? (x1 + wsize) : w;
+
+                int const t = grayBiModalTiledValue(gray, x1, y1, x2, y2);
+
+                tlocal_line[wx] = (uint8_t) t;
+            }
+            tlocal_line += tlocal_stride;
+        }
+
+        /* biline scale */
+        tlocal_line = tlocal.data();
+        for (int y = 0; y < h; y++)
+        {
+            double const yd = (0.5 + y) / wsize - 0.5;
+            int y1 = yd;
+            int y2 = y1 + 1;
+            double dy1 = yd - y1;
+            double dy2 = 1.0 - dy1;
+            y1 = (y1 < 0) ? 0 : ((y1 < wh) ? y1 : (wh - 1));
+            y2 = (y2 < 0) ? 0 : ((y2 < wh) ? y2 : (wh - 1));
+            for (int x = 0; x < w; x++)
+            {
+                double const xd = (0.5 + x) / wsize - 0.5;
+                int x1 = xd;
+                int x2 = x1 + 1;
+                double dx1 = xd - x1;
+                double dx2 = 1.0 - dx1;
+                x1 = (x1 < 0) ? 0 : ((x1 < ww) ? x1 : (ww - 1));
+                x2 = (x2 < 0) ? 0 : ((x2 < ww) ? x2 : (ww - 1));
+
+                double const t11 = tlocal_line[y1 * tlocal_stride + x1];
+                double const t12 = tlocal_line[y1 * tlocal_stride + x2];
+                double const t21 = tlocal_line[y2 * tlocal_stride + x1];
+                double const t22 = tlocal_line[y2 * tlocal_stride + x2];
+
+                double bml = dy2 * (dx2 * t11 + dx1 * t12)
+                           + dy1 * (dx2 * t21 + dx1 * t22);
+                double t = coef * bml + (1.0 - coef) * bmg + 0.5;
+                t = (t < 0.0) ? 0.0 : ((t < 255.0) ? t : 255.0);
+                gray_line[x] = (uint8_t) t;
+            }
+            gray_line += gray_stride;
+        }
+    }
+    else
+    {
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                gray_line[x] = (uint8_t) bmg;
+            }
+            gray_line += gray_stride;
+        }
+    }
+
+    return gray;
+}  // grayBiModalTiledMap
 
 /*
  * niblack = mean - k * stderr, k = 0.2

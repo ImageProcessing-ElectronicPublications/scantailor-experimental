@@ -48,15 +48,15 @@ namespace output
 OptionsWidget::OptionsWidget(
     IntrusivePtr<Settings> const& settings,
     PageSelectionAccessor const& page_selection_accessor)
-    :   m_ptrSettings(settings),
-        m_pageSelectionAccessor(page_selection_accessor),
-        m_despeckleLevel(DESPECKLE_NORMAL),
-        m_despeckleFactor(despeckleLevelToFactor(DESPECKLE_NORMAL)),
-        m_lastTab(TAB_OUTPUT),
-        m_ignoreThresholdChanges(0),
-        m_ignoreDespeckleLevelChanges(0),
-        m_ignoreScaleChanges(0),
-        m_colorFilterCurrent(F_AUTOLEVEL)
+    : m_ptrSettings(settings)
+    , m_pageSelectionAccessor(page_selection_accessor)
+    , m_despeckleLevel(DESPECKLE_NORMAL)
+    , m_despeckleFactor(despeckleLevelToFactor(DESPECKLE_NORMAL))
+    , m_lastTab(TAB_OUTPUT)
+    , m_ignoreThresholdChanges(0)
+    , m_ignoreDespeckleLevelChanges(0)
+    , m_ignoreScaleChanges(0)
+    , m_colorFilterCurrent(F_AUTOLEVEL)
 {
     setupUi(this);
 
@@ -67,6 +67,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("Otsu"), T_OTSU);
     thresholdMethodSelector->addItem(tr("Mean"), T_MEANDELTA);
     thresholdMethodSelector->addItem(tr("Dots8"), T_DOTS8);
+    thresholdMethodSelector->addItem(tr("BMTiled"), T_BMTILED);
     thresholdMethodSelector->addItem(tr("Niblack"), T_NIBLACK);
     thresholdMethodSelector->addItem(tr("Gatos"), T_GATOS);
     thresholdMethodSelector->addItem(tr("Sauvola"), T_SAUVOLA);

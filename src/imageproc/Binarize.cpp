@@ -201,6 +201,7 @@ unsigned int binarizeBiModalValue(
     uint64_t im, iw, ib, histogram[histsize] = {0};
     unsigned int k, Tn;
     double Tw, Tb;
+    unsigned int Tmin = 255, Tmax = 0, Ti;
     double part = 0.5 + (double) delta / 256.0;
     part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
     double const partval = part * (double) histsize;
@@ -214,6 +215,19 @@ unsigned int binarizeBiModalValue(
             histogram[pixel]++;
         }
         gray_line += gray_stride;
+    }
+
+    Ti = 0;
+    while (Ti < Tmin)
+    {
+        Tmin = (histogram[Ti] > 0) ? Ti : Tmin;
+        Ti++;
+    }
+    Ti = 255;
+    while (Ti > Tmax)
+    {
+        Tmax = (histogram[Ti] > 0) ? Ti : Tmax;
+        Ti--;
     }
 
     Tb = 0.0;
@@ -246,8 +260,8 @@ unsigned int binarizeBiModalValue(
                 iw += im;
             }
         }
-        Tb = (ib > 0) ? (Tb / ib) : 0.0;
-        Tw = (iw > 0) ? (Tw / iw) : (double) histsize;
+        Tb = (ib > 0) ? (Tb / ib) : Tmin;
+        Tw = (iw > 0) ? (Tw / iw) : Tmax;
         threshold = (unsigned int) (part * Tw + (1.0 - part) * Tb + 0.5);
     }
 
@@ -460,6 +474,27 @@ BinaryImage binarizeImageToDots(
 
     return bw_img;
 }  // binarizeDots
+
+BinaryImage binarizeBMTiled(
+    GrayImage const& src,
+    int const radius,
+    double const coef,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+    GrayImage threshold_map(grayBiModalTiledMap(src, radius, coef));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+
+    return bw_img;
+}
 
 BinaryImage binarizeNiblack(
     GrayImage const& src, int const radius,

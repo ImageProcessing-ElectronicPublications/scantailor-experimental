@@ -159,6 +159,16 @@ IMAGEPROC_EXPORT GrayImage grayMapContrast(
 /**
  * \brief Threshold Map Images:
  */
+IMAGEPROC_EXPORT unsigned int grayBiModalTiledValue(
+    GrayImage const& src,
+    unsigned int const x1,
+    unsigned int const y1,
+    unsigned int const x2,
+    unsigned int const y2);
+IMAGEPROC_EXPORT GrayImage grayBiModalTiledMap(
+    GrayImage const& src,
+    int radius = 50,
+    double k = 0.75);
 IMAGEPROC_EXPORT GrayImage grayNiblackMap(
     GrayImage const& src, int radius = 100, double k = 0.20);
 IMAGEPROC_EXPORT GrayImage graySauvolaMap(
