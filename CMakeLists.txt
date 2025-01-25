@@ -188,14 +188,8 @@ ELSE()
     ENDIF()
 ENDIF()
 
-FIND_PACKAGE(JPEG REQUIRED)
-INCLUDE_DIRECTORIES("${JPEG_INCLUDE_DIR}")
-
 FIND_PACKAGE(ZLIB REQUIRED)
 INCLUDE_DIRECTORIES("${ZLIB_INCLUDE_DIR}")
-
-FIND_PACKAGE(PNG REQUIRED)
-INCLUDE_DIRECTORIES("${PNG_INCLUDE_DIR}")
 
 FIND_PACKAGE(TIFF REQUIRED)
 INCLUDE_DIRECTORIES("${TIFF_INCLUDE_DIR}")
@@ -284,7 +278,7 @@ IF(WIN32)
     LIST(APPEND EXTRA_LIBS winmm imm32 ws2_32 ole32 oleaut32 uuid gdi32 comdlg32 winspool)
 ENDIF()
 
-LIST(APPEND EXTRA_LIBS ${TIFF_LIBRARY} ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${JPEG_LIBRARY})
+LIST(APPEND EXTRA_LIBS ${TIFF_LIBRARY} ${ZLIB_LIBRARY})
 
 SET(MAYBE_QT_OPENGL_MODULE "")
 IF(ENABLE_OPENGL)
@@ -408,15 +402,6 @@ INCLUDE(CPack)
 
 IF(WIN32)
     # Copy some DLLs to the staging dir.
-    
-    find_file(LIBPNG_DLL
-        NAMES libpng.dll libpng16.dll
-        PATHS ${CMAKE_PREFIX_PATH}
-        PATH_SUFFIXES bin lib
-        NO_DEFAULT_PATH)
-    IF(NOT LIBPNG_DLL)
-        message(SEND_ERROR "Could not find LIBPNG dll. You may specify it manually.")
-    ENDIF()
 
     find_file(LIBJPEG_DLL
         NAMES libjpeg.dll jpeg.dll jpeg62.dll
@@ -447,7 +432,7 @@ IF(WIN32)
 
     SET(DLL_DIR "${QT_SRC_DIR}/qtbase/bin")
     COPY_TO_BUILD_DIR(
-        "${LIBPNG_DLL}" "${LIBJPEG_DLL}"
+        "${LIBJPEG_DLL}"
         "${LIBTIFF_DLL}" "${ZLIB_DLL}"
     )
     
