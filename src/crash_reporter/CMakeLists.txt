@@ -43,7 +43,7 @@ IF(ENABLE_CRASH_REPORTER)
     ADD_EXECUTABLE(CrashReporter WIN32 ${crash_reporter_sources} ${ui_sources})
     TARGET_LINK_LIBRARIES(
         CrashReporter Qt5::Widgets Qt5::Xml Qt5::Network
-        ${PNG_LIBRARY} ${JPEG_LIBRARY} winmm imm32 ws2_32
+        winmm imm32 ws2_32
     )
 ENDIF()
 

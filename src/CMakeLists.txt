@@ -81,9 +81,9 @@ SET(
     ImageMetadataLoader.cpp ImageMetadataLoader.h
     TiffReader.cpp TiffReader.h
     TiffWriter.cpp TiffWriter.h
-    PngMetadataLoader.cpp PngMetadataLoader.h
     TiffMetadataLoader.cpp TiffMetadataLoader.h
-    JpegMetadataLoader.cpp JpegMetadataLoader.h
+    fastimage.c fastimage.h
+    FastImageMetadataLoader.cpp FastImageMetadataLoader.h
     ImageLoader.cpp ImageLoader.h
     ErrorWidget.cpp ErrorWidget.h
     OrthogonalRotation.cpp OrthogonalRotation.h

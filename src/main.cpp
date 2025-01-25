@@ -19,9 +19,10 @@
 #include "config.h"
 #include "Application.h"
 #include "MainWindow.h"
-#include "PngMetadataLoader.h"
+//#include "PngMetadataLoader.h"
 #include "TiffMetadataLoader.h"
-#include "JpegMetadataLoader.h"
+//#include "JpegMetadataLoader.h"
+#include "FastImageMetadataLoader.h"
 #include "foundation/MultipleTargetsSupport.h"
 #include <boost/range/adaptor/reversed.hpp>
 #include <QMetaType>
@@ -236,9 +237,10 @@ int main(int argc, char** argv)
     app.setOrganizationDomain("scantailor.sourceforge.net");
     QSettings settings;
 
-    PngMetadataLoader::registerMyself();
+    //PngMetadataLoader::registerMyself();
     TiffMetadataLoader::registerMyself();
-    JpegMetadataLoader::registerMyself();
+    //JpegMetadataLoader::registerMyself();
+    FastImageMetadataLoader::registerMyself();
 
     MainWindow* main_wnd = new MainWindow();
     main_wnd->setAttribute(Qt::WA_DeleteOnClose);

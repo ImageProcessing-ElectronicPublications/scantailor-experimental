@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef JPEGMETADATALOADER_H_
-#define JPEGMETADATALOADER_H_
+#ifndef PNGMETADATALOADER_H_
+#define PNGMETADATALOADER_H_
 
 #include "ImageMetadataLoader.h"
 #include "VirtualFunction.h"
@@ -26,7 +26,7 @@
 class QIODevice;
 class ImageMetadata;
 
-class JpegMetadataLoader : public ImageMetadataLoader
+class FastImageMetadataLoader : public ImageMetadataLoader
 {
 public:
     /**
