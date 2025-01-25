@@ -23,7 +23,6 @@ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,41 +34,44 @@ extern "C" {
 #define FASTIMAGE_APIENTRY
 #endif
 
-enum fastimage_image_format {
-	fastimage_error,
-	fastimage_unknown,
-	fastimage_bmp,
-	fastimage_tga,
-	fastimage_pcx,
-	fastimage_png,
-	fastimage_gif,
-	fastimage_webp,
-	fastimage_heic,
-	fastimage_jpg,
-	fastimage_avif,
-	fastimage_miaf, // Not heic and not avif
-	fastimage_qoi,
-	fastimage_qoy,
-	fastimage_ani,
-	fastimage_ico
+enum fastimage_image_format
+{
+    fastimage_error,
+    fastimage_unknown,
+    fastimage_bmp,
+    fastimage_tga,
+    fastimage_pcx,
+    fastimage_png,
+    fastimage_gif,
+    fastimage_webp,
+    fastimage_heic,
+    fastimage_jpg,
+    fastimage_avif,
+    fastimage_miaf, // Not heic and not avif
+    fastimage_qoi,
+    fastimage_qoy,
+    fastimage_ani,
+    fastimage_ico
 };
 
-typedef struct {
-	int format;
-	size_t width;
-	size_t height;
-	unsigned int channels;
-	unsigned int bitsperpixel;
-	unsigned int palette;
+typedef struct
+{
+    int format;
+    size_t width;
+    size_t height;
+    unsigned int channels;
+    unsigned int bitsperpixel;
+    unsigned int palette;
 } fastimage_image_t;
 
 typedef size_t (FASTIMAGE_APIENTRY * fastimage_readfunc_t)(void *context, size_t size, void *buf);
 typedef bool (FASTIMAGE_APIENTRY * fastimage_seekfunc_t)(void *context, int64_t pos, bool seek_cur);
 
-typedef struct {
-	void *context;
-	fastimage_readfunc_t read;
-	fastimage_seekfunc_t seek;
+typedef struct
+{
+    void *context;
+    fastimage_readfunc_t read;
+    fastimage_seekfunc_t seek;
 } fastimage_reader_t;
 
 extern fastimage_image_t fastimageOpen(const fastimage_reader_t *reader);
@@ -78,4 +80,4 @@ extern fastimage_image_t fastimageOpen(const fastimage_reader_t *reader);
 }
 #endif
 
-#endif
+#endif /* FASTIMAGE_H */
