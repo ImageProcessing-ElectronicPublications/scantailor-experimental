@@ -17,13 +17,6 @@ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 // please make all code changes to this file also in (this)(https://github.com/plzombie/fastimage.c) repository
 
-#if defined(_WIN32)
-#include <Windows.h>
-#else
-#define _LARGEFILE_SOURCE
-#define _LARGEFILE64_SOURCE
-#endif
-
 #include "fastimage.h"
 #include <stdio.h>
 #include <stdlib.h>
