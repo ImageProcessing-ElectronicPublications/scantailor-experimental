@@ -25,28 +25,28 @@ namespace output
 {
 
 BlackKmeansOptions::BlackKmeansOptions()
-    :   m_kmeansCount(0),
-        m_kmeansValueStart(128),
-        m_kmeansSat(0.0),
-        m_kmeansNorm(0.0),
-        m_kmeansBG(0.0),
-        m_coloredMaskCoef(0.0),
-        m_kmeansColorSpace(HSV),
-        m_findBlack(false),
-        m_findWhite(false)
+    : m_kmeansCount(0)
+    , m_kmeansValueStart(128)
+    , m_kmeansSat(0.0)
+    , m_kmeansNorm(0.0)
+    , m_kmeansBG(0.0)
+    , m_coloredMaskCoef(0.0)
+    , m_kmeansColorSpace(HSV)
+    , m_findBlack(false)
+    , m_findWhite(false)
 {
 }
 
 BlackKmeansOptions::BlackKmeansOptions(QDomElement const& el)
-    :   m_kmeansCount(el.attribute("kmeans").toInt()),
-        m_kmeansValueStart(el.attribute("kmeansVal").toInt()),
-        m_kmeansSat(el.attribute("kmeansSat").toDouble()),
-        m_kmeansNorm(el.attribute("kmeansNorm").toDouble()),
-        m_kmeansBG(el.attribute("kmeansBG").toDouble()),
-        m_coloredMaskCoef(el.attribute("coloredMaskCoef").toDouble()),
-        m_kmeansColorSpace(parseKmeansColorSpace(el.attribute("colorspace"))),
-        m_findBlack(el.attribute("findBlack") == "1"),
-        m_findWhite(el.attribute("findWhite") == "1")
+    : m_kmeansCount(el.attribute("kmeans").toInt())
+    , m_kmeansValueStart(el.attribute("kmeansVal").toInt())
+    , m_kmeansSat(el.attribute("kmeansSat").toDouble())
+    , m_kmeansNorm(el.attribute("kmeansNorm").toDouble())
+    , m_kmeansBG(el.attribute("kmeansBG").toDouble())
+    , m_coloredMaskCoef(el.attribute("coloredMaskCoef").toDouble())
+    , m_kmeansColorSpace(parseKmeansColorSpace(el.attribute("colorspace")))
+    , m_findBlack(el.attribute("findBlack") == "1")
+    , m_findWhite(el.attribute("findWhite") == "1")
 {
     if (m_kmeansCount < 0)
     {

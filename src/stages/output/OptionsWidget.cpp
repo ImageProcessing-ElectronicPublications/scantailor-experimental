@@ -97,6 +97,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
     colorFilterSelector->addItem(tr("EdgeDiv"), F_EDGEDIV);
     colorFilterSelector->addItem(tr("Robust"), F_ROBUST);
+    colorFilterSelector->addItem(tr("Comix"), F_COMIX);
     colorFilterSelector->addItem(tr("Engraving"), F_ENGRAVING);
     colorFilterSelector->addItem(tr("Dots 8x8"), F_DOTS8);
     colorFilterSelector->addItem(tr("UnPaper"), F_UNPAPER);
@@ -567,6 +568,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.robustSize());
         colorFilterCoef->setValue(color_options.robustCoef());
         break;
+    case F_COMIX:
+        colorFilterSize->setValue(color_options.comixSize());
+        colorFilterCoef->setValue(color_options.comixCoef());
+        break;
     case F_ENGRAVING:
         colorFilterSize->setValue(color_options.gravureSize());
         colorFilterCoef->setValue(color_options.gravureCoef());
@@ -636,6 +641,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_ROBUST:
         color_options.setRobustSize(value);
         break;
+    case F_COMIX:
+        color_options.setComixSize(value);
+        break;
     case F_ENGRAVING:
         color_options.setGravureSize(value);
         break;
@@ -696,6 +704,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_ROBUST:
         color_options.setRobustCoef(value);
+        break;
+    case F_COMIX:
+        color_options.setComixCoef(value);
         break;
     case F_ENGRAVING:
         color_options.setGravureCoef(value);

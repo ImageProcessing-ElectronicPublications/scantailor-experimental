@@ -1549,6 +1549,122 @@ void grayKnnDenoiserInPlace(
     }
 } // grayKnnDenoiser
 
+int grayMedianValue(
+    GrayImage const& src,
+    unsigned int const x,
+    unsigned int const y,
+    unsigned int const radius)
+{
+    unsigned int const histsize = 256;
+    unsigned int median = histsize / 2;
+    if (src.isNull())
+    {
+        return median;
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    uint8_t const* src_line = src.data();
+    unsigned int const src_stride = src.stride();
+
+    unsigned int const x1 = (x < radius) ? 0 : (x - radius);
+    unsigned int const y1 = (y < radius) ? 0 : (y - radius);
+    unsigned int const x2 = ((x + radius) < w) ? (x + radius) : w;
+    unsigned int const y2 = ((y + radius) < h) ? (y + radius) : h;
+    uint64_t const fsize = (y2 - y1) * (x2 - x1);
+
+    unsigned int const origin = src_line[y * src_stride + x];
+    median = origin;
+    if (fsize > 0)
+    {
+        uint64_t sum = 0, histogram[histsize] = {0};
+        uint64_t histogramdelta[histsize] = {0};
+        uint64_t const fsizemed = (fsize + 1) / 2;
+        src_line += (y1 * src_stride);
+        for (unsigned int yf = y1; yf < y2; yf++)
+        {
+            for (unsigned int xf = x1; xf < x2; xf++)
+            {
+                unsigned char const pixel = src_line[xf];
+                histogram[pixel]++;
+            }
+            src_line += src_stride;
+        }
+
+        median = 0;
+        sum = histogram[median];
+        while (sum < fsizemed)
+        {
+            median++;
+            sum += histogram[median];
+        }
+    }
+
+    return median;
+}  // grayMedianValue
+
+GrayImage grayMedian(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    grayMedianInPlace(dst, radius, coef);
+    return dst;
+} // grayMedian
+
+void grayMedianInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        unsigned int const w = src.width();
+        unsigned int const h = src.height();
+        uint8_t* src_line = src.data();
+        unsigned int const src_stride = src.stride();
+
+        GrayImage gmean = GrayImage(src);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        uint8_t* gmean_line = gmean.data();
+        unsigned int const gmean_stride = gmean.stride();
+
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                int r = 1;
+                float median = origin;
+                float mediannew = grayMedianValue(src, x, y, r);
+                float delta = (origin < mediannew) ? (mediannew - origin) : (origin - mediannew);
+                float deltapre = delta;
+                while ((delta <= (deltapre * 1.6180339887498948482f)) && (r < radius))
+                {
+                    deltapre = delta;
+                    median = mediannew;
+                    r++;
+                    mediannew = grayMedianValue(src, x, y, r);
+                    delta = (origin < mediannew) ? (mediannew - origin) : (origin - mediannew);
+                }
+                float retval = coef * median + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                gmean_line[x] = (uint8_t) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+
+        src = GrayImage(gmean);
+        gmean = GrayImage();
+    }
+} // grayMedianInPlace
+
 GrayImage grayDespeckle(
     GrayImage const& src, int const radius, float const coef)
 {
@@ -1651,7 +1767,6 @@ void grayDespeckleInPlace(
         }
     }
 } // grayDespeckleInPlace
-
 
 GrayImage grayAutoLevel(
     GrayImage const& src, int const radius, float const coef)
@@ -2169,6 +2284,92 @@ void grayBlurInPlace(
         }
     }
 } // grayBlur
+
+GrayImage grayComix(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    grayComixInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayComixInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        uint8_t* src_line = src.data();
+        int const src_stride = src.stride();
+
+        GrayImage gray = GrayImage(src);
+        if (gray.isNull())
+        {
+            return;
+        }
+        uint8_t* gray_line = gray.data();
+        int const gray_stride = gray.stride();
+
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        uint8_t* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                unsigned char const origin = gray_line[x];
+                unsigned char const mean = gmean_line[x];
+                unsigned char const delta = (origin < mean) ? (mean - origin) : (origin - mean);
+                gray_line[x] = delta;
+            }
+            gray_line += gray_stride;
+            gmean_line += gmean_stride;
+        }
+
+        GrayImage grebound = gaussBlur(gray, radius, radius);
+        if (grebound.isNull())
+        {
+            return;
+        }
+        uint8_t* grebound_line = grebound.data();
+        int const grebound_stride = grebound.stride();
+        gray = GrayImage();
+
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+                float const rebound = grebound_line[x];
+                float const delta = mean - origin;
+                float const cre = (delta < 0.0f) ? (delta + rebound) : (delta -  rebound);
+                float const fre = origin + cre;
+
+                float retval = coef * fre + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                src_line[x] = (uint8_t) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+            grebound_line += grebound_stride;
+        }
+        grebound = GrayImage();
+        gmean = GrayImage();
+    }
+} // grayComix
 
 GrayImage graySigma(
     GrayImage const& src, int const radius, float const coef)

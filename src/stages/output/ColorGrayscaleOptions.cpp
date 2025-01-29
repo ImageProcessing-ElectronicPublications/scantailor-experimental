@@ -25,43 +25,45 @@ namespace output
 {
 
 ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
-    :  m_curveCoef(el.attribute("curveCoef").toDouble()),
-       m_sqrCoef(el.attribute("sqrCoef").toDouble()),
-       m_wienerSize(el.attribute("wienerSize").toInt()),
-       m_wienerCoef(el.attribute("wienerCoef").toDouble()),
-       m_autoLevelSize(el.attribute("autoLevelSize").toInt()),
-       m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble()),
-       m_balanceSize(el.attribute("balanceSize").toInt()),
-       m_balanceCoef(el.attribute("balanceCoef").toDouble()),
-       m_overblurSize(el.attribute("overblurSize").toInt()),
-       m_overblurCoef(el.attribute("overblurCoef").toDouble()),
-       m_retinexSize(el.attribute("retinexSize").toInt()),
-       m_retinexCoef(el.attribute("retinexCoef").toDouble()),
-       m_equalizeSize(el.attribute("equalizeSize").toInt()),
-       m_equalizeCoef(el.attribute("equalizeCoef").toDouble()),
-       m_knndRadius(el.attribute("knnDRadius").toInt()),
-       m_knndCoef(el.attribute("knnDenoiser").toDouble()),
-       m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt()),
-       m_cdespeckleCoef(el.attribute("cdespeckle").toDouble()),
-       m_sigmaSize(el.attribute("sigmaSize").toInt()),
-       m_sigmaCoef(el.attribute("sigmaCoef").toDouble()),
-       m_blurSize(el.attribute("blurSize").toInt()),
-       m_blurCoef(el.attribute("blurCoef").toDouble()),
-       m_screenSize(el.attribute("screenSize").toInt()),
-       m_screenCoef(el.attribute("screenCoef").toDouble()),
-       m_edgedivSize(el.attribute("edgedivSize").toInt()),
-       m_edgedivCoef(el.attribute("edgedivCoef").toDouble()),
-       m_robustSize(el.attribute("robustSize").toInt()),
-       m_robustCoef(el.attribute("robustCoef").toDouble()),
-       m_gravureSize(el.attribute("gravureSize").toInt()),
-       m_gravureCoef(el.attribute("gravureCoef").toDouble()),
-       m_dots8Size(el.attribute("dots8Size").toInt()),
-       m_dots8Coef(el.attribute("dots8Coef").toDouble()),
-       m_unPaperIters(el.attribute("unPaperIters").toInt()),
-       m_unPaperCoef(el.attribute("unPaper").toDouble()),
-       m_normalizeCoef(el.attribute("normalizeCoef").toDouble()),
-       m_whiteMargins(el.attribute("whiteMargins") == "1"),
-       m_grayScale(el.attribute("grayScale") == "1")
+    : m_curveCoef(el.attribute("curveCoef").toDouble())
+    , m_sqrCoef(el.attribute("sqrCoef").toDouble())
+    , m_wienerSize(el.attribute("wienerSize").toInt())
+    , m_wienerCoef(el.attribute("wienerCoef").toDouble())
+    , m_autoLevelSize(el.attribute("autoLevelSize").toInt())
+    , m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble())
+    , m_balanceSize(el.attribute("balanceSize").toInt())
+    , m_balanceCoef(el.attribute("balanceCoef").toDouble())
+    , m_overblurSize(el.attribute("overblurSize").toInt())
+    , m_overblurCoef(el.attribute("overblurCoef").toDouble())
+    , m_retinexSize(el.attribute("retinexSize").toInt())
+    , m_retinexCoef(el.attribute("retinexCoef").toDouble())
+    , m_equalizeSize(el.attribute("equalizeSize").toInt())
+    , m_equalizeCoef(el.attribute("equalizeCoef").toDouble())
+    , m_knndRadius(el.attribute("knnDRadius").toInt())
+    , m_knndCoef(el.attribute("knnDenoiser").toDouble())
+    , m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt())
+    , m_cdespeckleCoef(el.attribute("cdespeckle").toDouble())
+    , m_sigmaSize(el.attribute("sigmaSize").toInt())
+    , m_sigmaCoef(el.attribute("sigmaCoef").toDouble())
+    , m_blurSize(el.attribute("blurSize").toInt())
+    , m_blurCoef(el.attribute("blurCoef").toDouble())
+    , m_screenSize(el.attribute("screenSize").toInt())
+    , m_screenCoef(el.attribute("screenCoef").toDouble())
+    , m_edgedivSize(el.attribute("edgedivSize").toInt())
+    , m_edgedivCoef(el.attribute("edgedivCoef").toDouble())
+    , m_robustSize(el.attribute("robustSize").toInt())
+    , m_robustCoef(el.attribute("robustCoef").toDouble())
+    , m_comixSize(el.attribute("comixSize").toInt())
+    , m_comixCoef(el.attribute("comixCoef").toDouble())
+    , m_gravureSize(el.attribute("gravureSize").toInt())
+    , m_gravureCoef(el.attribute("gravureCoef").toDouble())
+    , m_dots8Size(el.attribute("dots8Size").toInt())
+    , m_dots8Coef(el.attribute("dots8Coef").toDouble())
+    , m_unPaperIters(el.attribute("unPaperIters").toInt())
+    , m_unPaperCoef(el.attribute("unPaper").toDouble())
+    , m_normalizeCoef(el.attribute("normalizeCoef").toDouble())
+    , m_whiteMargins(el.attribute("whiteMargins") == "1")
+    , m_grayScale(el.attribute("grayScale") == "1")
 {
     if (m_curveCoef < -1.0 || m_curveCoef > 1.0)
     {
@@ -158,6 +160,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_robustCoef < -1.0 || m_robustCoef > 1.0)
     {
         m_robustCoef = 0.0;
+    }
+    if (m_comixSize < 1)
+    {
+        m_comixSize = 6;
+    }
+    if (m_comixCoef < -1.0 || m_comixCoef > 1.0)
+    {
+        m_comixCoef = 0.0;
     }
     if (m_gravureSize < 1)
     {
@@ -260,6 +270,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("robustSize", m_robustSize);
         el.setAttribute("robustCoef", m_robustCoef);
     }
+    if (m_comixCoef != 0.0)
+    {
+        el.setAttribute("comixSize", m_comixSize);
+        el.setAttribute("comixCoef", m_comixCoef);
+    }
     if (m_gravureCoef != 0.0)
     {
         el.setAttribute("gravureSize", m_gravureSize);
@@ -298,67 +313,139 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
     {
         return false;
     }
-    if ((m_wienerCoef != other.m_wienerCoef) || (m_wienerSize != other.m_wienerSize))
+    if (m_wienerCoef != other.m_wienerCoef)
     {
         return false;
     }
-    if ((m_autoLevelCoef != other.m_autoLevelCoef) || (m_autoLevelSize != other.m_autoLevelSize))
+    if (m_wienerSize != other.m_wienerSize)
     {
         return false;
     }
-    if ((m_balanceCoef != other.m_balanceCoef) || (m_balanceSize != other.m_balanceSize))
+    if (m_autoLevelCoef != other.m_autoLevelCoef)
     {
         return false;
     }
-    if ((m_overblurCoef != other.m_overblurCoef) || (m_overblurSize != other.m_overblurSize))
+    if (m_autoLevelSize != other.m_autoLevelSize)
     {
         return false;
     }
-    if ((m_retinexCoef != other.m_retinexCoef) || (m_retinexSize != other.m_retinexSize))
+    if (m_balanceCoef != other.m_balanceCoef)
     {
         return false;
     }
-    if ((m_equalizeCoef != other.m_equalizeCoef) || (m_equalizeSize != other.m_equalizeSize))
+    if (m_balanceSize != other.m_balanceSize)
     {
         return false;
     }
-    if ((m_knndCoef != other.m_knndCoef) || (m_knndRadius != other.m_knndRadius))
+    if (m_overblurCoef != other.m_overblurCoef)
     {
         return false;
     }
-    if ((m_cdespeckleCoef != other.m_cdespeckleCoef) || (m_cdespeckleRadius != other.m_cdespeckleRadius))
+    if (m_overblurSize != other.m_overblurSize)
     {
         return false;
     }
-    if ((m_sigmaCoef != other.m_sigmaCoef) || (m_sigmaSize != other.m_sigmaSize))
+    if (m_retinexCoef != other.m_retinexCoef)
     {
         return false;
     }
-    if ((m_blurCoef != other.m_blurCoef) || (m_blurSize != other.m_blurSize))
+    if (m_retinexSize != other.m_retinexSize)
     {
         return false;
     }
-    if ((m_screenCoef != other.m_screenCoef) || (m_screenSize != other.m_screenSize))
+    if (m_equalizeCoef != other.m_equalizeCoef)
     {
         return false;
     }
-    if ((m_edgedivCoef != other.m_edgedivCoef) || (m_edgedivSize != other.m_edgedivSize))
+    if (m_equalizeSize != other.m_equalizeSize)
     {
         return false;
     }
-    if ((m_robustCoef != other.m_robustCoef) || (m_robustSize != other.m_robustSize))
+    if (m_knndCoef != other.m_knndCoef)
     {
         return false;
     }
-    if ((m_gravureCoef != other.m_gravureCoef) || (m_gravureSize != other.m_gravureSize))
+    if (m_knndRadius != other.m_knndRadius)
     {
         return false;
     }
-    if ((m_dots8Coef != other.m_dots8Coef) || (m_dots8Size != other.m_dots8Size))
+    if (m_cdespeckleCoef != other.m_cdespeckleCoef)
     {
         return false;
     }
-    if ((m_unPaperCoef != other.m_unPaperCoef) || (m_unPaperIters != other.m_unPaperIters))
+    if (m_cdespeckleRadius != other.m_cdespeckleRadius)
+    {
+        return false;
+    }
+    if (m_sigmaCoef != other.m_sigmaCoef)
+    {
+        return false;
+    }
+    if (m_sigmaSize != other.m_sigmaSize)
+    {
+        return false;
+    }
+    if (m_blurCoef != other.m_blurCoef)
+    {
+        return false;
+    }
+    if (m_blurSize != other.m_blurSize)
+    {
+        return false;
+    }
+    if (m_screenCoef != other.m_screenCoef)
+    {
+        return false;
+    }
+    if (m_screenSize != other.m_screenSize)
+    {
+        return false;
+    }
+    if (m_edgedivCoef != other.m_edgedivCoef)
+    {
+        return false;
+    }
+    if (m_edgedivSize != other.m_edgedivSize)
+    {
+        return false;
+    }
+    if (m_robustCoef != other.m_robustCoef)
+    {
+        return false;
+    }
+    if (m_robustSize != other.m_robustSize)
+    {
+        return false;
+    }
+    if (m_comixCoef != other.m_comixCoef)
+    {
+        return false;
+    }
+    if (m_comixSize != other.m_comixSize)
+    {
+        return false;
+    }
+    if (m_gravureCoef != other.m_gravureCoef)
+    {
+        return false;
+    }
+    if (m_gravureSize != other.m_gravureSize)
+    {
+        return false;
+    }
+    if (m_dots8Coef != other.m_dots8Coef)
+    {
+        return false;
+    }
+    if (m_dots8Size != other.m_dots8Size)
+    {
+        return false;
+    }
+    if (m_unPaperCoef != other.m_unPaperCoef)
+    {
+        return false;
+    }
+    if (m_unPaperIters != other.m_unPaperIters)
     {
         return false;
     }

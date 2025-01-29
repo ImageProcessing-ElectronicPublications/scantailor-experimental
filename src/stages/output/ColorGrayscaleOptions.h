@@ -30,43 +30,46 @@ class ColorGrayscaleOptions
 {
 public:
     ColorGrayscaleOptions()
-        : m_curveCoef(0.5),
-          m_sqrCoef(0.0),
-          m_wienerSize(3),
-          m_wienerCoef(0.0),
-          m_autoLevelSize(10),
-          m_autoLevelCoef(0.0),
-          m_balanceSize(23),
-          m_balanceCoef(0.0),
-          m_overblurSize(49),
-          m_overblurCoef(0.0),
-          m_retinexSize(31),
-          m_retinexCoef(0.0),
-          m_equalizeSize(6),
-          m_equalizeCoef(0.0),
-          m_knndRadius(7),
-          m_knndCoef(0.0),
-          m_cdespeckleRadius(2),
-          m_cdespeckleCoef(0.0),
-          m_sigmaSize(29),
-          m_sigmaCoef(0.0),
-          m_blurSize(1),
-          m_blurCoef(0.0),
-          m_screenSize(5),
-          m_screenCoef(0.0),
-          m_edgedivSize(13),
-          m_edgedivCoef(0.0),
-          m_robustSize(10),
-          m_robustCoef(0.0),
-          m_gravureSize(15),
-          m_gravureCoef(0.0),
-          m_dots8Size(17),
-          m_dots8Coef(0.0),
-          m_unPaperIters(4),
-          m_unPaperCoef(0.0),
-          m_normalizeCoef(0.5),
-          m_whiteMargins(false),
-          m_grayScale(false) {}
+        : m_curveCoef(0.5)
+        , m_sqrCoef(0.0)
+        , m_wienerSize(3)
+        , m_wienerCoef(0.0)
+        , m_autoLevelSize(10)
+        , m_autoLevelCoef(0.0)
+        , m_balanceSize(23)
+        , m_balanceCoef(0.0)
+        , m_overblurSize(49)
+        , m_overblurCoef(0.0)
+        , m_retinexSize(31)
+        , m_retinexCoef(0.0)
+        , m_equalizeSize(6)
+        , m_equalizeCoef(0.0)
+        , m_knndRadius(7)
+        , m_knndCoef(0.0)
+        , m_cdespeckleRadius(2)
+        , m_cdespeckleCoef(0.0)
+        , m_sigmaSize(29)
+        , m_sigmaCoef(0.0)
+        , m_blurSize(1)
+        , m_blurCoef(0.0)
+        , m_screenSize(5)
+        , m_screenCoef(0.0)
+        , m_edgedivSize(13)
+        , m_edgedivCoef(0.0)
+        , m_robustSize(10)
+        , m_robustCoef(0.0)
+        , m_comixSize(6)
+        , m_comixCoef(0.0)
+        , m_gravureSize(15)
+        , m_gravureCoef(0.0)
+        , m_dots8Size(17)
+        , m_dots8Coef(0.0)
+        , m_unPaperIters(4)
+        , m_unPaperCoef(0.0)
+        , m_normalizeCoef(0.5)
+        , m_whiteMargins(false)
+        , m_grayScale(false)
+    {}
 
     ColorGrayscaleOptions(QDomElement const& el);
 
@@ -311,6 +314,23 @@ public:
         m_robustCoef = val;
     }
 
+    int comixSize() const
+    {
+        return m_comixSize;
+    }
+    void setComixSize(int val)
+    {
+        m_comixSize = val;
+    }
+    double comixCoef() const
+    {
+        return m_comixCoef;
+    }
+    void setComixCoef(double val)
+    {
+        m_comixCoef = val;
+    }
+
     int gravureSize() const
     {
         return m_gravureSize;
@@ -422,6 +442,8 @@ private:
     double m_edgedivCoef;
     int m_robustSize;
     double m_robustCoef;
+    int m_comixSize;
+    double m_comixCoef;
     int m_gravureSize;
     double m_gravureCoef;
     int m_dots8Size;

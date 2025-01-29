@@ -287,6 +287,23 @@ IMAGEPROC_EXPORT void grayKnnDenoiserInPlace(
     float coef = 0.0f);
 
 /**
+ * @brief Median GrayImage.
+ */
+IMAGEPROC_EXPORT int grayMedianValue(
+    GrayImage const& src,
+    unsigned int const x,
+    unsigned int const y,
+    unsigned int radius = 2);
+IMAGEPROC_EXPORT GrayImage grayMedian(
+    GrayImage const& src,
+    int radius = 2,
+    float coef = 0.0f);
+IMAGEPROC_EXPORT void grayMedianInPlace(
+    GrayImage& src,
+    int radius = 2,
+    float coef = 0.0f);
+
+/**
  * @brief Despeckle GrayImage.
  */
 IMAGEPROC_EXPORT GrayImage grayDespeckle(
@@ -384,6 +401,18 @@ IMAGEPROC_EXPORT GrayImage grayBlur(
 IMAGEPROC_EXPORT void grayBlurInPlace(
     GrayImage& src,
     int radius = 1,
+    float coef = 0.0f);
+
+/**
+ * @brief Comix filter GrayImage based GaussBlur.
+ */
+IMAGEPROC_EXPORT GrayImage grayComix(
+    GrayImage const& src,
+    int radius = 6,
+    float coef = 0.0f);
+IMAGEPROC_EXPORT void grayComixInPlace(
+    GrayImage& src,
+    int radius = 6,
     float coef = 0.0f);
 
 /**

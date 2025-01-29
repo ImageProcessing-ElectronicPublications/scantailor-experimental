@@ -100,7 +100,8 @@ public:
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         QImage const& orig_image,
         CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-        ZoneSet const& picture_zones, ZoneSet const& fill_zones,
+        ZoneSet const& picture_zones,
+        ZoneSet const& fill_zones,
         imageproc::BinaryImage* out_auto_picture_mask = nullptr,
         imageproc::BinaryImage* out_speckles_image = nullptr,
         DebugImages* dbg = nullptr);
@@ -137,7 +138,8 @@ private:
         TaskStatus const& status,
         std::shared_ptr<AcceleratableOperations> const& accel_ops,
         imageproc::GrayImage const& input_for_estimation,
-        imageproc::GrayImage const& input_for_normalisation, double norm_coef,
+        imageproc::GrayImage const& input_for_normalisation,
+        double norm_coef,
         boost::optional<QPolygonF> const& estimation_region_of_intereset,
         DebugImages* dbg);
 
@@ -146,39 +148,51 @@ private:
         DebugImages* dbg);
 
     imageproc::BinaryImage estimateBinarizationMask(
-        TaskStatus const& status, imageproc::GrayImage const& gray_source,
+        TaskStatus const& status,
+        imageproc::GrayImage const& gray_source,
         DebugImages* dbg, float coef = 0.0f) const;
 
     void BinaryImageXOR(
-        imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, imageproc::BWColor const color) const;
+        imageproc::BinaryImage& bw_mask,
+        imageproc::BinaryImage& bw_content,
+        imageproc::BWColor const color) const;
 
     void modifyBinarizationMask(
-        imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, ZoneSet const& zones,
+        imageproc::BinaryImage& bw_mask,
+        imageproc::BinaryImage& bw_content,
+        ZoneSet const& zones,
         std::function<QPointF(QPointF const&)> const& orig_to_output) const;
 
     void modifyColoredMask(
-        imageproc::BinaryImage& coloredMask, ZoneSet const& zones,
+        imageproc::BinaryImage& coloredMask,
+        ZoneSet const& zones,
         std::function<QPointF(QPointF const&)> const& orig_to_output) const;
 
     imageproc::BinaryThreshold adjustThreshold(
         imageproc::BinaryThreshold threshold) const;
 
     imageproc::BinaryImage binarize(
-        QImage const& image, imageproc::BinaryImage const& mask) const;
+        QImage const& image,
+        imageproc::BinaryImage const& mask) const;
 
     void colored(
-        QImage& image, ColorGrayscaleOptions const& color_options);
+        QImage& image,
+        ColorGrayscaleOptions const& color_options);
 
     void maybeDespeckleInPlace(
-        imageproc::BinaryImage& image, double despeckle_factor,
+        imageproc::BinaryImage& image,
+        double despeckle_factor,
         imageproc::BinaryImage* out_speckles_img,
-        TaskStatus const& status, DebugImages* dbg) const;
+        TaskStatus const& status,
+        DebugImages* dbg) const;
 
     static imageproc::GrayImage smoothToGrayscale(
-        QImage const& src, std::shared_ptr<AcceleratableOperations> const& accel_ops);
+        QImage const& src,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops);
 
-    static void morphologicalSmoothInPlace(imageproc::BinaryImage& img,
-                                           std::shared_ptr<AcceleratableOperations> const& accel_ops);
+    static void morphologicalSmoothInPlace(
+        imageproc::BinaryImage& img,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops);
 
     static void generatePatternsForAllDirections(
         std::vector<Grid<char>>& sink, char const* const pattern,
@@ -186,27 +200,40 @@ private:
 
     static QSize calcLocalWindowSize();
 
-    static unsigned char calcDominantBackgroundGrayLevel(QImage const& img);
+    static unsigned char calcDominantBackgroundGrayLevel(
+        QImage const& img);
 
-    static QImage normalizeIllumination(QImage const& gray_input, DebugImages* dbg);
+    static QImage normalizeIllumination(
+        QImage const& gray_input,
+        DebugImages* dbg);
 
     QImage transformAndNormalizeIllumination(
-        QImage const& gray_input, DebugImages* dbg,
+        QImage const& gray_input,
+        DebugImages* dbg,
         QImage const* morph_background = 0) const;
 
     QImage transformAndNormalizeIllumination2(
-        QImage const& gray_input, DebugImages* dbg,
+        QImage const& gray_input,
+        DebugImages* dbg,
         QImage const* morph_background = 0) const;
 
-    void applyFillZonesInPlace(QImage& img, ZoneSet const& zones,
-                               std::function<QPointF(QPointF const&)> const& orig_to_output) const;
+    void applyFillZonesInPlace(
+        QImage& img,
+        ZoneSet const& zones,
+        std::function<QPointF(QPointF const&)> const& orig_to_output) const;
 
-    void applyFillZonesInPlace(QImage& img, ZoneSet const& zones) const;
+    void applyFillZonesInPlace(
+        QImage& img,
+        ZoneSet const& zones) const;
 
-    void applyFillZonesInPlace(imageproc::BinaryImage& img, ZoneSet const& zones,
-                               std::function<QPointF(QPointF const&)> const& orig_to_output) const;
+    void applyFillZonesInPlace(
+        imageproc::BinaryImage& img,
+        ZoneSet const& zones,
+        std::function<QPointF(QPointF const&)> const& orig_to_output) const;
 
-    void applyFillZonesInPlace(imageproc::BinaryImage& img, ZoneSet const& zones) const;
+    void applyFillZonesInPlace(
+        imageproc::BinaryImage& img,
+        ZoneSet const& zones) const;
 
     std::shared_ptr<imageproc::AbstractImageTransform const> m_ptrImageTransform;
 

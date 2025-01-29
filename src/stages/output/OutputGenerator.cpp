@@ -164,7 +164,8 @@ void reserveBlackAndWhite(QImage& img)
  */
 template<typename MixedPixel>
 void combineMixed(
-    QImage& mixed, BinaryImage const& bw_content,
+    QImage& mixed,
+    BinaryImage const& bw_content,
     BinaryImage const& bw_mask)
 {
     MixedPixel* mixed_line = reinterpret_cast<MixedPixel*>(mixed.bits());
@@ -213,13 +214,14 @@ void combineMixed(
 
 OutputGenerator::OutputGenerator(
     std::shared_ptr<AbstractImageTransform const> const& image_transform,
-    QRectF const& content_rect, QRectF const& outer_rect,
+    QRectF const& content_rect,
+    QRectF const& outer_rect,
     Params const& params)
-    :   m_ptrImageTransform(image_transform)
-    ,   m_colorParams(params.colorParams())
-    ,   m_outRect(outer_rect.toRect())
-    ,   m_contentRect(content_rect.toRect())
-    ,   m_despeckleFactor(params.despeckleFactor())
+    : m_ptrImageTransform(image_transform)
+    , m_colorParams(params.colorParams())
+    , m_outRect(outer_rect.toRect())
+    , m_contentRect(content_rect.toRect())
+    , m_despeckleFactor(params.despeckleFactor())
 {
     // An empty outer_rect may be a result of all pages having no content box.
     if (m_outRect.width() <= 0)
@@ -273,7 +275,8 @@ OutputGenerator::process(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     QImage const& orig_image,
     CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-    ZoneSet const& picture_zones, ZoneSet const& fill_zones,
+    ZoneSet const& picture_zones,
+    ZoneSet const& fill_zones,
     imageproc::BinaryImage* out_auto_picture_mask,
     imageproc::BinaryImage* out_speckles_image,
     DebugImages* const dbg)
@@ -755,7 +758,8 @@ OutputGenerator::normalizeIlluminationGray(
     TaskStatus const& status,
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     GrayImage const& input_for_normalisation,
-    GrayImage const& input_for_estimation, double norm_coef,
+    GrayImage const& input_for_estimation,
+    double norm_coef,
     boost::optional<QPolygonF> const& estimation_region_of_intereset,
     DebugImages* const dbg)
 {
@@ -826,8 +830,10 @@ OutputGenerator::normalizeIlluminationGray(
 
 imageproc::BinaryImage
 OutputGenerator::estimateBinarizationMask(
-    TaskStatus const& status, GrayImage const& gray_source,
-    DebugImages* const dbg, float const coef) const
+    TaskStatus const& status,
+    GrayImage const& gray_source,
+    DebugImages* const dbg,
+    float const coef) const
 {
     QSize const downscaled_size(gray_source.size().scaled(1600, 1600, Qt::KeepAspectRatio));
     GrayImage downscaled(scaleToGray(gray_source, downscaled_size));
@@ -889,7 +895,9 @@ OutputGenerator::estimateBinarizationMask(
 
 void
 OutputGenerator::BinaryImageXOR(
-    imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, imageproc::BWColor const color) const
+    imageproc::BinaryImage& bw_mask,
+    imageproc::BinaryImage& bw_content,
+    imageproc::BWColor const color) const
 {
     uint32_t* bw_mask_line = bw_mask.data();
     int const bw_mask_stride = bw_mask.wordsPerLine();
@@ -941,7 +949,9 @@ OutputGenerator::BinaryImageXOR(
 
 void
 OutputGenerator::modifyBinarizationMask(
-    imageproc::BinaryImage& bw_mask, imageproc::BinaryImage& bw_content, ZoneSet const& zones,
+    imageproc::BinaryImage& bw_mask,
+    imageproc::BinaryImage& bw_content,
+    ZoneSet const& zones,
     std::function<QPointF(QPointF const&)> const& orig_to_output) const
 {
     typedef PictureLayerProperty PLP;
@@ -1017,7 +1027,8 @@ OutputGenerator::modifyBinarizationMask(
 
 void
 OutputGenerator::modifyColoredMask(
-    imageproc::BinaryImage& colored_mask, ZoneSet const& zones,
+    imageproc::BinaryImage& colored_mask,
+    ZoneSet const& zones,
     std::function<QPointF(QPointF const&)> const& orig_to_output) const
 {
     typedef PictureLayerProperty PLP;
@@ -1044,7 +1055,8 @@ OutputGenerator::convertToRGBorRGBA(QImage const& src)
 
 GrayImage
 OutputGenerator::detectPictures(
-    TaskStatus const& status, GrayImage const& downscaled_input,
+    TaskStatus const& status,
+    GrayImage const& downscaled_input,
     DebugImages* const dbg)
 {
     // downscaled_input is expected to be ~300 DPI.
@@ -1141,7 +1153,8 @@ OutputGenerator::detectPictures(
 
 GrayImage
 OutputGenerator::smoothToGrayscale(
-    QImage const& src, std::shared_ptr<AcceleratableOperations> const& accel_ops)
+    QImage const& src,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops)
 {
     int const min_dim = std::min(src.width(), src.height());
     int window;
@@ -1353,6 +1366,8 @@ OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_optio
 
         grayRobustInPlace(gout, color_options.robustSize(), color_options.robustCoef());
 
+        grayComixInPlace(gout, color_options.comixSize(), color_options.comixCoef());
+
         grayGravureInPlace(gout, color_options.gravureSize(), color_options.gravureCoef());
 
         grayDots8InPlace(gout, color_options.dots8Size(), color_options.dots8Coef());
@@ -1383,8 +1398,11 @@ OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_optio
  */
 void
 OutputGenerator::maybeDespeckleInPlace(
-    imageproc::BinaryImage& image, double const despeckle_factor,
-    BinaryImage* out_speckles_img, TaskStatus const& status, DebugImages* dbg) const
+    imageproc::BinaryImage& image,
+    double const despeckle_factor,
+    BinaryImage* out_speckles_img,
+    TaskStatus const& status,
+    DebugImages* dbg) const
 {
     if (out_speckles_img)
     {
@@ -1409,7 +1427,8 @@ OutputGenerator::maybeDespeckleInPlace(
 
 void
 OutputGenerator::morphologicalSmoothInPlace(
-    BinaryImage& bin_img, std::shared_ptr<AcceleratableOperations> const& accel_ops)
+    BinaryImage& bin_img,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops)
 {
     std::vector<Grid<char>> patterns;
 
@@ -1486,8 +1505,10 @@ OutputGenerator::morphologicalSmoothInPlace(
 
 void
 OutputGenerator::generatePatternsForAllDirections(
-    std::vector<Grid<char>>& sink, char const* const pattern,
-    int const pattern_width, int const pattern_height)
+    std::vector<Grid<char>>& sink,
+    char const* const pattern,
+    int const pattern_width,
+    int const pattern_height)
 {
     // Rotations are clockwise.
     Grid<char> pattern0(pattern_width, pattern_height);
@@ -1589,7 +1610,8 @@ OutputGenerator::calcDominantBackgroundGrayLevel(QImage const& img)
 
 void
 OutputGenerator::applyFillZonesInPlace(
-    QImage& img, ZoneSet const& zones,
+    QImage& img,
+    ZoneSet const& zones,
     std::function<QPointF(QPointF const&)> const& orig_to_output) const
 {
     if (zones.empty())
@@ -1634,7 +1656,8 @@ OutputGenerator::applyFillZonesInPlace(QImage& img, ZoneSet const& zones) const
 
 void
 OutputGenerator::applyFillZonesInPlace(
-    imageproc::BinaryImage& img, ZoneSet const& zones,
+    imageproc::BinaryImage& img,
+    ZoneSet const& zones,
     std::function<QPointF(QPointF const&)> const& orig_to_output) const
 {
     if (zones.empty())
@@ -1656,7 +1679,8 @@ OutputGenerator::applyFillZonesInPlace(
  */
 void
 OutputGenerator::applyFillZonesInPlace(
-    imageproc::BinaryImage& img, ZoneSet const& zones) const
+    imageproc::BinaryImage& img,
+    ZoneSet const& zones) const
 {
     applyFillZonesInPlace(img, zones, origToOutputMapper());
 }

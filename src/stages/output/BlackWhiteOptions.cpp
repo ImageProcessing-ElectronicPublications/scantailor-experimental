@@ -25,34 +25,34 @@ namespace output
 {
 
 BlackWhiteOptions::BlackWhiteOptions()
-    :   m_thresholdMethod(T_OTSU),
-        m_morphology(true),
-        m_negate(false),
-        m_dimmingColoredCoef(0.0),
-        m_thresholdAdjustment(0),
-        m_boundLower(0),
-        m_boundUpper(255),
-        m_thresholdRadius(50),
-        m_thresholdCoef(0.3),
-        m_autoPictureCoef(0.0),
-        m_autoPictureOff(false),
-        m_pictureToDots8(false)
+    : m_thresholdMethod(T_OTSU)
+    , m_morphology(true)
+    , m_negate(false)
+    , m_dimmingColoredCoef(0.0)
+    , m_thresholdAdjustment(0)
+    , m_boundLower(0)
+    , m_boundUpper(255)
+    , m_thresholdRadius(50)
+    , m_thresholdCoef(0.3)
+    , m_autoPictureCoef(0.0)
+    , m_autoPictureOff(false)
+    , m_pictureToDots8(false)
 {
 }
 
 BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
-    :   m_thresholdMethod(parseThresholdMethod(el.attribute("thresholdMethod"))),
-        m_morphology(el.attribute("morphology") == "1"),
-        m_negate(el.attribute("negate") == "1"),
-        m_dimmingColoredCoef(el.attribute("dimmingColoredCoef").toDouble()),
-        m_thresholdAdjustment(el.attribute("thresholdAdj").toInt()),
-        m_boundLower(el.attribute("boundLower").toInt()),
-        m_boundUpper(el.attribute("boundUpper").toInt()),
-        m_thresholdRadius(el.attribute("thresholdRadius").toInt()),
-        m_thresholdCoef(el.attribute("thresholdCoef").toDouble()),
-        m_autoPictureCoef(el.attribute("autoPictureCoef").toDouble()),
-        m_autoPictureOff(el.attribute("autoPictureOff") == "1"),
-        m_pictureToDots8(el.attribute("pictureToDots8") == "1")
+    : m_thresholdMethod(parseThresholdMethod(el.attribute("thresholdMethod")))
+    , m_morphology(el.attribute("morphology") == "1")
+    , m_negate(el.attribute("negate") == "1")
+    , m_dimmingColoredCoef(el.attribute("dimmingColoredCoef").toDouble())
+    , m_thresholdAdjustment(el.attribute("thresholdAdj").toInt())
+    , m_boundLower(el.attribute("boundLower").toInt())
+    , m_boundUpper(el.attribute("boundUpper").toInt())
+    , m_thresholdRadius(el.attribute("thresholdRadius").toInt())
+    , m_thresholdCoef(el.attribute("thresholdCoef").toDouble())
+    , m_autoPictureCoef(el.attribute("autoPictureCoef").toDouble())
+    , m_autoPictureOff(el.attribute("autoPictureOff") == "1")
+    , m_pictureToDots8(el.attribute("pictureToDots8") == "1")
 {
     if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
     {
