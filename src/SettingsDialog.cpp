@@ -138,9 +138,10 @@ SettingsDialog::accept()
             m_pOpenCLPlugin->selectDevice(std::string(device.data(), device.size()));
         }
 #endif
-    
+
         QString stylesheetFilePath = ui.stylesheetCombo->currentData().toString();
-        if (stylesheetFilePath != m_oldStylesheetFilePath) {
+        if (stylesheetFilePath != m_oldStylesheetFilePath)
+        {
             settings.setValue("settings/stylesheet", stylesheetFilePath);
         }
     }
@@ -172,7 +173,7 @@ void
 SettingsDialog::saveOldSettings()
 {
     QSettings settings;
-    
+
     m_oldStylesheetFilePath = settings.value("settings/stylesheet", "").toString();
 }
 
@@ -197,10 +198,11 @@ SettingsDialog::setupStylesheetsCombo()
     stylesheetPaths.removeDuplicates();
     stylesheetPaths.sort();
 
-    for (const QString& stylesheetPath : stylesheetPaths) {
+    for (const QString& stylesheetPath : stylesheetPaths)
+    {
         QFileInfo stylesheetFileInfo(stylesheetPath);
         ui.stylesheetCombo->addItem(
-            stylesheetFileInfo.baseName(), 
+            stylesheetFileInfo.baseName(),
             stylesheetFileInfo.filePath());
     }
 

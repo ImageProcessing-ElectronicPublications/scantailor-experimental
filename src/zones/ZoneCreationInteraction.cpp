@@ -35,16 +35,16 @@ ZoneCreationInteraction::ZoneCreationInteraction(
     ZoneInteractionContext& context, InteractionState& interaction)
     :   m_rContext(context),
         m_dragHandler(context.imageView(), [](InteractionState const&)
-    {
-        return true;
-    }), m_dragWatcher(m_dragHandler),
-        m_zoomHandler(context.imageView(), [](InteractionState const&)
-    {
-        return true;
-    }), m_ptrSpline(new EditableSpline),
-        m_nextVertexImagePos_mid1(m_nextVertexImagePos),
-        m_nextVertexImagePos_mid2(m_nextVertexImagePos),
-        m_rectangularZoneType(false)
+{
+    return true;
+}), m_dragWatcher(m_dragHandler),
+m_zoomHandler(context.imageView(), [](InteractionState const&)
+{
+    return true;
+}), m_ptrSpline(new EditableSpline),
+m_nextVertexImagePos_mid1(m_nextVertexImagePos),
+m_nextVertexImagePos_mid2(m_nextVertexImagePos),
+m_rectangularZoneType(false)
 {
     QPointF const screen_mouse_pos(
         m_rContext.imageView().mapFromGlobal(QCursor::pos()) + QPointF(0.5, 0.5)

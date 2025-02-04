@@ -225,7 +225,7 @@ DewarpingImageTransform::toAffine(
     QRectF const model_domain(
         -dewarped_rect.topLeft(),
         QSizeF(m_intrinsicScaleX * m_userScaleX,
-        m_intrinsicScaleY * m_userScaleY)
+               m_intrinsicScaleY * m_userScaleY)
     );
     auto const minmax_densities = calcMinMaxDensities();
 
@@ -285,8 +285,8 @@ DewarpingImageTransform::materialize(
     assert(!target_rect.isEmpty());
 
     QRectF model_domain(0, 0,
-        m_intrinsicScaleX * m_userScaleX,
-        m_intrinsicScaleY * m_userScaleY);
+                        m_intrinsicScaleX * m_userScaleX,
+                        m_intrinsicScaleY * m_userScaleY);
     model_domain.translate(-target_rect.topLeft());
     auto const minmax_densities = calcMinMaxDensities();
 
@@ -487,7 +487,7 @@ DewarpingImageTransform::constrainCropArea(QPolygonF const& orig_crop_area) cons
     double const max_density = minmax_densities.second;
 
     ConstrainedCropAreaBuilder builder(orig_crop_area,
-        min_density, max_density, m_dewarper);
+                                       min_density, max_density, m_dewarper);
 
     builder.sampleCrvXRange(0.0 + 0.3, 0.0 - 0.6, -1.0);
     builder.sampleCrvXRange(1.0 - 0.3, 1.0 + 0.6, 1.0);
@@ -521,7 +521,7 @@ DewarpingImageTransform::calcMinMaxDensities() const
     auto const minmax_densities = std::minmax_element(
                                       std::begin(corner_densities), std::end(corner_densities)
                                   );
-/*    return std::make_pair(0.6 * *minmax_densities.first, 1.4 * *minmax_densities.second); // Tulon */
+    /*    return std::make_pair(0.6 * *minmax_densities.first, 1.4 * *minmax_densities.second); // Tulon */
     return std::make_pair(0.5 * *minmax_densities.first, 2.0 * *minmax_densities.second); // zvezdochiot (2025-01-11)
 }
 

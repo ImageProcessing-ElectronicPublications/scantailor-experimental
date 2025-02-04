@@ -25,7 +25,8 @@ static const QString::SplitBehavior QStringSkipEmptyParts = QString::SkipEmptyPa
 static const Qt::SplitBehavior QStringSkipEmptyParts = Qt::SkipEmptyParts;
 #endif
 
-static inline int QLineIntersect(const QLineF &line1, const QLineF &line2, QPointF *intersectionPoint) {
+static inline int QLineIntersect(const QLineF &line1, const QLineF &line2, QPointF *intersectionPoint)
+{
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     return line1.intersect(line2, intersectionPoint);
 #else
@@ -36,13 +37,14 @@ static inline int QLineIntersect(const QLineF &line1, const QLineF &line2, QPoin
 static inline QPointF QWheelEventPosF(const QWheelEvent *event)
 {
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-	return event->posF();
+    return event->posF();
 #else
-	return event->position();
+    return event->position();
 #endif
 }
 
-static inline Qt::Orientation QWheelEventOrientation(QWheelEvent* event) {
+static inline Qt::Orientation QWheelEventOrientation(QWheelEvent* event)
+{
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return event->orientation();
 #else
@@ -53,9 +55,10 @@ static inline Qt::Orientation QWheelEventOrientation(QWheelEvent* event) {
     else
         return Qt::Vertical;
 #endif
-    }
-    
-static inline int QWheelEventDelta(QWheelEvent* event) {
+}
+
+static inline int QWheelEventDelta(QWheelEvent* event)
+{
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return event->delta();
 #else
@@ -66,15 +69,15 @@ static inline int QWheelEventDelta(QWheelEvent* event) {
     else
         return angle_delta.y();
 #endif
-    }
+}
 
 template <class T>
 static inline QVector<T> QVectorFromStdVector(const std::vector<T> &vector)
 {
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-	return QVector<T>::fromStdVector(vector);
+    return QVector<T>::fromStdVector(vector);
 #else
-	return QVector<T>(vector.begin(), vector.end());
+    return QVector<T>(vector.begin(), vector.end());
 #endif
 }
 
@@ -82,7 +85,7 @@ static inline qint64 QDateTimeToSecsSinceEpoch(const QDateTime &datetime)
 {
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     uint t = datetime.toTime_t();
-    
+
     if(t == (uint)-1) return -1;
     else return t;
 #else

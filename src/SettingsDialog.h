@@ -41,13 +41,13 @@ signals:
     void stylesheetChanged(const QString stylesheetFilePath);
 private slots:
     void accept();
-    
+
     void reject();
 
     void on_stylesheetCombo_currentIndexChanged(int index);
 private:
     void saveOldSettings();
-    
+
     void setupStylesheetsCombo();
 private:
     Ui::SettingsDialog ui;

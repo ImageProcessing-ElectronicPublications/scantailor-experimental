@@ -561,7 +561,7 @@ GrayImage grayBiModalTiledMap(
                 double const t22 = tlocal_line[y2 * tlocal_stride + x2];
 
                 double bml = dy2 * (dx2 * t11 + dx1 * t12)
-                           + dy1 * (dx2 * t21 + dx1 * t22);
+                             + dy1 * (dx2 * t21 + dx1 * t22);
                 double t = coef * bml + (1.0 - coef) * bmg + 0.5;
                 t = (t < 0.0) ? 0.0 : ((t < 255.0) ? t : 255.0);
                 gray_line[x] = (uint8_t) t;

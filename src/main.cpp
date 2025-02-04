@@ -190,14 +190,16 @@ int main(int argc, char** argv)
         }
         absolute_path += QChar('/');
 
-        if(!found_translation) {
+        if(!found_translation)
+        {
             if (translator.load(absolute_path+translation))
             {
                 found_translation = true;
             }
         }
 
-        if(!found_translation_qtbase) {
+        if(!found_translation_qtbase)
+        {
             if (translator_qtbase.load(absolute_path+translation_qtbase))
             {
                 found_translation_qtbase = true;

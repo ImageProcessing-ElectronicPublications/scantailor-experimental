@@ -86,7 +86,8 @@ NewOpenProjectPanel::addRecentProject(QString const& file_path)
     }
 
     const int max_length = 30;
-    if (base_name.length() > max_length) {
+    if (base_name.length() > max_length)
+    {
         base_name.truncate(max_length);
         base_name.append("...");
     }
@@ -96,7 +97,7 @@ NewOpenProjectPanel::addRecentProject(QString const& file_path)
 
     button->setToolTip(file_path);
     recentProjectsGroup->layout()->addWidget(button);
-    
+
     connect(
         button, SIGNAL(clicked()),
         this, SLOT(recentProjectButtonClicked())

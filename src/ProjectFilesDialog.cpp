@@ -706,7 +706,7 @@ ProjectFilesDialog::FileList::remove(QItemSelection const& selection)
     );
 
     int rows_removed = 0;
-    
+
     for (auto it = sorted_ranges.begin(); it != sorted_ranges.end(); it++)
     {
         int const first = it->first - rows_removed;

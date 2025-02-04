@@ -691,18 +691,18 @@ OutputGenerator::process(
                 }
 
                 mse_kmeans = hsvKMeansInPlace(
-                    dst,
-                    transformed_image,
-                    bw_content,
-                    bw_mask,
-                    black_kmeans_options.kmeansCount(),
-                    black_kmeans_options.kmeansValueStart(),
-                    color_space_val,
-                    black_kmeans_options.kmeansSat(),
-                    black_kmeans_options.kmeansNorm(),
-                    black_kmeans_options.kmeansBG(),
-                    black_kmeans_options.getFindBlack(),
-                    black_kmeans_options.getFindWhite());
+                                 dst,
+                                 transformed_image,
+                                 bw_content,
+                                 bw_mask,
+                                 black_kmeans_options.kmeansCount(),
+                                 black_kmeans_options.kmeansValueStart(),
+                                 color_space_val,
+                                 black_kmeans_options.kmeansSat(),
+                                 black_kmeans_options.kmeansNorm(),
+                                 black_kmeans_options.kmeansBG(),
+                                 black_kmeans_options.getFindBlack(),
+                                 black_kmeans_options.getFindWhite());
                 /* deprecated: maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology()); */
             }
         }

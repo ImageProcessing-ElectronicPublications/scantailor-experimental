@@ -143,7 +143,7 @@ CylindricalSurfaceDewarper::mapGeneratrix(double crv_x, State& state) const
     double const pln_straight_line_y = pln_straight_line_frac * 0.5
                                        + (1.0 - pln_straight_line_frac) * m_plnStraightLineY;
     double const img_directrix12f_proj = (1.0 - pln_straight_line_y) * img_directrix1_proj
-                                       + pln_straight_line_y * img_directrix2_proj;
+                                         + pln_straight_line_y * img_directrix2_proj;
     double const img_directrix12fd_proj = img_directrix12f_proj - pln_straight_line_y;
     //double const curve_coef = 1.0 + 0.5 * (m_curveCorrect - 2.0);
     double const curve_coef = (m_curveCorrect < 2.0) ? (1.0 / (3.0 - m_curveCorrect)) : (m_curveCorrect - 1.0);
@@ -201,7 +201,7 @@ CylindricalSurfaceDewarper::mapToDewarpedSpace(QPointF const& img_pt, State& sta
     double const pln_straight_line_y = pln_straight_line_frac * 0.5
                                        + (1.0 - pln_straight_line_frac) * m_plnStraightLineY;
     double const img_directrix12f_proj = (1.0 - pln_straight_line_y) * img_directrix1_proj
-                                       + pln_straight_line_y * img_directrix2_proj;
+                                         + pln_straight_line_y * img_directrix2_proj;
     double const img_directrix12fd_proj = img_directrix12f_proj - pln_straight_line_y;
     //double const curve_coef = 1.0 + 0.5 * (m_curveCorrect - 2.0);
     double const curve_coef = (m_curveCorrect < 2.0) ? (1.0 / (3.0 - m_curveCorrect)) : (m_curveCorrect - 1.0);

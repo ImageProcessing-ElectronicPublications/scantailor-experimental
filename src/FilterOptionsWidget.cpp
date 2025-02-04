@@ -21,12 +21,12 @@
 bool FilterOptionsWidget::disconnectAll(void)
 {
     bool result = true;
-    
+
     if(!disconnect(this, SIGNAL(FilterOptionsWidget::reloadRequested()), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(FilterOptionsWidget::invalidateThumbnail(PageId const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(FilterOptionsWidget::invalidateThumbnail(PageInfo const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(FilterOptionsWidget::invalidateAllThumbnails()), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(FilterOptionsWidget::goToPage(PageId const&)), 0, 0)) result = false;
-    
+
     return result;
 }

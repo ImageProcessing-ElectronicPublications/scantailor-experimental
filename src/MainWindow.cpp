@@ -502,11 +502,13 @@ MainWindow::createBatchProcessingWidget()
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* ev)
 {
-    if (obj == filterOptions && ev->type() == QEvent::Resize) {
+    if (obj == filterOptions && ev->type() == QEvent::Resize)
+    {
         scrollArea->setMinimumWidth(filterOptions->minimumSizeHint().width());
     }
 
-    if (obj == thumbView && ev->type() == QEvent::Resize) {
+    if (obj == thumbView && ev->type() == QEvent::Resize)
+    {
         dockWidgetThumbnails->setFixedWidth(dockWidgetThumbnails->sizeHint().width());
     }
 
@@ -1670,7 +1672,7 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
     QString stylesheet = stylesheetFile.readAll();
 
     stylesheet.replace("@path_to_pics@", STYLESHEETS_DIR);
-    
+
     setStyleSheet(stylesheet);
 }
 

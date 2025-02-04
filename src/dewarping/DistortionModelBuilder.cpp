@@ -249,16 +249,16 @@ DistortionModelBuilder::tryBuildModel(DebugImages* dbg, QImage const* dbg_backgr
         }
     }
 
-/*
-    // Full RANCAS (zvezdochiot)
-    for (int i = 0; i < (num_curves - 1); i++)
-    {
-        for (int j = i + 1; j < num_curves; j++)
+    /*
+        // Full RANCAS (zvezdochiot)
+        for (int i = 0; i < (num_curves - 1); i++)
         {
-            ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
+            for (int j = i + 1; j < num_curves; j++)
+            {
+                ransac.buildAndAssessModel(&ordered_curves[i], &ordered_curves[j]);
+            }
         }
-    }
-*/
+    */
     if (dbg && dbg_background)
     {
         dbg->add(visualizeTrimmedPolylines(*dbg_background, ordered_curves), "trimmed_polylines");
