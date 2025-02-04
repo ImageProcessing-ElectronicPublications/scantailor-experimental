@@ -1548,8 +1548,8 @@ std::unique_ptr<ThumbnailSequence::CompositeItem>
 ThumbnailSequence::Impl::getCompositeItem(
     Item const* item, PageInfo const& page_info)
 {
-    std::unique_ptr<QGraphicsItem> thumb(std::move(getThumbnail(page_info)));
-    std::unique_ptr<LabelGroup> label_group(std::move(getLabelGroup(page_info)));
+    std::unique_ptr<QGraphicsItem> thumb = getThumbnail(page_info);
+    std::unique_ptr<LabelGroup> label_group = getLabelGroup(page_info);
     std::unique_ptr<CompositeItem> composite(
         new CompositeItem(*this, std::move(thumb), std::move(label_group))
     );
