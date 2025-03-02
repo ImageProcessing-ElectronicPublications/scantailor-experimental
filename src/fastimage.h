@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 #ifdef _WIN32
-#define FASTIMAGE_APIENTRY cdecl
+#define FASTIMAGE_APIENTRY __cdecl
 #else
 #define FASTIMAGE_APIENTRY
 #endif
