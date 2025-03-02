@@ -205,8 +205,8 @@ TiffWriter::writeImage(QIODevice& device, QImage const& image)
         return false;
     }
 
-    TIFFSetField(tif.handle(), TIFFTAG_IMAGEWIDTH, uint32(image.width()));
-    TIFFSetField(tif.handle(), TIFFTAG_IMAGELENGTH, uint32(image.height()));
+    TIFFSetField(tif.handle(), TIFFTAG_IMAGEWIDTH, uint32_t(image.width()));
+    TIFFSetField(tif.handle(), TIFFTAG_IMAGELENGTH, uint32_t(image.height()));
     TIFFSetField(tif.handle(), TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT);
     TIFFSetField(tif.handle(), TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
     TIFFSetField(tif.handle(), TIFFTAG_XRESOLUTION, TIFF_DEFAULT_DPI);
@@ -240,7 +240,7 @@ bool
 TiffWriter::writeBitonalOrIndexed8Image(
     TiffHandle const& tif, QImage const& image)
 {
-    TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16(1));
+    TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16_t(1));
 
     uint16_t compression = COMPRESSION_LZW;
     uint16_t bits_per_sample = 8;
@@ -331,9 +331,9 @@ TiffWriter::writeRGB32Image(
 {
     assert(image.format() == QImage::Format_RGB32);
 
-    TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16(3));
+    TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16_t(3));
     TIFFSetField(tif.handle(), TIFFTAG_COMPRESSION, COMPRESSION_LZW);
-    TIFFSetField(tif.handle(), TIFFTAG_BITSPERSAMPLE, uint16(8));
+    TIFFSetField(tif.handle(), TIFFTAG_BITSPERSAMPLE, uint16_t(8));
     TIFFSetField(tif.handle(), TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
 
     int const width = image.width();
@@ -371,9 +371,9 @@ TiffWriter::writeARGB32Image(
 {
     assert(image.format() == QImage::Format_ARGB32);
 
-    TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16(4));
+    TIFFSetField(tif.handle(), TIFFTAG_SAMPLESPERPIXEL, uint16_t(4));
     TIFFSetField(tif.handle(), TIFFTAG_COMPRESSION, COMPRESSION_LZW);
-    TIFFSetField(tif.handle(), TIFFTAG_BITSPERSAMPLE, uint16(8));
+    TIFFSetField(tif.handle(), TIFFTAG_BITSPERSAMPLE, uint16_t(8));
     TIFFSetField(tif.handle(), TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
 
     int const width = image.width();
