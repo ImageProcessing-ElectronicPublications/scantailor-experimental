@@ -68,6 +68,13 @@ IF(ENABLE_OPENCL)
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     )
 
+    IF(WIN32)
+        SET_TARGET_PROPERTIES(opencl_plugin
+            PROPERTIES
+            PREFIX ""
+        )
+    ENDIF()
+
     INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION lib/scantailor-experimental)
 
     IF(NOT STE_NO_TESTS STREQUAL "ON")
