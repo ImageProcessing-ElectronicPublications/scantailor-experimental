@@ -35,6 +35,7 @@
 #include "ProjectWriter.h"
 #include "CacheDrivenTask.h"
 #include "../../Utils.h"
+#include "orders/OrderByModeProvider.h"
 #include "orders/OrderByMSEfiltersProvider.h"
 #include "orders/OrderByBWoriginProvider.h"
 #include "orders/OrderByBWdestinationProvider.h"
@@ -48,8 +49,8 @@ namespace output
 
 Filter::Filter(
     PageSelectionAccessor const& page_selection_accessor)
-    : m_ptrSettings(new Settings),
-      m_selectedPageOrder(0)
+    : m_ptrSettings(new Settings)
+    , m_selectedPageOrder(0)
 {
     if (CommandLine::get().isGui())
     {
@@ -61,11 +62,13 @@ Filter::Filter(
     typedef PageOrderOption::ProviderPtr ProviderPtr;
 
     ProviderPtr const default_order;
+    ProviderPtr const order_by_mode(new OrderByModeProvider(m_ptrSettings));
     ProviderPtr const order_by_mse_filters(new OrderByMSEfiltersProvider(m_ptrSettings));
     ProviderPtr const order_by_bw_origin(new OrderByBWoriginProvider(m_ptrSettings));
     ProviderPtr const order_by_bw_destination(new OrderByBWdestinationProvider(m_ptrSettings));
     ProviderPtr const order_by_bw_delta(new OrderByBWdeltaProvider(m_ptrSettings));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Natural order"), default_order));
+    m_pageOrderOptions.push_back(PageOrderOption(tr("Order by Mode"), order_by_mode));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by MSE filters"), order_by_mse_filters));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by BW origin"), order_by_bw_origin));
     m_pageOrderOptions.push_back(PageOrderOption(tr("Order by BW destination"), order_by_bw_destination));

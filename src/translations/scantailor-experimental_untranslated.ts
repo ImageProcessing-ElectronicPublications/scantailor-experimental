@@ -2258,32 +2258,37 @@ You should remove them from the project.</source>
 <context>
     <name>output::Filter</name>
     <message>
-        <location filename="../stages/output/Filter.cpp" line="82"/>
+        <location filename="../stages/output/Filter.cpp" line="85"/>
         <source>Output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/Filter.cpp" line="68"/>
+        <location filename="../stages/output/Filter.cpp" line="70"/>
         <source>Natural order</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/Filter.cpp" line="69"/>
-        <source>Order by MSE filters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/Filter.cpp" line="70"/>
-        <source>Order by BW origin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../stages/output/Filter.cpp" line="71"/>
-        <source>Order by BW destination</source>
+        <source>Order by Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/Filter.cpp" line="72"/>
+        <source>Order by MSE filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="73"/>
+        <source>Order by BW origin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="74"/>
+        <source>Order by BW destination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="75"/>
         <source>Order by BW delta</source>
         <translation type="unfinished"></translation>
     </message>
