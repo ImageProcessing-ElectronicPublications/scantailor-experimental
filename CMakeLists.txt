@@ -404,7 +404,7 @@ IF(WIN32)
     # Copy some DLLs to the staging dir.
 
     find_file(LIBJPEG_DLL
-        NAMES libjpeg.dll jpeg.dll jpeg62.dll
+        NAMES libjpeg.dll jpeg.dll jpeg62.dll jpeg-62.dll libjpeg-62.dll
         PATHS ${CMAKE_PREFIX_PATH}
         PATH_SUFFIXES bin lib
         NO_DEFAULT_PATH)
@@ -422,7 +422,7 @@ IF(WIN32)
     ENDIF()
 
     find_file(ZLIB_DLL
-        NAMES zdll.dll zlib.dll zlib1.dll z.dll
+        NAMES zdll.dll zlib.dll zlib1.dll z.dll libzlib.dll
         PATHS ${CMAKE_PREFIX_PATH}
         PATH_SUFFIXES bin lib
         NO_DEFAULT_PATH)
