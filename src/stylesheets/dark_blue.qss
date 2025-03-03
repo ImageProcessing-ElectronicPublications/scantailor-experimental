@@ -54,6 +54,15 @@ QSlider::groove
     border-radius: 0.12em;
 }
 
+/** Borders - Checked **/
+
+QPushButton:checked
+{
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+}
+
 /** Borders - Focus **/
 
 QComboBox QListView,
@@ -121,6 +130,23 @@ QTableView,
 QTreeView
 {
     border-color: #646464;
+}
+
+/* Colors - Borders - Checked */
+
+QPushButton:checked
+{
+    border-color: #40A0F0;
+}
+
+QPushButton:checked:disabled
+{
+    border-color: #3070B0;
+}
+
+QPushButton:checked:hover
+{
+    border-color: #70B0F0;
 }
 
 /* Colors - Borders - Disabled */
