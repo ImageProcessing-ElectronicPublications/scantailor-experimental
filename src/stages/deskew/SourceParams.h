@@ -35,19 +35,19 @@ public:
      */
     SourceParams();
 
-    SourceParams(double const& focus, bool const& photo);
+    SourceParams(double const& fov, bool const& photo);
 
     SourceParams(QDomElement const& el);
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-    double focus() const
+    double fov() const
     {
-        return m_focus;
+        return m_fov;
     }
-    void setFocus(double focus_value)
+    void setFov(double fov_value)
     {
-        m_focus = focus_value;
+        m_fov= fov_value;
     }
 
     bool photo() const
@@ -64,7 +64,7 @@ public:
     bool operator!=(SourceParams const& other) const;
 
 private:
-    double m_focus;
+    double m_fov;
     bool m_photo;
 };
 

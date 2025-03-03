@@ -61,8 +61,8 @@ OptionsWidget::OptionsWidget(
         this, SLOT(photoToggled(bool))
     );
     connect(
-        ui.focusSpinBox, SIGNAL(valueChanged(double)),
-        this, SLOT(focusSpinBoxChanged(double))
+        ui.fovSpinBox, SIGNAL(valueChanged(double)),
+        this, SLOT(fovSpinBoxChanged(double))
     );
     connect(
         ui.applySourceBtn, SIGNAL(clicked()),
@@ -348,9 +348,9 @@ OptionsWidget::postUpdateUI(Params const& page_params)
     {
         bool const photo = page_params.sourceParams().photo();
         ui.photoCheckBox->setChecked(photo);
-        double const focus = page_params.sourceParams().focus();
-        ui.focusSpinBox->setValue(focus);
-        ui.focusSpinBox->setEnabled(photo);
+        double const fov = page_params.sourceParams().fov();
+        ui.fovSpinBox->setValue(fov);
+        ui.fovSpinBox->setEnabled(photo);
         ui.sourcePanel->setVisible( true );
     }
     else
@@ -440,18 +440,18 @@ OptionsWidget::photoToggled(bool const checked)
 
     m_pageParams.sourceParams().setPhoto(checked);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
-    ui.focusSpinBox->setEnabled(checked);
+    ui.fovSpinBox->setEnabled(checked);
 }
 
 void
-OptionsWidget::focusSpinBoxChanged(double const value)
+OptionsWidget::fovSpinBoxChanged(double const value)
 {
     if (m_ignoreSignalsFromUiControls)
     {
         return;
     }
 
-    m_pageParams.sourceParams().setFocus(value);
+    m_pageParams.sourceParams().setFov(value);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
 }
 

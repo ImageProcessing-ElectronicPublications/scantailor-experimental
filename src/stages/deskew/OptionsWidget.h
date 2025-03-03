@@ -79,7 +79,7 @@ private slots:
 
     void photoToggled(bool checked);
 
-    void focusSpinBoxChanged(double value);
+    void fovSpinBoxChanged(double value);
 
     void showApplySourceDialog();
 

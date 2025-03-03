@@ -25,13 +25,13 @@ namespace deskew
 {
 
 SourceParams::SourceParams()
-    : m_focus(1.4)
+    : m_fov(0.7)
     , m_photo(false)
 {
 }
 
-SourceParams::SourceParams(double const& focus, bool const& photo)
-    : m_focus(focus)
+SourceParams::SourceParams(double const& fov, bool const& photo)
+    : m_fov(fov)
     , m_photo(photo)
 {
 }
@@ -39,8 +39,8 @@ SourceParams::SourceParams(double const& focus, bool const& photo)
 SourceParams::SourceParams(QDomElement const& el)
     : m_photo(el.attribute("photo") == "1")
 {
-    double focus = el.attribute("focus").toDouble();
-    m_focus = (focus < 0.0) ? 0.0 : focus;
+    double fov = el.attribute("fov").toDouble();
+    m_fov = (fov < 0.0) ? 0.0 : fov;
 }
 
 QDomElement
@@ -48,7 +48,7 @@ SourceParams::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
     el.setAttribute("photo", (m_photo) ? "1" : "0");
-    el.setAttribute("focus", m_focus);
+    el.setAttribute("fov", m_fov);
     return el;
 }
 
@@ -59,7 +59,7 @@ SourceParams::operator==(SourceParams const& other) const
     {
         return false;
     }
-    if (m_focus != other.m_focus)
+    if (m_fov != other.m_fov)
     {
         return false;
     }

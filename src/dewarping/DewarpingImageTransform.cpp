@@ -119,14 +119,14 @@ DewarpingImageTransform::DewarpingImageTransform(
     QPolygonF const& orig_crop_area,
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
-    double const& focus,
+    double const& fov,
     DepthPerception const& depth_perception,
     DepthPerception const& curve_correct,
     DepthPerception const& curve_angle)
     : m_origSize(orig_size)
     , m_topPolyline(top_curve)
     , m_bottomPolyline(bottom_curve)
-    , m_focus(focus)
+    , m_fov(fov)
     , m_depthPerception(depth_perception)
     , m_curveCorrect(curve_correct)
     , m_curveAngle(curve_angle)
@@ -157,7 +157,7 @@ DewarpingImageTransform::fingerprint() const
     hash << "DewarpingImageTransform";
     hash << m_origSize
          << m_origCropArea
-         << m_focus
+         << m_fov
          << m_depthPerception.value()
          << m_curveCorrect.value()
          << m_curveAngle.value();
@@ -369,12 +369,12 @@ DewarpingImageTransform::setupIntrinsicScale()
     Vector2d const bottom_left(toVec(m_bottomPolyline.front()));
     Vector2d const bottom_right(toVec(m_bottomPolyline.back()));
 
-    if (m_focus > 0.0)
+    if (m_fov > 0.0)
     {
         double const width = m_origSize.width();
         double const height = m_origSize.height();
         double const wh = (width < height) ? width : height;
-        double const focus = m_focus * wh;
+        double const focus = wh / m_fov;
         double const pcx = width * 0.5;
         double const pcy = height * 0.5;
 
