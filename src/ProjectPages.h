@@ -20,7 +20,6 @@
 #define PROJECT_PAGES_H_
 
 #include "NonCopyable.h"
-#include "RefCountable.h"
 #include "ImageMetadata.h"
 #include "ImageId.h"
 #include "PageId.h"
@@ -28,6 +27,7 @@
 #include "PageView.h"
 #include "BeforeOrAfter.h"
 #include "VirtualFunction.h"
+#include <QAtomicInt>
 #include <QObject>
 #include <QMutex>
 #include <QString>
@@ -45,7 +45,7 @@ class AbstractRelinker;
 class QDomElement;
 class QSize;
 
-class ProjectPages : public QObject, public RefCountable
+class ProjectPages : public QObject
 {
     Q_OBJECT
     DECLARE_NON_COPYABLE(ProjectPages)
@@ -62,6 +62,19 @@ public:
                  Pages pages, Qt::LayoutDirection layout_direction);
 
     virtual ~ProjectPages();
+
+    void ref() const
+    {
+        m_refCounter.fetchAndAddRelaxed(1);
+    }
+
+    void unref() const
+    {
+        if (m_refCounter.fetchAndAddRelease(-1) == 1)
+        {
+            delete this;
+        }
+    }
 
     Qt::LayoutDirection layoutDirection() const;
 
@@ -167,6 +180,7 @@ private:
 
     PageInfo unremovePageImpl(PageId const& page_id, bool& modified);
 
+    mutable QAtomicInt m_refCounter;
     mutable QMutex m_mutex;
     std::vector<ImageDesc> m_images;
     PageId::SubPage m_subPagesInOrder[2];
