@@ -365,7 +365,9 @@ FILE(GLOB TRANSLATION_FILES src/translations/scantailor-experimental_*.ts)
 FILE(GLOB CR_TRANSLATION_FILES src/translations/crashreporter_*.ts)
 
 FINALIZE_TRANSLATION_SET(scantailor-experimental ${TRANSLATION_FILES})
-FINALIZE_TRANSLATION_SET(crashreporter ${CR_TRANSLATION_FILES})
+IF(ENABLE_CRASH_REPORTER)
+    FINALIZE_TRANSLATION_SET(crashreporter ${CR_TRANSLATION_FILES})
+ENDIF()
 UPDATE_TRANSLATIONS_TARGET(update_translations scantailor-experimental crashreporter)
 
 SET(ts_files ${TRANSLATION_FILES})
