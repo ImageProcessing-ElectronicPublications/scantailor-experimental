@@ -20,7 +20,8 @@
 #define OPENCL_UTILS_H_
 
 #include <QRect>
-#include <CL/cl2.hpp>
+#include <CL/cl.h>
+#include <CL/opencl.hpp>
 #include <cstddef>
 #include <vector>
 

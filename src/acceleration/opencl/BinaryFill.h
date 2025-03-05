@@ -22,7 +22,7 @@
 #include "OpenCLGrid.h"
 #include "imageproc/BWColor.h"
 #include <QRect>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <cstdint>
 #include <vector>
 

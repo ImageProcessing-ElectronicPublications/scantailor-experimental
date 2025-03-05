@@ -22,7 +22,8 @@
 #include "Grid.h"
 #include <QSize>
 #include <QRect>
-#include <CL/cl2.hpp>
+#include <CL/cl.h>
+#include <CL/opencl.hpp>
 
 namespace opencl
 {
