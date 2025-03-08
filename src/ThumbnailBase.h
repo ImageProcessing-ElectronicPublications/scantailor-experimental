@@ -135,7 +135,6 @@ private:
     QTransform m_postTransform;
 
     boost::shared_ptr<LoadCompletionHandler> m_ptrCompletionHandler;
-    bool m_extendedClipArea;
 };
 
 #endif

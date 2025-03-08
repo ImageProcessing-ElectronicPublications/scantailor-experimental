@@ -83,7 +83,6 @@ private:
     DespeckleState m_despeckleState;
     IntrusivePtr<TaskCancelHandle> m_ptrCancelHandle;
     std::unique_ptr<DebugImagesImpl> m_ptrDbg;
-    DespeckleLevel m_despeckleLevel;
     double m_despeckleFactor;
 };
 
