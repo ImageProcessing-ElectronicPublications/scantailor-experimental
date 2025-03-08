@@ -70,7 +70,7 @@ public:
 
     void setBridged(bool bridged)
     {
-        m_sentinel.setBridged(true);
+        m_sentinel.setBridged(bridged);
     }
 
     QPolygonF toPolygon() const;
