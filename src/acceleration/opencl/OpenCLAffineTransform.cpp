@@ -172,18 +172,18 @@ QImage affineTransform(
     int idx = 0;
     kernel.setArg(idx++, src_image);
     kernel.setArg(idx++, dst_image);
-    kernel.setArg(idx++, cl_float2{(float)inv_xform.m11(), (float)inv_xform.m12()});
-    kernel.setArg(idx++, cl_float2{(float)inv_xform.m21(), (float)inv_xform.m22()});
-    kernel.setArg(idx++, cl_float2{(float)inv_xform.dx(), (float)inv_xform.dy()});
-    kernel.setArg(idx++, cl_float2{(float)unit_size.width(), (float)unit_size.height()});
+    kernel.setArg(idx++, cl_float2{{(float)inv_xform.m11(), (float)inv_xform.m12()}});
+    kernel.setArg(idx++, cl_float2{{(float)inv_xform.m21(), (float)inv_xform.m22()}});
+    kernel.setArg(idx++, cl_float2{{(float)inv_xform.dx(), (float)inv_xform.dy()}});
+    kernel.setArg(idx++, cl_float2{{(float)unit_size.width(), (float)unit_size.height()}});
     kernel.setArg(idx++, cl_int(outside_pixels.flags()));
     kernel.setArg(idx++, cl_float4
-    {
+    {{
         (float)qRed(outside_pixels.rgba()) / 255.f,
         (float)qGreen(outside_pixels.rgba()) / 255.f,
         (float)qBlue(outside_pixels.rgba()) / 255.f,
         (float)qAlpha(outside_pixels.rgba()) / 255.f
-    });
+    }});
 
     command_queue.enqueueNDRangeKernel(
         kernel,

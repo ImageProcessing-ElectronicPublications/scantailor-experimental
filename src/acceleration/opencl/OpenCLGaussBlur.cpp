@@ -77,7 +77,7 @@ void horizontalPass(
     kernel.setArg(idx++, dst_grid.offset());
     kernel.setArg(idx++, dst_grid.stride());
     kernel.setArg(idx++, cl_int(1));
-    kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+    kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
     kernel.setArg(idx++, m1);
     kernel.setArg(idx++, m2);
     kernel.setArg(idx++, m3);
@@ -121,7 +121,7 @@ void verticalPass(
     kernel.setArg(idx++, dst_grid.offset());
     kernel.setArg(idx++, cl_int(1));
     kernel.setArg(idx++, dst_grid.stride());
-    kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+    kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
     kernel.setArg(idx++, m1);
     kernel.setArg(idx++, m2);
     kernel.setArg(idx++, m3);
@@ -309,7 +309,7 @@ void verticallyTraversedSkewedPassInPlace(
         kernel.setArg(idx++, cl_int(min_x_offset));
         kernel.setArg(idx++, cl_int(max_x_offset));
         kernel.setArg(idx++, cl_float(dx));
-        kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+        kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
         kernel.setArg(idx++, m1);
         kernel.setArg(idx++, m2);
         kernel.setArg(idx++, m3);
@@ -439,7 +439,7 @@ void horizontallyTraversedSkewedPassInPlace(
         kernel.setArg(idx++, cl_int(min_y_offset));
         kernel.setArg(idx++, cl_int(max_y_offset));
         kernel.setArg(idx++, cl_float(dy));
-        kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+        kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
         kernel.setArg(idx++, m1);
         kernel.setArg(idx++, m2);
         kernel.setArg(idx++, m3);

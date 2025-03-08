@@ -144,7 +144,7 @@ cl_uint2 computeLeftRightEdgeMasks(QRect const& pixel_rect)
         right_mask = left_mask;
     }
 
-    return cl_uint2{left_mask, right_mask};
+    return cl_uint2{{left_mask, right_mask}};
 }
 
 } // namespace opencl

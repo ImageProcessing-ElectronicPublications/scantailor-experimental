@@ -257,14 +257,14 @@ QImage dewarp(
         kernel.setArg(idx++, cl_float(model_domain_top));
         kernel.setArg(idx++, cl_float(model_y_scale));
         kernel.setArg(idx++, cl_float4
-        {
+        {{
             (float)background_color.redF(), (float)background_color.greenF(),
             (float)background_color.blueF(), (float)background_color.alphaF()
-        });
+        }});
         kernel.setArg(idx++, cl_float2
-        {
+        {{
             (float)min_mapping_area.width(), (float)min_mapping_area.height()
-        });
+        }});
 
         command_queue.enqueueNDRangeKernel(
             kernel,
