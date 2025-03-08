@@ -177,7 +177,7 @@ std::pair<OpenCLGrid<float>, OpenCLGrid<uint8_t>> textFilterBank(
             kernel.setArg(idx++, dir_map_grid.buffer());
             kernel.setArg(idx++, dir_map_grid.offset());
             kernel.setArg(idx++, dir_map_grid.stride());
-            kernel.setArg(idx++, cl_int2{shoulder_i.x(), shoulder_i.y()});
+            kernel.setArg(idx++, cl_int2{{shoulder_i.x(), shoulder_i.y()}});
             kernel.setArg(idx++, cl_uchar(dir_idx));
 
             command_queue.enqueueNDRangeKernel(

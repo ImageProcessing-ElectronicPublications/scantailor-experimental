@@ -167,7 +167,6 @@ GrayImage grayMapDeviation(
             src_line += src_stride;
         }
 
-        double max_deviation = 0;
         for (int y = 0; y < h; y++)
         {
             int const top = ((y - radius) < 0) ? 0 : (y - radius);
@@ -979,7 +978,7 @@ GrayImage grayMScaleMap(
     unsigned int whcp, l, i, j, blsz, rsz;
     double immean, kover, sensitivity, sensdiv, senspos, sensinv;
     unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
-    unsigned int maskbl, maskover, tim, threshold = 0;
+    unsigned int maskbl, maskover, tim;
     unsigned long int idx;
 
     whcp = (h + w) >> 1;
@@ -1472,7 +1471,6 @@ void grayKnnDenoiserInPlace(
     {
         float const threshold_weight = 0.02f;
         float const threshold_lerp = 0.66f;
-        float const noise_eps = 0.0000001f;
         float const noise_lerpc = 0.16f;
 
         int const w = src.width();
@@ -1578,7 +1576,6 @@ int grayMedianValue(
     if (fsize > 0)
     {
         uint64_t sum = 0, histogram[histsize] = {0};
-        uint64_t histogramdelta[histsize] = {0};
         uint64_t const fsizemed = (fsize + 1) / 2;
         src_line += (y1 * src_stride);
         for (unsigned int yf = y1; yf < y2; yf++)
@@ -2096,7 +2093,6 @@ void grayRetinexInPlace(
                 float const mean = 1.0f + gmean_line[x];
                 float const frac = origin / mean;
                 float const retinex = 127.5f * frac + 0.5f;
-                float const target = (retinex < 0.0f) ? 0.0f : (retinex < 255.0f) ? retinex : 255.0f;
 
                 gmean_line[x] = (uint8_t) retinex;
             }

@@ -25,7 +25,7 @@
 #include <QSize>
 #include <QRect>
 #include <QPoint>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/test/unit_test.hpp>
@@ -75,8 +75,6 @@ BOOST_AUTO_TEST_CASE(test_rop_correctness)
         {
             OpenCLGrid<uint32_t> const src_grid(binaryImageToOpenCLGrid(orig_src, command_queue));
             OpenCLGrid<uint32_t> const dst_grid(binaryImageToOpenCLGrid(orig_dst, command_queue));
-
-            BWColor const fill_color = dist4(rng) & 1 ? BLACK : WHITE;
 
             int offset[6];
             for (int i = 0; i < 6; ++i)

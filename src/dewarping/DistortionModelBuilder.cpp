@@ -501,8 +501,7 @@ try
     double total_error = 0;
     for (TracedCurve const& curve : m_rAllCurves)
     {
-        size_t const polyline_size = curve.trimmedPolyline.size();
-        assert(polyline_size > 0); // Guaranteed by addHorizontalCurve().
+        assert(curve.trimmedPolyline.size() > 0); // Guaranteed by addHorizontalCurve().
 
         // We want to penalize the line both for being not straight and also
         // for being non-horizontal. The penalty metric we use is:
@@ -718,29 +717,7 @@ DistortionModelBuilder::visualizeModel(
                 painter.drawPolyline(polyline);
             }
         }
-
-        int const num_control_points = curve.extendedSpline.numControlPoints();
         QRectF rect(0, 0, stroke_width, stroke_width);
-#if 0
-        // Draw junction points.
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(junction_point_brush);
-        for (int i = 0; i < num_control_points; ++i)
-        {
-            double const t = curve.extendedSpline.controlPointIndexToT(i);
-            rect.moveCenter(curve.extendedSpline.pointAt(t));
-            painter.drawEllipse(rect);
-        }
-
-        // Draw control points.
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(control_point_brush);
-        for (int i = 0; i < num_control_points; ++i)
-        {
-            rect.moveCenter(curve.extendedSpline.controlPointPosition(i));
-            painter.drawEllipse(rect);
-        }
-#endif
         // Draw original polyline knots.
         painter.setPen(Qt::NoPen);
         painter.setBrush(polyline_knot_brush);

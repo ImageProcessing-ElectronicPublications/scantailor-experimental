@@ -77,7 +77,7 @@ void horizontalPass(
     kernel.setArg(idx++, dst_grid.offset());
     kernel.setArg(idx++, dst_grid.stride());
     kernel.setArg(idx++, cl_int(1));
-    kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+    kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
     kernel.setArg(idx++, m1);
     kernel.setArg(idx++, m2);
     kernel.setArg(idx++, m3);
@@ -121,7 +121,7 @@ void verticalPass(
     kernel.setArg(idx++, dst_grid.offset());
     kernel.setArg(idx++, cl_int(1));
     kernel.setArg(idx++, dst_grid.stride());
-    kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+    kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
     kernel.setArg(idx++, m1);
     kernel.setArg(idx++, m2);
     kernel.setArg(idx++, m3);
@@ -309,7 +309,7 @@ void verticallyTraversedSkewedPassInPlace(
         kernel.setArg(idx++, cl_int(min_x_offset));
         kernel.setArg(idx++, cl_int(max_x_offset));
         kernel.setArg(idx++, cl_float(dx));
-        kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+        kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
         kernel.setArg(idx++, m1);
         kernel.setArg(idx++, m2);
         kernel.setArg(idx++, m3);
@@ -439,7 +439,7 @@ void horizontallyTraversedSkewedPassInPlace(
         kernel.setArg(idx++, cl_int(min_y_offset));
         kernel.setArg(idx++, cl_int(max_y_offset));
         kernel.setArg(idx++, cl_float(dy));
-        kernel.setArg(idx++, cl_float4{p.B, p.a1, p.a2, p.a3});
+        kernel.setArg(idx++, cl_float4{{p.B, p.a1, p.a2, p.a3}});
         kernel.setArg(idx++, m1);
         kernel.setArg(idx++, m2);
         kernel.setArg(idx++, m3);
@@ -524,8 +524,7 @@ OpenCLGrid<float> gaussBlur(
     // transpose() -> verticalPass() -> transpose()
     // provided we have fast local memory. On CPUs and integrated GPUs
     // it's not worth doing though.
-    if (device.getInfo<CL_DEVICE_HOST_UNIFIED_MEMORY>() == CL_TRUE ||
-            device.getInfo<CL_DEVICE_LOCAL_MEM_TYPE>() == CL_GLOBAL)
+    if (device.getInfo<CL_DEVICE_LOCAL_MEM_TYPE>() == CL_GLOBAL)
     {
 
         horizontalPass(command_queue, program, src_grid, dst_grid, h_sigma, &events);
@@ -584,8 +583,7 @@ OpenCLGrid<float> anisotropicGaussBlur(
         // transpose() -> verticalPass() -> transpose()
         // provided we have fast local memory. On CPUs and integrated GPUs
         // it's not worth doing though.
-        if (device.getInfo<CL_DEVICE_HOST_UNIFIED_MEMORY>() == CL_TRUE ||
-                device.getInfo<CL_DEVICE_LOCAL_MEM_TYPE>() == CL_GLOBAL)
+        if (device.getInfo<CL_DEVICE_LOCAL_MEM_TYPE>() == CL_GLOBAL)
         {
 
             cl::Buffer dst_buffer(
@@ -655,8 +653,7 @@ OpenCLGrid<float> anisotropicGaussBlur(
         // transpose() -> verticallyTraversedSkewedPassInPlace() -> transpose()
         // provided we have fast local memory. On CPUs and integrated GPUs
         // it's not worth doing though.
-        if (device.getInfo<CL_DEVICE_HOST_UNIFIED_MEMORY>() == CL_TRUE ||
-                device.getInfo<CL_DEVICE_LOCAL_MEM_TYPE>() == CL_GLOBAL)
+        if (device.getInfo<CL_DEVICE_LOCAL_MEM_TYPE>() == CL_GLOBAL)
         {
 
             horizontallyTraversedSkewedPassInPlace(

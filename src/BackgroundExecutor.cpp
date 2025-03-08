@@ -39,7 +39,7 @@ private:
 class BackgroundExecutor::Impl : public QThread
 {
 public:
-    Impl(BackgroundExecutor& owner);
+    Impl();
 
     ~Impl();
 
@@ -49,7 +49,6 @@ protected:
 
     virtual void customEvent(QEvent* event);
 private:
-    BackgroundExecutor& m_rOwner;
     Dispatcher m_dispatcher;
     bool m_threadStarted;
 };
@@ -58,7 +57,7 @@ private:
 /*============================ BackgroundExecutor ==========================*/
 
 BackgroundExecutor::BackgroundExecutor()
-    :	m_ptrImpl(new Impl(*this))
+    :	m_ptrImpl(new Impl())
 {
 }
 
@@ -117,9 +116,8 @@ BackgroundExecutor::Dispatcher::customEvent(QEvent* event)
 
 /*======================= BackgroundExecutor::Impl =========================*/
 
-BackgroundExecutor::Impl::Impl(BackgroundExecutor& owner)
-    :	m_rOwner(owner),
-      m_dispatcher(*this),
+BackgroundExecutor::Impl::Impl()
+    : m_dispatcher(*this),
       m_threadStarted(false)
 {
     m_dispatcher.moveToThread(this);

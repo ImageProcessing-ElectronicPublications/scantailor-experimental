@@ -25,7 +25,7 @@
 #include <QPoint>
 #include <QPointF>
 #include <QtGlobal>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <cmath>

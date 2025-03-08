@@ -65,7 +65,7 @@ void plugHoles(GridAccessor<T> const grid,
         T lowestNeighbour = std::numeric_limits<T>::max();
         T highestNeighbour = std::numeric_limits<T>::min();
 
-        bool const hasExactlyOneNeighbour() const
+        bool hasExactlyOneNeighbour() const
         {
             return lowestNeighbour == highestNeighbour;
         }

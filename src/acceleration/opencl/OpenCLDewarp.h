@@ -25,7 +25,8 @@
 #include <QSizeF>
 #include <QRectF>
 #include <QColor>
-#include <CL/cl2.hpp>
+#include <CL/cl.h>
+#include <CL/opencl.hpp>
 
 namespace opencl
 {

@@ -247,43 +247,43 @@ IMAGEPROC_EXPORT void coloredDimmingFilterInPlace(
 IMAGEPROC_EXPORT void coloredMaskInPlace(
     QImage& image, BinaryImage content, BinaryImage mask);
 
-static QImage imageHSVcylinder(QImage const& image);
+QImage imageHSVcylinder(QImage const& image);
 
-static QImage imageHSLcylinder(QImage const& image);
+QImage imageHSLcylinder(QImage const& image);
 
-static QImage imageYCbCr(QImage const& image);
+QImage imageYCbCr(QImage const& image);
 
-static float pixelDistance(
+float pixelDistance(
     float const h0, float const s0, float const v0,
     float const h1, float const s1, float const v1);
 
-static void paletteHSVcylinderGenerate(
+void paletteHSVcylinderGenerate(
     double* mean_h0, double* mean_s0, double* mean_v0,
     int const ncount, float start_value = 128.0f);
 
-static void paletteHSVcylinderToHSV(
+void paletteHSVcylinderToHSV(
     double* mean_h, double* mean_s,
     int const start, int const stop);
 
-static void paletteHSVsaturation(
+void paletteHSVsaturation(
     double* mean_s, float const coef_sat,
     int const start, int const stop);
 
-static void paletteYCbCrsaturation(
+void paletteYCbCrsaturation(
     double* mean_cb, double* mean_cr, float const coef_sat,
     int const start, int const stop);
 
-static void paletteHSVnorm(
+void paletteHSVnorm(
     double* mean_v, float const coef_norm,
     int const start, int const stop);
 
-static void paletteHSVtoRGB(
+void paletteHSVtoRGB(
     double* mean_h, double* mean_s, double* mean_v, int const ncount);
 
-static void paletteHSLtoRGB(
+void paletteHSLtoRGB(
     double* mean_h, double* mean_s, double* mean_l, int const ncount);
 
-static void paletteYCbCrtoRGB(
+void paletteYCbCrtoRGB(
     double* mean_cb, double* mean_cr, double* mean_cy, int const ncount);
 
 IMAGEPROC_EXPORT double hsvKMeansInPlace(

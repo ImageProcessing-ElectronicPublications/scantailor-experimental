@@ -24,7 +24,7 @@
 #include "imageproc/BinaryImage.h"
 #include <QRect>
 #include <QPoint>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/test/unit_test.hpp>

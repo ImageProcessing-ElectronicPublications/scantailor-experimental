@@ -70,7 +70,6 @@ ZoneCreationInteraction::onPaint(QPainter& painter, InteractionState const& inte
     painter.setRenderHint(QPainter::Antialiasing);
 
     QTransform const to_screen(m_rContext.imageView().imageToWidget());
-    QTransform const from_screen(m_rContext.imageView().widgetToImage());
 
     m_visualizer.drawSplines(painter, to_screen, m_rContext.zones());
 
@@ -205,7 +204,6 @@ ZoneCreationInteraction::onMouseReleaseEvent(QMouseEvent* event, InteractionStat
         return;
     }
 
-    QTransform const to_screen(m_rContext.imageView().imageToWidget());
     QTransform const from_screen(m_rContext.imageView().widgetToImage());
     QPointF const screen_mouse_pos(event->pos() + QPointF(0.5, 0.5));
     QPointF const image_mouse_pos(from_screen.map(screen_mouse_pos));

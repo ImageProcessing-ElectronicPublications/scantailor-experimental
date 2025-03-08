@@ -122,7 +122,6 @@ void colorCurveFilterInPlace(
     if (coef != 0.0f)
     {
         int icoef = (int) (coef * 256.0f + 0.5f);
-        unsigned int const w = image.width();
         unsigned int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
         int const image_stride = image.bytesPerLine();
@@ -174,7 +173,6 @@ void colorSqrFilterInPlace(
     if (coef != 0.0f)
     {
         int icoef = (int) (coef * 256.0f + 0.5f);
-        unsigned int const w = image.width();
         unsigned int const h = image.height();
         uint8_t* image_line = (uint8_t*) image.bits();
         int const image_stride = image.bytesPerLine();
@@ -424,17 +422,6 @@ void knnDenoiserFilterInPlace(
 
     if ((radius > 0) && (coef > 0.0f))
     {
-        float const threshold_weight = 0.02f;
-        float const threshold_lerp = 0.66f;
-        float const noise_eps = 0.0000001f;
-        float const noise_lerpc = 0.16f;
-
-        int const w = image.width();
-        int const h = image.height();
-        uint8_t* image_line = (uint8_t*) image.bits();
-        int const image_stride = image.bytesPerLine();
-        unsigned int const cnum = image_stride / w;
-
         GrayImage gray = GrayImage(image);
         if (gray.isNull())
         {
@@ -919,9 +906,6 @@ void coloredSignificanceFilterInPlace(
     unsigned int const h = image.height();
     unsigned int const wg = gray.width();
     unsigned int const hg = gray.height();
-    uint8_t const* image_line = (uint8_t const*) image.bits();
-    int const image_stride = image.bytesPerLine();
-    unsigned int const cnum = image_stride / w;
     uint8_t* gray_line = gray.data();
     int const gray_stride = gray.stride();
 
@@ -1120,8 +1104,6 @@ QImage imageHSVcylinder(QImage const& image)
         return QImage();
     }
 
-    uint8_t* hsv_line = (uint8_t*) hsv_img.bits();
-
     float ctorad = (float)(2.0 * M_PI / 256.0);
 
     for (unsigned int y = 0; y < h; y++)
@@ -1195,8 +1177,6 @@ QImage imageHSLcylinder(QImage const& image)
         return QImage();
     }
 
-    uint8_t* hsl_line = (uint8_t*) hsl_img.bits();
-
     float ctorad = (float)(2.0 * M_PI / 256.0);
 
     for (unsigned int y = 0; y < h; y++)
@@ -1264,8 +1244,6 @@ QImage imageYCbCr(QImage const& image)
     {
         return QImage();
     }
-
-    uint8_t* ycbcr_line = (uint8_t*) ycbcr_img.bits();
 
     for (unsigned int y = 0; y < h; y++)
     {

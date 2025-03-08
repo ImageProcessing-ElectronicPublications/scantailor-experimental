@@ -106,8 +106,8 @@ imageproc::GrayImage savGolFilter(
         int idx = 0;
         kernel.setArg(idx++, byte_texture);
         kernel.setArg(idx++, float_texture);
-        kernel.setArg(idx++, cl_float2{1.f / (src.width() - 1), 1.f / (src.height() - 1)});
-        kernel.setArg(idx++, cl_float2{1.f / (src.width() - 1), 0.f                     });
+        kernel.setArg(idx++, cl_float2{{1.f / (src.width() - 1), 1.f / (src.height() - 1)}});
+        kernel.setArg(idx++, cl_float2{{1.f / (src.width() - 1), 0.f                     }});
         kernel.setArg(idx++, coeffs_buffer);
         kernel.setArg(idx++, cl_int(-k_origin_x));
         kernel.setArg(idx++, cl_int(window_size.width() - 1 - k_origin_x));
@@ -139,8 +139,8 @@ imageproc::GrayImage savGolFilter(
         int idx = 0;
         kernel.setArg(idx++, float_texture);
         kernel.setArg(idx++, byte_texture);
-        kernel.setArg(idx++, cl_float2{1.f / (src.width() - 1), 1.f / (src.height() - 1)});
-        kernel.setArg(idx++, cl_float2{                    0.f, 1.f / (src.height() - 1)});
+        kernel.setArg(idx++, cl_float2{{1.f / (src.width() - 1), 1.f / (src.height() - 1)}});
+        kernel.setArg(idx++, cl_float2{{                    0.f, 1.f / (src.height() - 1)}});
         kernel.setArg(idx++, coeffs_buffer);
         kernel.setArg(idx++, cl_int(-k_origin_y));
         kernel.setArg(idx++, cl_int(window_size.height() - 1 - k_origin_y));

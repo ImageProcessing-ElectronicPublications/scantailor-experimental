@@ -21,7 +21,7 @@
 
 #include "OpenCLGrid.h"
 #include <QRect>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <cstdint>
 #include <vector>
 #include <string>

@@ -53,7 +53,7 @@ public:
         m_colorParams.setColorGrayscaleOptions(color_options);
     }
 
-    ColorParams::ColorMode const colorMode() const
+    ColorParams::ColorMode colorMode() const
     {
         return m_colorParams.colorMode();
     }

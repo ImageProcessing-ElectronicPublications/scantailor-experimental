@@ -65,8 +65,7 @@ ThumbnailBase::ThumbnailBase(
     boost::optional<QRectF> const& transformed_viewport)
     :   m_ptrThumbnailCache(thumbnail_cache),
         m_maxDisplaySize(max_display_size),
-        m_pageId(page_id),
-        m_extendedClipArea(false)
+        m_pageId(page_id)
 {
     setFullSizeToVirtualTransform(full_size_image_transform, transformed_viewport);
 }

@@ -233,46 +233,9 @@ BinaryImage binarizeMean(
     uint8_t const* src_line = src.data();
     unsigned int const src_stride = src.stride();
     uint64_t count = 0, countb = 0;
-    double meanl = 0, mean = 0.0, meanw = 0.0, countw = 0.0;
+    double meanl = 0, meanw = 0.0;
     double dist, dist_mean = 0, threshold = 128;
 
-    /*
-        for (unsigned int y = 0; y < h; y++)
-        {
-            meanl = 0.0;
-            for (unsigned int x = 0; x < w; x++)
-            {
-                unsigned char pix = src_line[x];
-                pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
-                double const pixel = pix;
-                meanl += pixel;
-                count++;
-            }
-            mean += meanl;
-            src_line += src_stride;
-        }
-        mean = (count > 0) ? (mean / count) : 128.0;
-
-        src_line = src.data();
-        for (unsigned int y = 0; y < h; y++)
-        {
-            meanl = 0.0;
-            for (unsigned int x = 0; x < w; x++)
-            {
-                unsigned char pix = src_line[x];
-                pix = (pix < bound_lower) ? bound_lower : (pix < bound_upper) ? pix : bound_upper;
-                double const pixel = pix;
-                dist = (pixel > mean) ? (pixel - mean) : (mean - pixel);
-                dist++;
-                dist = 256.0 / dist;
-                meanl += (pixel * dist);
-                countw += dist;
-            }
-            meanw += meanl;
-            src_line += src_stride;
-        }
-        meanw = (countw > 0.0) ? (meanw / countw) : 128.0;
-    */
     meanw = grayDominantaValue(src);
 
     src_line = src.data();
@@ -424,8 +387,6 @@ BinaryImage binarizeBMTiled(
         return BinaryImage();
     }
 
-    int const w = src.width();
-    int const h = src.height();
     GrayImage threshold_map(grayBiModalTiledMap(src, radius, coef, delta, bound_lower, bound_upper));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
@@ -442,8 +403,6 @@ BinaryImage binarizeNiblack(
         return BinaryImage();
     }
 
-    int const w = src.width();
-    int const h = src.height();
     GrayImage threshold_map(grayNiblackMap(src, radius, k));
     BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
 

@@ -715,7 +715,6 @@ XSpline::junctionPointsAttractionForce(int seg_begin, int seg_end) const
 
     if (seg_begin != seg_end)
     {
-        QPointF pt(pointAt(controlPointIndexToT(seg_begin)));
         std::vector<LinearCoefficient> coeffs;
         Function<2> prev_x(0);
         Function<2> prev_y(0);

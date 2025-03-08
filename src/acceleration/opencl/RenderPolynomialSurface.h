@@ -21,7 +21,8 @@
 
 #include "imageproc/GrayImage.h"
 #include <Eigen/Core>
-#include <CL/cl2.hpp>
+#include <CL/cl.h>
+#include <CL/opencl.hpp>
 
 namespace opencl
 {

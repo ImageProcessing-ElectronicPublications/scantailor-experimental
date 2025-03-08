@@ -324,10 +324,11 @@ ProjectPages::insertImage(
     ImageId const& existing, PageView const view)
 {
     bool was_modified = false;
+    std::vector<PageInfo> res;
 
     {
         QMutexLocker locker(&m_mutex);
-        return insertImageImpl(
+        res = insertImageImpl(
                    new_image, before_or_after, existing, view, was_modified
                );
     }
@@ -336,6 +337,8 @@ ProjectPages::insertImage(
     {
         emit modified();
     }
+
+    return res;
 }
 
 void
@@ -647,7 +650,6 @@ ProjectPages::removePagesImpl(std::set<PageId> const& to_remove, bool& modified)
 
     std::vector<ImageDesc> new_images;
     new_images.reserve(m_images.size());
-    int new_total_logical_pages = 0;
 
     int const num_old_images = m_images.size();
     for (int i = 0; i < num_old_images; ++i)
@@ -678,7 +680,6 @@ ProjectPages::removePagesImpl(std::set<PageId> const& to_remove, bool& modified)
         if (image.numLogicalPages > 0)
         {
             new_images.push_back(image);
-            new_total_logical_pages += new_images.back().numLogicalPages;
         }
     }
 
