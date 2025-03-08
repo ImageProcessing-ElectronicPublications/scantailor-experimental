@@ -43,7 +43,7 @@ public:
 
     FastQueue& operator=(FastQueue const& other);
 
-    bool const empty() const
+    bool empty() const
     {
         return m_chunkList.empty();
     }

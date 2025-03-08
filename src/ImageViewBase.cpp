@@ -74,7 +74,7 @@ public:
         m_ptrResult->cancel();
     }
 
-    bool const isCancelled() const
+    bool isCancelled() const
     {
         return m_ptrResult->isCancelled();
     }

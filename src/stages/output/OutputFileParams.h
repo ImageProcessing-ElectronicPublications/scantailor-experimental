@@ -43,7 +43,7 @@ public:
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
-    bool const isValid() const
+    bool isValid() const
     {
         return m_size >= 0;
     }
