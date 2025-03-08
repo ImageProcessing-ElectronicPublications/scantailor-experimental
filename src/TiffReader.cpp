@@ -347,8 +347,6 @@ TiffReader::readImage(QIODevice& device, int const page_num)
 
     TiffInfo const info(tif, header);
 
-    ImageMetadata const metadata(currentPageMetadata(tif));
-
     QImage image;
 
     if (info.mapsToBinaryOrIndexed8())

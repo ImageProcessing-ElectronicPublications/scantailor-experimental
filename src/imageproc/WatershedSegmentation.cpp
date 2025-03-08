@@ -172,7 +172,6 @@ WatershedSegmentation::WatershedSegmentation(
         grid_line += grid_stride;
     }
 
-    uint32_t last_label = 0;
     uint32_t const remapping_table_size = remapping_table.size();
     std::vector<uint32_t> remapping_table2(remapping_table_size, 0);
     for (uint32_t src_label = 1; src_label < remapping_table_size; ++src_label)

@@ -234,14 +234,6 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     status.throwIfCancelled();
 
-    CommandLine const& cli = CommandLine::get();
-    /*
-        Despeckle::Level despeckle_level = Despeckle::NORMAL;
-        if (cli.hasContentRect())
-        {
-            despeckle_level = cli.getContentDetection();
-        }
-    */
     double despeckle_factor = output::despeckleLevelToFactor(output::DESPECKLE_NORMAL);
     BinaryImage despeckled(Despeckle::despeckle(content, despeckle_factor, status, dbg));
     if (dbg)
