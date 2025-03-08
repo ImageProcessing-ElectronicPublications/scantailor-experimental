@@ -160,7 +160,7 @@ OpenCLAcceleratedOperations::gaussBlurUnguarded(
 
     cl::WaitForEvents(events);
 
-    return std::move(dst);
+    return dst;
 }
 
 Grid<float>
@@ -218,7 +218,7 @@ OpenCLAcceleratedOperations::anisotropicGaussBlurUnguarded(
 
     cl::WaitForEvents(events);
 
-    return std::move(dst);
+    return dst;
 }
 
 std::pair<Grid<float>, Grid<uint8_t>>
