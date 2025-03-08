@@ -24,7 +24,11 @@
 #include "InteractionState.h"
 #include "ImagePixmapUnion.h"
 #include "acceleration/AcceleratableOperations.h"
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <QEvent>
+#else
 #include <QEnterEvent>
+#endif
 #include <QTimer>
 #include <QWidget>
 #include <QAbstractScrollArea>
@@ -300,7 +304,11 @@ protected:
 
     virtual void resizeEvent(QResizeEvent* event);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    virtual void enterEvent(QEvent* event);
+#else
     virtual void enterEvent(QEnterEvent* event);
+#endif
 
     /**
      * Returns the maximum viewport size (as if scrollbars are hidden)

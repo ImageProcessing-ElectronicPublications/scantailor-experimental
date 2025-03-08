@@ -686,12 +686,21 @@ ImageViewBase::resizeEvent(QResizeEvent* event)
     }
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void
+ImageViewBase::enterEvent(QEvent* event)
+{
+    viewport()->setFocus();
+    QAbstractScrollArea::enterEvent(event);
+}
+#else
 void
 ImageViewBase::enterEvent(QEnterEvent* event)
 {
     viewport()->setFocus();
     QAbstractScrollArea::enterEvent(event);
 }
+#endif
 
 /**
  * Called when any of the transformations change.
