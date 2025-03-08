@@ -647,7 +647,6 @@ ProjectPages::removePagesImpl(std::set<PageId> const& to_remove, bool& modified)
 
     std::vector<ImageDesc> new_images;
     new_images.reserve(m_images.size());
-    int new_total_logical_pages = 0;
 
     int const num_old_images = m_images.size();
     for (int i = 0; i < num_old_images; ++i)
@@ -678,7 +677,6 @@ ProjectPages::removePagesImpl(std::set<PageId> const& to_remove, bool& modified)
         if (image.numLogicalPages > 0)
         {
             new_images.push_back(image);
-            new_total_logical_pages += new_images.back().numLogicalPages;
         }
     }
 

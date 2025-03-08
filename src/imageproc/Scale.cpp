@@ -105,9 +105,8 @@ static GrayImage scaleUpIntGrayToGray(GrayImage const& src, QSize const& dst_siz
     int const dst_stride = dst.stride();
     int const dst_stride_scaled = dst_stride * yscale;
 
-    int sy = 0;
     int dy = 0;
-    for (; dy < dh; ++sy, dy += xscale)
+    for (; dy < dh; dy += xscale)
     {
         int sx = 0;
         int dx = 0;

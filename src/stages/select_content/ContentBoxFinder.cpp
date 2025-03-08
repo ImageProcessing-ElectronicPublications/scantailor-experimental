@@ -1466,7 +1466,6 @@ ContentBoxFinder::trim(
     uint32_t const* dm_others_line = dm_to_others.data();
     int const dm_stride = dm_to_others.stride();
 
-    int count = 0;
     cb_line += cb_stride * removed_area.top();
     dm_garbage_line += dm_stride * removed_area.top();
     dm_others_line += dm_stride * removed_area.top();
@@ -1478,7 +1477,6 @@ ContentBoxFinder::trim(
             {
                 sum_dist_to_garbage += sqrt((double)dm_garbage_line[x]);
                 sum_dist_to_others += sqrt((double)dm_others_line[x]);
-                ++count;
             }
         }
         cb_line += cb_stride;
@@ -1489,7 +1487,6 @@ ContentBoxFinder::trim(
     //qDebug() << "proximity_bias = " << proximity_bias;
     //qDebug() << "sum_dist_to_garbage = " << sum_dist_to_garbage;
     //qDebug() << "sum_dist_to_others = " << sum_dist_to_others;
-    //qDebug() << "count = " << count;
 
     sum_dist_to_garbage *= proximity_bias;
     sum_dist_to_others *= 1.0 - proximity_bias;
