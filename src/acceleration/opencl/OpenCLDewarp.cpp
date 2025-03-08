@@ -21,7 +21,7 @@
 #include "imageproc/BadAllocIfNull.h"
 #include "imageproc/Grayscale.h"
 #include <QSysInfo>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <array>
 #include <utility>
 #include <stdexcept>

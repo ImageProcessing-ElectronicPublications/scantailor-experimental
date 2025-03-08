@@ -28,7 +28,7 @@
 #include <QSize>
 #include <QRect>
 #include <QPoint>
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <vector>

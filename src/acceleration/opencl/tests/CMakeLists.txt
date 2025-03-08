@@ -35,6 +35,11 @@ LIST(APPEND libs
 ADD_EXECUTABLE(opencl_tests ${sources})
 TARGET_LINK_LIBRARIES(opencl_tests ${libs})
 
+TARGET_COMPILE_DEFINITIONS(opencl_tests
+    PRIVATE
+    CL_TARGET_OPENCL_VERSION=${OPENCL_VERSION}
+)
+
 # We want the executable located where we copy all the DLLs.
 SET_TARGET_PROPERTIES(
     opencl_tests PROPERTIES

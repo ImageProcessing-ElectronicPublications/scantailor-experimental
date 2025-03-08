@@ -20,7 +20,7 @@
 #define OPENCL_TRANSPOSE_H_
 
 #include "OpenCLGrid.h"
-#include <CL/cl2.hpp>
+#include <CL/opencl.hpp>
 
 namespace opencl
 {
