@@ -559,6 +559,11 @@ OptionsWidget::modeChanged(bool const auto_mode)
 void
 OptionsWidget::depthPerceptionSliderMoved(int value)
 {
+    if (m_ignoreSignalsFromUiControls)
+    {
+        return;
+    }
+
     double const depth_perception = sliderToDepthPerception(value);
     m_pageParams.dewarpingParams().setDepthPerception(depth_perception);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
@@ -580,6 +585,11 @@ OptionsWidget::depthPerceptionSliderReleased()
 void
 OptionsWidget::correctCurvesSliderMoved(int value)
 {
+    if (m_ignoreSignalsFromUiControls)
+    {
+        return;
+    }
+
     double const correct_curves = sliderToDepthPerception(value);
     m_pageParams.dewarpingParams().setCorrectCurves(correct_curves);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
@@ -601,6 +611,11 @@ OptionsWidget::correctCurvesSliderReleased()
 void
 OptionsWidget::correctAngleSliderMoved(int value)
 {
+    if (m_ignoreSignalsFromUiControls)
+    {
+        return;
+    }
+
     double const correct_angle = sliderToDepthPerception(value);
     m_pageParams.dewarpingParams().setCorrectAngle(correct_angle);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
