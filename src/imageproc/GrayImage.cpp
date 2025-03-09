@@ -414,10 +414,10 @@ unsigned int grayBiModalTiledValue(
     double part = 0.5 + (double) delta / 256.0;
     part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
 
-    unsigned int const x1w = (x1 < 0) ? 0 : ((x1 < w) ? x1 : w);
-    unsigned int const y1w = (y1 < 0) ? 0 : ((y1 < h) ? y1 : h);
-    unsigned int const x2w = (x2 < 0) ? 0 : ((x2 < w) ? x2 : w);
-    unsigned int const y2w = (y2 < 0) ? 0 : ((y2 < h) ? y2 : h);
+    unsigned int const x1w = (x1 < w) ? x1 : w;
+    unsigned int const y1w = (y1 < h) ? y1 : h;
+    unsigned int const x2w = (x2 < w) ? x2 : w;
+    unsigned int const y2w = (y2 < h) ? y2 : h;
     uint64_t const wsize = (y2w - y1w) * (x2w - x1w);
 
     if (wsize > 0)
