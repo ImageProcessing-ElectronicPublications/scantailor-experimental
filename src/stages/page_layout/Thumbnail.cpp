@@ -60,6 +60,8 @@ Thumbnail::paintOverImage(
     QTransform const& transformed_to_display,
     QTransform const& thumb_to_display)
 {
+    Q_UNUSED(thumb_to_display);
+    
     // We work in display coordinates because we want to be
     // pixel-accurate with what we draw.
     painter.setWorldTransform(QTransform());

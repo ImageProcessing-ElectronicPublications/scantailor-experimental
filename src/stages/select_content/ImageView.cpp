@@ -175,6 +175,8 @@ ImageView::removeContentBox()
 void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
+    Q_UNUSED(interaction);
+    
     if (m_contentRect.isNull())
     {
         return;

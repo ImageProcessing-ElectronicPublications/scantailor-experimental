@@ -34,7 +34,10 @@ private slots:
     /**
      * \see QLabel::linkActivated()
      */
-    virtual void linkActivated(QString const& link) {}
+    virtual void linkActivated(QString const &link)
+    {
+        Q_UNUSED(link);
+    }
 };
 
 #endif

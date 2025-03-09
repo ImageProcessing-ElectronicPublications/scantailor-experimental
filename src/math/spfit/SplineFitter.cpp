@@ -59,6 +59,8 @@ SplineFitter::addAttractionForce(
     std::vector<FittableSpline::LinearCoefficient> const& coeffs,
     SqDistApproximant const& sqdist_approx)
 {
+    Q_UNUSED(spline_point);
+    
     int const num_coeffs = coeffs.size();
     int const num_vars = num_coeffs * 2;
     QuadraticFunction f(num_vars);

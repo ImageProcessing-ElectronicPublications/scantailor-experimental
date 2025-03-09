@@ -163,6 +163,8 @@ PolylineModelShape::calcApproximant(
     Flags const polyline_flags, FrenetFrame const& frenet_frame,
     double const signed_curvature) const
 {
+    Q_UNUSED(polyline_flags);
+
     if (sample_flags & (FittableSpline::HEAD_SAMPLE|FittableSpline::TAIL_SAMPLE))
     {
         return SqDistApproximant::pointDistance(frenet_frame.origin());

@@ -308,6 +308,8 @@ ConsoleBatch::setupFixOrientation(std::set<PageId> allPages)
 void
 ConsoleBatch::setupPageSplit(std::set<PageId> allPages)
 {
+    Q_UNUSED(allPages);
+    
     IntrusivePtr<page_split::Filter> page_split = m_ptrStages->pageSplitFilter();
     CommandLine const& cli = CommandLine::get();
 

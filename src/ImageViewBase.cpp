@@ -496,6 +496,8 @@ ImageViewBase::ensureStatusTip(QString const& status_tip)
 void
 ImageViewBase::paintEvent(QPaintEvent* event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(viewport());
     painter.save();
 

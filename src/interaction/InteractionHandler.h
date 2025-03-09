@@ -74,31 +74,67 @@ public:
     void makeLastFollower(InteractionHandler& handler);
 protected:
     virtual void onPaint(
-        QPainter& painter, InteractionState const& interaction) {}
+        QPainter &painter, InteractionState const &interaction)
+    {
+        Q_UNUSED(painter);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onProximityUpdate(
-        QPointF const& screen_mouse_pos, InteractionState& interaction) {}
+        QPointF const &screen_mouse_pos, InteractionState &interaction)
+    {
+        Q_UNUSED(screen_mouse_pos);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onKeyPressEvent(
-        QKeyEvent* event, InteractionState& interaction) {}
+        QKeyEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onKeyReleaseEvent(
-        QKeyEvent* event, InteractionState& interaction) {}
+        QKeyEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onMousePressEvent(
-        QMouseEvent* event, InteractionState& interaction) {}
+        QMouseEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onMouseReleaseEvent(
-        QMouseEvent* event, InteractionState& interaction) {}
+        QMouseEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onMouseMoveEvent(
-        QMouseEvent* event, InteractionState& interaction) {}
+        QMouseEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onWheelEvent(
-        QWheelEvent* event, InteractionState& interaction) {}
+        QWheelEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     virtual void onContextMenuEvent(
-        QContextMenuEvent* event, InteractionState& interaction) {}
+        QContextMenuEvent *event, InteractionState &interaction)
+    {
+        Q_UNUSED(event);
+        Q_UNUSED(interaction);
+    }
 
     static bool defaultInteractionPermitter(InteractionState const& interaction);
 private:

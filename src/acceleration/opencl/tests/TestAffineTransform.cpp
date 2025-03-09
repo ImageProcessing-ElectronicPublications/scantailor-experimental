@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(test_argb)
 
         int max_err = 0;
         rasterOpGenericXY(
-            [&max_err](uint32_t argb1, uint32_t argb2, int x, int y)
+            [&max_err](uint32_t argb1, uint32_t argb2, int, int)
         {
             uint32_t const argb1_pm = qPremultiply(argb1);
             uint32_t const argb2_pm = qPremultiply(argb2);

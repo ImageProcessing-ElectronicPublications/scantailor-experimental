@@ -66,6 +66,8 @@ m_rectangularZoneType(false)
 void
 ZoneCreationInteraction::onPaint(QPainter& painter, InteractionState const& interaction)
 {
+    Q_UNUSED(interaction);
+
     painter.setWorldMatrixEnabled(false);
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -182,6 +184,8 @@ ZoneCreationInteraction::onPaint(QPainter& painter, InteractionState const& inte
 void
 ZoneCreationInteraction::onKeyPressEvent(QKeyEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(interaction);
+    
     if (event->key() == Qt::Key_Escape)
     {
         makePeerPreceeder(*m_rContext.createDefaultInteraction());

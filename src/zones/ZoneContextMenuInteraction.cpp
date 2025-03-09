@@ -307,6 +307,8 @@ std::vector<ZoneContextMenuItem>
 ZoneContextMenuInteraction::defaultMenuCustomizer(
     EditableZoneSet::Zone const& zone, StandardMenuItems const& std_items)
 {
+    Q_UNUSED(zone);
+
     std::vector<ZoneContextMenuItem> items;
     items.reserve(2);
     items.push_back(std_items.propertiesItem);

@@ -614,6 +614,8 @@ void
 ContentBoxFinder::inPlaceRemoveAreasTouchingBorders(
     imageproc::BinaryImage& content_blocks, DebugImages* dbg)
 {
+    Q_UNUSED(dbg);
+    
     // We could just do a seed fill from borders, but that
     // has the potential to remove too much.  Instead, we
     // do something similar to a seed fill, but with a limited
@@ -748,6 +750,8 @@ ContentBoxFinder::segmentGarbage(
     imageproc::BinaryImage& vert_garbage,
     DebugImages* dbg)
 {
+    Q_UNUSED(dbg);
+    
     hor_garbage = openBrick(garbage, QSize(200, 1), WHITE);
 
     QRect rect(garbage.rect());
@@ -1521,6 +1525,8 @@ ContentBoxFinder::filterShadows(
     TaskStatus const& status, imageproc::BinaryImage& shadows,
     DebugImages* const dbg)
 {
+    Q_UNUSED(status);
+    
     // The input image should only contain shadows from the edges
     // of a page, but in practice it may also contain things like
     // a black table header which white letters on it.  Here we

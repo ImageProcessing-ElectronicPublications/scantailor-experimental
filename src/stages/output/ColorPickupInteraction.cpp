@@ -66,6 +66,8 @@ void
 ColorPickupInteraction::onPaint(
     QPainter& painter, InteractionState const& interaction)
 {
+    Q_UNUSED(interaction);
+    
     if (m_dontDrawCircle)
     {
         return;
@@ -85,6 +87,8 @@ void
 ColorPickupInteraction::onMousePressEvent(
     QMouseEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(interaction);
+    
     if (event->buttons() == Qt::LeftButton)   // Left and only left button.
     {
         event->accept();
@@ -97,6 +101,9 @@ void
 ColorPickupInteraction::onMouseMoveEvent(
     QMouseEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(event);
+    Q_UNUSED(interaction);
+    
     m_rContext.imageView().update();
 }
 
@@ -104,6 +111,8 @@ void
 ColorPickupInteraction::onKeyPressEvent(
     QKeyEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(interaction);
+    
     if (event->key() == Qt::Key_Escape)
     {
         event->accept();

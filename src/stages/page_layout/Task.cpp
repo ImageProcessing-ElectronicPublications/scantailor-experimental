@@ -90,6 +90,7 @@ Task::Task(IntrusivePtr<Filter> const& filter,
       m_pageId(page_id),
       m_batchProcessing(batch)
 {
+    Q_UNUSED(debug);
 }
 
 Task::~Task()

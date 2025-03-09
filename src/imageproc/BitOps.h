@@ -152,6 +152,8 @@ struct MostSignificantZeroes<T, 0>
 {
     static int reduce(T val, int count)
     {
+        (void)val; // unused parameter
+
         return count - 1;
     }
 };
@@ -176,6 +178,8 @@ struct LeastSignificantZeroes<T, 0>
 {
     static int reduce(T val, int count)
     {
+        (void)val; // unused parameter
+        
         return count - 1;
     }
 };

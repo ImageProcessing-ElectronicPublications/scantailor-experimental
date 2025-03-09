@@ -55,6 +55,9 @@ RotationThumbnail::paintOverImage(
     QPainter& painter, QTransform const& transformed_to_display,
     QTransform const& thumb_to_display)
 {
+    Q_UNUSED(transformed_to_display);
+    Q_UNUSED(thumb_to_display);
+
     if (!m_drawGrid)
     {
         return;

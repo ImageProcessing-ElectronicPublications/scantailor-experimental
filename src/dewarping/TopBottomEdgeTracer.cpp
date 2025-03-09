@@ -657,8 +657,6 @@ struct Path
 std::vector<QPoint>
 TopBottomEdgeTracer::locateBestPathEndpoints(Grid<GridNode> const& grid, QLineF const& line)
 {
-    int const width = grid.width();
-    int const height = grid.height();
     int const stride = grid.stride();
     GridNode const* const data = grid.data();
 
@@ -672,7 +670,7 @@ TopBottomEdgeTracer::locateBestPathEndpoints(Grid<GridNode> const& grid, QLineF 
         QPoint const pt(traverser.next());
 
         // intersectWithRect() ensures that.
-        assert(pt.x() >= 0 && pt.y() >= 0 && pt.x() < width && pt.y() < height);
+        assert(pt.x() >= 0 && pt.y() >= 0 && pt.x() < grid.width() && pt.y() < grid.height());
 
         uint32_t const offset = pt.y() * stride + pt.x();
         GridNode const* node = data + offset;

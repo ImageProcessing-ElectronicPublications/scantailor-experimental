@@ -80,6 +80,9 @@ BOOST_AUTO_TEST_CASE(test_line_detection)
             auto updater = [pixel](unsigned& hough_val,
                                    HoughAngle const& angle, QPoint hough_space_pos)
             {
+                Q_UNUSED(angle);
+                Q_UNUSED(hough_space_pos);
+                
                 hough_val += 255 - qGray(pixel);
             };
 

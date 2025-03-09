@@ -102,20 +102,6 @@ static double calcRMSE(
     return std::sqrt(mse);
 }
 
-/** Use for debugging only. */
-static void saveImpulseResponse(Grid<float> const& response, QString const& file)
-{
-    GrayImage image(QSize(response.width(), response.height()));
-    rasterOpGeneric(
-        [](float const src, uint8_t& dst)
-    {
-        dst = static_cast<uint8_t>(qBound<long>(0l, std::lroundf(src * 255.f), 255l));
-    },
-    response, image
-    );
-    image.toQImage().save(file);
-}
-
 BOOST_AUTO_TEST_SUITE(GaussBlurTestSuite);
 
 BOOST_AUTO_TEST_CASE(test_aligned_gaussian)
@@ -147,9 +133,6 @@ BOOST_AUTO_TEST_CASE(test_aligned_gaussian)
     Grid<float> const analytical_response(
         computeAnalyticalImpulseResponse(scale, size, center, Vector2f(1.f, 0.f), sigmas)
     );
-
-    //saveImpulseResponse(impulse_response, "/path/to/image.png");
-    //saveImpulseResponse(analytical_response, "/path/to/another-image.png");
 
     double rmse = calcRMSE(impulse_response, analytical_response);
     BOOST_CHECK_LT(rmse, 0.01);
