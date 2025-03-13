@@ -289,11 +289,6 @@ IMAGEPROC_EXPORT void grayKnnDenoiserInPlace(
 /**
  * @brief Median GrayImage.
  */
-IMAGEPROC_EXPORT int grayMedianValue(
-    GrayImage const& src,
-    unsigned int const x,
-    unsigned int const y,
-    unsigned int radius = 2);
 IMAGEPROC_EXPORT GrayImage grayMedian(
     GrayImage const& src,
     int radius = 2,
