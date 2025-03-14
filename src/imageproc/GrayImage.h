@@ -175,42 +175,42 @@ IMAGEPROC_EXPORT unsigned int grayBiModalTiledValue(
 IMAGEPROC_EXPORT GrayImage grayBiModalTiledMap(
     GrayImage const& src,
     int radius = 50,
-    double k = 0.75,
+    float k = 0.75f,
     int delta = 0,
     unsigned char bound_lower = 0,
     unsigned char bound_upper = 255);
 IMAGEPROC_EXPORT GrayImage grayNiblackMap(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.20);
+    float k = 0.20f);
 IMAGEPROC_EXPORT GrayImage graySauvolaMap(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.34);
+    float k = 0.34f);
 IMAGEPROC_EXPORT GrayImage grayWolfMap(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.30);
+    float k = 0.30f);
 IMAGEPROC_EXPORT GrayImage grayBradleyMap(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.2);
+    float k = 0.2f);
 IMAGEPROC_EXPORT GrayImage grayGradMap(
     GrayImage const& src,
     int radius = 10,
-    double coef = 0.75);
+    float coef = 0.75f);
 IMAGEPROC_EXPORT GrayImage graySinghMap(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.2);
+    float k = 0.2f);
 IMAGEPROC_EXPORT GrayImage grayWANMap(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.2);
+    float k = 0.2f);
 IMAGEPROC_EXPORT GrayImage grayMScaleMap(
     GrayImage const& src,
     int radius = 10,
-    double coef = 0.5);
+    float coef = 0.5f);
 IMAGEPROC_EXPORT GrayImage grayEngravingMap(
     GrayImage const& src,
     int radius = 20,

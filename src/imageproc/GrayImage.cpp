@@ -409,10 +409,10 @@ unsigned int grayBiModalTiledValue(
     unsigned int const src_stride = src.stride();
     uint64_t im, iw, ib, histogram[histsize] = {0};
     unsigned int k, Tn;
-    double Tw, Tb;
+    uint64_t Tw, Tb;
     int Tmin = 255, Tmax = 0, Ti;
-    double part = 0.5 + (double) delta / 256.0;
-    part = (part < 0.0) ? 0.0 : (part < 1.0) ? part : 1.0;
+    int part = 256 + delta + delta;
+    part = (part < 0) ? 0 : (part < 512) ? part : 512;
 
     unsigned int const x1w = (x1 < w) ? x1 : w;
     unsigned int const y1w = (y1 < h) ? y1 : h;
@@ -448,30 +448,30 @@ unsigned int grayBiModalTiledValue(
         }
         Tmax++;
 
-        threshold = (unsigned int) (part * Tmax + (1.0 - part) * Tmin + 0.5);
+        threshold = part * Tmax + (512 - part) * Tmin;
         Tn = threshold + 1;
         while (threshold != Tn)
         {
             Tn = threshold;
-            Tb = Tw = 0.0;
+            Tb = Tw = 0;
             ib = iw = 0;
             for (k = 0; k < histsize; k++)
             {
                 im = histogram[k];
                 if (k < threshold)
                 {
-                    Tb += (double) (im * k);
+                    Tb += im * k;
                     ib += im;
                 }
                 else
                 {
-                    Tw += (double) (im * k);
+                    Tw += im * k;
                     iw += im;
                 }
             }
-            Tb = (ib > 0) ? (Tb / ib) : Tmin;
-            Tw = (iw > 0) ? (Tw / iw) : Tmax;
-            threshold = (unsigned int) (part * Tw + (1.0 - part) * Tb + 0.5);
+            Tb = (ib > 0) ? ((Tb + (ib >> 1)) / ib) : Tmin;
+            Tw = (iw > 0) ? ((Tw + (iw >> 1)) / iw) : Tmax;
+            threshold = ((part * Tw + (512 - part) * Tb + 256) >> 9);
         }
     }
 
@@ -481,7 +481,7 @@ unsigned int grayBiModalTiledValue(
 GrayImage grayBiModalTiledMap(
     GrayImage const& src,
     int const radius,
-    double const coef,
+    float const coef,
     int const delta,
     unsigned char const bound_lower,
     unsigned char const bound_upper)
@@ -500,7 +500,7 @@ GrayImage grayBiModalTiledMap(
 
     int const w = src.width();
     int const h = src.height();
-    unsigned int bmg = grayBiModalTiledValue(src, 0, 0, w, h, delta, bound_lower, bound_upper);
+    unsigned int const bmg = grayBiModalTiledValue(src, 0, 0, w, h, delta, bound_lower, bound_upper);
 
     if (radius > 0)
     {
@@ -537,32 +537,32 @@ GrayImage grayBiModalTiledMap(
         tlocal_line = tlocal.data();
         for (int y = 0; y < h; y++)
         {
-            double const yd = (0.5 + y) / wsize - 0.5;
+            float const yd = (0.5f + y) / wsize - 0.5f;
             int y1 = yd;
             int y2 = y1 + 1;
-            double dy1 = yd - y1;
-            double dy2 = 1.0 - dy1;
+            float const dy1 = yd - y1;
+            float const dy2 = 1.0f - dy1;
             y1 = (y1 < 0) ? 0 : ((y1 < wh) ? y1 : (wh - 1));
             y2 = (y2 < 0) ? 0 : ((y2 < wh) ? y2 : (wh - 1));
             for (int x = 0; x < w; x++)
             {
-                double const xd = (0.5 + x) / wsize - 0.5;
+                float const xd = (0.5f + x) / wsize - 0.5f;
                 int x1 = xd;
                 int x2 = x1 + 1;
-                double dx1 = xd - x1;
-                double dx2 = 1.0 - dx1;
+                float const dx1 = xd - x1;
+                float const dx2 = 1.0f - dx1;
                 x1 = (x1 < 0) ? 0 : ((x1 < ww) ? x1 : (ww - 1));
                 x2 = (x2 < 0) ? 0 : ((x2 < ww) ? x2 : (ww - 1));
 
-                double const t11 = tlocal_line[y1 * tlocal_stride + x1];
-                double const t12 = tlocal_line[y1 * tlocal_stride + x2];
-                double const t21 = tlocal_line[y2 * tlocal_stride + x1];
-                double const t22 = tlocal_line[y2 * tlocal_stride + x2];
+                float const t11 = tlocal_line[y1 * tlocal_stride + x1];
+                float const t12 = tlocal_line[y1 * tlocal_stride + x2];
+                float const t21 = tlocal_line[y2 * tlocal_stride + x1];
+                float const t22 = tlocal_line[y2 * tlocal_stride + x2];
 
-                double bml = dy2 * (dx2 * t11 + dx1 * t12)
-                             + dy1 * (dx2 * t21 + dx1 * t22);
-                double t = coef * bml + (1.0 - coef) * bmg + 0.5;
-                t = (t < 0.0) ? 0.0 : ((t < 255.0) ? t : 255.0);
+                float const bml = dy2 * (dx2 * t11 + dx1 * t12)
+                                + dy1 * (dx2 * t21 + dx1 * t22);
+                float t = coef * bml + (1.0f - coef) * bmg + 0.5f;
+                t = (t < 0.0f) ? 0.0f : ((t < 255.0f) ? t : 255.0f);
                 gray_line[x] = (uint8_t) t;
             }
             gray_line += gray_stride;
@@ -587,7 +587,7 @@ GrayImage grayBiModalTiledMap(
  * niblack = mean - k * stderr, k = 0.2
  */
 GrayImage grayNiblackMap(
-    GrayImage const& src, int const radius, double const k)
+    GrayImage const& src, int const radius, float const k)
 {
     if (src.isNull())
     {
@@ -622,7 +622,7 @@ GrayImage grayNiblackMap(
                 float const deviation = gdeviation_line[x];
                 float threshold = mean - k * deviation;
 
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             gmean_line += gmean_stride;
@@ -637,7 +637,7 @@ GrayImage grayNiblackMap(
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage graySauvolaMap(
-    GrayImage const& src, int const radius, double const k)
+    GrayImage const& src, int const radius, float const k)
 {
     if (src.isNull())
     {
@@ -671,9 +671,9 @@ GrayImage graySauvolaMap(
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
 
-                float threshold = mean * (1.0 + k * (deviation / 128.0 - 1.0));
+                float threshold = mean * (1.0f + k * (deviation / 128.0f - 1.0f));
 
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             gmean_line += gmean_stride;
@@ -688,7 +688,7 @@ GrayImage graySauvolaMap(
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  */
 GrayImage grayWolfMap(
-    GrayImage const& src, int const radius, double const k)
+    GrayImage const& src, int const radius, float const k)
 {
     if (src.isNull())
     {
@@ -718,7 +718,7 @@ GrayImage grayWolfMap(
         int const gdeviation_stride = gdeviation.stride();
 
         uint32_t min_gray_level = 255;
-        float max_deviation = 0.0;
+        float max_deviation = 0.0f;
 
         for (int y = 0; y < h; y++)
         {
@@ -741,10 +741,10 @@ GrayImage grayWolfMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
-                float const a = 1.0 - deviation / max_deviation;
+                float const a = 1.0f - deviation / max_deviation;
                 float threshold = mean - k * a * (mean - min_gray_level);
 
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             gmean_line += gmean_stride;
@@ -759,7 +759,7 @@ GrayImage grayWolfMap(
  * bradley = mean * (1.0 - k), k = 0.2
  */
 GrayImage grayBradleyMap(
-    GrayImage const& src, int const radius, double const k)
+    GrayImage const& src, int const radius, float const k)
 {
     if (src.isNull())
     {
@@ -783,9 +783,9 @@ GrayImage grayBradleyMap(
             for (int x = 0; x < w; x++)
             {
                 float const mean = gmean_line[x];
-                float threshold = (k < 1.0) ? (mean * (1.0 - k)) : 0;
+                float threshold = (k < 1.0f) ? (mean * (1.0f - k)) : 0.0f;
 
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             gmean_line += gmean_stride;
@@ -799,7 +799,7 @@ GrayImage grayBradleyMap(
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
  */
 GrayImage grayGradMap(
-    GrayImage const& src, int const radius, double const coef)
+    GrayImage const& src, int const radius, float const coef)
 {
     if (src.isNull())
     {
@@ -813,7 +813,7 @@ GrayImage grayGradMap(
 
     if (radius > 0)
     {
-        float const mean_grad = (1.0 - coef) * binarizeGradValue(src, gmean);
+        float const mean_grad = (1.0f - coef) * binarizeGradValue(src, gmean);
 
         int const w = src.width();
         int const h = src.height();
@@ -828,7 +828,7 @@ GrayImage grayGradMap(
 
                 float threshold = mean_grad + mean * coef;
 
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             gmean_line += gmean_stride;
@@ -842,7 +842,7 @@ GrayImage grayGradMap(
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
 GrayImage graySinghMap(
-    GrayImage const& src, int const radius, double const k)
+    GrayImage const& src, int const radius, float const k)
 {
     if (src.isNull())
     {
@@ -878,9 +878,9 @@ GrayImage graySinghMap(
                 float const origin = src_line[x];
                 float const mean = gmean_line[x];
                 float const maxmin = graymm_line[x];
-                float threshold = (1.0 - k) * (mean + maxmin * (1.0 - origin / 255.0));
+                float threshold = (1.0f - k) * (mean + maxmin * (1.0f - origin / 255.0f));
 
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             src_line += src_stride;
@@ -896,7 +896,7 @@ GrayImage graySinghMap(
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage grayWANMap(
-    GrayImage const& src, int const radius, double const k)
+    GrayImage const& src, int const radius, float const k)
 {
     if (src.isNull())
     {
@@ -938,8 +938,8 @@ GrayImage grayWANMap(
                 float const deviation = gdeviation_line[x];
                 float const imax = gmax_line[x];
 
-                float threshold = (mean + imax) * 0.5 * (1.0 + k * (deviation / 128.0 - 1.0));
-                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
+                float threshold = (mean + imax) * 0.5f * (1.0f + k * (deviation / 128.0f - 1.0f));
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (uint8_t) threshold;
             }
             gmean_line += gmean_stride;
@@ -952,7 +952,7 @@ GrayImage grayWANMap(
 }
 
 GrayImage grayMScaleMap(
-    GrayImage const& src, int const radius, double const coef)
+    GrayImage const& src, int const radius, float const coef)
 {
     if (src.isNull())
     {
@@ -976,8 +976,8 @@ GrayImage grayMScaleMap(
     int const gray_stride = gray.stride();
 
     unsigned int whcp, l, i, j, blsz, rsz;
-    double immean, kover, sensitivity, sensdiv, senspos, sensinv;
-    unsigned int pim, immin, immax, imt, cnth, cntw, level = 0;
+    float immean, imt, kover, sensitivity, sensdiv, senspos, sensinv;
+    unsigned int pim, immin, immax, cnth, cntw, level = 0;
     unsigned int maskbl, maskover, tim;
     unsigned long int idx;
 
@@ -1015,9 +1015,9 @@ GrayImage grayMScaleMap(
         }
         gray_line += gray_stride;
     }
-    immean = (double) (immax + immin);
-    immean *= 0.5;
-    immean += 0.5;
+    immean = (float) (immax + immin);
+    immean *= 0.5f;
+    immean += 0.5f;
     tim = (unsigned int) immean;
 
     gray_line = gray.data();
@@ -1030,22 +1030,22 @@ GrayImage grayMScaleMap(
         gray_line += gray_stride;
     }
 
-    kover = 1.5;
+    kover = 1.5f;
 
-    if (coef < 0.0)
+    if (coef < 0.0f)
     {
         sensitivity = -coef;
         sensdiv = sensitivity;
-        sensdiv += 1.0;
-        sensinv = 1.0 / sensdiv;
+        sensdiv += 1.0f;
+        sensinv = 1.0f / sensdiv;
         senspos = sensitivity / sensdiv;
     }
     else
     {
         sensitivity = coef;
         sensdiv = sensitivity;
-        sensdiv += 1.0;
-        senspos = 1.0 / sensdiv;
+        sensdiv += 1.0f;
+        senspos = 1.0f / sensdiv;
         sensinv = sensitivity / sensdiv;
     }
 
@@ -1087,8 +1087,8 @@ GrayImage grayMScaleMap(
                         }
                     }
                 }
-                immean = (double) (immax + immin);
-                immean *= 0.5;
+                immean = (float) (immax + immin);
+                immean *= 0.5f;
                 immean *= sensinv;
                 for (int y = y0; y < y1; y++)
                 {
@@ -1098,8 +1098,8 @@ GrayImage grayMScaleMap(
                         imt = gray_line[idx];
                         imt *= senspos;
                         imt += immean;
-                        imt += 0.5;
-                        imt = (imt < 0.0) ? 0.0 : ((imt < 255.0) ? imt : 255.0);
+                        imt += 0.5f;
+                        imt = (imt < 0.0f) ? 0.0f : ((imt < 255.0f) ? imt : 255.0f);
                         gray_line[idx] = (uint8_t) imt;
                     }
                 }
