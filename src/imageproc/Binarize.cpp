@@ -67,7 +67,8 @@ BinaryImage binarizeOtsu(QImage const& src, int const delta)
 }
 
 BinaryImage binarizeMokji(
-    QImage const& src, unsigned const max_edge_width,
+    QImage const& src,
+    unsigned const max_edge_width,
     unsigned const min_edge_magnitude)
 {
     BinaryThreshold const threshold(
@@ -79,7 +80,8 @@ BinaryImage binarizeMokji(
 }
 
 BinaryImage binarizeUse(
-    GrayImage const& src, unsigned int const threshold)
+    GrayImage const& src,
+    unsigned int const threshold)
 {
     if (src.isNull())
     {
@@ -114,8 +116,11 @@ BinaryImage binarizeUse(
 }  // binarizeUse
 
 BinaryImage binarizeFromMap(
-    GrayImage const& src, GrayImage const& threshold, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    GrayImage const& threshold,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull() || threshold.isNull())
     {
@@ -220,8 +225,10 @@ BinaryImage binarizeBiModal(
 }  // binarizeBiModal
 
 BinaryImage binarizeMean(
-    GrayImage const& src, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -307,8 +314,10 @@ BinaryImage binarizeMean(
 }  // binarizeMean
 
 BinaryImage binarizeDots(
-    GrayImage const& src, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -377,7 +386,7 @@ BinaryImage binarizeImageToDots(
 BinaryImage binarizeBMTiled(
     GrayImage const& src,
     int const radius,
-    double const coef,
+    float const coef,
     int const delta,
     unsigned char const bound_lower,
     unsigned char const bound_upper)
@@ -394,9 +403,12 @@ BinaryImage binarizeBMTiled(
 }
 
 BinaryImage binarizeNiblack(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -410,9 +422,12 @@ BinaryImage binarizeNiblack(
 }
 
 BinaryImage binarizeGatosCleaner(
-    GrayImage const& src, BinaryImage const& niblack,
-    int const radius, double const q,
-    double const p1, double const p2)
+    GrayImage const& src,
+    BinaryImage const& niblack,
+    int const radius,
+    float const q,
+    float const p1,
+    float const p2)
 {
     GrayImage gray = GrayImage(src);
     if (gray.isNull() || niblack.isNull())
@@ -560,10 +575,16 @@ BinaryImage binarizeGatosCleaner(
  * niblack = mean - k * stderr, k = 0.2
  */
 BinaryImage binarizeGatos(
-    GrayImage const& src, int const radius,
-    double const noise_sigma, double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper,
-    double const q, double const p1, double const p2)
+    GrayImage const& src,
+    int const radius,
+    float const noise_sigma,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper,
+    float const q,
+    float const p1,
+    float const p2)
 {
     if (src.isNull())
     {
@@ -581,9 +602,12 @@ BinaryImage binarizeGatos(
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 BinaryImage binarizeSauvola(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -600,9 +624,12 @@ BinaryImage binarizeSauvola(
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  */
 BinaryImage binarizeWolf(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -619,9 +646,12 @@ BinaryImage binarizeWolf(
  * bradley = mean * (1.0 - k), k = 0.2
  */
 BinaryImage binarizeBradley(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -638,7 +668,8 @@ BinaryImage binarizeBradley(
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
  */
 float binarizeGradValue(
-    GrayImage const& gray, GrayImage const& gmean)
+    GrayImage const& gray,
+    GrayImage const& gmean)
 {
     float tvalue = 127.5f;
 
@@ -688,9 +719,12 @@ float binarizeGradValue(
 }
 
 BinaryImage binarizeGrad(
-    GrayImage const& src, int const radius,
-    double const coef, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const coef,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -707,9 +741,12 @@ BinaryImage binarizeGrad(
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
 BinaryImage binarizeSingh(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -726,9 +763,12 @@ BinaryImage binarizeSingh(
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 BinaryImage binarizeWAN(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -742,9 +782,13 @@ BinaryImage binarizeWAN(
 }
 
 BinaryImage binarizeEdgeDiv(
-    GrayImage const& src, int const radius,
-    double const kep, double const kbd, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const kep,
+    float const kbd,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -763,9 +807,12 @@ BinaryImage binarizeEdgeDiv(
  * surround = blur(img, r), r = 10
  */
 BinaryImage binarizeRobust(
-    GrayImage const& src, int const radius,
-    double const k, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -779,9 +826,12 @@ BinaryImage binarizeRobust(
 } // binarizeRobust
 
 BinaryImage binarizeMScale(
-    GrayImage const& src, int const radius,
-    double const coef, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const coef,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {
@@ -795,9 +845,12 @@ BinaryImage binarizeMScale(
 }  // binarizeMScale
 
 BinaryImage binarizeEngraving(
-    GrayImage const& src, int const radius,
-    double const coef, int const delta,
-    unsigned char const bound_lower, unsigned char const bound_upper)
+    GrayImage const& src,
+    int const radius,
+    float const coef,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
 {
     if (src.isNull())
     {

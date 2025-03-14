@@ -110,7 +110,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeImageToDots(
 IMAGEPROC_EXPORT BinaryImage binarizeBMTiled(
     GrayImage const& src,
     int radius = 50,
-    double k = 0.75,
+    float k = 0.75f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -123,7 +123,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeBMTiled(
 IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.20,
+    float k = 0.20f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -140,20 +140,20 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
     GrayImage const& src,
     BinaryImage const& niblack,
     int radius = 100,
-    double q = 0.6,
-    double p1 = 0.5,
-    double p2 = 0.8);
+    float q = 0.6f,
+    float p1 = 0.5f,
+    float p2 = 0.8f);
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
     GrayImage const& src,
     int radius = 100,
-    double noise_sigma = 3.0,
-    double k = 0.2,
+    float noise_sigma = 3.0f,
+    float k = 0.2f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255,
-    double q = 0.6,
-    double p1 = 0.5,
-    double p2 = 0.8);
+    float q = 0.6f,
+    float p1 = 0.5f,
+    float p2 = 0.8f);
 
 /**
  * \brief Image binarization using Sauvola's local thresholding method.
@@ -163,7 +163,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatos(
 IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.34,
+    float k = 0.34f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -181,7 +181,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeSauvola(
 IMAGEPROC_EXPORT BinaryImage binarizeWolf(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.30,
+    float k = 0.30f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -195,7 +195,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
 IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.2,
+    float k = 0.2f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -211,7 +211,7 @@ IMAGEPROC_EXPORT float binarizeGradValue(
 IMAGEPROC_EXPORT BinaryImage binarizeGrad(
     GrayImage const& src,
     int radius = 10,
-    double coef = 0.75,
+    float coef = 0.75f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -227,7 +227,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeGrad(
 IMAGEPROC_EXPORT BinaryImage binarizeSingh(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.2,
+    float k = 0.2f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -242,7 +242,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeSingh(
 IMAGEPROC_EXPORT BinaryImage binarizeWAN(
     GrayImage const& src,
     int radius = 100,
-    double k = 0.2,
+    float k = 0.2f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -255,8 +255,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeWAN(
 IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
     GrayImage const& src,
     int radius = 10,
-    double kep = 0.5,
-    double kdb = 0.5,
+    float kep = 0.5f,
+    float kdb = 0.5f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -271,7 +271,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeEdgeDiv(
 IMAGEPROC_EXPORT BinaryImage binarizeRobust(
     GrayImage const& src,
     int radius = 10,
-    double k = 0.2,
+    float k = 0.2f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -284,7 +284,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeRobust(
 IMAGEPROC_EXPORT BinaryImage binarizeMScale(
     GrayImage const& src,
     int radius = 10,
-    double coef = 0.5,
+    float coef = 0.5f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
@@ -292,7 +292,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeMScale(
 IMAGEPROC_EXPORT BinaryImage binarizeEngraving(
     GrayImage const& src,
     int radius = 20,
-    double coef = 0.2,
+    float coef = 0.2f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);
