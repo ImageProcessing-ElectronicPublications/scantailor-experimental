@@ -420,12 +420,16 @@ StageListView::Model::disableBatchProcessingAnimation()
 int
 StageListView::Model::columnCount(QModelIndex const& parent) const
 {
+    Q_UNUSED(parent);
+
     return 2;
 }
 
 int
 StageListView::Model::rowCount(QModelIndex const& parent) const
 {
+    Q_UNUSED(parent);
+    
     return m_ptrStages->count();
 }
 

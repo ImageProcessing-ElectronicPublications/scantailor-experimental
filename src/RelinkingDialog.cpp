@@ -56,6 +56,8 @@ RelinkingDialog::RelinkingDialog(QString const& project_file_path, QWidget* pare
 void
 RelinkingDialog::selectionChanged(QItemSelection const& selected, QItemSelection const& deselected)
 {
+    Q_UNUSED(deselected);
+    
     if (selected.isEmpty())
     {
         ui.pathVisualization->clear();

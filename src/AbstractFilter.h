@@ -52,7 +52,10 @@ public:
         return -1;
     }
 
-    virtual void selectPageOrder(int option) {}
+    virtual void selectPageOrder(int option)
+    {
+        Q_UNUSED(option);
+    }
 
     virtual std::vector<PageOrderOption> pageOrderOptions() const
     {

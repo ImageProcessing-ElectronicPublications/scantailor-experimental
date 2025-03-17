@@ -97,6 +97,10 @@ private:
 
 static tsize_t deviceRead(thandle_t context, tdata_t data, tsize_t size)
 {
+    Q_UNUSED(context);
+    Q_UNUSED(data);
+    Q_UNUSED(size);
+    
     // Not implemented.
     return 0;
 }

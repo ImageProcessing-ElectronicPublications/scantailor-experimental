@@ -322,6 +322,8 @@ ImageView::aggregateHardSizeChanged()
 void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
+    Q_UNUSED(interaction);
+    
     QRectF centerRectV = QRectF((m_extraRect.right() + m_extraRect.left()) * 0.5f, m_extraRect.top(), 0.0f, (m_extraRect.bottom() - m_extraRect.top()));
     QRectF centerRectH = QRectF(m_extraRect.left(), (m_extraRect.bottom() + m_extraRect.top()) * 0.5f, (m_extraRect.right() - m_extraRect.left()), 0.0f);
 

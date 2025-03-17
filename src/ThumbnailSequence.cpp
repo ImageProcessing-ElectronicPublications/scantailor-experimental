@@ -1751,6 +1751,9 @@ void
 ThumbnailSequence::CompositeItem::paint(
     QPainter* painter, QStyleOptionGraphicsItem const* option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+    
     if (m_pItem->isSelected())
     {
         painter->fillRect(

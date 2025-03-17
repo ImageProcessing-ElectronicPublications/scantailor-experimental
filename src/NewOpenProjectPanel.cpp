@@ -114,6 +114,8 @@ NewOpenProjectPanel::recentProjectButtonClicked()
 void
 NewOpenProjectPanel::paintEvent(QPaintEvent* event)
 {
+    Q_UNUSED(event);
+    
     // In fact Qt doesn't draw QWidget's background, unless
     // autoFillBackground property is set, so we can safely
     // draw our borders and shadows in the margins area.

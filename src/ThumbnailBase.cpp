@@ -84,6 +84,9 @@ void
 ThumbnailBase::paint(QPainter* painter,
                      QStyleOptionGraphicsItem const* option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
     ThumbnailLoadResult res(ThumbnailLoadResult::QUEUED);
 
     if (!m_ptrCompletionHandler.get())

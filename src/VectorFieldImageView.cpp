@@ -127,6 +127,9 @@ VectorFieldImageView::onPaint(QPainter& painter, InteractionState const& interac
 void
 VectorFieldImageView::onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(event);
+    Q_UNUSED(interaction);
+
     m_imageFocalPoint = widgetToImage().map(event->pos());
     update();
 }

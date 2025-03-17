@@ -257,6 +257,8 @@ Grid<Vec2f>
 TextLineTracer::calcGradient(
     imageproc::GrayImage const& image, DebugImages* dbg)
 {
+    Q_UNUSED(dbg);
+
     int const width = image.width();
     int const height = image.height();
     Grid<Vec2f> grad(width, height, 0);

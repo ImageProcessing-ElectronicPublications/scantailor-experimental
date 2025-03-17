@@ -41,6 +41,8 @@ PageLayout::PageLayout(
     Framings const& framings,
     RelativeMargins const& margins)
 {
+    Q_UNUSED(framings);
+    
     m_innerRect = unscaled_content_rect;
     m_scaleFactor_X = 1.0;
     m_scaleFactor_Y = 1.0;

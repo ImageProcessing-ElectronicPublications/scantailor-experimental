@@ -211,6 +211,19 @@ public:
     Item(ThumbId const& thumb_id,
          AbstractImageTransform const& full_size_image_transform,
          int preceding_load_attepmts, Status status);
+
+    Item(Item const &other)
+        : thumbId(other.thumbId),
+          thisPtr(std::make_shared<Item const*>(this)),
+          fullSizeImageTransform(other.fullSizeImageTransform),
+          pixmap(other.pixmap),
+          pixmapTransform(other.pixmapTransform),
+          completionHandlers(other.completionHandlers),
+          precedingLoadAttempts(other.precedingLoadAttempts),
+          status(other.status)
+    {
+    }
+
 private:
     Item& operator=(Item const& other); // Assignment is forbidden.
 };

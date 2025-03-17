@@ -86,8 +86,13 @@ protected:
      * @note It's not necessary for subclasses to restore the painter state.
      */
     virtual void paintOverImage(
-        QPainter& painter, QTransform const& transformed_to_display,
-        QTransform const& thumb_to_display) {}
+        QPainter &painter, QTransform const &transformed_to_display,
+        QTransform const &thumb_to_display)
+    {
+        Q_UNUSED(painter);
+        Q_UNUSED(transformed_to_display);
+        Q_UNUSED(thumb_to_display);
+    }
 
     imageproc::AbstractImageTransform const& fullSizeImageTransform() const
     {

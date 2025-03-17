@@ -271,6 +271,8 @@ ZoneDefaultInteraction::onMouseReleaseEvent(QMouseEvent* event, InteractionState
 void
 ZoneDefaultInteraction::onMouseMoveEvent(QMouseEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(interaction);
+
     QTransform const to_screen(m_rContext.imageView().imageToWidget());
 
     m_screenMousePos = to_screen.map(event->pos() + QPointF(0.5, 0.5));

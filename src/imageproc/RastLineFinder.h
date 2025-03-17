@@ -291,7 +291,11 @@ private:
     {
         friend class PriorityQueue<SearchSpace, OrderedSearchSpaces>;
     private:
-        void setIndex(SearchSpace& obj, size_t heap_idx) {}
+        void setIndex(SearchSpace& obj, size_t heap_idx)
+        {
+            Q_UNUSED(obj);
+            Q_UNUSED(heap_idx);
+        }
 
         bool higherThan(SearchSpace const& lhs, SearchSpace const& rhs) const
         {

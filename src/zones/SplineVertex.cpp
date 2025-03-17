@@ -146,6 +146,8 @@ SentinelSplineVertex::point() const
 void
 SentinelSplineVertex::setPoint(QPointF const& pt)
 {
+    Q_UNUSED(pt);
+    
     assert(!"Illegal call to SentinelSplineVertex::setPoint()");
 }
 
@@ -208,14 +210,18 @@ RealSplineVertex::unref() const
 }
 
 SplineVertex::Ptr
-RealSplineVertex::thisOrPrevReal(Loop)
+RealSplineVertex::thisOrPrevReal(Loop loop)
 {
+    Q_UNUSED(loop);
+
     return SplineVertex::Ptr(this);
 }
 
 SplineVertex::Ptr
 RealSplineVertex::thisOrNextReal(Loop loop)
 {
+    Q_UNUSED(loop);
+
     return SplineVertex::Ptr(this);
 }
 

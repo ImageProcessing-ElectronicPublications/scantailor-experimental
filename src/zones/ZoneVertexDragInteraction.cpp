@@ -49,6 +49,8 @@ ZoneVertexDragInteraction::ZoneVertexDragInteraction(
 void
 ZoneVertexDragInteraction::onPaint(QPainter& painter, InteractionState const& interaction)
 {
+    Q_UNUSED(interaction);
+
     painter.setWorldMatrixEnabled(false);
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -112,6 +114,8 @@ void
 ZoneVertexDragInteraction::onMouseReleaseEvent(
     QMouseEvent* event, InteractionState& interaction)
 {
+    Q_UNUSED(interaction);
+
     if (event->button() == Qt::LeftButton)
     {
         if (m_ptrVertex->point() == m_ptrVertex->next(SplineVertex::LOOP)->point() ||

@@ -385,6 +385,8 @@ ProjectFilesDialog::inpDirEdited(QString const& text)
 void
 ProjectFilesDialog::outDirEdited(QString const& text)
 {
+    Q_UNUSED(text);
+    
     m_autoOutDir = false;
 }
 
