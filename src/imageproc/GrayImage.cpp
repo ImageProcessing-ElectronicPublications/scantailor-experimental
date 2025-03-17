@@ -1642,6 +1642,70 @@ void grayMedianInPlace(
     }
 } // grayMedianInPlace
 
+GrayImage graySubtractBG(
+    GrayImage const& src, int const radius, float const coef)
+{
+    GrayImage dst(src);
+    graySubtractBGInPlace(dst, radius, coef);
+    return dst;
+} // graySubstractBG
+
+void graySubtractBGInPlace(
+    GrayImage& src, int const radius, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+    unsigned char* src_line = src.data();
+    int const src_stride = src.stride();
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        GrayImage gmean = grayMedian(src, radius, 1.0f);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        unsigned int const w = src.width();
+        unsigned int const h = src.height();
+        unsigned char* gmean_line = gmean.data();
+        unsigned int const gmean_stride = gmean.stride();
+        int const coef512 = (int)(coef * 512.0f + 0.5f);
+
+        unsigned char gmin = gmean_line[0];
+        unsigned char gmax = gmean_line[0];
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned char const mean = gmean_line[x];
+                gmin = (mean < gmin) ? mean : gmin;
+                gmax = (mean < gmax) ? gmax : mean;
+            }
+            gmean_line += gmean_stride;
+        }
+        int const gm = ((int) gmin + (int) gmax) >> 1;
+
+        gmean_line = gmean.data();
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                int const origin = src_line[x];
+                int const mean = gmean_line[x];
+                int diff = gm + origin - mean;
+                int ret = ((coef512 * diff + (512 - coef512) * origin + 256) >> 9);
+                ret = (ret < 0) ? 0 : (ret < 255) ? ret : 255;
+                src_line[x] = (unsigned char) ret;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+        gmean = GrayImage();
+    }
+} // graySubtractBGInPlace
+
 GrayImage grayDespeckle(
     GrayImage const& src, int const radius, float const coef)
 {
@@ -1761,14 +1825,22 @@ void grayAutoLevelInPlace(
         return;
     }
 
-    if ((radius > 0) && (coef != 0.0f))
+    if (coef != 0.0f)
     {
         int const w = src.width();
         int const h = src.height();
         uint8_t* src_line = src.data();
         int const src_stride = src.stride();
 
-        GrayImage gmean = gaussBlur(src, radius, radius);
+        GrayImage gmean;
+        if (radius > 0)
+        {
+            gmean = gaussBlur(src, radius, radius);
+        }
+        else
+        {
+            gmean = GrayImage(src);
+        }
         if (gmean.isNull())
         {
             return;

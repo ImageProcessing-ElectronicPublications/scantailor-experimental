@@ -1348,6 +1348,8 @@ OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_optio
 
         grayRetinexInPlace(gout, color_options.retinexSize(), color_options.retinexCoef());
 
+        graySubtractBGInPlace(gout, color_options.subtractbgSize(), color_options.subtractbgCoef());
+
         grayEqualizeInPlace(gout, color_options.equalizeSize(), color_options.equalizeCoef());
 
         grayWienerInPlace(gout, color_options.wienerSize(), (255.0f * color_options.wienerCoef() * color_options.wienerCoef()));

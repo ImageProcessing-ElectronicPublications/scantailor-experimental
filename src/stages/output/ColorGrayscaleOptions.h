@@ -42,6 +42,8 @@ public:
         , m_overblurCoef(0.0)
         , m_retinexSize(31)
         , m_retinexCoef(0.0)
+        , m_subtractbgSize(45)
+        , m_subtractbgCoef(0.0)
         , m_equalizeSize(6)
         , m_equalizeCoef(0.0)
         , m_knndRadius(7)
@@ -176,6 +178,23 @@ public:
     void setRetinexCoef(double val)
     {
         m_retinexCoef = val;
+    }
+
+    int subtractbgSize() const
+    {
+        return m_subtractbgSize;
+    }
+    void setSubtractbgSize(int val)
+    {
+        m_subtractbgSize = val;
+    }
+    double subtractbgCoef() const
+    {
+        return m_subtractbgCoef;
+    }
+    void setSubtractbgCoef(double val)
+    {
+        m_subtractbgCoef = val;
     }
 
     int equalizeSize() const
@@ -426,6 +445,8 @@ private:
     double m_overblurCoef;
     int m_retinexSize;
     double m_retinexCoef;
+    int m_subtractbgSize;
+    double m_subtractbgCoef;
     int m_equalizeSize;
     double m_equalizeCoef;
     int m_knndRadius;

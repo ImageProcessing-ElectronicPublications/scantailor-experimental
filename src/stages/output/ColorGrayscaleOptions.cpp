@@ -37,6 +37,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     , m_overblurCoef(el.attribute("overblurCoef").toDouble())
     , m_retinexSize(el.attribute("retinexSize").toInt())
     , m_retinexCoef(el.attribute("retinexCoef").toDouble())
+    , m_subtractbgSize(el.attribute("subtractbgSize").toInt())
+    , m_subtractbgCoef(el.attribute("subtractbgCoef").toDouble())
     , m_equalizeSize(el.attribute("equalizeSize").toInt())
     , m_equalizeCoef(el.attribute("equalizeCoef").toDouble())
     , m_knndRadius(el.attribute("knnDRadius").toInt())
@@ -100,6 +102,10 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_retinexSize < 1)
     {
         m_retinexSize = 31;
+    }
+    if (m_subtractbgSize < 1)
+    {
+        m_subtractbgSize = 45;
     }
     if (m_equalizeSize < 1)
     {
@@ -230,6 +236,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("retinexSize", m_retinexSize);
         el.setAttribute("retinexCoef", m_retinexCoef);
     }
+    if (m_subtractbgCoef != 0.0)
+    {
+        el.setAttribute("subtractbgSize", m_subtractbgSize);
+        el.setAttribute("subtractbgCoef", m_subtractbgCoef);
+    }
     if (m_equalizeCoef != 0.0)
     {
         el.setAttribute("equalizeSize", m_equalizeSize);
@@ -350,6 +361,14 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_retinexSize != other.m_retinexSize)
+    {
+        return false;
+    }
+    if (m_subtractbgCoef != other.m_subtractbgCoef)
+    {
+        return false;
+    }
+    if (m_subtractbgSize != other.m_subtractbgSize)
     {
         return false;
     }

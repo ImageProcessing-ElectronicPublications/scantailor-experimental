@@ -299,6 +299,18 @@ IMAGEPROC_EXPORT void grayMedianInPlace(
     float coef = 0.0f);
 
 /**
+ * @brief Subtract BG GrayImage.
+ */
+IMAGEPROC_EXPORT GrayImage graySubtractBG(
+    GrayImage const& src,
+    int radius = 45,
+    float coef = 0.0f);
+IMAGEPROC_EXPORT void graySubtractBGInPlace(
+    GrayImage& src,
+    int radius = 45,
+    float coef = 0.0f);
+
+/**
  * @brief Despeckle GrayImage.
  */
 IMAGEPROC_EXPORT GrayImage grayDespeckle(
