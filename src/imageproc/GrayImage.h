@@ -183,6 +183,11 @@ IMAGEPROC_EXPORT GrayImage grayNiblackMap(
     GrayImage const& src,
     int radius = 100,
     float k = 0.20f);
+IMAGEPROC_EXPORT void grayBGtoMap(
+    GrayImage const& src,
+    GrayImage& background,
+    float q = 0.6f,
+    float p = 0.2f);
 IMAGEPROC_EXPORT GrayImage graySauvolaMap(
     GrayImage const& src,
     int radius = 100,

@@ -634,6 +634,94 @@ GrayImage grayNiblackMap(
 }
 
 /*
+ * gatos = bg - f(i, bg, q, p), q = 0.6, p = 0.2
+ */
+void grayBGtoMap(
+    GrayImage const& src,
+    GrayImage& background,
+    float const q,
+    float const p)
+{
+    if (src.isNull() || background.isNull())
+    {
+        return;
+    }
+
+    int const w = src.width();
+    int const h = src.height();
+
+    if ((w != background.width()) || (h != background.height()))
+    {
+        return;
+    }
+    uint8_t const* src_line = src.data();
+    int const src_stride = src.stride();
+    uint8_t* background_line = background.data();
+    int const background_stride = background.stride();
+
+    // sum(background - original) for foreground pixels (background > original).
+    uint64_t sum_diff = 0;
+    // sum(background) for background pixels (background <= original).
+    uint64_t sum_bg = 0;
+    uint64_t sum_contour = 0;
+    uint64_t src_size = w * h;
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            int const im = src_line[x];
+            int const bg = background_line[x];
+            if (im < bg)
+            {
+                sum_diff += (bg - im);
+                sum_contour++;
+            }
+            else
+            {
+                sum_bg += bg;
+            }
+        }
+        src_line += src_stride;
+        background_line += background_stride;
+    }
+
+    if ((sum_contour == 0) || (sum_contour == src_size))
+    {
+        return;
+    }
+
+    float const d = ((float) sum_diff) / sum_contour;
+    float const b = ((float) sum_bg) / (src_size - sum_contour);
+
+    /*
+        double const q = 0.6;
+        double const p = 0.2;
+    */
+    float const qd = q * d;
+    float const threshold_scale = qd * p;
+    float const threshold_bias = qd * (1.0f - p);
+
+    src_line = src.data();
+    background_line = background.data();
+    for (int y = 0; y < h; y++)
+    {
+        for (int x = 0; x < w; x++)
+        {
+            int const im = src_line[x];
+            int const bg = background_line[x];
+            float const bgf = ((float) bg) / b;
+            float const tk = 1.0f / (1.0f + expf(-8.0f * bgf + 6.0f));
+            int const threshold = (threshold_scale * tk + threshold_bias + 0.5f);
+            int bgn = bg - threshold;
+            bgn = (bgn < 0) ? 0 : ((bgn < 255) ? bgn : 255);
+            background_line[x] = bgn;
+        }
+        src_line += src_stride;
+        background_line += background_stride;
+    }
+}
+
+/*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage graySauvolaMap(

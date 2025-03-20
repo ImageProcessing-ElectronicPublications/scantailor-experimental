@@ -402,6 +402,9 @@ BinaryImage binarizeBMTiled(
     return bw_img;
 }
 
+/*
+ * niblack = mean - k * stderr, k = 0.2
+ */
 BinaryImage binarizeNiblack(
     GrayImage const& src,
     int const radius,
@@ -421,22 +424,22 @@ BinaryImage binarizeNiblack(
     return bw_img;
 }
 
-BinaryImage binarizeGatosCleaner(
+/*
+ * gatos = bg - f(i, bg, q, p), q = 0.6, p = 0.2
+ */
+GrayImage binarizeGatosBG(
     GrayImage const& src,
     BinaryImage const& niblack,
-    int const radius,
-    float const q,
-    float const p1,
-    float const p2)
+    int const radius)
 {
     GrayImage gray = GrayImage(src);
     if (gray.isNull() || niblack.isNull())
     {
-        return niblack;
+        return GrayImage();
     }
     if (radius < 1)
     {
-        return niblack;
+        return gray;
     }
 
     int const w = src.width();
@@ -445,7 +448,7 @@ BinaryImage binarizeGatosCleaner(
 
     if ((w != niblack.width()) || (h != niblack.height()))
     {
-        return niblack;
+        return gray;
     }
 
     IntegralImage<uint32_t> niblack_bg_ii(w, h);
@@ -475,28 +478,15 @@ BinaryImage binarizeGatosCleaner(
         niblack_line += niblack_stride;
     }
 
-    QRect const image_rect(gray.rect());
     GrayImage background(gray);
     if (background.isNull())
     {
-        return niblack;
+        return gray;
     }
-
     uint8_t* background_line = background.data();
     int const background_stride = background.stride();
 
-    uint64_t niblack_bg_sum = niblack_bg_ii.sum(image_rect);
-    uint64_t src_size = w * h;
-    if ((niblack_bg_sum == 0) || (niblack_bg_sum == src_size))
-    {
-        return niblack;
-    }
-
-    // sum(background - original) for foreground pixels according to Niblack.
-    uint32_t sum_diff = 0;
-
-    // sum(background) pixels for background pixels according to Niblack.
-    uint32_t sum_bg = 0;
+    QRect const image_rect(gray.rect());
 
     niblack_line = niblack.data();
     unsigned int const w2 = w + w;
@@ -520,60 +510,22 @@ BinaryImage binarizeGatosCleaner(
                 }
 
                 // Foreground pixel. Interpolate from background pixels in window.
+                uint32_t bg = background_line[x];
                 if (niblack_sum_bg > 0)
                 {
                     uint32_t const gray_sum_bg = gray_bg_ii.sum(window);
-                    uint32_t const bg = (gray_sum_bg + (niblack_sum_bg >> 1)) / niblack_sum_bg;
-                    sum_diff += bg - background_line[x];
-                    background_line[x] = bg;
+                    bg = (gray_sum_bg + (niblack_sum_bg >> 1)) / niblack_sum_bg;
                 }
-                else
-                {
-                    sum_diff += 255 - background_line[x];
-                    background_line[x] = 255;
-                }
-            }
-            else
-            {
-                sum_bg += background_line[x];
+                background_line[x] = bg;
             }
         }
         background_line += background_stride;
         niblack_line += niblack_stride;
     }
 
-    double const delta = double(sum_diff) / (src_size - niblack_bg_sum);
-    double const b = double(sum_bg) / niblack_bg_sum;
-
-    /*
-        double const q = 0.6;
-        double const p1 = 0.5;
-        double const p2 = 0.8;
-    */
-    double const exp_scale = -4.0 / (b * (1.0 - p1));
-    double const exp_bias = 2.0 * (1.0 + p1) / (1.0 - p1);
-    double const threshold_scale = q * delta * (1.0 - p2);
-    double const threshold_bias = q * delta * p2;
-
-    rasterOpGeneric(
-        [exp_scale, exp_bias, threshold_scale, threshold_bias]
-        (uint8_t& gray, uint8_t const bg)
-    {
-        double const threshold = threshold_scale /
-                                 (1.0 + exp(double(bg) * exp_scale + exp_bias)) + threshold_bias;
-        gray = double(bg) - double(gray) > threshold ? 0x00 : 0xff;
-    },
-    gray, background
-    );
-
-    BinaryImage bw_img = BinaryImage(gray);
-
-    return bw_img;
+    return background;
 }
 
-/*
- * niblack = mean - k * stderr, k = 0.2
- */
 BinaryImage binarizeGatos(
     GrayImage const& src,
     int const radius,
@@ -583,17 +535,18 @@ BinaryImage binarizeGatos(
     unsigned char const bound_lower,
     unsigned char const bound_upper,
     float const q,
-    float const p1,
-    float const p2)
+    float const p)
 {
     if (src.isNull())
     {
         return BinaryImage();
     }
 
-    GrayImage wiener(grayWiener(src, 5, noise_sigma));
+    GrayImage const wiener(grayWiener(src, 5, noise_sigma));
     BinaryImage niblack(binarizeNiblack(wiener, radius, k, delta, bound_lower, bound_upper));
-    BinaryImage bw_img(binarizeGatosCleaner(wiener, niblack, radius, q, p1, p2));
+    GrayImage threshold_map(binarizeGatosBG(wiener, niblack, radius));
+    grayBGtoMap(wiener, threshold_map, q, p);
+    BinaryImage bw_img(binarizeFromMap(wiener, threshold_map, delta, bound_lower, bound_upper));
 
     return bw_img;
 }

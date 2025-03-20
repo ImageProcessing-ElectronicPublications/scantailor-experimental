@@ -136,13 +136,10 @@ IMAGEPROC_EXPORT BinaryImage binarizeNiblack(
  *
  * \see Help -> About -> References -> [10]
  */
-IMAGEPROC_EXPORT BinaryImage binarizeGatosCleaner(
+IMAGEPROC_EXPORT GrayImage binarizeGatosBG(
     GrayImage const& src,
     BinaryImage const& niblack,
-    int radius = 100,
-    float q = 0.6f,
-    float p1 = 0.5f,
-    float p2 = 0.8f);
+    int radius = 100);
 IMAGEPROC_EXPORT BinaryImage binarizeGatos(
     GrayImage const& src,
     int radius = 100,
@@ -152,8 +149,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeGatos(
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255,
     float q = 0.6f,
-    float p1 = 0.5f,
-    float p2 = 0.8f);
+    float p = 0.2f);
 
 /**
  * \brief Image binarization using Sauvola's local thresholding method.
