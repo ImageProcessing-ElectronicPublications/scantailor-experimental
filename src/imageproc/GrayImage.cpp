@@ -658,6 +658,8 @@ void grayBGtoMap(
     int const src_stride = src.stride();
     uint8_t* background_line = background.data();
     int const background_stride = background.stride();
+    int const hist_size = 256;
+    unsigned char histogram[hist_size] = {0};
 
     // sum(background - original) for foreground pixels (background > original).
     uint64_t sum_diff = 0;
@@ -701,22 +703,25 @@ void grayBGtoMap(
     float const threshold_scale = qd * p;
     float const threshold_bias = qd * (1.0f - p);
 
-    src_line = src.data();
+    for (int k = 0; k < hist_size; k++)
+    {
+        float const bgf = ((float) k + 1.0f) / (b + 1.0f);
+        float const tk = 1.0f / (1.0f + expf(-8.0f * bgf + 6.0f));
+        int const threshold = (threshold_scale * tk + threshold_bias + 0.5f);
+        int bgn = k - threshold;
+        bgn = (bgn < 0) ? 0 : ((bgn < 255) ? bgn : 255);
+        histogram[k] = (unsigned char) bgn;
+    }
+
     background_line = background.data();
     for (int y = 0; y < h; y++)
     {
         for (int x = 0; x < w; x++)
         {
-            int const im = src_line[x];
-            int const bg = background_line[x];
-            float const bgf = ((float) bg) / b;
-            float const tk = 1.0f / (1.0f + expf(-8.0f * bgf + 6.0f));
-            int const threshold = (threshold_scale * tk + threshold_bias + 0.5f);
-            int bgn = bg - threshold;
-            bgn = (bgn < 0) ? 0 : ((bgn < 255) ? bgn : 255);
+            unsigned char const bg = background_line[x];
+            unsigned char const bgn = histogram[bg];
             background_line[x] = bgn;
         }
-        src_line += src_stride;
         background_line += background_stride;
     }
 }
