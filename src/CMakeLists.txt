@@ -176,14 +176,38 @@ IF(WIN32)
 ENDIF(WIN32)
 
 ADD_LIBRARY(stcore STATIC ${common_sources} ${common_ui_sources})
-IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
-    TARGET_LINK_LIBRARIES(stcore Qt5::Widgets Qt5::Xml ${MAYBE_QT_OPENGL_MODULE})
+
+IF(APPLE)
+    IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        TARGET_LINK_LIBRARIES(stcore Qt5::Widgets Qt5::Xml Qt5::PrintSupport ${MAYBE_QT_OPENGL_MODULE})
+    ELSE()
+        TARGET_LINK_LIBRARIES(stcore Qt6::Widgets Qt6::Xml Qt6::PrintSupport ${MAYBE_QT_OPENGL_MODULE})
+    ENDIF()
 ELSE()
-    TARGET_LINK_LIBRARIES(stcore Qt6::Widgets Qt6::Xml ${MAYBE_QT_OPENGL_MODULE})
+    IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        TARGET_LINK_LIBRARIES(stcore Qt5::Widgets Qt5::Xml ${MAYBE_QT_OPENGL_MODULE})
+    ELSE()
+        TARGET_LINK_LIBRARIES(stcore Qt6::Widgets Qt6::Xml ${MAYBE_QT_OPENGL_MODULE})
+    ENDIF()
 ENDIF()
+
 ADD_DEPENDENCIES(stcore toplevel_ui_sources)
 
-ADD_EXECUTABLE(scantailor-experimental WIN32 ${gui_only_sources} ${resource_sources} ${win32_resource_file})
+IF(APPLE)
+    SET(ICON_NAME "ScanTailor-Experimental.icns")
+    SET(ICON_PATH "${CMAKE_SOURCE_DIR}/packaging/osx/${ICON_NAME}")
+    SET_SOURCE_FILES_PROPERTIES(${ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    ADD_EXECUTABLE(scantailor-experimental MACOSX_BUNDLE ${gui_only_sources} ${resource_sources} ${ICON_PATH})
+    SET_TARGET_PROPERTIES(scantailor-experimental PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/packaging/osx/Info.plist.in
+        INSTALL_RPATH "@executable_path/../Frameworks"
+    )
+ELSEIF(WIN32)
+    ADD_EXECUTABLE(scantailor-experimental WIN32 ${gui_only_sources} ${resource_sources} ${win32_resource_file})
+ELSE()
+    ADD_EXECUTABLE(scantailor-experimental ${gui_only_sources} ${resource_sources})
+ENDIF()
+
 TARGET_LINK_LIBRARIES(
     scantailor-experimental
     acceleration page_layout output
@@ -197,6 +221,13 @@ SET_TARGET_PROPERTIES(
 )
 
 ADD_EXECUTABLE(scantailor-experimental-cli ${cli_only_sources} ${common_ui_sources})
+
+IF(APPLE)
+    SET_TARGET_PROPERTIES(scantailor-experimental-cli PROPERTIES
+        INSTALL_RPATH "@executable_path/../Frameworks"
+    )
+ENDIF()
+
 TARGET_LINK_LIBRARIES(
     scantailor-experimental-cli
     acceleration page_layout output

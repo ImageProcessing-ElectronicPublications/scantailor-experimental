@@ -78,7 +78,11 @@ IF(ENABLE_OPENCL)
         )
     ENDIF()
 
-    INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION lib/scantailor-experimental)
+    IF(APPLE)
+        INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION scantailor-experimental.app/Contents/PlugIns)
+    ELSE()
+        INSTALL(TARGETS opencl_plugin LIBRARY DESTINATION lib/scantailor-experimental)
+    ENDIF()
 
     IF(NOT STE_NO_TESTS STREQUAL "ON")
         ADD_SUBDIRECTORY(tests)

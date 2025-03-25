@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.21.0)
 
 IF(NOT DEFINED ST_ARCH)
     SET(ST_ARCH "X86")
@@ -120,7 +120,6 @@ INCLUDE(CheckIncludeFile)
 INCLUDE(CheckIncludeFileCXX)
 INCLUDE(TestCXXAcceptsFlag)
 INCLUDE(CMakeDependentOption)
-INCLUDE(cmake/FindPthreads.cmake)
 INCLUDE(cmake/SetDefaultBuildType.cmake)
 INCLUDE(cmake/SetDefaultGccFlags.cmake)
 INCLUDE(cmake/ToNativePath.cmake)
@@ -179,7 +178,11 @@ IF(ST_USE_QT6 STREQUAL "ON")
     IF(ENABLE_OPENGL)
         FIND_PACKAGE(Qt6OpenGL ${qt_min_version} REQUIRED)
     ENDIF()
-ELSE()
+    IF(APPLE)
+        # Not used but required for loading cocoa plugin
+        FIND_PACKAGE(Qt6PrintSupport ${qt_min_version} REQUIRED)
+    ENDIF(APPLE)
+ ELSE()
     SET(qt_min_version 5.3)
     FIND_PACKAGE(Qt5Core ${qt_min_version} REQUIRED)
     FIND_PACKAGE(Qt5Gui ${qt_min_version} REQUIRED)
@@ -190,6 +193,10 @@ ELSE()
     IF(ENABLE_OPENGL)
         FIND_PACKAGE(Qt5OpenGL ${qt_min_version} REQUIRED)
     ENDIF()
+    IF(APPLE)
+        # Not used but required for loading cocoa plugin
+        FIND_PACKAGE(Qt5PrintSupport ${qt_min_version} REQUIRED)
+    ENDIF(APPLE)
     IF(NOT DEFINED QT_DEFAULT_MAJOR_VERSION)
         SET(QT_DEFAULT_MAJOR_VERSION 5)
     ENDIF()
@@ -200,6 +207,10 @@ INCLUDE_DIRECTORIES("${ZLIB_INCLUDE_DIR}")
 
 FIND_PACKAGE(TIFF REQUIRED)
 INCLUDE_DIRECTORIES("${TIFF_INCLUDE_DIR}")
+
+IF(APPLE)
+    FIND_PACKAGE(JPEG REQUIRED)
+ENDIF()
 
 IF(WIN32)
     ADD_DEFINITIONS(-DUSE_LIBTIFF_DLL)
@@ -236,17 +247,8 @@ ENDIF()
 SET(EXTRA_LIBS "")
 
 IF(UNIX)
-    FindPthreads()
-    IF(PTHREADS_FOUND)
-        ADD_DEFINITIONS(${PTHREADS_CFLAGS})
-        LINK_LIBRARIES(${PTHREADS_LIBS})
-    ELSE(PTHREADS_FOUND)
-        MESSAGE(
-            FATAL_ERROR
-            "Could not detect threading flags.\n"
-            "Try specifying them manually in PTHREADS_CFLAGS and PTHREADS_LIBS."
-        )
-    ENDIF(PTHREADS_FOUND)
+    FIND_PACKAGE(Threads REQUIRED)
+    LINK_LIBRARIES(Threads::Threads)
 ELSEIF(WIN32)
     ADD_DEFINITIONS(-DNOMINMAX)
 ENDIF(UNIX)
@@ -294,6 +296,15 @@ IF(NOT TIFF_LIBRARY)
 ELSE()
     LIST(APPEND EXTRA_LIBS ${TIFF_LIBRARY})
 ENDIF()
+
+IF(APPLE)
+    IF(NOT JPEG_LIBRARY)
+        LIST(APPEND EXTRA_LIBS ${JPEG_LIBRARIES})
+    ELSE()
+        LIST(APPEND EXTRA_LIBS ${JPEG_LIBRARY})
+    ENDIF()
+ENDIF()
+
 IF(NOT ZLIB_LIBRARY)
     LIST(APPEND EXTRA_LIBS ${ZLIB_LIBRARIES})
 ELSE()
@@ -318,7 +329,11 @@ IF(MSVC)
 ENDIF(MSVC)
 
 # Prepare config.h
-IF(WIN32)
+IF(APPLE)
+    SET(TRANSLATION_DIRS "../Resources/translations")
+    SET(STYLESHEETS_DIR "../Resources/stylesheets")
+    SET(PLUGIN_DIRS "../PlugIns")
+ELSEIF(WIN32)
     SET(TRANSLATION_DIRS ".:translations")
     SET(STYLESHEETS_DIR "stylesheets")
     SET(PLUGIN_DIRS ".")
@@ -333,7 +348,12 @@ CONFIGURE_FILE(src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h @ONLY)
 ADD_SUBDIRECTORY(src)
 INCLUDE_DIRECTORIES("${toplevel_ui_sources_BINARY_DIR}")
 
-INSTALL(TARGETS scantailor-experimental scantailor-experimental-cli RUNTIME DESTINATION bin)
+IF(APPLE)
+    INSTALL(TARGETS scantailor-experimental BUNDLE DESTINATION .)
+    INSTALL(TARGETS scantailor-experimental-cli RUNTIME DESTINATION scantailor-experimental.app/Contents/Library)
+ELSE()
+    INSTALL(TARGETS scantailor-experimental scantailor-experimental-cli RUNTIME DESTINATION bin)
+ENDIF()
 
 IF(ENABLE_CRASH_REPORTER)
     FIND_PATH(
@@ -398,12 +418,22 @@ ELSE()
 ENDIF()
 ADD_CUSTOM_TARGET(compile_translations ALL DEPENDS ${QM_FILES})
 
-INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translations")
-INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/stylesheets" DESTINATION "share/scantailor-experimental")
-IF(UNIX)
-    CONFIGURE_FILE("src/io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.metainfo.xml.in" "src/share/metainfo/io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.metainfo.xml")
+IF(APPLE)
+    INSTALL(FILES ${QM_FILES} DESTINATION "scantailor-experimental.app/Contents/Resources/translations")
+ELSE()
+    INSTALL(FILES ${QM_FILES} DESTINATION "share/scantailor-experimental/translations")
 ENDIF()
-INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/share/" DESTINATION "share")
+
+IF(APPLE)
+    INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/stylesheets" DESTINATION scantailor-experimental.app/Contents/Resources)
+ELSE()
+    INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/stylesheets" DESTINATION "share/scantailor-experimental")
+ENDIF()
+
+IF(UNIX AND NOT APPLE)
+    CONFIGURE_FILE("src/io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.metainfo.xml.in" "src/share/metainfo/io.github.ImageProcessing_ElectronicPublications.scantailor-experimental.metainfo.xml")
+    INSTALL(DIRECTORY "${CMAKE_SOURCE_DIR}/src/share/" DESTINATION "share")
+ENDIF()
 
 # Source code packaging
 SET(CPACK_CMAKE_GENERATOR "")
@@ -422,7 +452,38 @@ SET(
 )
 INCLUDE(CPack)
 
-IF(WIN32)
+IF(APPLE)
+    SET(CPACK_CMAKE_GENERATOR "DragNDrop")
+    SET(CPACK_SOURCE_GENERATOR "TGZ")
+
+    INSTALL(IMPORTED_RUNTIME_ARTIFACTS scantailor-experimental
+        RUNTIME_DEPENDENCY_SET runtime
+        BUNDLE DESTINATION .
+    )
+
+    INSTALL(RUNTIME_DEPENDENCY_SET runtime
+        DESTINATION scantailor-experimental.app/Contents/Frameworks
+        PRE_EXCLUDE_REGEXES "^/System" "^/Library" "^/usr/lib"
+        POST_EXCLUDE_REGEXES ""
+    )
+    
+    IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        CMAKE_PATH(SET QT_PLUGINS_DIR NORMALIZE ${Qt5Core_DIR}/../../../plugins)
+    ELSE()
+        CMAKE_PATH(SET QT_PLUGINS_DIR NORMALIZE ${Qt6Core_DIR}/../../../plugins)
+    ENDIF()
+
+    set(PLUGINS_DESTINATION scantailor-experimental.app/Contents/PlugIns)
+
+    INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/libqcocoa.dylib    DESTINATION ${PLUGINS_DESTINATION}/platforms)
+
+    INSTALL(FILES ${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib    DESTINATION ${PLUGINS_DESTINATION}/styles)
+
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqico.dylib   DESTINATION ${PLUGINS_DESTINATION}/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqjpeg.dylib  DESTINATION ${PLUGINS_DESTINATION}/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqsvg.dylib   DESTINATION ${PLUGINS_DESTINATION}/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/libqtiff.dylib  DESTINATION ${PLUGINS_DESTINATION}/imageformats)
+ELSEIF(WIN32)
     # Copy some DLLs to the staging dir.
 
     find_file(LIBJPEG_DLL
@@ -571,4 +632,4 @@ ENDIF()
     
     # Installer for Windows.  Must go last.
     ADD_SUBDIRECTORY(packaging/windows)
-ENDIF(WIN32)
+ENDIF()
