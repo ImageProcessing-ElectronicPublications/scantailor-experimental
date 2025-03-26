@@ -5,8 +5,6 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
 ADD_SUBDIRECTORY(ui)
 INCLUDE_DIRECTORIES("${toplevel_ui_sources_BINARY_DIR}")
 
-# crash_reporter is included unconditionally to collect translation sources from there.
-ADD_SUBDIRECTORY(crash_reporter)
 ADD_SUBDIRECTORY(dewarping)
 ADD_SUBDIRECTORY(foundation)
 ADD_SUBDIRECTORY(math)

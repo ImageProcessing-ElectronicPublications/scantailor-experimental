@@ -41,7 +41,7 @@ CONFIGURE_FILE(
 
 SET(
     dist_targets
-    "scantailor-${ST_FAMILY_LOWER}" "scantailor-${ST_FAMILY_LOWER}-cli" CrashReporter opencl_plugin
+    "scantailor-${ST_FAMILY_LOWER}" "scantailor-${ST_FAMILY_LOWER}-cli" opencl_plugin
 )
 SET(BUILT_BINARIES "")
 FOREACH(target ${dist_targets})
@@ -59,7 +59,6 @@ ADD_CUSTOM_TARGET(
     COMMAND "${CMAKE_COMMAND}" ARGS -DCFG=$<CONFIGURATION>
     "-DCONF_BUILD_DIR=$<TARGET_FILE_DIR:scantailor-experimental>"
     "-DBUILT_BINARIES=${BUILT_BINARIES}"
-    ${MAYBE_CRASHREPORTER_EXE}
     ${MAYBE_OPENCL_PLUGIN_DLL}
     ${MAYBE_CRT_REDIST_PATH}
     -P "${CMAKE_BINARY_DIR}/prepare_staging_dir.cmake"
@@ -70,30 +69,10 @@ ADD_DEPENDENCIES(
     prepare_staging_dir
     "scantailor-${ST_FAMILY_LOWER}" "scantailor-${ST_FAMILY_LOWER}-cli" compile_translations
 )
-IF(ENABLE_CRASH_REPORTER)
-    ADD_DEPENDENCIES(prepare_staging_dir CrashReporter)
-ENDIF()
 
 SET(extra_deps "scantailor-${ST_FAMILY_LOWER}" compile_translations)
 
 SET(DUMP_SYMBOLS_COMMANDS "")
-IF(ENABLE_CRASH_REPORTER)
-    LIST(APPEND extra_deps CrashReporter)
-    SET(
-        DUMP_SYMBOLS_COMMANDS
-        COMMAND "${CMAKE_COMMAND}" ARGS -E echo "Dumping symbols..."
-        
-        COMMAND "${DUMP_SYMS_EXECUTABLE}" ARGS "$<TARGET_FILE:scantailor-experimental>"
-        ">" "${SYMBOLS_PATH}/temp.sym"
-        COMMAND "${CMAKE_COMMAND}" ARGS "-DSYMBOLS_PATH=${SYMBOLS_PATH}"
-        -P "${CMAKE_SOURCE_DIR}/cmake/move_sym_file.cmake"
-        
-        COMMAND "${DUMP_SYMS_EXECUTABLE}" ARGS "$<TARGET_FILE:scantailor-experimental-cli>"
-        ">" "${SYMBOLS_PATH}/temp.sym"
-        COMMAND "${CMAKE_COMMAND}" ARGS "-DSYMBOLS_PATH=${SYMBOLS_PATH}"
-        -P "${CMAKE_SOURCE_DIR}/cmake/move_sym_file.cmake"
-    )
-ENDIF(ENABLE_CRASH_REPORTER)
 
 CONFIGURE_FILE(
     "${CMAKE_SOURCE_DIR}/cmake/generate_nsi_file.cmake.in"
@@ -105,12 +84,6 @@ SET(
     OUTPUT "${CMAKE_BINARY_DIR}/scantailor-${ST_FAMILY_LOWER}.nsi"
     COMMAND "${CMAKE_COMMAND}" "-DCFG=$<CONFIGURATION>"
 )
-IF(ENABLE_CRASH_REPORTER)
-    LIST(
-        APPEND scantailor_nsi_command
-        "-DCRASHREPORTER_EXE=$<TARGET_FILE:CrashReporter>"
-    )
-ENDIF()
 LIST(
     APPEND scantailor_nsi_command
     -P "${CMAKE_BINARY_DIR}/generate_nsi_file.cmake"

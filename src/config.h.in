@@ -7,7 +7,6 @@
 #define STYLESHEETS_DIR "@STYLESHEETS_DIR@"
 #define PLUGIN_DIRS "@PLUGIN_DIRS@"
 
-#cmakedefine ENABLE_CRASH_REPORTER
 #cmakedefine ENABLE_OPENGL
 #cmakedefine ENABLE_OPENCL
 

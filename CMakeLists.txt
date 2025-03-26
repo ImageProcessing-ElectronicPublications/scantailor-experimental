@@ -310,13 +310,6 @@ IF(ENABLE_OPENGL)
     ENDIF()
 ENDIF()
 
-# Crash reporter, only Windows + MSVC supported for now.
-# Must go before generating config.h, as ENABLE_CRASH_REPORTER
-# goes in there.
-IF(MSVC)
-    OPTION(ENABLE_CRASH_REPORTER "Enable crash reporter (only for official builds)" OFF)
-ENDIF(MSVC)
-
 # Prepare config.h
 IF(WIN32)
     SET(TRANSLATION_DIRS ".:translations")
@@ -335,51 +328,16 @@ INCLUDE_DIRECTORIES("${toplevel_ui_sources_BINARY_DIR}")
 
 INSTALL(TARGETS scantailor-experimental scantailor-experimental-cli RUNTIME DESTINATION bin)
 
-IF(ENABLE_CRASH_REPORTER)
-    FIND_PATH(
-        SYMBOLS_PATH . PATHS "${build_outer_dir}/symbols"
-        "${source_outer_dir}/symbols" NO_DEFAULT_PATH
-        DOC "The directory to write symbol information into."
-    )
-    IF(NOT SYMBOLS_PATH)
-        MESSAGE(FATAL_ERROR "SYMBOLS_PATH directory is not set.")
-    ENDIF()
-
-    # We can't build it, because it requires ATL, which is not part
-    # of the Visual Studio Express Edition, so we rely on a pre-built
-    # version which can be found in the Mozilla repository.
-    FIND_PROGRAM(
-        DUMP_SYMS_EXECUTABLE dump_syms PATHS "${build_outer_dir}" "${source_outer_dir}"
-        DOC "Path to dump_syms.exe, which can be found in Mozilla repository."
-    )
-    IF(NOT DUMP_SYMS_EXECUTABLE)
-        MESSAGE(
-            FATAL_ERROR "dump_syms.exe wasn't found.  Specify its location manually by setting the DUMP_SYMS_EXECUTABLE variable.  dump_syms.exe may be found in the Mozilla repository under /toolkit/crashreporter/tools/win32"
-        )
-    ENDIF()
-
-    INCLUDE_DIRECTORIES(crash_reporter crash_reporter/google-breakpad)
-    TARGET_LINK_LIBRARIES(scantailor-experimental crash_handler)
-ENDIF()
-
 # Translations
 TRANSLATION_SOURCES(
     scantailor-experimental
     ${common_sources} ${gui_only_sources} ${cli_only_sources}
 )
 FILE(GLOB TRANSLATION_FILES src/translations/scantailor-experimental_*.ts)
-FILE(GLOB CR_TRANSLATION_FILES src/translations/crashreporter_*.ts)
 
 FINALIZE_TRANSLATION_SET(scantailor-experimental ${TRANSLATION_FILES})
-IF(ENABLE_CRASH_REPORTER)
-    FINALIZE_TRANSLATION_SET(crashreporter ${CR_TRANSLATION_FILES})
-ENDIF()
-UPDATE_TRANSLATIONS_TARGET(update_translations scantailor-experimental crashreporter)
-
+UPDATE_TRANSLATIONS_TARGET(update_translations scantailor-experimental)
 SET(ts_files ${TRANSLATION_FILES})
-IF(ENABLE_CRASH_REPORTER)
-    LIST(APPEND ts_files ${CR_TRANSLATION_FILES})
-ENDIF(ENABLE_CRASH_REPORTER)
 
 # Don't build *.qm files from *untranslated.ts
 SET(FILTERED_TRANSLATION_FILES)
