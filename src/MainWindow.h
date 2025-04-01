@@ -338,6 +338,7 @@ private:
     bool m_debug;
     bool m_closing;
     bool m_beepOnBatchProcessingCompletion;
+    QPalette m_systemPalette;
 };
 
 #endif

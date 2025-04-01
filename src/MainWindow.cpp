@@ -273,6 +273,8 @@ MainWindow::MainWindow()
 
     setDockNestingEnabled(true);
 
+    m_systemPalette = QApplication::palette();
+
     QString stylesheetFilePath = settings.value("settings/stylesheet", "").toString();
     if (!stylesheetFilePath.isEmpty())
         stylesheetChanged(stylesheetFilePath);
@@ -1672,6 +1674,23 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
     QString stylesheet = stylesheetFile.readAll();
 
     stylesheet.replace("@path_to_pics@", STYLESHEETS_DIR);
+
+    if (stylesheet.isEmpty())
+    {
+        QApplication::setPalette(m_systemPalette);
+    }
+    else
+    {
+        QPalette palette = QPalette(m_systemPalette);
+
+        // TODO: Replace me with something normal
+        if (stylesheetFilePath.endsWith("dark_blue.qss"))
+        {
+            palette.setColor(QPalette::Highlight, QColor(0x40, 0xA0, 0xF0));
+        }
+
+        QApplication::setPalette(palette);
+    }
 
     setStyleSheet(stylesheet);
 }
