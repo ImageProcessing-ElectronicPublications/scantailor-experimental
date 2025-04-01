@@ -397,7 +397,7 @@ unsigned int grayBiModalTiledValue(
     unsigned char const bound_upper)
 {
     unsigned int const histsize = 256;
-    unsigned int threshold = histsize / 2;
+    unsigned int threshold = histsize >> 1;
     if (src.isNull())
     {
         return threshold;
@@ -447,8 +447,11 @@ unsigned int grayBiModalTiledValue(
             Ti--;
         }
         Tmax++;
+        Tmin <<= 7;
+        Tmax <<= 7;
 
         threshold = part * Tmax + (512 - part) * Tmin;
+        threshold >>= 8;
         Tn = threshold + 1;
         while (threshold != Tn)
         {
@@ -458,7 +461,7 @@ unsigned int grayBiModalTiledValue(
             for (k = 0; k < histsize; k++)
             {
                 im = histogram[k];
-                if (k < threshold)
+                if ((k << 8) < threshold)
                 {
                     Tb += im * k;
                     ib += im;
@@ -469,10 +472,12 @@ unsigned int grayBiModalTiledValue(
                     iw += im;
                 }
             }
-            Tb = (ib > 0) ? ((Tb + (ib >> 1)) / ib) : Tmin;
-            Tw = (iw > 0) ? ((Tw + (iw >> 1)) / iw) : Tmax;
-            threshold = ((part * Tw + (512 - part) * Tb + 256) >> 9);
+            Tb = (ib > 0) ? ((Tb << 7) / ib) : Tmin;
+            Tw = (iw > 0) ? ((Tw << 7) / iw) : Tmax;
+            threshold = ((part * Tw + (512 - part) * Tb + 127) >> 8);
         }
+        threshold += 127;
+        threshold >>= 8;
     }
 
     return threshold;
