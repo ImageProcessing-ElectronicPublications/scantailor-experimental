@@ -59,11 +59,16 @@ signals:
     void correctCurvesSetByUser(double correct_curves);
 
     void correctAngleSetByUser(double correct_angle);
+
+protected:
+    virtual bool event(QEvent* event);
+
 public slots:
     void manualDeskewAngleSetExternally(double degrees);
 
     void manualDistortionModelSetExternally(
         dewarping::DistortionModel const& model);
+
 public:
     void preUpdateUI(PageId const& page_id, DistortionType const& distortion_type);
 

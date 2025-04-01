@@ -320,6 +320,19 @@ OptionsWidget::manualDeskewAngleSetExternally(double const degrees)
     emit invalidateThumbnail(m_pageId);
 }
 
+bool
+OptionsWidget::event(QEvent* event)
+{
+    bool result = FilterOptionsWidget::event(event);
+
+    if (event->type() == QEvent::StyleChange)
+    {
+        setupDistortionTypeButtons();
+    }
+
+    return result;
+}
+
 void
 OptionsWidget::preUpdateUI(PageId const& page_id, DistortionType const& distortion_type)
 {
@@ -653,7 +666,7 @@ OptionsWidget::setupDistortionTypeButtons()
     resource_names[DistortionType::WARP] = ":/icons/distortion-warp.png";
 
     // Take the "highlight" color from palette and whiten it quite a bit.
-    QColor selected_color(palette().color(QPalette::Active, QPalette::Highlight).toHsl());
+    QColor selected_color(QApplication::palette().color(QPalette::Active, QPalette::Highlight).toHsl());
     selected_color.setHsl(selected_color.hslHue(), selected_color.hslSaturation(), 230);
 
     for (int i = DistortionType::FIRST; i <= DistortionType::LAST; ++i)
