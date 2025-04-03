@@ -244,6 +244,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_ROBUST;
     }
+    else if (str == "grain")
+    {
+        return T_GRAIN;
+    }
     else if (str == "multiscale")
     {
         return T_MSCALE;
@@ -314,6 +318,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_ROBUST:
         str = "robust";
+        break;
+    case T_GRAIN:
+        str = "grain";
         break;
     case T_MSCALE:
         str = "multiscale";

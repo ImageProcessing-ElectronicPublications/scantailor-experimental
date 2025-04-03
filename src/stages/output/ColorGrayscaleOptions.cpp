@@ -55,6 +55,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     , m_edgedivCoef(el.attribute("edgedivCoef").toDouble())
     , m_robustSize(el.attribute("robustSize").toInt())
     , m_robustCoef(el.attribute("robustCoef").toDouble())
+    , m_grainSize(el.attribute("grainSize").toInt())
+    , m_grainCoef(el.attribute("grainCoef").toDouble())
     , m_comixSize(el.attribute("comixSize").toInt())
     , m_comixCoef(el.attribute("comixCoef").toDouble())
     , m_gravureSize(el.attribute("gravureSize").toInt())
@@ -166,6 +168,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_robustCoef < -1.0 || m_robustCoef > 1.0)
     {
         m_robustCoef = 0.0;
+    }
+    if (m_grainSize < 1)
+    {
+        m_grainSize = 15;
+    }
+    if (m_grainCoef < -1.0 || m_grainCoef > 1.0)
+    {
+        m_grainCoef = 0.0;
     }
     if (m_comixSize < 1)
     {
@@ -280,6 +290,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     {
         el.setAttribute("robustSize", m_robustSize);
         el.setAttribute("robustCoef", m_robustCoef);
+    }
+    if (m_grainCoef != 0.0)
+    {
+        el.setAttribute("grainSize", m_grainSize);
+        el.setAttribute("grainCoef", m_grainCoef);
     }
     if (m_comixCoef != 0.0)
     {
@@ -433,6 +448,14 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_robustSize != other.m_robustSize)
+    {
+        return false;
+    }
+    if (m_grainCoef != other.m_grainCoef)
+    {
+        return false;
+    }
+    if (m_grainSize != other.m_grainSize)
     {
         return false;
     }

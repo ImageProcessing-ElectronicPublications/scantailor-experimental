@@ -60,7 +60,8 @@ GrayImage::accessor()
  * mean, w = 200
  */
 GrayImage grayMapMean(
-    GrayImage const& src, int const radius)
+    GrayImage const& src,
+    int const radius)
 {
     if (src.isNull())
     {
@@ -127,7 +128,8 @@ GrayImage grayMapMean(
  * stdev, w = 200
  */
 GrayImage grayMapDeviation(
-    GrayImage const& src, int const radius)
+    GrayImage const& src,
+    int const radius)
 {
     if (src.isNull())
     {
@@ -202,7 +204,8 @@ GrayImage grayMapDeviation(
 } // grayMapDeviation
 
 GrayImage grayMapMax(
-    GrayImage const& src, int const radius)
+    GrayImage const& src,
+    int const radius)
 {
     if (src.isNull())
     {
@@ -281,7 +284,8 @@ GrayImage grayMapMax(
 }  // grayMapMax
 
 GrayImage grayMapContrast(
-    GrayImage const& src, int const radius)
+    GrayImage const& src,
+    int const radius)
 {
     if (src.isNull())
     {
@@ -428,7 +432,7 @@ unsigned int grayBiModalTiledValue(
             for (unsigned int x = x1w; x < x2w; x++)
             {
                 unsigned char pixel = src_line[x];
-                pixel = (pixel < bound_lower) ? bound_lower : (pixel < bound_upper) ? pixel : bound_upper;
+                pixel = (pixel < bound_lower) ? bound_lower : (pixel <= bound_upper) ? pixel : bound_upper;
                 histogram[pixel]++;
             }
             src_line += src_stride;
@@ -592,7 +596,9 @@ GrayImage grayBiModalTiledMap(
  * niblack = mean - k * stderr, k = 0.2
  */
 GrayImage grayNiblackMap(
-    GrayImage const& src, int const radius, float const k)
+    GrayImage const& src,
+    int const radius,
+    float const k)
 {
     if (src.isNull())
     {
@@ -735,7 +741,9 @@ void grayBGtoMap(
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage graySauvolaMap(
-    GrayImage const& src, int const radius, float const k)
+    GrayImage const& src,
+    int const radius,
+    float const k)
 {
     if (src.isNull())
     {
@@ -786,7 +794,9 @@ GrayImage graySauvolaMap(
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  */
 GrayImage grayWolfMap(
-    GrayImage const& src, int const radius, float const k)
+    GrayImage const& src,
+    int const radius,
+    float const k)
 {
     if (src.isNull())
     {
@@ -857,7 +867,9 @@ GrayImage grayWolfMap(
  * bradley = mean * (1.0 - k), k = 0.2
  */
 GrayImage grayBradleyMap(
-    GrayImage const& src, int const radius, float const k)
+    GrayImage const& src,
+    int const radius,
+    float const k)
 {
     if (src.isNull())
     {
@@ -897,7 +909,9 @@ GrayImage grayBradleyMap(
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
  */
 GrayImage grayGradMap(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -940,7 +954,9 @@ GrayImage grayGradMap(
  * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
  */
 GrayImage graySinghMap(
-    GrayImage const& src, int const radius, float const k)
+    GrayImage const& src,
+    int const radius,
+    float const k)
 {
     if (src.isNull())
     {
@@ -994,7 +1010,9 @@ GrayImage graySinghMap(
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  */
 GrayImage grayWANMap(
-    GrayImage const& src, int const radius, float const k)
+    GrayImage const& src,
+    int const radius,
+    float const k)
 {
     if (src.isNull())
     {
@@ -1050,7 +1068,9 @@ GrayImage grayWANMap(
 }
 
 GrayImage grayMScaleMap(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1210,7 +1230,9 @@ GrayImage grayMScaleMap(
 }  // grayMScaleMap
 
 GrayImage grayEngravingMap(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1288,7 +1310,9 @@ GrayImage grayEngravingMap(
     return gmean;
 }  // grayEngraving
 
-GrayImage grayDotsMap (GrayImage const& src, int const delta)
+GrayImage grayDotsMap (
+    GrayImage const& src,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -1347,7 +1371,9 @@ GrayImage grayDotsMap (GrayImage const& src, int const delta)
 // threshold MAPs as filters
 
 void grayMapOverlay(
-    GrayImage& src, GrayImage& gover, float const coef)
+    GrayImage& src,
+    GrayImage& gover,
+    float const coef)
 {
     if ((src.isNull()) || (gover.isNull()))
     {
@@ -1417,7 +1443,9 @@ void grayMapOverlay(
 } // grayMapOverlay
 
 GrayImage grayGravure(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayGravureInPlace(dst, radius, coef);
@@ -1425,7 +1453,9 @@ GrayImage grayGravure(
 }
 
 void grayGravureInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1446,7 +1476,9 @@ void grayGravureInPlace(
 }  // grayGravure
 
 GrayImage grayDots8(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayDots8InPlace(dst, radius, coef);
@@ -1454,7 +1486,9 @@ GrayImage grayDots8(
 }
 
 void grayDots8InPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1480,7 +1514,9 @@ void grayDots8InPlace(
 }  // grayDots8
 
 GrayImage grayWiener(
-    GrayImage const& src, int const radius, float const noise_sigma)
+    GrayImage const& src,
+    int const radius,
+    float const noise_sigma)
 {
     GrayImage dst(src);
     grayWienerInPlace(dst, radius, noise_sigma);
@@ -1488,7 +1524,9 @@ GrayImage grayWiener(
 }
 
 void grayWienerInPlace(
-    GrayImage& src, int const radius, float const noise_sigma)
+    GrayImage& src,
+    int const radius,
+    float const noise_sigma)
 {
     if (src.isNull())
     {
@@ -1550,7 +1588,9 @@ void grayWienerInPlace(
 } // grayWiener
 
 GrayImage grayKnnDenoiser(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayKnnDenoiserInPlace(dst, radius, coef);
@@ -1558,7 +1598,9 @@ GrayImage grayKnnDenoiser(
 }
 
 void grayKnnDenoiserInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1646,7 +1688,9 @@ void grayKnnDenoiserInPlace(
 } // grayKnnDenoiser
 
 GrayImage grayMedian(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayMedianInPlace(dst, radius, coef);
@@ -1654,7 +1698,9 @@ GrayImage grayMedian(
 } // grayMedian
 
 void grayMedianInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1741,7 +1787,9 @@ void grayMedianInPlace(
 } // grayMedianInPlace
 
 GrayImage graySubtractBG(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     graySubtractBGInPlace(dst, radius, coef);
@@ -1749,7 +1797,9 @@ GrayImage graySubtractBG(
 } // graySubstractBG
 
 void graySubtractBGInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1805,7 +1855,9 @@ void graySubtractBGInPlace(
 } // graySubtractBGInPlace
 
 GrayImage grayDespeckle(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayDespeckleInPlace(dst, radius, coef);
@@ -1813,7 +1865,9 @@ GrayImage grayDespeckle(
 } // grayDespeckle
 
 void grayDespeckleInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1908,7 +1962,9 @@ void grayDespeckleInPlace(
 } // grayDespeckleInPlace
 
 GrayImage grayAutoLevel(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayAutoLevelInPlace(dst, radius, coef);
@@ -1916,7 +1972,9 @@ GrayImage grayAutoLevel(
 }
 
 void grayAutoLevelInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -1978,7 +2036,9 @@ void grayAutoLevelInPlace(
 } // grayAutoLevel
 
 GrayImage grayBalance(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayBalanceInPlace(dst, radius, coef);
@@ -1986,7 +2046,9 @@ GrayImage grayBalance(
 }
 
 void grayBalanceInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2122,7 +2184,9 @@ void grayBalanceInPlace(
 } // grayBalance
 
 GrayImage grayOverBlur(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayOverBlurInPlace(dst, radius, coef);
@@ -2130,7 +2194,9 @@ GrayImage grayOverBlur(
 }
 
 void grayOverBlurInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2205,7 +2271,9 @@ void grayOverBlurInPlace(
 } // grayOverBlur
 
 GrayImage grayRetinex(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayRetinexInPlace(dst, radius, coef);
@@ -2213,7 +2281,9 @@ GrayImage grayRetinex(
 }
 
 void grayRetinexInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2270,7 +2340,10 @@ void grayRetinexInPlace(
 } // grayReinex
 
 GrayImage grayEqualize(
-    GrayImage const& src, int const radius, float const coef, bool flg_blur)
+    GrayImage const& src,
+    int const radius,
+    float const coef,
+    bool flg_blur)
 {
     GrayImage dst(src);
     grayEqualizeInPlace(dst, radius, coef, flg_blur);
@@ -2278,7 +2351,10 @@ GrayImage grayEqualize(
 }
 
 void grayEqualizeInPlace(
-    GrayImage& src, int const radius, float const coef, bool flg_blur)
+    GrayImage& src,
+    int const radius,
+    float const coef,
+    bool flg_blur)
 {
     if (src.isNull())
     {
@@ -2383,7 +2459,9 @@ void grayEqualizeInPlace(
 } // grayEqualize
 
 GrayImage grayBlur(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayBlurInPlace(dst, radius, coef);
@@ -2391,7 +2469,9 @@ GrayImage grayBlur(
 }
 
 void grayBlurInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2432,7 +2512,9 @@ void grayBlurInPlace(
 } // grayBlur
 
 GrayImage grayComix(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayComixInPlace(dst, radius, coef);
@@ -2440,7 +2522,9 @@ GrayImage grayComix(
 }
 
 void grayComixInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2518,7 +2602,9 @@ void grayComixInPlace(
 } // grayComix
 
 GrayImage graySigma(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     graySigmaInPlace(dst, radius, coef);
@@ -2526,7 +2612,9 @@ GrayImage graySigma(
 }
 
 void graySigmaInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2571,7 +2659,9 @@ void graySigmaInPlace(
 } // graySigma
 
 GrayImage grayScreen(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayScreenInPlace(dst, radius, coef);
@@ -2579,7 +2669,9 @@ GrayImage grayScreen(
 }
 
 void grayScreenInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2634,8 +2726,10 @@ void grayScreenInPlace(
 } // grayScreen
 
 GrayImage grayEdgeDiv(
-    GrayImage const& src, int const radius,
-    double const kep, double const kbd)
+    GrayImage const& src,
+    int const radius,
+    double const kep,
+    double const kbd)
 {
     GrayImage dst(src);
     grayEdgeDivInPlace(dst, radius, kep, kbd);
@@ -2643,8 +2737,10 @@ GrayImage grayEdgeDiv(
 }
 
 void grayEdgeDivInPlace(
-    GrayImage& src, int const radius,
-    double const kep, double const kbd)
+    GrayImage& src,
+    int const radius,
+    double const kep,
+    double const kbd)
 {
     if (src.isNull())
     {
@@ -2743,7 +2839,9 @@ void grayEdgeDivInPlace(
  * surround = blur(img, r), r = 10
  */
 GrayImage grayRobust(
-    GrayImage const& src, int const radius, float const coef)
+    GrayImage const& src,
+    int const radius,
+    float const coef)
 {
     GrayImage dst(src);
     grayRobustInPlace(dst, radius, coef);
@@ -2751,7 +2849,9 @@ GrayImage grayRobust(
 }
 
 void grayRobustInPlace(
-    GrayImage& src, int const radius, float const coef)
+    GrayImage& src,
+    int const radius,
+    float const coef)
 {
     if (src.isNull())
     {
@@ -2781,16 +2881,115 @@ void grayRobustInPlace(
                 float const mean = gmean_line[x];
                 float retval = origin;
                 float const sc = mean - origin;
-                float const robust = 255.0 - (mean + 255.0) * sc / (mean + sc);
-                retval = coef * robust + (1.0 - coef) * origin + 0.5f;
-                retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
-                src_line[x] = (int) retval;
+                float const robust = 255.0f - (mean + 255.0f) * sc / (mean + sc);
+                retval = coef * robust + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
         }
     }
 }  // grayRobust
+
+/*
+ * Grain:
+ * I
+ * B = BLUR(I,r)
+ * D = GRAIN(I,B) {d = i-b+127}
+ * S = BLUR(D,r)
+ * N = GRAIN(S,D) {n = s-d+127}
+ * T = GRAIN(D,N) {t = d-n+127} {t = d-s+d-127+127 = 2d-s}
+ * O = k * T + (1 - k) * I
+ */
+GrayImage grayGrain(
+    GrayImage const& src,
+    int const radius,
+    float const coef)
+{
+    GrayImage dst(src);
+    grayGrainInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayGrainInPlace(
+    GrayImage& src,
+    int const radius,
+    float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const origin = src_line[x];
+                int const mean = gmean_line[x];
+                int retval = origin - mean + 127;
+                retval = (retval < 0) ? 0 : (retval < 255) ? retval : 255;
+                gmean_line[x] = (unsigned char) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+
+        GrayImage gsigma = gaussBlur(gmean, radius, radius);
+        if (!(gsigma.isNull()))
+        {
+            unsigned char* gsigma_line = gsigma.data();
+            int const gsigma_stride = gsigma.stride();
+
+            gmean_line = gmean.data();
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    int const mean = gmean_line[x];
+                    int const sigma = gsigma_line[x];
+                    int retval = mean + mean - sigma;
+                    retval = (retval < 0) ? 0 : (retval < 255) ? retval : 255;
+                    gmean_line[x] = (unsigned char) retval;
+                }
+                gmean_line += gmean_stride;
+                gsigma_line += gsigma_stride;
+            }
+        }
+
+        src_line = src.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+                float retval = coef * mean + (1.0f - coef) * origin + 0.5f;
+                retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                src_line[x] = (unsigned char) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+}  // grayGrain
 
 unsigned int grayDominantaValue(
     GrayImage const& src)

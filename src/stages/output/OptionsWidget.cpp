@@ -81,6 +81,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgeDiv"), T_EDGEDIV);
     thresholdMethodSelector->addItem(tr("EdgeAdapt"), T_EDGEADAPT);
     thresholdMethodSelector->addItem(tr("Robust"), T_ROBUST);
+    thresholdMethodSelector->addItem(tr("Grain"), T_GRAIN);
     thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
     thresholdMethodSelector->addItem(tr("Engraving"), T_ENGRAVING);
 
@@ -98,6 +99,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
     colorFilterSelector->addItem(tr("EdgeDiv"), F_EDGEDIV);
     colorFilterSelector->addItem(tr("Robust"), F_ROBUST);
+    colorFilterSelector->addItem(tr("Grain"), F_GRAIN);
     colorFilterSelector->addItem(tr("Comix"), F_COMIX);
     colorFilterSelector->addItem(tr("Engraving"), F_ENGRAVING);
     colorFilterSelector->addItem(tr("Dots 8x8"), F_DOTS8);
@@ -573,6 +575,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.robustSize());
         colorFilterCoef->setValue(color_options.robustCoef());
         break;
+    case F_GRAIN:
+        colorFilterSize->setValue(color_options.grainSize());
+        colorFilterCoef->setValue(color_options.grainCoef());
+        break;
     case F_COMIX:
         colorFilterSize->setValue(color_options.comixSize());
         colorFilterCoef->setValue(color_options.comixCoef());
@@ -649,6 +655,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_ROBUST:
         color_options.setRobustSize(value);
         break;
+    case F_GRAIN:
+        color_options.setGrainSize(value);
+        break;
     case F_COMIX:
         color_options.setComixSize(value);
         break;
@@ -715,6 +724,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_ROBUST:
         color_options.setRobustCoef(value);
+        break;
+    case F_GRAIN:
+        color_options.setGrainCoef(value);
         break;
     case F_COMIX:
         color_options.setComixCoef(value);

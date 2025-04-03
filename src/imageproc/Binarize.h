@@ -273,6 +273,19 @@ IMAGEPROC_EXPORT BinaryImage binarizeRobust(
     unsigned char upper_bound = 255);
 
 /**
+ * \brief Image prefilter Grain for local/global thresholding method.
+ *
+ * Grain, zvezdochiot 2025. "Adaptive/global document image binarization".
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeGrain(
+    GrayImage const& src,
+    int radius = 15,
+    float k = 0.5f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
  * \brief Image binarization using MultiScale thresholding method.
  *
  * MultiScale thresholding method.

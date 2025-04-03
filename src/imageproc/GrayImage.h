@@ -471,6 +471,20 @@ IMAGEPROC_EXPORT void grayRobustInPlace(
     float coef = 0.2f);
 
 /**
+ * \brief Image prefilter Grain for local/global thresholding method.
+ *
+ * Grain, zvezdochiot 2025. "Adaptive/global document image binarization".
+ */
+IMAGEPROC_EXPORT GrayImage grayGrain(
+    GrayImage const& src,
+    int radius = 15,
+    float coef = 0.5f);
+IMAGEPROC_EXPORT void grayGrainInPlace(
+    GrayImage& src,
+    int radius = 15,
+    float coef = 0.5f);
+
+/**
  * @brief Dominanta GrayImage.
  */
 IMAGEPROC_EXPORT unsigned int grayDominantaValue(

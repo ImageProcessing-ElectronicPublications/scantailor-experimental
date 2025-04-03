@@ -778,6 +778,35 @@ BinaryImage binarizeRobust(
     return bw_img;
 } // binarizeRobust
 
+/*
+ * Grain:
+ * I
+ * B = BLUR(I,r)
+ * D = GRAIN(I,B) {d = i-b+127}
+ * S = BLUR(D,r)
+ * N = GRAIN(S,D) {n = s-d+127}
+ * T = GRAIN(D,N) {t = d-n+127} {t = d-s+d-127+127 = 2d-s}
+ * O = k * T + (1 - k) * I
+ */
+BinaryImage binarizeGrain(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage gray(grayGrain(src, radius, k));
+    BinaryImage bw_img(binarizeBiModal(gray, delta, bound_lower, bound_upper));
+
+    return bw_img;
+} // binarizeGrain
+
 BinaryImage binarizeMScale(
     GrayImage const& src,
     int const radius,

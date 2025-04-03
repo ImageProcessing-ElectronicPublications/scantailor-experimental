@@ -1306,6 +1306,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeRobust(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_GRAIN:
+        {
+            binarized = binarizeGrain(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         case T_MSCALE:
         {
             binarized = binarizeMScale(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
@@ -1367,6 +1372,8 @@ OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_optio
         grayEdgeDivInPlace(gout, color_options.edgedivSize(), color_options.edgedivCoef(), color_options.edgedivCoef());
 
         grayRobustInPlace(gout, color_options.robustSize(), color_options.robustCoef());
+
+        grayGrainInPlace(gout, color_options.grainSize(), color_options.grainCoef());
 
         grayComixInPlace(gout, color_options.comixSize(), color_options.comixCoef());
 

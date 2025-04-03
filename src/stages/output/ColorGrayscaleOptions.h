@@ -60,6 +60,8 @@ public:
         , m_edgedivCoef(0.0)
         , m_robustSize(10)
         , m_robustCoef(0.0)
+        , m_grainSize(15)
+        , m_grainCoef(0.0)
         , m_comixSize(6)
         , m_comixCoef(0.0)
         , m_gravureSize(15)
@@ -333,6 +335,23 @@ public:
         m_robustCoef = val;
     }
 
+    int grainSize() const
+    {
+        return m_grainSize;
+    }
+    void setGrainSize(int val)
+    {
+        m_grainSize = val;
+    }
+    double grainCoef() const
+    {
+        return m_grainCoef;
+    }
+    void setGrainCoef(double val)
+    {
+        m_grainCoef = val;
+    }
+
     int comixSize() const
     {
         return m_comixSize;
@@ -463,6 +482,8 @@ private:
     double m_edgedivCoef;
     int m_robustSize;
     double m_robustCoef;
+    int m_grainSize;
+    double m_grainCoef;
     int m_comixSize;
     double m_comixCoef;
     int m_gravureSize;
