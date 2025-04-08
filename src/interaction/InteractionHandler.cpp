@@ -228,6 +228,23 @@ InteractionHandler::contextMenuEvent(
 }
 
 void
+InteractionHandler::mouseDoubleClickEvent(
+    QMouseEvent* event, InteractionState& interaction)
+{
+    RETURN_IF_ACCEPTED(event);
+
+    // Keep them alive in case this object gets destroyed.
+    IntrusivePtr<HandlerList> preceeders(m_ptrPreceeders);
+    IntrusivePtr<HandlerList> followers(m_ptrFollowers);
+
+    DISPATCH(preceeders, mouseDoubleClickEvent(event, interaction));
+    RETURN_IF_ACCEPTED(event);
+    onMouseDoubleClickEvent(event, interaction);
+    ScopedClearAcceptance guard(event);
+    DISPATCH(followers, mouseDoubleClickEvent(event, interaction));
+}
+
+void
 InteractionHandler::makePeerPreceeder(InteractionHandler& handler)
 {
     handler.unlink();

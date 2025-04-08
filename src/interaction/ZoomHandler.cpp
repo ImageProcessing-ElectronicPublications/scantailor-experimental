@@ -24,6 +24,7 @@
 #include <QKeyEvent>
 #include <QRectF>
 #include <math.h>
+#include <limits>
 
 ZoomHandler::ZoomHandler(ImageViewBase& image_view)
     :	m_rImageView(image_view),
@@ -121,3 +122,13 @@ ZoomHandler::onKeyPressEvent(QKeyEvent* event, InteractionState& interaction)
     m_rImageView.setZoomLevel(zoom); // this will call update()
 }
 
+void
+ZoomHandler::onMouseDoubleClickEvent(QMouseEvent* event, InteractionState& interaction)
+{
+    if (!m_interactionPermitter(interaction)) {
+        return;
+    }
+
+    m_rImageView.setZoomLevel(1.0);
+    m_rImageView.moveTowardsIdealPosition(std::numeric_limits<double>::max());
+}

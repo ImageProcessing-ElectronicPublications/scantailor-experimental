@@ -302,33 +302,69 @@ English or Russian please.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="187"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="197"/>
         <source>Mode</source>
         <translation type="unfinished">Mód</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="206"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="216"/>
         <source>Auto</source>
         <translation>Automaticky</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="222"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="232"/>
         <source>Manual</source>
         <translation>Ručně</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="251"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="261"/>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="282"/>
+        <source>Photo: FOV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="285"/>
+        <source>Scanner / Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="295"/>
+        <source>FOV (default = 1.4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="372"/>
         <source>Rotation angle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="296"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="417"/>
+        <source>Correction model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="423"/>
         <source>Depth perception</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="336"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="445"/>
+        <source>Middle curves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="467"/>
+        <source>Middle angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="172"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="347"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="505"/>
         <source>Apply to ...</source>
         <translation>Aplikovat na</translation>
     </message>
@@ -422,9 +458,13 @@ English or Russian please.</source>
 <context>
     <name>ImageViewBase</name>
     <message>
-        <location filename="../ImageViewBase.cpp" line="249"/>
         <source>Use the mouse wheel or +/- to zoom.  When zoomed, dragging is possible.</source>
-        <translation type="unfinished">Pro přiblížení použijte kolečko myši nebo klávesy + resp. -. Při zvětšení je možné stránkou tažením posouvat.</translation>
+        <translation type="obsolete">Pro přiblížení použijte kolečko myši nebo klávesy + resp. -. Při zvětšení je možné stránkou tažením posouvat.</translation>
+    </message>
+    <message>
+        <location filename="../ImageViewBase.cpp" line="249"/>
+        <source>Use the mouse wheel or +/- to zoom.  When zoomed, dragging is possible. Double click to zoom all.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -662,7 +702,7 @@ English or Russian please.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="473"/>
+        <location filename="../MainWindow.cpp" line="476"/>
         <source>Stop batch processing</source>
         <translation type="unfinished">Zastavit dávkové zpracování</translation>
     </message>
@@ -705,8 +745,8 @@ English or Russian please.</source>
     <message>
         <location filename="../MainWindow.cpp" line="1556"/>
         <location filename="../MainWindow.cpp" line="1566"/>
-        <location filename="../MainWindow.cpp" line="1930"/>
-        <location filename="../MainWindow.cpp" line="1962"/>
+        <location filename="../MainWindow.cpp" line="1947"/>
+        <location filename="../MainWindow.cpp" line="1979"/>
         <source>Error</source>
         <translation type="unfinished">Chyba</translation>
     </message>
@@ -721,35 +761,35 @@ English or Russian please.</source>
         <translation type="unfinished">Soubor s projektem je poškozen.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1813"/>
+        <location filename="../MainWindow.cpp" line="1830"/>
         <source>Output is not yet possible, as the final size of pages is not yet known.
 To determine it, run batch processing at &quot;Select Content&quot; or &quot;Margins&quot;.</source>
         <translation type="unfinished">Výstup zatim není možný, protože ještě není známa konečná velikost stránek.
 Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat Obsah&quot; nebo &quot;Okraje&quot;.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1849"/>
+        <location filename="../MainWindow.cpp" line="1866"/>
         <source>Unnamed</source>
         <translation type="unfinished">Nepojmenovaný</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1856"/>
-        <source>%2 - Scan Tailor %3 [%1bit]</source>
+        <location filename="../MainWindow.cpp" line="1873"/>
+        <source>%2 - Scan Tailor Experimental %3 [%1bit]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1931"/>
-        <location filename="../MainWindow.cpp" line="1963"/>
+        <location filename="../MainWindow.cpp" line="1948"/>
+        <location filename="../MainWindow.cpp" line="1980"/>
         <source>Error saving the project file!</source>
         <translation type="unfinished">Chyba při ukládání souboru s projektem!</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2020"/>
+        <location filename="../MainWindow.cpp" line="2037"/>
         <source>Files to insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2082"/>
+        <location filename="../MainWindow.cpp" line="2099"/>
         <source>Skip failed files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -758,7 +798,7 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="obsolete">Soubor pro vložení</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2026"/>
+        <location filename="../MainWindow.cpp" line="2043"/>
         <source>Images not in project (%1)</source>
         <translation type="unfinished">Obrázky, které nejsou v projektu (%1)</translation>
     </message>
@@ -767,7 +807,7 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="obsolete">Chyba při otevírání souboru s obrázkem.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2118"/>
+        <location filename="../MainWindow.cpp" line="2135"/>
         <source>Remove</source>
         <translation type="unfinished">Vyjmout</translation>
     </message>
@@ -874,12 +914,11 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation>Obnovit</translation>
     </message>
     <message>
-        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="167"/>
         <source>Scope</source>
-        <translation>Rozsah</translation>
+        <translation type="vanished">Rozsah</translation>
     </message>
     <message>
-        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="188"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="189"/>
         <source>Apply to ...</source>
         <translation>Aplikovat na</translation>
     </message>
@@ -1178,8 +1217,8 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="183"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="196"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="226"/>
         <source>Filters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1194,220 +1233,189 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="282"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="289"/>
         <source>The size of a select filters.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
-        <source>Wiener denoiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="220"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="256"/>
-        <source>Value is 0.0 .. 1.0..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="236"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="344"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="380"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="681"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="620"/>
         <source>The dimensions of a pixel neighborhood to consider.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="249"/>
-        <source>KNN denoiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="272"/>
-        <source>The radius of a pixel neighborhood to consider.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="285"/>
-        <source>Despeckle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="400"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="416"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="960"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="302"/>
         <source>Value is -1.0 .. 1.0..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="308"/>
-        <source>The radius of a color despeckle.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="321"/>
-        <source>Blur/Sharpen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="328"/>
-        <source>Value is -2.0 .. 1.0..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="357"/>
-        <source>Screen filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="400"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="416"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="250"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="266"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="813"/>
         <source>Value is -1.0 .. 1.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
-        <source>Engraving</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
-        <source>UnPaper</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="443"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="506"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="329"/>
         <source>Value is 0.0 .. 1.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="482"/>
-        <source>The iters of a unPaper.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="452"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="465"/>
         <source>Mode</source>
         <translation>Mód</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="977"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="990"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="839"/>
+        <source>D8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="842"/>
+        <source>Picture to Dots8.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="892"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="905"/>
         <source>K-means</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1010"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="925"/>
         <source>K (colors):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1017"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="932"/>
         <source>Number of K-means colors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1030"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="945"/>
         <source>The starting value of the k-means color.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1046"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="961"/>
         <source> - sat, norm:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1053"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1069"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1092"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1108"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="968"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="984"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1007"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1023"/>
         <source>Default value is 0.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1085"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1000"/>
         <source> - bg, mask:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1124"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1039"/>
         <source> - colorspace:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1131"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1046"/>
         <source>Select color space in K-means.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1048"/>
-        <source>Find Black.</source>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1055"/>
+        <source>B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
+        <source>Find Black.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1065"/>
+        <source>W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1068"/>
         <source>Find White.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1165"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1268"/>
         <source>Custom despeckling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1208"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1311"/>
         <source>Despeckle factor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1215"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1318"/>
         <source>Value is 0.0 .. 9.99.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="491"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="387"/>
         <source>White margins</source>
         <translation>Bílé okraje</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="436"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="322"/>
         <source>Equalize illumination</source>
         <translation>Kompenzovat osvětlení</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="619"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="345"/>
+        <source>G</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="348"/>
+        <source>GrayScale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="515"/>
         <source>Dimming Colored</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="626"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="522"/>
         <source>Value is -1.0 .. 2.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="646"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="542"/>
         <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="653"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="549"/>
         <source>Select threshold method.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="660"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <source>M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="663"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="559"/>
         <source>Morphology ON/OFF.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="673"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="566"/>
+        <source>N</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Negate threshold.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1427,44 +1435,97 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="613"/>
         <source> - radius, coef.:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="694"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="633"/>
         <source>Default value is 0.34.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="788"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="727"/>
         <source>Thinner</source>
         <translation>Tenčí</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="852"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="791"/>
         <source>Thicker</source>
         <translation>Tlustší</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="953"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="806"/>
         <source>autozones:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="976"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="829"/>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vypnuto</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="979"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="832"/>
         <source>Off autozones.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1376"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1389"/>
+        <source>Metrics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1407"/>
+        <source>MSE filters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1414"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1428"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1442"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1456"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1470"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1484"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1498"/>
+        <source>?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1421"/>
+        <source>MSE k-means:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1435"/>
+        <source>BW origin:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1449"/>
+        <source>BW filters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1463"/>
+        <source>BW threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1477"/>
+        <source>BW destination:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1491"/>
+        <source>BW delta:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="427"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="867"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1097"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1351"/>
         <source>Apply to ...</source>
         <translation>Aplikovat na ...</translation>
     </message>
@@ -1473,36 +1534,36 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="vanished">Deformace</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1019"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1032"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1122"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1135"/>
         <source>Despeckling</source>
         <translation>Vyčistit</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1062"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1165"/>
         <source>No despeckling</source>
         <translation>Bez čištění</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1087"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1190"/>
         <source>Cautious despeckling</source>
         <translation>Opatrné čištění</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1090"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1116"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1142"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1168"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1193"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1219"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1245"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1271"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1113"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1216"/>
         <source>Normal despeckling</source>
         <translation>Normální čištění</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1139"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1242"/>
         <source>Aggressive despeckling</source>
         <translation>Agresivní čištění</translation>
     </message>
@@ -1575,12 +1636,12 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="69"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="76"/>
         <source>Height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="20"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="166"/>
         <source>Margins</source>
         <translation>Okraje</translation>
     </message>
@@ -1593,88 +1654,99 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation type="vanished">Palce (in)</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="43"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="189"/>
         <source>Top</source>
         <translation>Nahoře</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="56"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="135"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="350"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="376"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="402"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="428"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="454"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="483"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="221"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="509"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="535"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="561"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="587"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="613"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="642"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="668"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="694"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="720"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="77"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="242"/>
         <source>Bottom</source>
         <translation>Dole</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="103"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="268"/>
         <source>Left</source>
         <translation>Vlevo</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="159"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="324"/>
         <source>Right</source>
         <translation>Vpravo</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="141"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="382"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="778"/>
         <source>Apply to ...</source>
         <translation>Aplikovat na ...</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="261"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="407"/>
         <source>Alignment</source>
         <translation>Zarovnání</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="274"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="420"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="277"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="423"/>
         <source>Don&apos;t match size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="287"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="433"/>
         <source>Growing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="290"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="436"/>
         <source>Match size by growing margins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="446"/>
         <source>Scaling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="303"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="449"/>
         <source>Match size by scaling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="644"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="459"/>
+        <source>Affine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="462"/>
+        <source>Match size by affine scaling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="803"/>
         <source>Missing content box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="657"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="816"/>
         <source>As there is no content box, the output will be a blank white page with size matching that of other pages.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1749,27 +1821,27 @@ Pro určení velikosti stránek spusťte dávkové zpracování u &quot;Vybrat O
         <translation>Layout strany</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="134"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="149"/>
         <source>?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="193"/>
         <source>Apply to ...</source>
         <translation>Aplikovat na</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="218"/>
         <source>Split Line</source>
         <translation>Řez</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="214"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="248"/>
         <source>Auto</source>
         <translation>Automaticky</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="230"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="264"/>
         <source>Manual</source>
         <translation>Ručně</translation>
     </message>
@@ -1894,52 +1966,52 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Opravit DPI, ikdyž vypadají OK</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="521"/>
-        <location filename="../ProjectFilesDialog.cpp" line="530"/>
-        <location filename="../ProjectFilesDialog.cpp" line="540"/>
-        <location filename="../ProjectFilesDialog.cpp" line="567"/>
-        <location filename="../ProjectFilesDialog.cpp" line="577"/>
-        <location filename="../ProjectFilesDialog.cpp" line="651"/>
+        <location filename="../ProjectFilesDialog.cpp" line="523"/>
+        <location filename="../ProjectFilesDialog.cpp" line="532"/>
+        <location filename="../ProjectFilesDialog.cpp" line="542"/>
+        <location filename="../ProjectFilesDialog.cpp" line="569"/>
+        <location filename="../ProjectFilesDialog.cpp" line="579"/>
+        <location filename="../ProjectFilesDialog.cpp" line="653"/>
         <source>Error</source>
         <translation type="unfinished">Chyba</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="521"/>
+        <location filename="../ProjectFilesDialog.cpp" line="523"/>
         <source>No files in project!</source>
         <translation type="unfinished">Projekt nemá žádné soubory!</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="531"/>
+        <location filename="../ProjectFilesDialog.cpp" line="533"/>
         <source>Input directory is not set or doesn&apos;t exist.</source>
         <translation type="unfinished">Vstupní adresář není nastaven nebo neexistuje.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="541"/>
+        <location filename="../ProjectFilesDialog.cpp" line="543"/>
         <source>Input and output directories can&apos;t be the same.</source>
         <translation type="unfinished">Vstupní a výstupní adresáře musejí být různé.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="553"/>
+        <location filename="../ProjectFilesDialog.cpp" line="555"/>
         <source>Create Directory?</source>
         <translation type="unfinished">Vytvořit adresář?</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="554"/>
+        <location filename="../ProjectFilesDialog.cpp" line="556"/>
         <source>Output directory doesn&apos;t exist.  Create it?</source>
         <translation type="unfinished">Výstupní adresář neexistuje. Vytvořit?</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="568"/>
+        <location filename="../ProjectFilesDialog.cpp" line="570"/>
         <source>Unable to create output directory.</source>
         <translation type="unfinished">Nelze vytvořit výstupní adresář.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="578"/>
+        <location filename="../ProjectFilesDialog.cpp" line="580"/>
         <source>Output directory is not set or doesn&apos;t exist.</source>
         <translation type="unfinished">Výstupní adresář není nastaven nebo neexistuje.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="651"/>
+        <location filename="../ProjectFilesDialog.cpp" line="653"/>
         <source>Some of the files failed to load.
 Either we don&apos;t support their format, or they are broken.
 You should remove them from the project.</source>
@@ -1979,17 +2051,17 @@ Vyjměte je z projektu.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../RelinkingDialog.cpp" line="101"/>
+        <location filename="../RelinkingDialog.cpp" line="103"/>
         <source>Substitution File for %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../RelinkingDialog.cpp" line="110"/>
+        <location filename="../RelinkingDialog.cpp" line="112"/>
         <source>Substitution Directory for %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../RelinkingDialog.cpp" line="141"/>
+        <location filename="../RelinkingDialog.cpp" line="143"/>
         <source>This change would merge several files into one.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2080,22 +2152,21 @@ Vyjměte je z projektu.</translation>
         <translation>Obsah</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="38"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="40"/>
         <source>Auto</source>
         <translation>Automaticky</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="54"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="56"/>
         <source>Manual</source>
         <translation>Ručně</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="83"/>
         <source>Scope</source>
-        <translation>Rozsah</translation>
+        <translation type="vanished">Rozsah</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="104"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="109"/>
         <source>Apply to ...</source>
         <translation>Aplikovat na ...</translation>
     </message>
@@ -2257,17 +2328,17 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>ZoneCreationInteraction</name>
     <message>
-        <location filename="../zones/ZoneCreationInteraction.cpp" line="347"/>
+        <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
         <source>Click to finish this zone.  ESC to cancel.</source>
         <translation>Klikněte pro uzavření zóny. ESC pro zrušení.</translation>
     </message>
     <message>
-        <location filename="../zones/ZoneCreationInteraction.cpp" line="351"/>
+        <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
         <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
         <translation>Spojit první a poslední bod k uzavření zóny. ESC pro zrušení.</translation>
     </message>
     <message>
-        <location filename="../zones/ZoneCreationInteraction.cpp" line="356"/>
+        <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
         <source>Zones need to have at least 3 points.  ESC to cancel.</source>
         <translation>Zóna musí mít aspoň 3 body. ESC ke zrušení.</translation>
     </message>
@@ -2298,12 +2369,12 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>ZoneVertexDragInteraction</name>
     <message>
-        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="171"/>
+        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="175"/>
         <source>Merge these two vertices.</source>
         <translation>Sloučit vrcholy.</translation>
     </message>
     <message>
-        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="175"/>
+        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="179"/>
         <source>Move the vertex to one of its neighbors to merge them.</source>
         <translation>Sloučit vrchol s jedním z jeho sousedů.</translation>
     </message>
@@ -2315,32 +2386,42 @@ Vyjměte je z projektu.</translation>
         <translation type="vanished">Natočení</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="56"/>
+        <location filename="../stages/deskew/Filter.cpp" line="82"/>
         <source>Geometric Distortions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="61"/>
+        <location filename="../stages/deskew/Filter.cpp" line="66"/>
         <source>Natural order</source>
+        <translation type="unfinished">Přirozené řazení</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="67"/>
+        <source>Order by type distortion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="62"/>
+        <location filename="../stages/deskew/Filter.cpp" line="68"/>
         <source>Order by increasing angle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="63"/>
+        <location filename="../stages/deskew/Filter.cpp" line="69"/>
+        <source>Order by angle size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/Filter.cpp" line="70"/>
         <source>Order by oblique</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="64"/>
+        <location filename="../stages/deskew/Filter.cpp" line="71"/>
         <source>Order by extension horizontally</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/Filter.cpp" line="65"/>
+        <location filename="../stages/deskew/Filter.cpp" line="72"/>
         <source>Order by extension vertically</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2365,13 +2446,18 @@ Vyjměte je z projektu.</translation>
         <translation type="vanished">Aplikovat otočení</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/OptionsWidget.cpp" line="124"/>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="178"/>
         <source>Apply Distortion Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/deskew/OptionsWidget.cpp" line="174"/>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="228"/>
         <source>Apply Depth Perception</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="478"/>
+        <source>Apply Source</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2425,7 +2511,37 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>output::Filter</name>
     <message>
-        <location filename="../stages/output/Filter.cpp" line="64"/>
+        <location filename="../stages/output/Filter.cpp" line="70"/>
+        <source>Natural order</source>
+        <translation type="unfinished">Přirozené řazení</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="71"/>
+        <source>Order by Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="72"/>
+        <source>Order by MSE filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="73"/>
+        <source>Order by BW origin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="74"/>
+        <source>Order by BW destination</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="75"/>
+        <source>Order by BW delta</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/Filter.cpp" line="85"/>
         <source>Output</source>
         <translation>Výstup</translation>
     </message>
@@ -2433,82 +2549,232 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>output::OptionsWidget</name>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="62"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="63"/>
         <source>Black and White</source>
         <translation>Černá a Bílá</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="63"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="64"/>
         <source>Color / Grayscale</source>
         <translation>Barevně / Stupně šedé</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="64"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="65"/>
         <source>Mixed</source>
         <translation>Smíšeně</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="66"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="67"/>
         <source>Otsu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="67"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="68"/>
         <source>Mean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="68"/>
-        <source>Niblack</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="69"/>
-        <source>Gatos</source>
+        <source>Dots8</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="70"/>
-        <source>Sauvola</source>
+        <source>BMTiled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="71"/>
-        <source>Wolf</source>
+        <source>Niblack</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="72"/>
-        <source>Bradley</source>
+        <source>Gatos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="73"/>
-        <source>EdgePlus</source>
+        <source>Sauvola</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="74"/>
-        <source>BlurDiv</source>
+        <source>Wolf</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="75"/>
-        <source>EdgeDiv</source>
+        <source>Bradley</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/OptionsWidget.cpp" line="76"/>
+        <source>Grad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="77"/>
+        <source>Singh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="78"/>
+        <source>WAN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="79"/>
+        <source>EdgePlus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="80"/>
+        <source>BlurDiv</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="81"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="100"/>
+        <source>EdgeDiv</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="82"/>
+        <source>EdgeAdapt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="83"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="101"/>
+        <source>Robust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="84"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="102"/>
+        <source>Grain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="85"/>
         <source>MultiScale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="856"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="86"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="104"/>
+        <source>Engraving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="88"/>
+        <source>Auto Level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="89"/>
+        <source>Balance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="90"/>
+        <source>OverBlur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="91"/>
+        <source>Retinex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="92"/>
+        <source>SubtractBG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="93"/>
+        <source>Equalize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="94"/>
+        <source>Wiener denoiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="95"/>
+        <source>KNN denoiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="96"/>
+        <source>Despeckle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="97"/>
+        <source>Sigma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="98"/>
+        <source>Blur/Sharpen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="99"/>
+        <source>Screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="103"/>
+        <source>Comix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="105"/>
+        <source>Dots 8x8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="106"/>
+        <source>UnPaper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="108"/>
+        <source>HSV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="109"/>
+        <source>HSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="110"/>
+        <source>YCbCr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1255"/>
         <source>Apply Despeckling Level</source>
         <translation>Aplikovat úroveň čištění</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="1077"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1484"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1485"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1486"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1487"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1488"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1489"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1490"/>
+        <source>%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1525"/>
         <source>This page: %1 x %2 px</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2528,27 +2794,27 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>output::Task::UiUpdater</name>
     <message>
-        <location filename="../stages/output/Task.cpp" line="573"/>
+        <location filename="../stages/output/Task.cpp" line="579"/>
         <source>Picture zones are only available in Mixed mode.</source>
         <translation>Zóny s obrázky jsou možné pouze ve smíšeném módu.</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="608"/>
+        <location filename="../stages/output/Task.cpp" line="614"/>
         <source>Despeckling can&apos;t be done in Color / Grayscale mode.</source>
         <translation>Čištění nelze provést v barevném / černobílém módu.</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="627"/>
+        <location filename="../stages/output/Task.cpp" line="633"/>
         <source>Output</source>
         <translation>Výstup</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="628"/>
+        <location filename="../stages/output/Task.cpp" line="634"/>
         <source>Picture Zones</source>
         <translation>Zóny s obrázky</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="629"/>
+        <location filename="../stages/output/Task.cpp" line="635"/>
         <source>Fill Zones</source>
         <translation>Prázdné zóny</translation>
     </message>
@@ -2557,7 +2823,7 @@ Vyjměte je z projektu.</translation>
         <translation type="vanished">Deformace</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="630"/>
+        <location filename="../stages/output/Task.cpp" line="636"/>
         <source>Despeckling</source>
         <translation>Vyčistit</translation>
     </message>
@@ -2573,32 +2839,32 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>page_layout::Filter</name>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="70"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
         <source>Natural order</source>
         <translation>Přirozené řazení</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="71"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="73"/>
         <source>Order by increasing width</source>
         <translation>Řadit podle rostoucí šířky</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="74"/>
         <source>Order by increasing height</source>
         <translation>Řadit podle rosoucí výšky</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="73"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="75"/>
         <source>Order by width/height ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="74"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="76"/>
         <source>Order by area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="85"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="86"/>
         <source>Margins</source>
         <translation>Okraje</translation>
     </message>
@@ -2606,7 +2872,7 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>page_layout::ImageView</name>
     <message>
-        <location filename="../stages/page_layout/ImageView.cpp" line="88"/>
+        <location filename="../stages/page_layout/ImageView.cpp" line="90"/>
         <source>Resize margins by dragging any of the solid lines.</source>
         <translation>Změňte okraje tažením za libovolný okraj.</translation>
     </message>
@@ -2614,35 +2880,51 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>page_layout::OptionsWidget</name>
     <message>
-        <location filename="../stages/page_layout/OptionsWidget.cpp" line="362"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="462"/>
+        <source>Apply Framings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="477"/>
         <source>Apply Margins</source>
         <translation>Aplikovat okraje</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/OptionsWidget.cpp" line="377"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="492"/>
         <source>Apply Alignment</source>
         <translation>Aplikovat zarovnání</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="594"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="595"/>
+        <source> = %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>page_split::Filter</name>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="66"/>
+        <location filename="../stages/page_split/Filter.cpp" line="68"/>
         <source>Natural order</source>
         <translation>Přirozené řazení</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="67"/>
+        <location filename="../stages/page_split/Filter.cpp" line="69"/>
         <source>Order by split type</source>
         <translation type="unfinished">Řadit podle typu řezu</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="68"/>
+        <location filename="../stages/page_split/Filter.cpp" line="70"/>
         <source>Order by split position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/Filter.cpp" line="78"/>
+        <location filename="../stages/page_split/Filter.cpp" line="71"/>
+        <source>Order by split offset size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_split/Filter.cpp" line="81"/>
         <source>Split Pages</source>
         <translation>Řezat strany</translation>
     </message>
@@ -2658,15 +2940,15 @@ Vyjměte je z projektu.</translation>
 <context>
     <name>page_split::OptionsWidget</name>
     <message>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="120"/>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="228"/>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="337"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="134"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="245"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="381"/>
         <source>Set manually</source>
         <translation>Nastavit ručně</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="175"/>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="332"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="190"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="376"/>
         <source>Auto detected</source>
         <translation>Detekovat</translation>
     </message>

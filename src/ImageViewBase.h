@@ -302,6 +302,8 @@ protected:
 
     virtual void contextMenuEvent(QContextMenuEvent* event);
 
+    virtual void mouseDoubleClickEvent(QMouseEvent* event);
+
     virtual void resizeEvent(QResizeEvent* event);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

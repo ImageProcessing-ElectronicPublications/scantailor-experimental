@@ -290,17 +290,17 @@ Andrey Bergman - Регулировка загрузки системы.
         <translation>Кривые</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="187"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="197"/>
         <source>Mode</source>
         <translation>Режим</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="206"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="216"/>
         <source>Auto</source>
         <translation>Автоматически</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="222"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="232"/>
         <source>Manual</source>
         <translation>Вручную</translation>
     </message>
@@ -325,33 +325,34 @@ Andrey Bergman - Регулировка загрузки системы.
         <translation>FOV (по умолчанию = 1.4)</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="251"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="372"/>
         <source>Rotation angle</source>
         <translation>Угол поворота</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="306"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="417"/>
         <source>Correction model</source>
         <translation>Коррекция модели</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="312"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="423"/>
         <source>Depth perception</source>
         <translation>Восприятие глубины</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="334"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="445"/>
         <source>Middle curves</source>
         <translation>Кривизна средней</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="356"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="467"/>
         <source>Middle angle</source>
         <translation>Наклон средней</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="162"/>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="393"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="172"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="347"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="505"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
@@ -445,13 +446,17 @@ Andrey Bergman - Регулировка загрузки системы.
 <context>
     <name>ImageViewBase</name>
     <message>
-        <location filename="../ImageViewBase.cpp" line="249"/>
         <source>Use the mouse wheel or +/- to zoom.  When zoomed, dragging is possible.</source>
-        <translation>Используйте колесо мыши для увеличения. В увеличенном виде доступно перетаскивание.</translation>
+        <translation type="vanished">Используйте колесо мыши для увеличения. В увеличенном виде доступно перетаскивание.</translation>
     </message>
     <message>
         <source>Unrestricted dragging is possible by holding down the Shift key.</source>
         <translation type="obsolete">Удерживая кнопку Shift, можно перетаскивать без ограничений.</translation>
+    </message>
+    <message>
+        <location filename="../ImageViewBase.cpp" line="249"/>
+        <source>Use the mouse wheel or +/- to zoom.  When zoomed, dragging is possible. Double click to zoom all.</source>
+        <translation>Используйте колесо мыши для увеличения. В увеличенном виде доступно перетаскивание. Двойной щелчок показывает все.</translation>
     </message>
 </context>
 <context>
@@ -509,26 +514,21 @@ Andrey Bergman - Регулировка загрузки системы.
     <message>
         <location filename="../MainWindow.cpp" line="1556"/>
         <location filename="../MainWindow.cpp" line="1566"/>
-        <location filename="../MainWindow.cpp" line="1930"/>
-        <location filename="../MainWindow.cpp" line="1962"/>
+        <location filename="../MainWindow.cpp" line="1947"/>
+        <location filename="../MainWindow.cpp" line="1979"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1813"/>
+        <location filename="../MainWindow.cpp" line="1830"/>
         <source>Output is not yet possible, as the final size of pages is not yet known.
 To determine it, run batch processing at &quot;Select Content&quot; or &quot;Margins&quot;.</source>
         <translation>Вывод невозможен, поскольку еще не известны итоговые размеры страниц.
 Для их определения, прогоните пакетную обработку на этапах &quot;Полезная Область&apos; или &quot;Поля&quot;.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1856"/>
-        <source>%2 - Scan Tailor %3 [%1bit]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../MainWindow.cpp" line="1931"/>
-        <location filename="../MainWindow.cpp" line="1963"/>
+        <location filename="../MainWindow.cpp" line="1948"/>
+        <location filename="../MainWindow.cpp" line="1980"/>
         <source>Error saving the project file!</source>
         <translation>Ошибка при сохранении файла!</translation>
     </message>
@@ -556,7 +556,7 @@ First you need to process all of them with the &quot;Page Layout&quot; filter.</
 Для их определения, прогоните пакетную обработку на этапах &quot;Полезная Область&apos; или &quot;Макет страницы&quot;.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="1849"/>
+        <location filename="../MainWindow.cpp" line="1866"/>
         <source>Unnamed</source>
         <translation>Без имени</translation>
     </message>
@@ -738,12 +738,17 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Файл проекта поврежден.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2020"/>
+        <location filename="../MainWindow.cpp" line="1873"/>
+        <source>%2 - Scan Tailor Experimental %3 [%1bit]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../MainWindow.cpp" line="2037"/>
         <source>Files to insert</source>
         <translation>Файлы для вставки</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2082"/>
+        <location filename="../MainWindow.cpp" line="2099"/>
         <source>Skip failed files</source>
         <translation>Пропустить неудачные файлы</translation>
     </message>
@@ -756,7 +761,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="obsolete">Вставить файл</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2026"/>
+        <location filename="../MainWindow.cpp" line="2043"/>
         <source>Images not in project (%1)</source>
         <translation>Изображения не в проекте (%1)</translation>
     </message>
@@ -769,7 +774,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="obsolete">%1 (страницы %2)</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="2118"/>
+        <location filename="../MainWindow.cpp" line="2135"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
@@ -846,7 +851,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="obsolete">Автопрокрутка ленты предпросмотра.</translation>
     </message>
     <message>
-        <location filename="../MainWindow.cpp" line="473"/>
+        <location filename="../MainWindow.cpp" line="476"/>
         <source>Stop batch processing</source>
         <translation>Остановить пакетную обработку</translation>
     </message>
@@ -989,12 +994,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Сброс</translation>
     </message>
     <message>
-        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="167"/>
         <source>Scope</source>
-        <translation>Область применения</translation>
+        <translation type="vanished">Область применения</translation>
     </message>
     <message>
-        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="188"/>
+        <location filename="../stages/fix_orientation/ui/OrientationOptionsWidget.ui" line="189"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
@@ -1273,7 +1277,7 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="vanished">Восприятие глубины</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1062"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1165"/>
         <source>No despeckling</source>
         <translation>Не удалять пятна</translation>
     </message>
@@ -1282,31 +1286,31 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="obsolete">Устранение геометрических искажений</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1019"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1032"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1122"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1135"/>
         <source>Despeckling</source>
         <translation>Удаление пятен</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1087"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1190"/>
         <source>Cautious despeckling</source>
         <translation>Осторожное удаление пятен</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1090"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1116"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1142"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1168"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1193"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1219"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1245"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1271"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1113"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1216"/>
         <source>Normal despeckling</source>
         <translation>Обычное удаление пятен</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1139"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1242"/>
         <source>Aggressive despeckling</source>
         <translation>Агрессивное удаление пятен</translation>
     </message>
@@ -1327,15 +1331,16 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="obsolete">Черно-белый порог</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="531"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="994"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1248"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="427"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="867"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1097"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1351"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="452"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="465"/>
         <source>Mode</source>
         <translation>Режим</translation>
     </message>
@@ -1381,8 +1386,8 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Значение 0.5 .. 9.99.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="183"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="196"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="226"/>
         <source>Filters</source>
         <translation>Фильтры</translation>
     </message>
@@ -1397,139 +1402,137 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выбор дополнительного фильтра.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="282"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="289"/>
         <source>The size of a select filters.</source>
         <translation>Размер выбранного фильтра.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="213"/>
         <source>Wiener denoiser</source>
-        <translation>Шумодав Винера</translation>
+        <translation type="vanished">Шумодав Винера</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="220"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="256"/>
         <source>Value is 0.0 .. 1.0..</source>
-        <translation>Значение 0,0 .. 1,0 ..</translation>
+        <translation type="vanished">Значение 0,0 .. 1,0 ..</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="236"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="344"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="380"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="681"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="620"/>
         <source>The dimensions of a pixel neighborhood to consider.</source>
         <translation>Размеры учитываемой окрестности пикселя</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="249"/>
         <source>KNN denoiser</source>
-        <translation>Шумодав KNN</translation>
+        <translation type="vanished">Шумодав KNN</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="272"/>
         <source>The radius of a pixel neighborhood to consider.</source>
-        <translation>Радиус окрестности пикселя, который следует учитывать.</translation>
+        <translation type="vanished">Радиус окрестности пикселя, который следует учитывать.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="292"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="364"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="302"/>
         <source>Value is -1.0 .. 1.0..</source>
         <translation>Значение -1,0 .. 1,0 ..</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="308"/>
         <source>The radius of a color despeckle.</source>
-        <translation>Радиус цветного пятна.</translation>
+        <translation type="vanished">Радиус цветного пятна.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="321"/>
         <source>Blur/Sharpen</source>
-        <translation>Размытие/Резкость</translation>
+        <translation type="vanished">Размытие/Резкость</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="328"/>
         <source>Value is -2.0 .. 1.0..</source>
-        <translation>Значение -2,0 .. 1,0 ..</translation>
+        <translation type="vanished">Значение -2,0 .. 1,0 ..</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="357"/>
         <source>Screen</source>
-        <translation>Экран</translation>
+        <translation type="vanished">Экран</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="400"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="416"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="250"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="266"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="813"/>
         <source>Value is -1.0 .. 1.0.</source>
         <translation>Значение -1,0 .. 1,0.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="462"/>
         <source>Engraving</source>
-        <translation>Гравюра</translation>
+        <translation type="vanished">Гравюра</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="459"/>
         <source>UnPaper</source>
-        <translation>Удалить фон</translation>
+        <translation type="vanished">Удалить фон</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="443"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="506"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="329"/>
         <source>Value is 0.0 .. 1.0.</source>
         <translation>Значение 0,0 .. 1,0.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="482"/>
         <source>The iters of a unPaper.</source>
-        <translation>Кол-во итераций поиска фона.</translation>
+        <translation type="vanished">Кол-во итераций поиска фона.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="491"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="387"/>
         <source>White margins</source>
         <translation>Белые поля</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="436"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="322"/>
         <source>Equalize illumination</source>
         <translation>Выровнять освещение</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="285"/>
         <source>Despeckle</source>
-        <translation>Удалять пятна</translation>
+        <translation type="vanished">Удалять пятна</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="619"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="345"/>
+        <source>G</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="348"/>
+        <source>GrayScale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="515"/>
         <source>Dimming Colored</source>
         <translation>Затемнение цветов</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="626"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="522"/>
         <source>Value is -1.0 .. 2.0.</source>
         <translation>Значение -1,0 .. 2,0.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="646"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="542"/>
         <source>Threshold</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="653"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="549"/>
         <source>Select threshold method.</source>
         <translation>Выберите пороговый метод.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="660"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <source>M</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="663"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="559"/>
         <source>Morphology ON/OFF.</source>
         <translation>Морфология ВКЛ/ВЫКЛ.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="673"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="566"/>
+        <source>N</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Negate threshold.</source>
         <translation>Негатив.</translation>
     </message>
@@ -1549,12 +1552,12 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Верхняя граница.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="674"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="613"/>
         <source> - radius, coef.:</source>
         <translation> - радиус, коэф.:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="694"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="633"/>
         <source>Default value is 0.34.</source>
         <translation>Знач. по умол. 0,34.</translation>
     </message>
@@ -1584,81 +1587,96 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выключить автозоны.</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="839"/>
+        <source>D8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="842"/>
         <source>Picture to Dots8.</source>
         <translation>Иллюстрации точками 8x8.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="977"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="990"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="892"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="905"/>
         <source>K-means</source>
         <translation>К-средних</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1010"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="925"/>
         <source>K (colors):</source>
         <translation>К (цветов):</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1017"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="932"/>
         <source>Number of K-means colors.</source>
         <translation>Количество цветов К-средних.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1030"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="945"/>
         <source>The starting value of the k-means color.</source>
         <translation>Начальное значение цвета К-средних.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1046"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="961"/>
         <source> - sat, norm:</source>
         <translation> - насыщ, норм:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1053"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1069"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1092"/>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1108"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="968"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="984"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1007"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1023"/>
         <source>Default value is 0.0.</source>
         <translation>Значение по умолчанию 0,0.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1085"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1000"/>
         <source> - bg, mask:</source>
         <translation> - фон, маска:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1124"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1039"/>
         <source> - colorspace:</source>
         <translation> - цв. схема:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1131"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1046"/>
         <source>Select color space in K-means.</source>
         <translation>Выберите цветовое пространство в K-средних.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1048"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1055"/>
+        <source>B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
         <source>Find Black.</source>
         <translation>Найти Чёрное.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1058"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1065"/>
+        <source>W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1068"/>
         <source>Find White.</source>
         <translation>Найти Белое.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1165"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1268"/>
         <source>Custom despeckling</source>
         <translation>Настраиваемое удаление пятен</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1208"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1311"/>
         <source>Despeckle factor:</source>
         <translation>Фактор удаления пятен:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1215"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1318"/>
         <source>Value is 0.0 .. 9.99.</source>
         <translation>Значение 0,0 .. 9,99.</translation>
     </message>
@@ -1672,6 +1690,17 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1407"/>
         <source>MSE filters:</source>
         <translation>MSE фильтров:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1414"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1428"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1442"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1456"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1470"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1484"/>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1498"/>
+        <source>?</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1421"/>
@@ -1776,12 +1805,12 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Ширина</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="69"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="76"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="20"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="166"/>
         <source>Margins</source>
         <translation>Поля</translation>
     </message>
@@ -1794,78 +1823,79 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="vanished">Дюймы (in)</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="43"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="189"/>
         <source>Top</source>
         <translation>Сверху</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="56"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="135"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="350"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="376"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="402"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="428"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="454"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="483"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="221"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="509"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="535"/>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="561"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="587"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="613"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="642"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="668"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="694"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="720"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="77"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="242"/>
         <source>Bottom</source>
         <translation>Снизу</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="103"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="268"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="159"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="324"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="236"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="619"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="141"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="382"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="778"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="261"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="407"/>
         <source>Alignment</source>
         <translation>Выравнивание</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="274"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="420"/>
         <source>None</source>
         <translation>Не выравнивать</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="277"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="423"/>
         <source>Don&apos;t match size</source>
         <translation>Не соответствует размеру</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="287"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="433"/>
         <source>Growing</source>
         <translation>Расширить</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="290"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="436"/>
         <source>Match size by growing margins</source>
         <translation>Соответствие размера за счет увеличения поля</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="300"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="446"/>
         <source>Scaling</source>
         <translation>Масштабировать</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="303"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="449"/>
         <source>Match size by scaling</source>
         <translation>Выровнить размер путем масштабирования</translation>
     </message>
@@ -1880,12 +1910,12 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выровнить размер путем аффинного масштабирования</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="644"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="803"/>
         <source>Missing content box</source>
         <translation>Отсутствует блок содержимого</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="657"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="816"/>
         <source>As there is no content box, the output will be a blank white page with size matching that of other pages.</source>
         <translation>Поскольку поле содержимого отсутствует, на выходе будет пустая белая страница, размер которой соответствует размеру других страниц.</translation>
     </message>
@@ -2001,27 +2031,27 @@ p, li { white-space: pre-wrap; }
         <translation>Тип разреза</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="134"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="149"/>
         <source>?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="159"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="193"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="184"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="218"/>
         <source>Split Line</source>
         <translation>Разделительная линия</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="214"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="248"/>
         <source>Auto</source>
         <translation>Автоматически</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="230"/>
+        <location filename="../stages/page_split/ui/PageSplitOptionsWidget.ui" line="264"/>
         <source>Manual</source>
         <translation>Вручную</translation>
     </message>
@@ -2084,52 +2114,52 @@ p, li { white-space: pre-wrap; }
         <translation>Папка вывода</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="521"/>
-        <location filename="../ProjectFilesDialog.cpp" line="530"/>
-        <location filename="../ProjectFilesDialog.cpp" line="540"/>
-        <location filename="../ProjectFilesDialog.cpp" line="567"/>
-        <location filename="../ProjectFilesDialog.cpp" line="577"/>
-        <location filename="../ProjectFilesDialog.cpp" line="651"/>
+        <location filename="../ProjectFilesDialog.cpp" line="523"/>
+        <location filename="../ProjectFilesDialog.cpp" line="532"/>
+        <location filename="../ProjectFilesDialog.cpp" line="542"/>
+        <location filename="../ProjectFilesDialog.cpp" line="569"/>
+        <location filename="../ProjectFilesDialog.cpp" line="579"/>
+        <location filename="../ProjectFilesDialog.cpp" line="653"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="521"/>
+        <location filename="../ProjectFilesDialog.cpp" line="523"/>
         <source>No files in project!</source>
         <translation>В проекте нет файлов!</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="531"/>
+        <location filename="../ProjectFilesDialog.cpp" line="533"/>
         <source>Input directory is not set or doesn&apos;t exist.</source>
         <translation>Папка ввода не задана или не существует.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="541"/>
+        <location filename="../ProjectFilesDialog.cpp" line="543"/>
         <source>Input and output directories can&apos;t be the same.</source>
         <translation>Папки ввода и вывода не могут совпадать.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="553"/>
+        <location filename="../ProjectFilesDialog.cpp" line="555"/>
         <source>Create Directory?</source>
         <translation>Создать папку?</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="554"/>
+        <location filename="../ProjectFilesDialog.cpp" line="556"/>
         <source>Output directory doesn&apos;t exist.  Create it?</source>
         <translation>Папка вывода не существует. Создать?</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="568"/>
+        <location filename="../ProjectFilesDialog.cpp" line="570"/>
         <source>Unable to create output directory.</source>
         <translation>Невозможно создать папку вывода.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="578"/>
+        <location filename="../ProjectFilesDialog.cpp" line="580"/>
         <source>Output directory is not set or doesn&apos;t exist.</source>
         <translation>Папка вывода не задана или не существует.</translation>
     </message>
     <message>
-        <location filename="../ProjectFilesDialog.cpp" line="651"/>
+        <location filename="../ProjectFilesDialog.cpp" line="653"/>
         <source>Some of the files failed to load.
 Either we don&apos;t support their format, or they are broken.
 You should remove them from the project.</source>
@@ -2247,17 +2277,17 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="../RelinkingDialog.cpp" line="101"/>
+        <location filename="../RelinkingDialog.cpp" line="103"/>
         <source>Substitution File for %1</source>
         <translation>Файл замены для %1</translation>
     </message>
     <message>
-        <location filename="../RelinkingDialog.cpp" line="110"/>
+        <location filename="../RelinkingDialog.cpp" line="112"/>
         <source>Substitution Directory for %1</source>
         <translation>Каталог замены для %1</translation>
     </message>
     <message>
-        <location filename="../RelinkingDialog.cpp" line="141"/>
+        <location filename="../RelinkingDialog.cpp" line="143"/>
         <source>This change would merge several files into one.</source>
         <translation>Это объединит несколько файлов в один.</translation>
     </message>
@@ -2367,23 +2397,22 @@ p, li { white-space: pre-wrap; }
         <translation>Полезная область</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="38"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="40"/>
         <source>Auto</source>
         <translation>Автоматически</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="54"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="56"/>
         <source>Manual</source>
         <translation>Вручную</translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="83"/>
         <source>Scope</source>
-        <translation>Применить
+        <translation type="vanished">Применить
 </translation>
     </message>
     <message>
-        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="104"/>
+        <location filename="../stages/select_content/ui/SelectContentOptionsWidget.ui" line="109"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
@@ -2545,17 +2574,17 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ZoneCreationInteraction</name>
     <message>
-        <location filename="../zones/ZoneCreationInteraction.cpp" line="347"/>
+        <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
         <source>Click to finish this zone.  ESC to cancel.</source>
         <translation>Кликните для завершения этой зоны. ESC для отмены.</translation>
     </message>
     <message>
-        <location filename="../zones/ZoneCreationInteraction.cpp" line="351"/>
+        <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
         <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
         <translation>Соедините первую и последнюю точку для завершения этой зоны. ESC для отмены.</translation>
     </message>
     <message>
-        <location filename="../zones/ZoneCreationInteraction.cpp" line="356"/>
+        <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
         <source>Zones need to have at least 3 points.  ESC to cancel.</source>
         <translation>Зоны должны содержать по крайней мере 3 точки. ESC для отмены.</translation>
     </message>
@@ -2605,12 +2634,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ZoneVertexDragInteraction</name>
     <message>
-        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="171"/>
+        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="175"/>
         <source>Merge these two vertices.</source>
         <translation>Объединить эти две вершины.</translation>
     </message>
     <message>
-        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="175"/>
+        <location filename="../zones/ZoneVertexDragInteraction.cpp" line="179"/>
         <source>Move the vertex to one of its neighbors to merge them.</source>
         <translation>Придвиньте вершину к одной из соседних вершин, чтобы объединить их.</translation>
     </message>
@@ -2682,14 +2711,19 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Применить наклон</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/OptionsWidget.cpp" line="124"/>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="178"/>
         <source>Apply Distortion Type</source>
         <translation>Применить тип искажения</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/OptionsWidget.cpp" line="174"/>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="228"/>
         <source>Apply Depth Perception</source>
         <translation>Применить восприятие глубины</translation>
+    </message>
+    <message>
+        <location filename="../stages/deskew/OptionsWidget.cpp" line="478"/>
+        <source>Apply Source</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2800,7 +2834,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>output::OptionsWidget</name>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="62"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="63"/>
         <source>Black and White</source>
         <translation>Черно-белый</translation>
     </message>
@@ -2809,77 +2843,227 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Двухтоновый</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="63"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="64"/>
         <source>Color / Grayscale</source>
         <translation>Цветной / Серый</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="64"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="65"/>
         <source>Mixed</source>
         <translation>Смешанный</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="66"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="67"/>
         <source>Otsu</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="67"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="68"/>
         <source>Mean</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="68"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="69"/>
+        <source>Dots8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="70"/>
+        <source>BMTiled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="71"/>
         <source>Niblack</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="69"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="72"/>
         <source>Gatos</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="70"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="73"/>
         <source>Sauvola</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="71"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="74"/>
         <source>Wolf</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="72"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="75"/>
         <source>Bradley</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="73"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="76"/>
+        <source>Grad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="77"/>
+        <source>Singh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="78"/>
+        <source>WAN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="79"/>
         <source>EdgePlus</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="74"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="80"/>
         <source>BlurDiv</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="75"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="81"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="100"/>
         <source>EdgeDiv</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="76"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="82"/>
+        <source>EdgeAdapt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="83"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="101"/>
+        <source>Robust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="84"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="102"/>
+        <source>Grain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="85"/>
         <source>MultiScale</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="856"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="86"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="104"/>
+        <source>Engraving</source>
+        <translation type="unfinished">Гравюра</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="88"/>
+        <source>Auto Level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="89"/>
+        <source>Balance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="90"/>
+        <source>OverBlur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="91"/>
+        <source>Retinex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="92"/>
+        <source>SubtractBG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="93"/>
+        <source>Equalize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="94"/>
+        <source>Wiener denoiser</source>
+        <translation type="unfinished">Шумодав Винера</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="95"/>
+        <source>KNN denoiser</source>
+        <translation type="unfinished">Шумодав KNN</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="96"/>
+        <source>Despeckle</source>
+        <translation type="unfinished">Удалять пятна</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="97"/>
+        <source>Sigma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="98"/>
+        <source>Blur/Sharpen</source>
+        <translation type="unfinished">Размытие/Резкость</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="99"/>
+        <source>Screen</source>
+        <translation type="unfinished">Экран</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="103"/>
+        <source>Comix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="105"/>
+        <source>Dots 8x8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="106"/>
+        <source>UnPaper</source>
+        <translation type="unfinished">Удалить фон</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="108"/>
+        <source>HSV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="109"/>
+        <source>HSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="110"/>
+        <source>YCbCr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1255"/>
         <source>Apply Despeckling Level</source>
         <translation>Применить уровень удаления пятен</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="1077"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1484"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1485"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1486"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1487"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1488"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1489"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1490"/>
+        <source>%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="1525"/>
         <source>This page: %1 x %2 px</source>
         <translation>Эта страница: %1 x %2 px</translation>
     </message>
@@ -2963,27 +3147,27 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>output::Task::UiUpdater</name>
     <message>
-        <location filename="../stages/output/Task.cpp" line="573"/>
+        <location filename="../stages/output/Task.cpp" line="579"/>
         <source>Picture zones are only available in Mixed mode.</source>
         <translation>Зоны картинок доступны только в режиме &quot;Смешанный&quot;.</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="608"/>
+        <location filename="../stages/output/Task.cpp" line="614"/>
         <source>Despeckling can&apos;t be done in Color / Grayscale mode.</source>
         <translation>Удаление пятен не делается в режиме &quot;Цветной / Серый&quot;.</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="627"/>
+        <location filename="../stages/output/Task.cpp" line="633"/>
         <source>Output</source>
         <translation>Вывод</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="628"/>
+        <location filename="../stages/output/Task.cpp" line="634"/>
         <source>Picture Zones</source>
         <translation>Зоны картинок</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="629"/>
+        <location filename="../stages/output/Task.cpp" line="635"/>
         <source>Fill Zones</source>
         <translation>Зоны заливки</translation>
     </message>
@@ -2992,7 +3176,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Распрямление строк</translation>
     </message>
     <message>
-        <location filename="../stages/output/Task.cpp" line="630"/>
+        <location filename="../stages/output/Task.cpp" line="636"/>
         <source>Despeckling</source>
         <translation>Удаление пятен</translation>
     </message>
@@ -3012,32 +3196,32 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Макет страницы</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="70"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
         <source>Natural order</source>
         <translation>Естественный порядок</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="71"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="73"/>
         <source>Order by increasing width</source>
         <translation>Сортировка по возрастающей ширине</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="72"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="74"/>
         <source>Order by increasing height</source>
         <translation>Сортировка по возрастающей высоте</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="73"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="75"/>
         <source>Order by width/height ratio</source>
         <translation>Сортировка по соотношению ширины/высоты</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="74"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="76"/>
         <source>Order by area</source>
         <translation>Сортировка по площади</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/Filter.cpp" line="85"/>
+        <location filename="../stages/page_layout/Filter.cpp" line="86"/>
         <source>Margins</source>
         <translation>Поля</translation>
     </message>
@@ -3045,7 +3229,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::ImageView</name>
     <message>
-        <location filename="../stages/page_layout/ImageView.cpp" line="88"/>
+        <location filename="../stages/page_layout/ImageView.cpp" line="90"/>
         <source>Resize margins by dragging any of the solid lines.</source>
         <translation>Меняйте размеры полей, перетаскивая хоть внешние, хоть внутренние сплошные линии.</translation>
     </message>
@@ -3053,14 +3237,25 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>page_layout::OptionsWidget</name>
     <message>
-        <location filename="../stages/page_layout/OptionsWidget.cpp" line="362"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="462"/>
+        <source>Apply Framings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="477"/>
         <source>Apply Margins</source>
         <translation>Применить поля</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/OptionsWidget.cpp" line="377"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="492"/>
         <source>Apply Alignment</source>
         <translation>Применить выравнивание</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="594"/>
+        <location filename="../stages/page_layout/OptionsWidget.cpp" line="595"/>
+        <source> = %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3118,15 +3313,15 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Для всех страниц</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="120"/>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="228"/>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="337"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="134"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="245"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="381"/>
         <source>Set manually</source>
         <translation>Установлено вручную</translation>
     </message>
     <message>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="175"/>
-        <location filename="../stages/page_split/OptionsWidget.cpp" line="332"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="190"/>
+        <location filename="../stages/page_split/OptionsWidget.cpp" line="376"/>
         <source>Auto detected</source>
         <translation>Определено автоматически</translation>
     </message>

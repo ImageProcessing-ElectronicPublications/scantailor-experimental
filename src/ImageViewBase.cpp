@@ -246,7 +246,7 @@ ImageViewBase::ImageViewBase(
     updateWidgetTransformAndFixFocalPoint(CENTER_IF_FITS);
 
     interactionState().setDefaultStatusTip(
-        tr("Use the mouse wheel or +/- to zoom.  When zoomed, dragging is possible.")
+        tr("Use the mouse wheel or +/- to zoom.  When zoomed, dragging is possible. Double click to zoom all.")
     );
     ensureStatusTip(interactionState().statusTip());
 
@@ -643,6 +643,16 @@ ImageViewBase::contextMenuEvent(QContextMenuEvent* event)
 {
     event->setAccepted(false);
     m_rootInteractionHandler.contextMenuEvent(event, m_interactionState);
+    event->setAccepted(true);
+    updateStatusTipAndCursor();
+    maybeQueueRedraw();
+}
+
+void
+ImageViewBase::mouseDoubleClickEvent(QMouseEvent* event)
+{
+    event->setAccepted(false);
+    m_rootInteractionHandler.mouseDoubleClickEvent(event, m_interactionState);
     event->setAccepted(true);
     updateStatusTipAndCursor();
     maybeQueueRedraw();
