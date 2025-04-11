@@ -604,7 +604,7 @@ GrayImage grayNiblackMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = gaussBlur(src, radius, radius);
+    GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -749,7 +749,7 @@ GrayImage graySauvolaMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = gaussBlur(src, radius, radius);
+    GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -802,7 +802,7 @@ GrayImage grayWolfMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = gaussBlur(src, radius, radius);
+    GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -875,7 +875,7 @@ GrayImage grayBradleyMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = gaussBlur(src, radius, radius);
+    GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -962,7 +962,7 @@ GrayImage graySinghMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = gaussBlur(src, radius, radius);
+    GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -1018,7 +1018,7 @@ GrayImage grayWANMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = gaussBlur(src, radius, radius);
+    GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
         return GrayImage(src);
