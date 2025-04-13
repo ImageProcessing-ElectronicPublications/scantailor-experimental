@@ -543,10 +543,11 @@ BinaryImage binarizeGatos(
     }
 
     GrayImage const wiener(grayWiener(src, 5, noise_sigma));
-    BinaryImage niblack(binarizeNiblack(wiener, radius, k, delta, bound_lower, bound_upper));
+    BinaryImage niblack(binarizeNiblack(wiener, radius, k, 0, bound_lower, bound_upper));
     GrayImage threshold_map(binarizeGatosBG(wiener, niblack, radius));
-    grayBGtoMap(wiener, threshold_map, q, p);
-    BinaryImage bw_img(binarizeFromMap(wiener, threshold_map, delta, bound_lower, bound_upper));
+    float const qd = q - (1.0f - q) * delta * 0.02f;
+    grayBGtoMap(wiener, threshold_map, qd, p);
+    BinaryImage bw_img(binarizeFromMap(wiener, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }
