@@ -1,0 +1,11 @@
+<palette>
+<group name="Active">
+<role name="Highlight">#40A0F0</role>
+</group>
+<group name="Disabled">
+<role name="Highlight">#40A0F0</role>
+</group>
+<group name="Inactive">
+<role name="Highlight">#40A0F0</role>
+</group>
+</palette>

@@ -44,6 +44,7 @@
 #include "BasicImageView.h"
 #include "ProjectWriter.h"
 #include "ProjectReader.h"
+#include "PaletteReader.h"
 #include "ThumbnailPixmapCache.h"
 #include "ThumbnailFactory.h"
 #include "ContentBoxPropagator.h"
@@ -1682,14 +1683,22 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
     else
     {
         QPalette palette = QPalette(m_systemPalette);
+        QString stylesheetPalettePath = stylesheetFilePath + ".pal";
+        QFile stylesheetPaletteFile(stylesheetPalettePath);
+        QDomDocument paletteDoc;
+        PaletteReader paletteReader;
 
-        // TODO: Replace me with something normal
-        if (stylesheetFilePath.endsWith("dark_blue.qss"))
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
+        if (paletteDoc.setContent(&stylesheetPaletteFile, false))
+#else
+        if (paletteDoc.setContent(&stylesheetPaletteFile, QDomDocument::ParseOption::Default))
+#endif
         {
-            palette.setColor(QPalette::Highlight, QColor(0x40, 0xA0, 0xF0));
+            if (paletteReader.readPalette(paletteDoc, palette))
+            {
+                QApplication::setPalette(palette);
+            }
         }
-
-        QApplication::setPalette(palette);
     }
 
     setStyleSheet(stylesheet);

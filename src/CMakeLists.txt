@@ -91,6 +91,7 @@ SET(
     TaskStatus.h FilterUiInterface.h
     ProjectReader.cpp ProjectReader.h
     ProjectWriter.cpp ProjectWriter.h
+    PaletteReader.cpp PaletteReader.h
     AtomicFileOverwriter.cpp AtomicFileOverwriter.h
     EstimateBackground.cpp EstimateBackground.h
     Despeckle.cpp Despeckle.h
