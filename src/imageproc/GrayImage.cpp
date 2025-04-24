@@ -1442,6 +1442,127 @@ void grayMapOverlay(
     }
 } // grayMapOverlay
 
+GrayImage grayCurveFilter(
+    GrayImage& src, float const coef)
+{
+    GrayImage dst(src);
+    grayCurveFilterInPlace(dst, coef);
+    return dst;
+}
+
+void grayCurveFilterInPlace(
+    GrayImage& src, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if (coef != 0.0f)
+    {
+        int icoef = (int) (coef * 256.0f + 0.5f);
+        unsigned int const w = src.width();
+        unsigned int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char pix_replace[256];
+
+        uint64_t thres = 0;
+        uint32_t sim = h * w;
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned char const val = src_line[x];
+                thres += val;
+            }
+            src_line += src_stride;
+        }
+        thres += (sim >> 1);
+        thres /= sim;
+
+        thres <<= 8;
+        for (unsigned int j = 0; j < 256; j++)
+        {
+            int val = (j << 8);
+            int delta = (val - thres);
+            int dsqr = delta * delta;
+            int ddiv = (delta < 0) ? -thres : (65280 - thres);
+            dsqr = (ddiv == 0) ? 0 : dsqr / ddiv;
+            delta -= dsqr;
+            delta *= icoef;
+            delta += 128;
+            delta >>= 8;
+            val += delta;
+            val += 128;
+            val >>= 8;
+            pix_replace[j] = (unsigned char) val;
+        }
+
+        src_line = src.data();
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned char const val = src_line[x];
+                src_line[x] = pix_replace[val];
+            }
+            src_line += src_stride;
+        }
+    }
+}
+
+GrayImage graySqrFilter(
+    GrayImage& src, float const coef)
+{
+    GrayImage dst(src);
+    graySqrFilterInPlace(dst, coef);
+    return dst;
+}
+
+void graySqrFilterInPlace(
+    GrayImage& src, float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if (coef != 0.0f)
+    {
+        int icoef = (int) (coef * 256.0f + 0.5f);
+        unsigned int const w = src.width();
+        unsigned int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char pix_replace[256];
+
+        for (unsigned int j = 0; j < 256; j++)
+        {
+            unsigned int val = j;
+            val++;
+            val *= val;
+            val += 255;
+            val >>= 8;
+            val--;
+            val = icoef * val + (256 - icoef) * j;
+            val += 128;
+            val >>= 8;
+            pix_replace[j] = (uint8_t) val;
+        }
+
+        for (unsigned int y = 0; y < h; y++)
+        {
+            for (unsigned int x = 0; x < w; x++)
+            {
+                unsigned char const val = src_line[x];
+                src_line[x] = pix_replace[val];
+            }
+            src_line += src_stride;
+        }
+    }
+}
+
 GrayImage grayGravure(
     GrayImage const& src,
     int const radius,

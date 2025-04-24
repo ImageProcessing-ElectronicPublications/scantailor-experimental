@@ -1311,13 +1311,13 @@ OutputGenerator::colored(
     DebugImages* const dbg)
 {
     // Color filters begin
-    colorCurveFilterInPlace(image, color_options.curveCoef());
-
-    colorSqrFilterInPlace(image, color_options.sqrCoef());
-
     GrayImage gout = GrayImage(image);
     if (!gout.isNull())
     {
+        grayCurveFilterInPlace(gout, color_options.curveCoef());
+
+        graySqrFilterInPlace(gout, color_options.sqrCoef());
+
         grayAutoLevelInPlace(gout, color_options.autoLevelSize(), color_options.autoLevelCoef());
 
         grayBalanceInPlace(gout, color_options.balanceSize(), color_options.balanceCoef());

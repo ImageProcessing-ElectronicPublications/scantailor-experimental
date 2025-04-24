@@ -233,6 +233,28 @@ void grayMapOverlay(
     float coef = 0.0f);
 
 /**
+ * @brief S-curve.
+ *
+ * (0-T)+(T-255), T = mean(I)
+  */
+IMAGEPROC_EXPORT GrayImage grayCurveFilter(
+    GrayImage& src, float coef = 0.5f);
+
+IMAGEPROC_EXPORT void grayCurveFilterInPlace(
+    GrayImage& src, float coef = 0.5f);
+
+/**
+ * @brief C-curve.
+ *
+ * (0-255)
+  */
+IMAGEPROC_EXPORT GrayImage graySqrFilter(
+    GrayImage& src, float coef = 0.0f);
+
+IMAGEPROC_EXPORT void graySqrFilterInPlace(
+    GrayImage& src, float coef = 0.0f);
+
+/**
  * @brief Engraving GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayGravure(
