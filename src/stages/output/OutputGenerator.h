@@ -177,7 +177,14 @@ private:
 
     void colored(
         QImage& image,
-        ColorGrayscaleOptions const& color_options);
+        ColorGrayscaleOptions const& color_options,
+        QImage const& orig_image,
+        CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+        QPolygonF transformed_crop_area,
+        QRect const normalize_illumination_rect,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        TaskStatus const& status,
+        DebugImages* dbg = nullptr);
 
     void maybeDespeckleInPlace(
         imageproc::BinaryImage& image,

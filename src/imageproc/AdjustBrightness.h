@@ -48,7 +48,10 @@ namespace imageproc
  * This function takes wr and wb arguments, and calculates wg as 1.0 - wr - wb.
  */
 IMAGEPROC_EXPORT void adjustBrightness(
-    QImage& rgb_image, QImage const& brightness, double wr, double wb);
+    QImage& rgb_image,
+    QImage const& brightness,
+    float wr,
+    float wb);
 
 /**
  * \brief A custom version of adjustBrightness().
@@ -56,7 +59,9 @@ IMAGEPROC_EXPORT void adjustBrightness(
  * Same as adjustBrightness(), but the weighting factors used in the YUV
  * color space are assumed.
  */
-IMAGEPROC_EXPORT void adjustBrightnessYUV(QImage& rgb_image, QImage const& brightness);
+IMAGEPROC_EXPORT void adjustBrightnessYUV(
+    QImage& rgb_image,
+    QImage const& brightness);
 
 /**
  * \brief A custom version of adjustBrightness().
@@ -64,7 +69,9 @@ IMAGEPROC_EXPORT void adjustBrightnessYUV(QImage& rgb_image, QImage const& brigh
  * Same as adjustBrightness(), but the weighting factors used by
  * toGrayscale() and qGray() are assumed.
  */
-IMAGEPROC_EXPORT void adjustBrightnessGrayscale(QImage& rgb_image, QImage const& brightness);
+IMAGEPROC_EXPORT void adjustBrightnessGrayscale(
+    QImage& rgb_image,
+    QImage const& brightness);
 
 } // namespace imageproc
 

@@ -374,7 +374,6 @@ OutputGenerator::process(
         ColorGrayscaleOptions const& color_options = m_colorParams.colorGrayscaleOptions();
         BlackWhiteOptions const& black_white_options = m_colorParams.blackWhiteOptions();
         BlackKmeansOptions const& black_kmeans_options = m_colorParams.blackKmeansOptions();
-        double norm_coef = color_options.normalizeCoef();
 
         GrayImage coloredSignificance;
         BinaryImage colored_mask;
@@ -383,51 +382,16 @@ OutputGenerator::process(
 
         metrics.setMetricBWorigin(grayMetricBW(GrayImage(transformed_image)));
         // Color filters begin
-        colored(transformed_image, color_options);
-
-        if (norm_coef > 0.0)
-        {
-            QImage maybe_normalized;
-            // For background estimation we need a downscaled image of about 200x300 pixels.
-            // We can't just downscale image, as this background estimation we
-            // need to set outside pixels to black.
-            double const downscale_factor = 300.0 / std::max<int>(
-                                                300, std::max(m_outRect.width(), m_outRect.height())
-                                            );
-            auto downscaled_transform = m_ptrImageTransform->clone();
-            QTransform const downscale_only_transform(
-                downscaled_transform->scale(downscale_factor, downscale_factor)
-            );
-
-            QRect const downscaled_out_rect(downscale_only_transform.mapRect(m_outRect));
-            GrayImage const transformed_for_bg_estimation(
-                downscaled_transform->materialize(
-                    gray_orig_image_factory(), downscaled_out_rect, Qt::black, accel_ops
-                )
-            );
-            QPolygonF const downscaled_region_of_intereset(
-                downscale_only_transform.map(
-                    transformed_crop_area.intersected(QRectF(normalize_illumination_rect))
-                )
-            );
-
-            // imageGraySaveColors(image, gray, 1.0);
-            maybe_normalized = normalizeIlluminationGray(
-                                   status, accel_ops, GrayImage(transformed_image),
-                                   transformed_for_bg_estimation, norm_coef,
-                                   downscaled_region_of_intereset, dbg
-                               );
-            if (orig_image.allGray())
-            {
-                transformed_image = QImage(maybe_normalized);
-            }
-            else
-            {
-                adjustBrightnessGrayscale(transformed_image, maybe_normalized);
-            }
-        }
-
-        unPaperFilterInPlace(transformed_image, color_options.unPaperIters(), color_options.unPaperCoef());
+        colored(
+            transformed_image,
+            color_options,
+            orig_image,
+            gray_orig_image_factory,
+            transformed_crop_area,
+            normalize_illumination_rect,
+            accel_ops,
+            status,
+            dbg);
 
         coloredSignificance = GrayImage(transformed_image);
         if (render_params.needBinarization())
@@ -1335,7 +1299,16 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
 }
 
 void
-OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_options)
+OutputGenerator::colored(
+    QImage& image,
+    ColorGrayscaleOptions const& color_options,
+    QImage const& orig_image,
+    CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
+    QPolygonF transformed_crop_area,
+    QRect const normalize_illumination_rect,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    TaskStatus const& status,
+    DebugImages* const dbg)
 {
     // Color filters begin
     colorCurveFilterInPlace(image, color_options.curveCoef());
@@ -1381,12 +1354,64 @@ OutputGenerator::colored(QImage& image, ColorGrayscaleOptions const& color_optio
 
         grayDots8InPlace(gout, color_options.dots8Size(), color_options.dots8Coef());
 
+        double const norm_coef = color_options.normalizeCoef();
+        if (norm_coef > 0.0)
+        {
+            QImage maybe_normalized;
+            // For background estimation we need a downscaled image of about 200x300 pixels.
+            // We can't just downscale image, as this background estimation we
+            // need to set outside pixels to black.
+            int const size_max = (m_outRect.width() > m_outRect.height()) ? m_outRect.width() : m_outRect.height();
+            int const size_div = (size_max > 300) ? size_max : 300;
+            double const downscale_factor = 300.0 / size_div;
+            auto downscaled_transform = m_ptrImageTransform->clone();
+            QTransform const downscale_only_transform(
+                downscaled_transform->scale(downscale_factor, downscale_factor)
+            );
+
+            QRect const downscaled_out_rect(downscale_only_transform.mapRect(m_outRect));
+            GrayImage const transformed_for_bg_estimation(
+                downscaled_transform->materialize(
+                    gray_orig_image_factory(),
+                    downscaled_out_rect,
+                    Qt::black,
+                    accel_ops
+                )
+            );
+            QPolygonF const downscaled_region_of_intereset(
+                downscale_only_transform.map(
+                    transformed_crop_area.intersected(QRectF(normalize_illumination_rect))
+                )
+            );
+
+            // imageGraySaveColors(image, gray, 1.0);
+            maybe_normalized = normalizeIlluminationGray(
+                                   status,
+                                   accel_ops,
+                                   gout,
+                                   transformed_for_bg_estimation,
+                                   norm_coef,
+                                   downscaled_region_of_intereset,
+                                   dbg
+                               );
+            gout = GrayImage(maybe_normalized);
+        }
+
         metrics.setMetricMSEfilters(grayMetricMSE(GrayImage(image),  gout));
 
-        imageLevelSet(image, gout);
+        if (orig_image.allGray())
+        {
+            image = gout.toQImage();
+        }
+        else
+        {
+            adjustBrightnessGrayscale(image, gout.toQImage());
+        }
+//        imageLevelSet(image, gout);
     }
     gout = GrayImage();
 
+    unPaperFilterInPlace(image, color_options.unPaperIters(), color_options.unPaperCoef());
     // Color filters end
 }
 
