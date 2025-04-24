@@ -44,16 +44,16 @@ GrayImage::GrayImage(QImage const& image)
 {
 }
 
-GridAccessor<uint8_t const>
+GridAccessor<unsigned char const>
 GrayImage::accessor() const
 {
-    return GridAccessor<uint8_t const> {data(), stride(), width(), height()};
+    return GridAccessor<unsigned char const> {data(), stride(), width(), height()};
 }
 
-GridAccessor<uint8_t>
+GridAccessor<unsigned char>
 GrayImage::accessor()
 {
-    return GridAccessor<uint8_t> {data(), stride(), width(), height()};
+    return GridAccessor<unsigned char> {data(), stride(), width(), height()};
 }
 
 /*
@@ -77,9 +77,9 @@ GrayImage grayMapMean(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t const* src_line = src.data();
+        unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
-        uint8_t* gray_line = gray.data();
+        unsigned char* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
         IntegralImage<uint32_t> integral_image(w, h);
@@ -115,7 +115,7 @@ GrayImage grayMapMean(
 
                 mean += 0.5;
                 mean = (mean < 0.0) ? 0.0 : ((mean < 255.0) ? mean : 255.0);
-                gray_line[x] = (uint8_t) mean;
+                gray_line[x] = (unsigned char) mean;
             }
             gray_line += gray_stride;
         }
@@ -145,9 +145,9 @@ GrayImage grayMapDeviation(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t const* src_line = src.data();
+        unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
-        uint8_t* gray_line = gray.data();
+        unsigned char* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
         IntegralImage<uint32_t> integral_image(w, h);
@@ -194,7 +194,7 @@ GrayImage grayMapDeviation(
 
                 deviation += 0.5;
                 deviation = (deviation < 0.0) ? 0.0 : ((deviation < 255.0) ? deviation : 255.0);
-                gray_line[x] = (uint8_t) deviation;
+                gray_line[x] = (unsigned char) deviation;
             }
             gray_line += gray_stride;
         }
@@ -226,9 +226,9 @@ GrayImage grayMapMax(
         }
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gray_line = gray.data();
+        unsigned char* gray_line = gray.data();
         int const gray_stride = gray.stride();
-        uint8_t* gmax_line = gmax.data();
+        unsigned char* gmax_line = gmax.data();
 
         for (int y = 0; y < h; y++)
         {
@@ -237,11 +237,11 @@ GrayImage grayMapMax(
                 int const left = ((x - radius) < 0) ? 0 : (x - radius);
                 int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
 
-                uint8_t const origin = gray_line[x];
-                uint8_t immax = origin;
+                unsigned char const origin = gray_line[x];
+                unsigned char immax = origin;
                 for (int xf = left; xf < right; xf++)
                 {
-                    uint8_t imf = gray_line[xf];
+                    unsigned char imf = gray_line[xf];
                     if (imf > immax)
                     {
                         immax = imf;
@@ -262,12 +262,12 @@ GrayImage grayMapMax(
 
             for (int x = 0; x < w; x++)
             {
-                uint8_t const origin = gray_line[x];
-                uint8_t immax = origin;
+                unsigned char const origin = gray_line[x];
+                unsigned char immax = origin;
                 unsigned long int idx = top * gray_stride + x;
                 for (int yf = top; yf < bottom; yf++)
                 {
-                    uint8_t immaxf = gmax_line[idx];
+                    unsigned char immaxf = gmax_line[idx];
                     if (immaxf > immax)
                     {
                         immax = immaxf;
@@ -311,10 +311,10 @@ GrayImage grayMapContrast(
         }
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gray_line = gray.data();
+        unsigned char* gray_line = gray.data();
         int const gray_stride = gray.stride();
-        uint8_t* gmax_line = gmax.data();
-        uint8_t* gmin_line = gmin.data();
+        unsigned char* gmax_line = gmax.data();
+        unsigned char* gmin_line = gmin.data();
 
         for (int y = 0; y < h; y++)
         {
@@ -323,12 +323,12 @@ GrayImage grayMapContrast(
                 int const left = ((x - radius) < 0) ? 0 : (x - radius);
                 int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
 
-                uint8_t const origin = gray_line[x];
-                uint8_t immin = origin;
-                uint8_t immax = origin;
+                unsigned char const origin = gray_line[x];
+                unsigned char immin = origin;
+                unsigned char immax = origin;
                 for (int xf = left; xf < right; xf++)
                 {
-                    uint8_t imf = gray_line[xf];
+                    unsigned char imf = gray_line[xf];
                     if (imf > immax)
                     {
                         immax = imf;
@@ -356,14 +356,14 @@ GrayImage grayMapContrast(
 
             for (int x = 0; x < w; x++)
             {
-                uint8_t const origin = gray_line[x];
-                uint8_t immin = origin;
-                uint8_t immax = origin;
+                unsigned char const origin = gray_line[x];
+                unsigned char immin = origin;
+                unsigned char immax = origin;
                 unsigned long int idx = top * gray_stride + x;
                 for (int yf = top; yf < bottom; yf++)
                 {
-                    uint8_t immaxf = gmax_line[idx];
-                    uint8_t imminf = gmin_line[idx];
+                    unsigned char immaxf = gmax_line[idx];
+                    unsigned char imminf = gmin_line[idx];
                     if (immaxf > immax)
                     {
                         immax = immaxf;
@@ -374,7 +374,7 @@ GrayImage grayMapContrast(
                     }
                     idx += gray_stride;
                 }
-                uint8_t threshold = (immax - immin);
+                unsigned char threshold = (immax - immin);
 
                 gray_line[x] = threshold;
             }
@@ -409,7 +409,7 @@ unsigned int grayBiModalTiledValue(
 
     unsigned int const w = src.width();
     unsigned int const h = src.height();
-    uint8_t const* src_line = src.data();
+    unsigned char const* src_line = src.data();
     unsigned int const src_stride = src.stride();
     uint64_t im, iw, ib, histogram[histsize] = {0};
     unsigned int k, Tn;
@@ -504,7 +504,7 @@ GrayImage grayBiModalTiledMap(
     {
         return GrayImage();
     }
-    uint8_t* gray_line = gray.data();
+    unsigned char* gray_line = gray.data();
     int const gray_stride = gray.stride();
 
     int const w = src.width();
@@ -523,7 +523,7 @@ GrayImage grayBiModalTiledMap(
             return GrayImage();
         }
 
-        uint8_t* tlocal_line = tlocal.data();
+        unsigned char* tlocal_line = tlocal.data();
         int const tlocal_stride = tlocal.stride();
 
         for (int wy = 0; wy < wh; wy++)
@@ -537,7 +537,7 @@ GrayImage grayBiModalTiledMap(
 
                 int const t = grayBiModalTiledValue(gray, x1, y1, x2, y2, delta, bound_lower, bound_upper);
 
-                tlocal_line[wx] = (uint8_t) t;
+                tlocal_line[wx] = (unsigned char) t;
             }
             tlocal_line += tlocal_stride;
         }
@@ -572,7 +572,7 @@ GrayImage grayBiModalTiledMap(
                                 + dy1 * (dx2 * t21 + dx1 * t22);
                 float t = coef * bml + (1.0f - coef) * bmg + 0.5f;
                 t = (t < 0.0f) ? 0.0f : ((t < 255.0f) ? t : 255.0f);
-                gray_line[x] = (uint8_t) t;
+                gray_line[x] = (unsigned char) t;
             }
             gray_line += gray_stride;
         }
@@ -583,7 +583,7 @@ GrayImage grayBiModalTiledMap(
         {
             for (int x = 0; x < w; x++)
             {
-                gray_line[x] = (uint8_t) bmg;
+                gray_line[x] = (unsigned char) bmg;
             }
             gray_line += gray_stride;
         }
@@ -620,9 +620,9 @@ GrayImage grayNiblackMap(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        uint8_t* gdeviation_line = gdeviation.data();
+        unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
 
         for (int y = 0; y < h; y++)
@@ -634,7 +634,7 @@ GrayImage grayNiblackMap(
                 float threshold = mean - k * deviation;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
             gdeviation_line += gdeviation_stride;
@@ -665,9 +665,9 @@ void grayBGtoMap(
     {
         return;
     }
-    uint8_t const* src_line = src.data();
+    unsigned char const* src_line = src.data();
     int const src_stride = src.stride();
-    uint8_t* background_line = background.data();
+    unsigned char* background_line = background.data();
     int const background_stride = background.stride();
     int const hist_size = 256;
     unsigned char histogram[hist_size] = {0};
@@ -765,9 +765,9 @@ GrayImage graySauvolaMap(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        uint8_t* gdeviation_line = gdeviation.data();
+        unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
 
         for (int y = 0; y < h; y++)
@@ -780,7 +780,7 @@ GrayImage graySauvolaMap(
                 float threshold = mean * (1.0f + k * (deviation / 128.0f - 1.0f));
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
             gdeviation_line += gdeviation_stride;
@@ -818,11 +818,11 @@ GrayImage grayWolfMap(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t const* src_line = src.data();
+        unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        uint8_t* gdeviation_line = gdeviation.data();
+        unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
 
         uint32_t min_gray_level = 255;
@@ -853,7 +853,7 @@ GrayImage grayWolfMap(
                 float threshold = mean - k * a * (mean - min_gray_level);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
             gdeviation_line += gdeviation_stride;
@@ -885,7 +885,7 @@ GrayImage grayBradleyMap(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -896,7 +896,7 @@ GrayImage grayBradleyMap(
                 float threshold = (k < 1.0f) ? (mean * (1.0f - k)) : 0.0f;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
         }
@@ -929,7 +929,7 @@ GrayImage grayGradMap(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -941,7 +941,7 @@ GrayImage grayGradMap(
                 float threshold = mean_grad + mean * coef;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
         }
@@ -978,11 +978,11 @@ GrayImage graySinghMap(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t const* src_line = src.data();
+        unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        uint8_t* graymm_line = graymm.data();
+        unsigned char* graymm_line = graymm.data();
         int const graymm_stride = graymm.stride();
 
         for (int y = 0; y < h; y++)
@@ -995,7 +995,7 @@ GrayImage graySinghMap(
                 float threshold = (1.0f - k) * (mean + maxmin * (1.0f - origin / 255.0f));
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -1039,11 +1039,11 @@ GrayImage grayWANMap(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        uint8_t* gdeviation_line = gdeviation.data();
+        unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
-        uint8_t* gmax_line = gmax.data();
+        unsigned char* gmax_line = gmax.data();
         int const gmax_stride = gmax.stride();
 
         for (int y = 0; y < h; y++)
@@ -1056,7 +1056,7 @@ GrayImage grayWANMap(
 
                 float threshold = (mean + imax) * 0.5f * (1.0f + k * (deviation / 128.0f - 1.0f));
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
-                gmean_line[x] = (uint8_t) threshold;
+                gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
             gdeviation_line += gdeviation_stride;
@@ -1088,9 +1088,9 @@ GrayImage grayMScaleMap(
 
     int const w = src.width();
     int const h = src.height();
-    uint8_t const* src_line = src.data();
+    unsigned char const* src_line = src.data();
     int const src_stride = src.stride();
-    uint8_t* gray_line = gray.data();
+    unsigned char* gray_line = gray.data();
     int const gray_stride = gray.stride();
 
     unsigned int whcp, l, i, j, blsz, rsz;
@@ -1218,7 +1218,7 @@ GrayImage grayMScaleMap(
                         imt += immean;
                         imt += 0.5f;
                         imt = (imt < 0.0f) ? 0.0f : ((imt < 255.0f) ? imt : 255.0f);
-                        gray_line[idx] = (uint8_t) imt;
+                        gray_line[idx] = (unsigned char) imt;
                     }
                 }
             }
@@ -1248,9 +1248,9 @@ GrayImage grayEngravingMap(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t const* src_line = src.data();
+        unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         double mean_delta = 0.0;
@@ -1300,7 +1300,7 @@ GrayImage grayEngravingMap(
                     }
                     retval = coef * retval + (1.0f - coef) * mean + 0.5f;
                     retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                    gmean_line[x] = (uint8_t) retval;
+                    gmean_line[x] = (unsigned char) retval;
                 }
                 gmean_line += gmean_stride;
             }
@@ -1326,7 +1326,7 @@ GrayImage grayDotsMap (
 
     int const w = src.width();
     int const h = src.height();
-    uint8_t* gray_line = gray.data();
+    unsigned char* gray_line = gray.data();
     int const gray_stride = gray.stride();
 
     int y, x, yb, xb, k, wwidth = 8;
@@ -1360,7 +1360,7 @@ GrayImage grayDotsMap (
         {
             xb = x % wwidth;
             threshold = ddith[yb * wwidth + xb];
-            gray_line[x] = (uint8_t) threshold;
+            gray_line[x] = (unsigned char) threshold;
         }
         gray_line += gray_stride;
     }
@@ -1382,14 +1382,14 @@ void grayMapOverlay(
 
     int const w = src.width();
     int const h = src.height();
-    uint8_t* src_line = src.data();
+    unsigned char* src_line = src.data();
     int const src_stride = src.stride();
 
     if ((gover.width() != w) || (gover.height() != h))
     {
         return;
     }
-    uint8_t* gover_line = gover.data();
+    unsigned char* gover_line = gover.data();
     int const gover_stride = gover.stride();
 
     if (coef != 0.0f)
@@ -1434,7 +1434,7 @@ void grayMapOverlay(
 
                 retval = coef * retval + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gover_line += gover_stride;
@@ -1468,7 +1468,6 @@ void grayCurveFilterInPlace(
         unsigned char pix_replace[256];
 
         uint64_t thres = 0;
-        uint32_t sim = h * w;
         for (unsigned int y = 0; y < h; y++)
         {
             for (unsigned int x = 0; x < w; x++)
@@ -1478,10 +1477,11 @@ void grayCurveFilterInPlace(
             }
             src_line += src_stride;
         }
-        thres += (sim >> 1);
-        thres /= sim;
 
-        thres <<= 8;
+        thres <<= 8; /* no round */
+        thres /= h;
+        thres /= w;
+
         for (unsigned int j = 0; j < 256; j++)
         {
             int val = (j << 8);
@@ -1548,7 +1548,7 @@ void graySqrFilterInPlace(
             val = icoef * val + (256 - icoef) * j;
             val += 128;
             val >>= 8;
-            pix_replace[j] = (uint8_t) val;
+            pix_replace[j] = (unsigned char) val;
         }
 
         for (unsigned int y = 0; y < h; y++)
@@ -1660,7 +1660,7 @@ void grayWienerInPlace(
         int const h = src.height();
         float const noise_variance = noise_sigma * noise_sigma;
 
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -1669,7 +1669,7 @@ void grayWienerInPlace(
             return;
         }
 
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         GrayImage gdeviation = grayMapDeviation(src, radius);
@@ -1678,7 +1678,7 @@ void grayWienerInPlace(
             return;
         }
 
-        uint8_t* gdeviation_line = gdeviation.data();
+        unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
 
         for (int y = 0; y < h; y++)
@@ -1699,7 +1699,7 @@ void grayWienerInPlace(
                 }
                 int val = (int) (dst_pixel + 0.5f);
                 val = (val < 0) ? 0 : (val < 255) ? val : 255;
-                src_line[x] = (uint8_t) val;
+                src_line[x] = (unsigned char) val;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -1736,7 +1736,7 @@ void grayKnnDenoiserInPlace(
 
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         IntegralImage<uint32_t> integral_image(w, h);
@@ -1801,7 +1801,7 @@ void grayKnnDenoiserInPlace(
                 // Result to memory
                 color += 0.5f;
                 color = (color < 0.0f) ? 0.0f : ((color < 255.0f) ? color : 255.0f);
-                src_line[x] = (uint8_t) color;
+                src_line[x] = (unsigned char) color;
             }
             src_line += src_stride;
         }
@@ -1834,7 +1834,7 @@ void grayMedianInPlace(
         unsigned int median = histsize / 2;
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         unsigned int const src_stride = src.stride();
         uint64_t const rsize = radius + 1 + radius;
         uint64_t const fsize = rsize * rsize;
@@ -1846,7 +1846,7 @@ void grayMedianInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         unsigned int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -1863,7 +1863,7 @@ void grayMedianInPlace(
                     for (int yf = (y - radius); yf < (y + radius + 1); yf++)
                     {
                         int const yfs = (yf < 0) ? 0 : ((yf < h) ? yf : (h - 1));
-                        uint8_t* f_line = src.data();
+                        unsigned char* f_line = src.data();
                         f_line += (yfs * src_stride);
                         for  (int xf = (x - radius); xf < (x + radius + 1); xf++)
                         {
@@ -1881,7 +1881,7 @@ void grayMedianInPlace(
                     for (int yf = (y - radius); yf < (y + radius + 1); yf++)
                     {
                         int const yfs = (yf < 0) ? 0 : ((yf < h) ? yf : (h - 1));
-                        uint8_t* f_line = src.data();
+                        unsigned char* f_line = src.data();
                         f_line += (yfs * src_stride);
                         histogram[f_line[xl]]--;
                         histogram[f_line[xr]]++;
@@ -1896,7 +1896,7 @@ void grayMedianInPlace(
                 }
                 float retval = coef * median + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) retval;
+                gmean_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -1999,7 +1999,7 @@ void grayDespeckleInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = GrayImage(src);
@@ -2007,7 +2007,7 @@ void grayDespeckleInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int j = 0; j < radius; j++)
@@ -2016,8 +2016,8 @@ void grayDespeckleInPlace(
             gmean_line = gmean.data();
             for (int y = 0; y < h; y++)
             {
-                uint8_t* src_line1 = (y > 0) ? (src_line - src_stride) : src_line;
-                uint8_t* src_line2 = (y < (h - 1)) ? (src_line + src_stride) : src_line;
+                unsigned char* src_line1 = (y > 0) ? (src_line - src_stride) : src_line;
+                unsigned char* src_line2 = (y < (h - 1)) ? (src_line + src_stride) : src_line;
                 for (int x = 0; x < w; x++)
                 {
                     int x1 = (x > 0) ? (x - 1) : x;
@@ -2106,7 +2106,7 @@ void grayAutoLevelInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean;
@@ -2123,7 +2123,7 @@ void grayAutoLevelInPlace(
             return;
         }
 
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         int gmin = 256, gmax = 0;
@@ -2149,7 +2149,7 @@ void grayAutoLevelInPlace(
                 float retval = origin * a1 + a0;
                 retval = coef * retval + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
         }
@@ -2180,7 +2180,7 @@ void grayBalanceInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2188,7 +2188,7 @@ void grayBalanceInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         int const radius2 = radius + radius;
@@ -2197,7 +2197,7 @@ void grayBalanceInPlace(
         {
             return;
         }
-        uint8_t* gmean2_line = gmean2.data();
+        unsigned char* gmean2_line = gmean2.data();
         int const gmean2_stride = gmean2.stride();
 
         for (int y = 0; y < h; y++)
@@ -2278,7 +2278,7 @@ void grayBalanceInPlace(
 
                 retval += 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) retval;
+                gmean_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2296,7 +2296,7 @@ void grayBalanceInPlace(
 
                 mean = coef * mean + (1.0f - coef) * origin + 0.5f;
                 mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                src_line[x] = (uint8_t) mean;
+                src_line[x] = (unsigned char) mean;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2328,7 +2328,7 @@ void grayOverBlurInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2336,7 +2336,7 @@ void grayOverBlurInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -2366,7 +2366,7 @@ void grayOverBlurInPlace(
 
                 retval += 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                gmean_line[x] = (uint8_t) retval;
+                gmean_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2383,7 +2383,7 @@ void grayOverBlurInPlace(
 
                 mean = coef * mean + (1.0f - coef) * origin + 0.5f;
                 mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                src_line[x] = (uint8_t) mean;
+                src_line[x] = (unsigned char) mean;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2415,7 +2415,7 @@ void grayRetinexInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2423,7 +2423,7 @@ void grayRetinexInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -2435,7 +2435,7 @@ void grayRetinexInPlace(
                 float const frac = origin / mean;
                 float const retinex = 127.5f * frac + 0.5f;
 
-                gmean_line[x] = (uint8_t) retinex;
+                gmean_line[x] = (unsigned char) retinex;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2452,7 +2452,7 @@ void grayRetinexInPlace(
 
                 mean = coef * mean + (1.0f - coef) * origin + 0.5f;
                 mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                src_line[x] = (uint8_t) mean;
+                src_line[x] = (unsigned char) mean;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2500,10 +2500,10 @@ void grayEqualizeInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         uint64_t histogram[256] = {0};
@@ -2539,7 +2539,7 @@ void grayEqualizeInPlace(
                     int const origin = gmean_line[x];
                     int const remap = histogram[origin];
 
-                    gmean_line[x] = (uint8_t) remap;
+                    gmean_line[x] = (unsigned char) remap;
                 }
                 gmean_line += gmean_stride;
             }
@@ -2553,7 +2553,7 @@ void grayEqualizeInPlace(
                     int const origin = src_line[x];
                     int const remap = histogram[origin];
 
-                    gmean_line[x] = (uint8_t) remap;
+                    gmean_line[x] = (unsigned char) remap;
                 }
                 src_line += src_stride;
                 gmean_line += gmean_stride;
@@ -2571,7 +2571,7 @@ void grayEqualizeInPlace(
 
                 mean = coef * mean + (1.0f - coef) * origin + 0.5f;
                 mean = (mean < 0.0f) ? 0.0f : (mean < 255.0f) ? mean : 255.0f;
-                src_line[x] = (uint8_t) mean;
+                src_line[x] = (unsigned char) mean;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2603,7 +2603,7 @@ void grayBlurInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2612,7 +2612,7 @@ void grayBlurInPlace(
             return;
         }
 
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -2624,7 +2624,7 @@ void grayBlurInPlace(
 
                 float retval = coef * mean + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2656,7 +2656,7 @@ void grayComixInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gray = GrayImage(src);
@@ -2664,7 +2664,7 @@ void grayComixInPlace(
         {
             return;
         }
-        uint8_t* gray_line = gray.data();
+        unsigned char* gray_line = gray.data();
         int const gray_stride = gray.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2672,7 +2672,7 @@ void grayComixInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -2693,7 +2693,7 @@ void grayComixInPlace(
         {
             return;
         }
-        uint8_t* grebound_line = grebound.data();
+        unsigned char* grebound_line = grebound.data();
         int const grebound_stride = grebound.stride();
         gray = GrayImage();
 
@@ -2711,7 +2711,7 @@ void grayComixInPlace(
 
                 float retval = coef * fre + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2746,7 +2746,7 @@ void graySigmaInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2755,7 +2755,7 @@ void graySigmaInPlace(
             return;
         }
 
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -2771,7 +2771,7 @@ void graySigmaInPlace(
 
                 float retval = coef * target + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2803,7 +2803,7 @@ void grayScreenInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = grayEqualize(src, radius, 1.0f, true);
@@ -2812,7 +2812,7 @@ void grayScreenInPlace(
             return;
         }
 
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -2838,7 +2838,7 @@ void grayScreenInPlace(
                 }
                 retval = coef * retval + (1.0f - coef) * origin + 0.5f;
                 retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
-                src_line[x] = (uint8_t) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2872,7 +2872,7 @@ void grayEdgeDivInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2880,7 +2880,7 @@ void grayEdgeDivInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         double kepw = kep;
@@ -2946,7 +2946,7 @@ void grayEdgeDivInPlace(
                 }
                 // trim value {0..255}
                 retval = (retval < 0.0) ? 0.0 : (retval < 255.0) ? retval : 255.0;
-                src_line[x] = (int) retval;
+                src_line[x] = (unsigned char) retval;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
@@ -2983,7 +2983,7 @@ void grayRobustInPlace(
     {
         int const w = src.width();
         int const h = src.height();
-        uint8_t* src_line = src.data();
+        unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
         GrayImage gmean = gaussBlur(src, radius, radius);
@@ -2991,7 +2991,7 @@ void grayRobustInPlace(
         {
             return;
         }
-        uint8_t* gmean_line = gmean.data();
+        unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
         for (int y = 0; y < h; y++)
@@ -3122,7 +3122,7 @@ unsigned int grayDominantaValue(
 
     int const w = src.width();
     int const h = src.height();
-    uint8_t const* src_line = src.data();
+    unsigned char const* src_line = src.data();
     int const src_stride = src.stride();
 
     uint64_t histogram[256] = {0};
