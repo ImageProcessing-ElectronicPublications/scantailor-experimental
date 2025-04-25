@@ -19,8 +19,8 @@
 #ifndef IMAGEPROC_COLOR_FILTER_H_
 #define IMAGEPROC_COLOR_FILTER_H_
 
-#include "imageproc_config.h"
 #include <QSize>
+#include "imageproc_config.h"
 
 class QImage;
 

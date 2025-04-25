@@ -19,11 +19,11 @@
 #ifndef IMAGEPROC_GRAYIMAGE_H_
 #define IMAGEPROC_GRAYIMAGE_H_
 
+#include <stdint.h>
+#include <math.h>
 #include <QImage>
 #include <QSize>
 #include <QRect>
-#include <stdint.h>
-#include <math.h>
 #include "imageproc_config.h"
 #include "GridAccessor.h"
 #include "IntegralImage.h"
@@ -58,9 +58,9 @@ public:
      */
     explicit GrayImage(QImage const& image);
 
-    GridAccessor<uint8_t const> accessor() const;
+    GridAccessor<unsigned char const> accessor() const;
 
-    GridAccessor<uint8_t> accessor();
+    GridAccessor<unsigned char> accessor();
 
     /**
      * \brief Returns a const reference to the underlying QImage.
@@ -83,17 +83,17 @@ public:
         return m_image.isNull();
     }
 
-    void fill(uint8_t color)
+    void fill(unsigned char color)
     {
         m_image.fill(color);
     }
 
-    uint8_t* data()
+    unsigned char* data()
     {
         return m_image.bits();
     }
 
-    uint8_t const* data() const
+    unsigned char const* data() const
     {
         return m_image.bits();
     }

@@ -1484,10 +1484,10 @@ void grayCurveFilterInPlace(
 
         for (unsigned int j = 0; j < 256; j++)
         {
-            int val = (j << 8);
-            int delta = (val - thres);
-            int dsqr = delta * delta;
-            int ddiv = (delta < 0) ? -thres : (65280 - thres);
+            int64_t val = (j << 8);
+            int64_t delta = (val - thres);
+            int64_t dsqr = delta * delta;
+            int64_t ddiv = (delta < 0) ? -thres : (65280 - thres);
             dsqr = (ddiv == 0) ? 0 : dsqr / ddiv;
             delta -= dsqr;
             delta *= icoef;
