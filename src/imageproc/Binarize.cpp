@@ -619,6 +619,28 @@ BinaryImage binarizeBradley(
 }  // binarizeBradley
 
 /*
+ * nick = mean - k * sqrt(stdev * stdev + mean * mean), k = 0.05
+ */
+BinaryImage binarizeNick(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(grayNickMap(src, radius, k));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+
+    return bw_img;
+}
+
+/*
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
  */
 float binarizeGradValue(

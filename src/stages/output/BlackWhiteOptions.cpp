@@ -212,6 +212,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_BRADLEY;
     }
+    else if (str == "nick")
+    {
+        return T_NICK;
+    }
     else if (str == "grad")
     {
         return T_GRAD;
@@ -294,6 +298,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_BRADLEY:
         str = "bradley";
+        break;
+    case T_NICK:
+        str = "nick";
         break;
     case T_GRAD:
         str = "grad";

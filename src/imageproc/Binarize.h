@@ -197,6 +197,20 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
     unsigned char upper_bound = 255);
 
 /**
+  * \brief Image binarization using N.I.C.K.'s local thresholding method.
+  *
+ * Khurram Khurshid, Imran Siddiqi, Claudie Faure, Nicole Vincent.
+ * "Comparison of Niblack inspired Binarization methods for ancient documents", 2009.
+  */
+IMAGEPROC_EXPORT BinaryImage binarizeNick(
+    GrayImage const& src,
+    int radius = 100,
+    float k = 0.05f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
  * \brief Image binarization using Grad local/global thresholding method.
  *
  * Grad, zvezdochiot 2024. "Adaptive/global document image binarization".

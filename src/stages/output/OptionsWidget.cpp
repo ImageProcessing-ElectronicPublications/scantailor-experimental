@@ -73,6 +73,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("Sauvola"), T_SAUVOLA);
     thresholdMethodSelector->addItem(tr("Wolf"), T_WOLF);
     thresholdMethodSelector->addItem(tr("Bradley"), T_BRADLEY);
+    thresholdMethodSelector->addItem(tr("N.I.C.K"), T_NICK);
     thresholdMethodSelector->addItem(tr("Grad"), T_GRAD);
     thresholdMethodSelector->addItem(tr("Singh"), T_SINGH);
     thresholdMethodSelector->addItem(tr("WAN"), T_WAN);

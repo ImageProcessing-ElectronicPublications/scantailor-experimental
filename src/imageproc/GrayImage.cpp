@@ -906,6 +906,59 @@ GrayImage grayBradleyMap(
 }  // grayBradleyMap
 
 /*
+ * nick = mean - k * sqrt(stdev * stdev + mean * mean), k = 0.05
+ */
+GrayImage grayNickMap(
+    GrayImage const& src,
+    int const radius,
+    float const k)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmean = grayMapMean(src, radius);
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    if (radius > 0)
+    {
+        GrayImage gdeviation = grayMapDeviation(src, radius);
+        if (gdeviation.isNull())
+        {
+            return gmean;
+        }
+
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        unsigned char* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+                float const circle = sqrtf(deviation * deviation + mean * mean);
+                float threshold = mean - k * circle;
+
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                gmean_line[x] = (unsigned char) threshold;
+            }
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
+        }
+    }
+
+    return gmean;
+}
+
+/*
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
  */
 GrayImage grayGradMap(

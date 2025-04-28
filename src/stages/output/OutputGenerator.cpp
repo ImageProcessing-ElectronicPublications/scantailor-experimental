@@ -1230,6 +1230,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeBradley(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_NICK:
+        {
+            binarized = binarizeNick(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         case T_GRAD:
         {
             binarized = binarizeGrad(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
