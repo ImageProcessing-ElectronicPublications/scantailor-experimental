@@ -46,7 +46,9 @@ public:
         imageproc::AffineImageTransform const& full_size_image_transform,
         std::vector<QPointF> const& top_curve,
         std::vector<QPointF> const& bottom_curve,
-        dewarping::DepthPerception const& depth_perception);
+        dewarping::DepthPerception const& depth_perception,
+        dewarping::DepthPerception const& correct_curves,
+        dewarping::DepthPerception const& correct_angle);
 
     virtual void paintOverImage(
         QPainter& painter, QTransform const& transformed_to_display,
@@ -55,6 +57,8 @@ private:
     std::vector<QPointF> m_topCurve;
     std::vector<QPointF> m_bottomCurve;
     dewarping::DepthPerception m_depthPerception;
+    dewarping::DepthPerception m_correctCurves;
+    dewarping::DepthPerception m_correctAngle;
     bool m_isValidModel;
 };
 

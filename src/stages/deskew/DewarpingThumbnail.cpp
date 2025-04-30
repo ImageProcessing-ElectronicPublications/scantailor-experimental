@@ -44,7 +44,9 @@ DewarpingThumbnail::DewarpingThumbnail(
     AffineImageTransform const& full_size_image_transform,
     std::vector<QPointF> const& top_curve,
     std::vector<QPointF> const& bottom_curve,
-    dewarping::DepthPerception const& depth_perception)
+    dewarping::DepthPerception const& depth_perception,
+    dewarping::DepthPerception const& correct_curves,
+    dewarping::DepthPerception const& correct_angle)
     : ThumbnailBase(
           thumbnail_cache, max_display_size,
           page_id, full_size_image_transform
@@ -52,6 +54,8 @@ DewarpingThumbnail::DewarpingThumbnail(
     , m_topCurve(top_curve)
     , m_bottomCurve(bottom_curve)
     , m_depthPerception(depth_perception)
+    , m_correctCurves(correct_curves)
+    , m_correctAngle(correct_angle)
 {
     dewarping::DistortionModel distortion_model;
     distortion_model.setTopCurve(Curve(m_topCurve));
@@ -91,8 +95,8 @@ DewarpingThumbnail::paintOverImage(
             m_topCurve,
             m_bottomCurve,
             m_depthPerception,
-            m_depthPerception,
-            m_depthPerception,
+            m_correctCurves,
+            m_correctAngle,
             num_horizontal_curves,
             num_vertical_lines,
             horizontal_curves,

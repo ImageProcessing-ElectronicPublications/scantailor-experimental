@@ -48,7 +48,7 @@ public:
 
     static double minValue()
     {
-        return 1.0;
+        return 0.0;
     }
 
     static double defaultValue()
@@ -58,7 +58,7 @@ public:
 
     static double maxValue()
     {
-        return 3.0;
+        return 4.0;
     }
 private:
     double m_value;

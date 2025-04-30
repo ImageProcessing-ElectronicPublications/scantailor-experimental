@@ -195,6 +195,8 @@ CacheDrivenTask::process(
                     thumb_col->maxLogicalThumbSize(),
                     page_info.id(), image_transform,
                     top_curve, bottom_curve,
+                    dewarping::DepthPerception(),
+                    dewarping::DepthPerception(),
                     dewarping::DepthPerception()
                 )
             );
@@ -209,7 +211,9 @@ CacheDrivenTask::process(
                     page_info.id(), image_transform,
                     params->dewarpingParams().distortionModel().topCurve().polyline(),
                     params->dewarpingParams().distortionModel().bottomCurve().polyline(),
-                    params->dewarpingParams().depthPerception()
+                    params->dewarpingParams().depthPerception(),
+                    params->dewarpingParams().correctCurves(),
+                    params->dewarpingParams().correctAngle()
                 )
             );
             break;

@@ -768,13 +768,13 @@ OptionsWidget::degreesToSpinBox(double const degrees)
 int
 OptionsWidget::depthPerceptionToSlider(double depth_perception)
 {
-    return qRound(depth_perception * 100.0);
+    return qRound(depth_perception * 50.0 + 100.0);
 }
 
 double
 OptionsWidget::sliderToDepthPerception(int slider_value)
 {
-    return slider_value / 100.0;
+    return (slider_value - 100.0) / 50.0;
 }
 
 } // namespace deskew
