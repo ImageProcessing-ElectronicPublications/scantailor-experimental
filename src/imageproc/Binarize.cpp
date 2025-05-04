@@ -619,7 +619,7 @@ BinaryImage binarizeBradley(
 }  // binarizeBradley
 
 /*
- * nick = mean - k * sqrt(stdev * stdev + mean * mean), k = 0.05
+ * nick = mean - k * sqrt(stdev * stdev + cnick * mean * mean), k = 0.10
  */
 BinaryImage binarizeNick(
     GrayImage const& src,
@@ -634,8 +634,8 @@ BinaryImage binarizeNick(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(grayNickMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(grayNickMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }

@@ -205,7 +205,7 @@ IMAGEPROC_EXPORT BinaryImage binarizeBradley(
 IMAGEPROC_EXPORT BinaryImage binarizeNick(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.05f,
+    float k = 0.10f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);

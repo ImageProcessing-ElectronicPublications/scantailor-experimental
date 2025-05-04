@@ -906,12 +906,13 @@ GrayImage grayBradleyMap(
 }  // grayBradleyMap
 
 /*
- * nick = mean - k * sqrt(stdev * stdev + mean * mean), k = 0.05
+ * nick = mean - k * sqrt(stdev * stdev + cnick * mean * mean), k = 0.10
  */
 GrayImage grayNickMap(
     GrayImage const& src,
     int const radius,
-    float const k)
+    float const k,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -925,6 +926,7 @@ GrayImage grayNickMap(
 
     if (radius > 0)
     {
+        float cnick = (50.0f - delta) * 0.01f;
         GrayImage gdeviation = grayMapDeviation(src, radius);
         if (gdeviation.isNull())
         {
@@ -944,7 +946,7 @@ GrayImage grayNickMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
-                float const circle = sqrtf(deviation * deviation + mean * mean);
+                float const circle = sqrtf(deviation * deviation + cnick * mean * mean);
                 float threshold = mean - k * circle;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);

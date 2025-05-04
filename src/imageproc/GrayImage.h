@@ -203,7 +203,8 @@ IMAGEPROC_EXPORT GrayImage grayBradleyMap(
 IMAGEPROC_EXPORT GrayImage grayNickMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.05f);
+    float k = 0.10f,
+    int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayGradMap(
     GrayImage const& src,
     int radius = 10,
