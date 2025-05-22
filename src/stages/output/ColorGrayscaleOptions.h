@@ -32,8 +32,6 @@ public:
     ColorGrayscaleOptions()
         : m_curveCoef(0.5)
         , m_sqrCoef(0.0)
-        , m_wienerSize(3)
-        , m_wienerCoef(0.0)
         , m_autoLevelSize(10)
         , m_autoLevelCoef(0.0)
         , m_balanceSize(23)
@@ -46,8 +44,12 @@ public:
         , m_subtractbgCoef(0.0)
         , m_equalizeSize(6)
         , m_equalizeCoef(0.0)
+        , m_wienerSize(3)
+        , m_wienerCoef(0.0)
         , m_knndRadius(7)
         , m_knndCoef(0.0)
+        , m_emdRadius(9)
+        , m_emdCoef(0.0)
         , m_cdespeckleRadius(2)
         , m_cdespeckleCoef(0.0)
         , m_sigmaSize(29)
@@ -95,23 +97,6 @@ public:
     void setSqrCoef(double val)
     {
         m_sqrCoef = val;
-    }
-
-    int wienerSize() const
-    {
-        return m_wienerSize;
-    }
-    void setWienerSize(int val)
-    {
-        m_wienerSize = val;
-    }
-    double wienerCoef() const
-    {
-        return m_wienerCoef;
-    }
-    void setWienerCoef(double val)
-    {
-        m_wienerCoef = val;
     }
 
     int autoLevelSize() const
@@ -216,6 +201,23 @@ public:
         m_equalizeCoef = val;
     }
 
+    int wienerSize() const
+    {
+        return m_wienerSize;
+    }
+    void setWienerSize(int val)
+    {
+        m_wienerSize = val;
+    }
+    double wienerCoef() const
+    {
+        return m_wienerCoef;
+    }
+    void setWienerCoef(double val)
+    {
+        m_wienerCoef = val;
+    }
+
     int knndRadius() const
     {
         return m_knndRadius;
@@ -231,6 +233,23 @@ public:
     void setKnndCoef(double val)
     {
         m_knndCoef = val;
+    }
+
+    int emdRadius() const
+    {
+        return m_emdRadius;
+    }
+    void setEmdRadius(int val)
+    {
+        m_emdRadius = val;
+    }
+    double emdCoef() const
+    {
+        return m_emdCoef;
+    }
+    void setEmdCoef(double val)
+    {
+        m_emdCoef = val;
     }
 
     int cdespeckleRadius() const
@@ -454,8 +473,6 @@ public:
 private:
     double m_curveCoef;
     double m_sqrCoef;
-    int m_wienerSize;
-    double m_wienerCoef;
     int m_autoLevelSize;
     double m_autoLevelCoef;
     int m_balanceSize;
@@ -468,8 +485,12 @@ private:
     double m_subtractbgCoef;
     int m_equalizeSize;
     double m_equalizeCoef;
+    int m_wienerSize;
+    double m_wienerCoef;
     int m_knndRadius;
     double m_knndCoef;
+    int m_emdRadius;
+    double m_emdCoef;
     int m_cdespeckleRadius;
     double m_cdespeckleCoef;
     int m_sigmaSize;

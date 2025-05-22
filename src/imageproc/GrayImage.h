@@ -311,11 +311,23 @@ IMAGEPROC_EXPORT void grayWienerInPlace(
  */
 IMAGEPROC_EXPORT GrayImage grayKnnDenoiser(
     GrayImage const& src,
-    int radius = 1,
+    int radius = 7,
     float coef = 0.0f);
 IMAGEPROC_EXPORT void grayKnnDenoiserInPlace(
     GrayImage& src,
-    int radius = 1,
+    int radius = 7,
+    float coef = 0.0f);
+
+/**
+ * @brief EM (Edge Mask) denoiser GrayImage based BoxBlur.
+ */
+IMAGEPROC_EXPORT GrayImage grayEMDenoiser(
+    GrayImage const& src,
+    int radius = 9,
+    float coef = 0.0f);
+IMAGEPROC_EXPORT void grayEMDenoiserInPlace(
+    GrayImage& src,
+    int radius = 9,
     float coef = 0.0f);
 
 /**

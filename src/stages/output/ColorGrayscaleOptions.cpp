@@ -27,8 +27,6 @@ namespace output
 ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     : m_curveCoef(el.attribute("curveCoef").toDouble())
     , m_sqrCoef(el.attribute("sqrCoef").toDouble())
-    , m_wienerSize(el.attribute("wienerSize").toInt())
-    , m_wienerCoef(el.attribute("wienerCoef").toDouble())
     , m_autoLevelSize(el.attribute("autoLevelSize").toInt())
     , m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble())
     , m_balanceSize(el.attribute("balanceSize").toInt())
@@ -41,8 +39,12 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     , m_subtractbgCoef(el.attribute("subtractbgCoef").toDouble())
     , m_equalizeSize(el.attribute("equalizeSize").toInt())
     , m_equalizeCoef(el.attribute("equalizeCoef").toDouble())
+    , m_wienerSize(el.attribute("wienerSize").toInt())
+    , m_wienerCoef(el.attribute("wienerCoef").toDouble())
     , m_knndRadius(el.attribute("knnDRadius").toInt())
     , m_knndCoef(el.attribute("knnDenoiser").toDouble())
+    , m_emdRadius(el.attribute("emDRadius").toInt())
+    , m_emdCoef(el.attribute("emDenoiser").toDouble())
     , m_cdespeckleRadius(el.attribute("cdespeckleRadius").toInt())
     , m_cdespeckleCoef(el.attribute("cdespeckle").toDouble())
     , m_sigmaSize(el.attribute("sigmaSize").toInt())
@@ -77,14 +79,6 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_sqrCoef = 0.0;
     }
-    if (m_wienerSize < 1)
-    {
-        m_wienerSize = 3;
-    }
-    if (m_wienerCoef < 0.0 || m_wienerCoef > 1.0)
-    {
-        m_wienerCoef = 0.0;
-    }
     if (m_autoLevelSize < 1)
     {
         m_autoLevelSize = 10;
@@ -113,6 +107,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     {
         m_equalizeSize = 6;
     }
+    if (m_wienerSize < 1)
+    {
+        m_wienerSize = 3;
+    }
+    if (m_wienerCoef < 0.0 || m_wienerCoef > 1.0)
+    {
+        m_wienerCoef = 0.0;
+    }
     if (m_knndRadius < 1)
     {
         m_knndRadius = 7;
@@ -120,6 +122,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_knndCoef < 0.0 || m_knndCoef > 1.0)
     {
         m_knndCoef = 0.0;
+    }
+    if (m_emdRadius < 1)
+    {
+        m_emdRadius = 9;
+    }
+    if (m_emdCoef < 0.0 || m_emdCoef > 1.0)
+    {
+        m_emdCoef = 0.0;
     }
     if (m_cdespeckleRadius < 1)
     {
@@ -221,11 +231,6 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.setAttribute("curveCoef", m_curveCoef);
     el.setAttribute("sqrCoef", m_sqrCoef);
-    if (m_wienerCoef != 0.0)
-    {
-        el.setAttribute("wienerSize", m_wienerSize);
-        el.setAttribute("wienerCoef", m_wienerCoef);
-    }
     if (m_autoLevelCoef != 0.0)
     {
         el.setAttribute("autoLevelSize", m_autoLevelSize);
@@ -256,10 +261,20 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("equalizeSize", m_equalizeSize);
         el.setAttribute("equalizeCoef", m_equalizeCoef);
     }
+    if (m_wienerCoef != 0.0)
+    {
+        el.setAttribute("wienerSize", m_wienerSize);
+        el.setAttribute("wienerCoef", m_wienerCoef);
+    }
     if (m_knndCoef != 0.0)
     {
         el.setAttribute("knnDenoiser", m_knndCoef);
         el.setAttribute("knnDRadius", m_knndRadius);
+    }
+    if (m_emdCoef != 0.0)
+    {
+        el.setAttribute("emDenoiser", m_emdCoef);
+        el.setAttribute("emDRadius", m_emdRadius);
     }
     if (m_cdespeckleCoef != 0.0)
     {
@@ -339,14 +354,6 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
     {
         return false;
     }
-    if (m_wienerCoef != other.m_wienerCoef)
-    {
-        return false;
-    }
-    if (m_wienerSize != other.m_wienerSize)
-    {
-        return false;
-    }
     if (m_autoLevelCoef != other.m_autoLevelCoef)
     {
         return false;
@@ -395,11 +402,27 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
     {
         return false;
     }
+    if (m_wienerCoef != other.m_wienerCoef)
+    {
+        return false;
+    }
+    if (m_wienerSize != other.m_wienerSize)
+    {
+        return false;
+    }
     if (m_knndCoef != other.m_knndCoef)
     {
         return false;
     }
     if (m_knndRadius != other.m_knndRadius)
+    {
+        return false;
+    }
+    if (m_emdCoef != other.m_emdCoef)
+    {
+        return false;
+    }
+    if (m_emdRadius != other.m_emdRadius)
     {
         return false;
     }

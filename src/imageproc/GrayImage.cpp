@@ -1863,6 +1863,97 @@ void grayKnnDenoiserInPlace(
     }
 } // grayKnnDenoiser
 
+GrayImage grayEMDenoiser(
+    GrayImage const& src,
+    int const radius,
+    float const coef)
+{
+    GrayImage dst(src);
+    grayEMDenoiserInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayEMDenoiserInPlace(
+    GrayImage& src,
+    int const radius,
+    float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+
+        GrayImage gmean = gaussBlur(src, radius, radius);
+        if (gmean.isNull())
+        {
+            return;
+        }
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        GrayImage gdelta(gmean);
+        if (gdelta.isNull())
+        {
+            return;
+        }
+        unsigned char* gdelta_line = gdelta.data();
+        int const gdelta_stride = gdelta.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                unsigned char const origin = src_line[x];
+                unsigned char const mean = gmean_line[x];
+                unsigned char const dt = (origin < mean) ? (mean - origin) : (origin - mean);
+                gdelta_line[x] = dt;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+            gdelta_line += gdelta_stride;
+        }
+
+        GrayImage gcon = gaussBlur(gdelta, radius, radius);
+        if (gcon.isNull())
+        {
+            return;
+        }
+        unsigned char* gcon_line = gcon.data();
+        int const gcon_stride = gcon.stride();
+
+        unsigned int threshold = grayBiModalTiledValue(gcon, 0, 0, w, h);
+
+        src_line = src.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                unsigned char const origin = src_line[x];
+                unsigned char const mean = gmean_line[x];
+                unsigned char const con = gcon_line[x];
+                float retval = origin;
+                if (con < threshold)
+                {
+                    retval = coef * mean + (1.0f - coef) * origin + 0.5f;
+                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                }
+                src_line[x] = (unsigned char) retval;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+            gcon_line += gcon_stride;
+        }
+    }
+} // grayEMDenoiser
+
 GrayImage grayMedian(
     GrayImage const& src,
     int const radius,

@@ -1339,6 +1339,8 @@ OutputGenerator::colored(
 
         grayKnnDenoiserInPlace(gout, color_options.knndRadius(), color_options.knndCoef());
 
+        grayEMDenoiserInPlace(gout, color_options.emdRadius(), color_options.emdCoef());
+
         grayDespeckleInPlace(gout, color_options.cdespeckleRadius(), color_options.cdespeckleCoef());
 
         graySigmaInPlace(gout, color_options.sigmaSize(), color_options.sigmaCoef());

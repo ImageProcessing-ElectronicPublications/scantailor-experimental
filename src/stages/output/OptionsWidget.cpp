@@ -94,6 +94,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Equalize"), F_EQUALIZE);
     colorFilterSelector->addItem(tr("Wiener denoiser"), F_WIENER);
     colorFilterSelector->addItem(tr("KNN denoiser"), F_KNND);
+    colorFilterSelector->addItem(tr("EM denoiser"), F_EMD);
     colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
     colorFilterSelector->addItem(tr("Sigma"), F_SIGMA);
     colorFilterSelector->addItem(tr("Blur/Sharpen"), F_BLUR);
@@ -552,6 +553,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.knndRadius());
         colorFilterCoef->setValue(color_options.knndCoef());
         break;
+    case F_EMD:
+        colorFilterSize->setValue(color_options.emdRadius());
+        colorFilterCoef->setValue(color_options.emdCoef());
+        break;
     case F_DESPECKLE:
         colorFilterSize->setValue(color_options.cdespeckleRadius());
         colorFilterCoef->setValue(color_options.cdespeckleCoef());
@@ -638,6 +643,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_KNND:
         color_options.setKnndRadius(value);
         break;
+    case F_EMD:
+        color_options.setEmdRadius(value);
+        break;
     case F_DESPECKLE:
         color_options.setCdespeckleRadius(value);
         break;
@@ -707,6 +715,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_KNND:
         color_options.setKnndCoef(value);
+        break;
+    case F_EMD:
+        color_options.setEmdCoef(value);
         break;
     case F_DESPECKLE:
         color_options.setCdespeckleCoef(value);
