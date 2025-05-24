@@ -27,6 +27,8 @@ namespace output
 ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     : m_curveCoef(el.attribute("curveCoef").toDouble())
     , m_sqrCoef(el.attribute("sqrCoef").toDouble())
+    , m_RISundefectSize(el.attribute("risSize").toInt())
+    , m_RISundefectCoef(el.attribute("risCoef").toDouble())
     , m_autoLevelSize(el.attribute("autoLevelSize").toInt())
     , m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble())
     , m_balanceSize(el.attribute("balanceSize").toInt())
@@ -78,6 +80,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_sqrCoef < -1.0 || m_sqrCoef > 1.0)
     {
         m_sqrCoef = 0.0;
+    }
+    if (m_RISundefectSize < 1)
+    {
+        m_RISundefectSize = 2;
+    }
+    if (m_RISundefectCoef < -1.0 || m_RISundefectCoef > 1.0)
+    {
+        m_RISundefectCoef = 0.0;
     }
     if (m_autoLevelSize < 1)
     {
@@ -231,6 +241,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
     QDomElement el(doc.createElement(name));
     el.setAttribute("curveCoef", m_curveCoef);
     el.setAttribute("sqrCoef", m_sqrCoef);
+    if (m_RISundefectCoef != 0.0)
+    {
+        el.setAttribute("risSize", m_RISundefectSize);
+        el.setAttribute("risCoef", m_RISundefectCoef);
+    }
     if (m_autoLevelCoef != 0.0)
     {
         el.setAttribute("autoLevelSize", m_autoLevelSize);
@@ -351,6 +366,14 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_sqrCoef != other.m_sqrCoef)
+    {
+        return false;
+    }
+    if (m_RISundefectCoef != other.m_RISundefectCoef)
+    {
+        return false;
+    }
+    if (m_RISundefectSize != other.m_RISundefectSize)
     {
         return false;
     }

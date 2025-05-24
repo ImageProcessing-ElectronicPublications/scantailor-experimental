@@ -1689,6 +1689,138 @@ void grayDots8InPlace(
     }
 }  // grayDots8
 
+GrayImage grayScaleByLine(
+    GrayImage& src,
+    int const wnew,
+    int const hnew)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+
+    if ((wnew > 0) && (hnew > 0))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+
+        float const scalew = (float)w / wnew;
+        float const scaleh = (float)h / hnew;
+
+        GrayImage gscale = GrayImage(QSize(wnew, hnew));
+        if (gscale.isNull())
+        {
+            return GrayImage(src);
+        }
+        unsigned char* gscale_line = gscale.data();
+        int const gscale_stride = gscale.stride();
+
+        /* biline scale */
+        for (int y = 0; y < hnew; y++)
+        {
+            float const yd = (0.5f + y) * scaleh - 0.5f;
+            int y1 = yd;
+            int y2 = y1 + 1;
+            float const dy1 = yd - y1;
+            float const dy2 = 1.0f - dy1;
+            y1 = (y1 < 0) ? 0 : ((y1 < h) ? y1 : (h - 1));
+            y2 = (y2 < 0) ? 0 : ((y2 < h) ? y2 : (h - 1));
+            for (int x = 0; x < wnew; x++)
+            {
+                float const xd = (0.5f + x) * scalew - 0.5f;
+                int x1 = xd;
+                int x2 = x1 + 1;
+                float const dx1 = xd - x1;
+                float const dx2 = 1.0f - dx1;
+                x1 = (x1 < 0) ? 0 : ((x1 < w) ? x1 : (w - 1));
+                x2 = (x2 < 0) ? 0 : ((x2 < w) ? x2 : (w - 1));
+
+                float const t11 = src_line[y1 * src_stride + x1];
+                float const t12 = src_line[y1 * src_stride + x2];
+                float const t21 = src_line[y2 * src_stride + x1];
+                float const t22 = src_line[y2 * src_stride + x2];
+
+                float t = dy2 * (dx2 * t11 + dx1 * t12)
+                        + dy1 * (dx2 * t21 + dx1 * t22);
+                t = (t < 0.0f) ? 0.0f : ((t < 255.0f) ? t : 255.0f);
+                gscale_line[x] = (unsigned char) t;
+            }
+            gscale_line += gscale_stride;
+        }
+        return gscale;
+    }
+    else
+    {
+        return GrayImage(src);
+    }
+}
+GrayImage grayRISundefect(
+    GrayImage const& src,
+    int const radius,
+    float const coef)
+{
+    GrayImage dst(src);
+    grayRISundefectInPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayRISundefectInPlace(
+    GrayImage& src,
+    int const radius,
+    float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+
+        int const wr = (w + radius - 1) / radius;
+        int const hr = (h + radius - 1) / radius;
+
+        if ((wr > 0) && (hr > 0))
+        {
+            GrayImage gsub = grayScaleByLine(src, wr, hr);
+            if (gsub.isNull())
+            {
+                return;
+            }
+
+            GrayImage gref = grayScaleByLine(gsub, w, h);
+            if (gref.isNull())
+            {
+                return;
+            }
+            unsigned char* gref_line = gref.data();
+            int const gref_stride = gref.stride();
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    float const origin = src_line[x];
+                    float const ref = gref_line[x];
+                    float const target = origin + (origin - ref);
+
+                    float retval = coef * target + (1.0f - coef) * origin + 0.5f;
+                    retval = (retval < 0.0f) ? 0.0f : (retval < 255.0f) ? retval : 255.0f;
+                    src_line[x] = (unsigned char) retval;
+                }
+                src_line += src_stride;
+                gref_line += gref_stride;
+            }
+        }
+    }
+} // grayRISundefect
+
 GrayImage grayWiener(
     GrayImage const& src,
     int const radius,

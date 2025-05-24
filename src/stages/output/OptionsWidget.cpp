@@ -56,7 +56,7 @@ OptionsWidget::OptionsWidget(
     , m_ignoreThresholdChanges(0)
     , m_ignoreDespeckleLevelChanges(0)
     , m_ignoreScaleChanges(0)
-    , m_colorFilterCurrent(F_AUTOLEVEL)
+    , m_colorFilterCurrent(F_RIS)
 {
     setupUi(this);
 
@@ -86,6 +86,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
     thresholdMethodSelector->addItem(tr("Engraving"), T_ENGRAVING);
 
+    colorFilterSelector->addItem(tr("RIS undefect"), F_RIS);
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Balance"), F_BALANCE);
     colorFilterSelector->addItem(tr("OverBlur"), F_OVERBLUR);
@@ -521,6 +522,10 @@ OptionsWidget::colorFilterGet()
     colorFilterCoef->blockSignals(true);
     switch (m_colorFilterCurrent)
     {
+    case F_RIS:
+        colorFilterSize->setValue(color_options.RISundefectSize());
+        colorFilterCoef->setValue(color_options.RISundefectCoef());
+        break;
     case F_AUTOLEVEL:
         colorFilterSize->setValue(color_options.autoLevelSize());
         colorFilterCoef->setValue(color_options.autoLevelCoef());
@@ -619,6 +624,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     switch (m_colorFilterCurrent)
     {
+    case F_RIS:
+        color_options.setRISundefectSize(value);
+        break;
     case F_AUTOLEVEL:
         color_options.setAutoLevelSize(value);
         break;
@@ -692,6 +700,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
     ColorGrayscaleOptions color_options(m_colorParams.colorGrayscaleOptions());
     switch (m_colorFilterCurrent)
     {
+    case F_RIS:
+        color_options.setRISundefectCoef(value);
+        break;
     case F_AUTOLEVEL:
         color_options.setAutoLevelCoef(value);
         break;

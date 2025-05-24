@@ -1323,6 +1323,8 @@ OutputGenerator::colored(
 
         graySqrFilterInPlace(gout, color_options.sqrCoef());
 
+        grayRISundefectInPlace(gout, color_options.RISundefectSize(), color_options.RISundefectCoef());
+
         grayAutoLevelInPlace(gout, color_options.autoLevelSize(), color_options.autoLevelCoef());
 
         grayBalanceInPlace(gout, color_options.balanceSize(), color_options.balanceCoef());

@@ -162,6 +162,8 @@ IMAGEPROC_EXPORT GrayImage grayMapContrast(
 
 /**
  * \brief Threshold Map Images:
+ * https://github.com/brandonmpetty/Doxa
+ * https://habr.com/ru/articles/907996/
  */
 IMAGEPROC_EXPORT unsigned int grayBiModalTiledValue(
     GrayImage const& src,
@@ -285,6 +287,23 @@ IMAGEPROC_EXPORT void grayDots8InPlace(
     float coef = 0.0f);
 
 /**
+ * @brief RIS undefect GrayImage based linear scale.
+ * https://habr.com/ru/articles/910412/
+ */
+IMAGEPROC_EXPORT GrayImage grayScaleByLine(
+    GrayImage& src,
+    int const wnew,
+    int const hnew);
+IMAGEPROC_EXPORT GrayImage grayRISundefect(
+    GrayImage const& src,
+    int radius = 2,
+    float coef = 0.0f);
+IMAGEPROC_EXPORT void grayRISundefectInPlace(
+    GrayImage& src,
+    int radius = 2,
+    float coef = 0.0f);
+
+/**
  * @brief Applies the Wiener filter to a grayscale image.
  *
  * @param src The image to apply the filter to. A null image is allowed.
@@ -320,6 +339,7 @@ IMAGEPROC_EXPORT void grayKnnDenoiserInPlace(
 
 /**
  * @brief EM (Edge Mask) denoiser GrayImage based BoxBlur.
+ * https://habr.com/ru/articles/911588/
  */
 IMAGEPROC_EXPORT GrayImage grayEMDenoiser(
     GrayImage const& src,
@@ -381,6 +401,7 @@ IMAGEPROC_EXPORT void grayAutoLevelInPlace(
 
 /**
  * @brief Balance GrayImage based GaussBlur.
+ * https://habr.com/ru/articles/909146/
  */
 IMAGEPROC_EXPORT GrayImage grayBalance(
     GrayImage const& src,

@@ -32,6 +32,8 @@ public:
     ColorGrayscaleOptions()
         : m_curveCoef(0.5)
         , m_sqrCoef(0.0)
+        , m_RISundefectSize(2)
+        , m_RISundefectCoef(0.0)
         , m_autoLevelSize(10)
         , m_autoLevelCoef(0.0)
         , m_balanceSize(23)
@@ -97,6 +99,23 @@ public:
     void setSqrCoef(double val)
     {
         m_sqrCoef = val;
+    }
+
+    int RISundefectSize() const
+    {
+        return m_RISundefectSize;
+    }
+    void setRISundefectSize(int val)
+    {
+        m_RISundefectSize = val;
+    }
+    double RISundefectCoef() const
+    {
+        return m_RISundefectCoef;
+    }
+    void setRISundefectCoef(double val)
+    {
+        m_RISundefectCoef = val;
     }
 
     int autoLevelSize() const
@@ -473,6 +492,8 @@ public:
 private:
     double m_curveCoef;
     double m_sqrCoef;
+    int m_RISundefectSize;
+    double m_RISundefectCoef;
     int m_autoLevelSize;
     double m_autoLevelCoef;
     int m_balanceSize;
