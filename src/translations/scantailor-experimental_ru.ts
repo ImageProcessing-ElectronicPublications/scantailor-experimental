@@ -2957,92 +2957,97 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Гравюра</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="88"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="90"/>
         <source>Auto Level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="89"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="91"/>
         <source>Balance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="90"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="92"/>
         <source>OverBlur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="91"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="93"/>
         <source>Retinex</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="92"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="94"/>
         <source>SubtractBG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="93"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="95"/>
         <source>Equalize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="94"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="96"/>
         <source>Wiener denoiser</source>
         <translation type="unfinished">Шумодав Винера</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="95"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="97"/>
         <source>KNN denoiser</source>
         <translation type="unfinished">Шумодав KNN</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="96"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="98"/>
+        <source>EM denoiser</source>
+        <translation type="unfinished">Шумодав EM</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/OptionsWidget.cpp" line="99"/>
         <source>Despeckle</source>
         <translation type="unfinished">Удалять пятна</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="97"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="100"/>
         <source>Sigma</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="98"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="101"/>
         <source>Blur/Sharpen</source>
         <translation type="unfinished">Размытие/Резкость</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="99"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="102"/>
         <source>Screen</source>
         <translation type="unfinished">Экран</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="103"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="106"/>
         <source>Comix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="105"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="108"/>
         <source>Dots 8x8</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="106"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="109"/>
         <source>UnPaper</source>
         <translation type="unfinished">Удалить фон</translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="108"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="111"/>
         <source>HSV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="109"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="112"/>
         <source>HSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/OptionsWidget.cpp" line="110"/>
+        <location filename="../stages/output/OptionsWidget.cpp" line="113"/>
         <source>YCbCr</source>
         <translation type="unfinished"></translation>
     </message>

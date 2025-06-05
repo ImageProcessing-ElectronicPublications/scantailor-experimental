@@ -1339,7 +1339,10 @@ GrayImage grayEngravingMap(
                     int threshold = (int) tline;
                     float delta = tline - threshold;
                     delta = (delta < 0.5f) ? (0.5f - delta) : (delta - 0.5f);
+                    delta *= delta;
                     delta += delta;
+                    delta += delta;
+
                     /* overlay */
                     float retval = mean;
                     if (mean > 127.5f)
