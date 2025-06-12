@@ -594,11 +594,14 @@ GrayImage grayBiModalTiledMap(
 
 /*
  * niblack = mean - k * stderr, k = 0.2
+ * modification by zvezdochiot:
+ * niblack = mean - k * (stderr - delta), k = 0.2, delta = 0
  */
 GrayImage grayNiblackMap(
     GrayImage const& src,
     int const radius,
-    float const k)
+    float const k,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -631,7 +634,8 @@ GrayImage grayNiblackMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
-                float threshold = mean - k * deviation;
+                float const shift = deviation - delta;
+                float threshold = mean - k * shift;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
@@ -739,11 +743,14 @@ void grayBGtoMap(
 
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ * modification by zvezdochiot:
+ * sauvola = mean * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
  */
 GrayImage graySauvolaMap(
     GrayImage const& src,
     int const radius,
-    float const k)
+    float const k,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -777,7 +784,8 @@ GrayImage graySauvolaMap(
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
 
-                float threshold = mean * (1.0f + k * (deviation / 128.0f - 1.0f));
+                float const shift = deviation + delta;
+                float threshold = mean * (1.0f + k * (shift / 128.0f - 1.0f));
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
@@ -792,11 +800,14 @@ GrayImage graySauvolaMap(
 
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
+ * modification by zvezdochiot:
+ * wolf = mean - k * (mean - min_v) * (1.0 - (stderr + delta) / stdmax), k = 0.3, delta = 0
  */
 GrayImage grayWolfMap(
     GrayImage const& src,
     int const radius,
-    float const k)
+    float const k,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -849,7 +860,8 @@ GrayImage grayWolfMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
-                float const a = 1.0f - deviation / max_deviation;
+                float const shift = deviation + delta;
+                float const a = 1.0f - shift / max_deviation;
                 float threshold = mean - k * a * (mean - min_gray_level);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
@@ -1063,11 +1075,14 @@ GrayImage graySinghMap(
 
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ * modification by zvezdochiot:
+ * WAN = (mean + max) / 2 * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
  */
 GrayImage grayWANMap(
     GrayImage const& src,
     int const radius,
-    float const k)
+    float const k,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -1106,16 +1121,18 @@ GrayImage grayWANMap(
             for (int x = 0; x < w; x++)
             {
                 float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
                 float const imax = gmax_line[x];
+                float const deviation = gdeviation_line[x];
+                float const average = (mean + imax) * 0.5f;
+                float const shift = deviation + delta;
 
-                float threshold = (mean + imax) * 0.5f * (1.0f + k * (deviation / 128.0f - 1.0f));
+                float threshold = average * (1.0f + k * (shift / 128.0f - 1.0f));
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
             gmax_line += gmax_stride;
+            gdeviation_line += gdeviation_stride;
         }
     }
 

@@ -418,8 +418,8 @@ BinaryImage binarizeNiblack(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(grayNiblackMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(grayNiblackMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -568,8 +568,8 @@ BinaryImage binarizeSauvola(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(graySauvolaMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(graySauvolaMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -590,8 +590,8 @@ BinaryImage binarizeWolf(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(grayWolfMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(grayWolfMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }
@@ -751,8 +751,8 @@ BinaryImage binarizeWAN(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(grayWANMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(grayWANMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }
