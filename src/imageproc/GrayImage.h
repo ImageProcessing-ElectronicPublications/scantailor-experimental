@@ -213,11 +213,13 @@ IMAGEPROC_EXPORT GrayImage grayNickMap(
 IMAGEPROC_EXPORT GrayImage grayGradMap(
     GrayImage const& src,
     int radius = 10,
-    float coef = 0.75f);
+    float coef = 0.75f,
+    int delta = 0);
 IMAGEPROC_EXPORT GrayImage graySinghMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.2f);
+    float k = 0.2f,
+    int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayWANMap(
     GrayImage const& src,
     int radius = 100,

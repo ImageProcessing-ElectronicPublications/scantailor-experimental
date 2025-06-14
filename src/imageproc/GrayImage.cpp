@@ -919,6 +919,8 @@ GrayImage grayBradleyMap(
 
 /*
  * nick = mean - k * sqrt(stdev * stdev + cnick * mean * mean), k = 0.10
+ * modification by zvezdochiot:
+ * cnick = (max_delta - delta) / (max_delta - min_delta);
  */
 GrayImage grayNickMap(
     GrayImage const& src,
@@ -974,11 +976,14 @@ GrayImage grayNickMap(
 
 /*
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
+ * modification by zvezdochiot:
+ * mean = mean + delta, delta = 0
  */
 GrayImage grayGradMap(
     GrayImage const& src,
     int const radius,
-    float const coef)
+    float const coef,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -992,13 +997,27 @@ GrayImage grayGradMap(
 
     if (radius > 0)
     {
-        float const mean_grad = (1.0f - coef) * binarizeGradValue(src, gmean);
-
         int const w = src.width();
         int const h = src.height();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const mean = gmean_line[x];
+                int md = mean + delta;
+
+                md = (md < 0) ? 0 : ((md < 255) ? md : 255);
+                gmean_line[x] = (unsigned char) md;
+            }
+            gmean_line += gmean_stride;
+        }
+
+        float const mean_grad = (1.0f - coef) * binarizeGradValue(src, gmean);
+
+        gmean_line = gmean.data();
         for (int y = 0; y < h; y++)
         {
             for (int x = 0; x < w; x++)
@@ -1018,12 +1037,16 @@ GrayImage grayGradMap(
 }
 
 /*
- * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
+ * singh = mean * (1.0 - k * (1.0 - dI / (256 - dI))), k = 0.2
+ * dI = origin - mean
+ * modification by zvezdochiot:
+ * singh = mean * (1.0 - k * (1.0 - (dI + delta) / (256 - dI))), k = 0.2, delta = 0
  */
 GrayImage graySinghMap(
     GrayImage const& src,
     int const radius,
-    float const k)
+    float const k,
+    int const delta)
 {
     if (src.isNull())
     {
@@ -1037,20 +1060,12 @@ GrayImage graySinghMap(
 
     if (radius > 0)
     {
-        GrayImage graymm = grayMapContrast(src, radius);
-        if (graymm.isNull())
-        {
-            return gmean;
-        }
-
         int const w = src.width();
         int const h = src.height();
         unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        unsigned char* graymm_line = graymm.data();
-        int const graymm_stride = graymm.stride();
 
         for (int y = 0; y < h; y++)
         {
@@ -1058,15 +1073,18 @@ GrayImage graySinghMap(
             {
                 float const origin = src_line[x];
                 float const mean = gmean_line[x];
-                float const maxmin = graymm_line[x];
-                float threshold = (1.0f - k) * (mean + maxmin * (1.0f - origin / 255.0f));
+
+                float const grad = origin - mean;
+                float const nom = grad + delta;
+                float const den = 256.0f - grad;
+                float const sigma = nom / den;
+                float threshold = mean * (1.0f - k * (1.0f - sigma));
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
             }
             src_line += src_stride;
             gmean_line += gmean_stride;
-            graymm_line += graymm_stride;
         }
     }
 

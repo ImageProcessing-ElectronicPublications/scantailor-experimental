@@ -404,6 +404,8 @@ BinaryImage binarizeBMTiled(
 
 /*
  * niblack = mean - k * stderr, k = 0.2
+ * modification by zvezdochiot:
+ * niblack = mean - k * (stderr - delta), k = 0.2, delta = 0
  */
 BinaryImage binarizeNiblack(
     GrayImage const& src,
@@ -426,6 +428,8 @@ BinaryImage binarizeNiblack(
 
 /*
  * gatos = bg - f(i, bg, q, p), q = 0.6, p = 0.2
+ * modification by zvezdochiot:
+ * q = q - (1 - q) * delta * 2 / (max_delta - min_delta), delta = 0
  */
 GrayImage binarizeGatosBG(
     GrayImage const& src,
@@ -554,6 +558,8 @@ BinaryImage binarizeGatos(
 
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ * modification by zvezdochiot:
+ * sauvola = mean * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
  */
 BinaryImage binarizeSauvola(
     GrayImage const& src,
@@ -576,6 +582,8 @@ BinaryImage binarizeSauvola(
 
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
+ * modification by zvezdochiot:
+ * wolf = mean - k * (mean - min_v) * (1.0 - (stderr + delta) / stdmax), k = 0.3, delta = 0
  */
 BinaryImage binarizeWolf(
     GrayImage const& src,
@@ -620,6 +628,8 @@ BinaryImage binarizeBradley(
 
 /*
  * nick = mean - k * sqrt(stdev * stdev + cnick * mean * mean), k = 0.10
+ * modification by zvezdochiot:
+ * cnick = (max_delta - delta) / (max_delta - min_delta);
  */
 BinaryImage binarizeNick(
     GrayImage const& src,
@@ -642,6 +652,8 @@ BinaryImage binarizeNick(
 
 /*
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
+ * modification by zvezdochiot:
+ * mean = mean + delta, delta = 0
  */
 float binarizeGradValue(
     GrayImage const& gray,
@@ -707,14 +719,17 @@ BinaryImage binarizeGrad(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(grayGradMap(src, radius, coef));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(grayGradMap(src, radius, coef, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }
 
 /*
- * singh = (1.0 - k) * (mean + (max - min) * (1.0 - img / 255.0)), k = 0.2
+ * singh = mean * (1.0 - k * (1.0 - dI / (256 - dI))), k = 0.2
+ * dI = origin - mean
+ * modification by zvezdochiot:
+ * singh = mean * (1.0 - k * (1.0 - (dI + delta) / (256 - dI))), k = 0.2, delta = 0
  */
 BinaryImage binarizeSingh(
     GrayImage const& src,
@@ -729,14 +744,16 @@ BinaryImage binarizeSingh(
         return BinaryImage();
     }
 
-    GrayImage threshold_map(graySinghMap(src, radius, k));
-    BinaryImage bw_img(binarizeFromMap(src, threshold_map, delta, bound_lower, bound_upper));
+    GrayImage threshold_map(graySinghMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
 
     return bw_img;
 }  // binarizeSingh
 
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ * modification by zvezdochiot:
+ * WAN = (mean + max) / 2 * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
  */
 BinaryImage binarizeWAN(
     GrayImage const& src,
