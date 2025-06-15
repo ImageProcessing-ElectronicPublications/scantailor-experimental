@@ -801,7 +801,7 @@ GrayImage graySauvolaMap(
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  * modification by zvezdochiot:
- * wolf = mean - k * (mean - min_v) * (1.0 - (stderr + delta) / stdmax), k = 0.3, delta = 0
+ * wolf = mean - k * (mean - min_v) * (1.0 - (stderr / stdmax + delta / 128.0)), k = 0.3, delta = 0
  */
 GrayImage grayWolfMap(
     GrayImage const& src,
@@ -860,9 +860,8 @@ GrayImage grayWolfMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
-                float const shift = deviation + delta;
-                float const a = 1.0f - shift / max_deviation;
-                float threshold = mean - k * a * (mean - min_gray_level);
+                float const shift = 1.0f - (deviation / max_deviation + (float) delta / 128.0f);
+                float threshold = mean - k * shift * (mean - min_gray_level);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;

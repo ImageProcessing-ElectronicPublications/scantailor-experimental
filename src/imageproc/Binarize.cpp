@@ -583,7 +583,7 @@ BinaryImage binarizeSauvola(
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  * modification by zvezdochiot:
- * wolf = mean - k * (mean - min_v) * (1.0 - (stderr + delta) / stdmax), k = 0.3, delta = 0
+ * wolf = mean - k * (mean - min_v) * (1.0 - (stderr / stdmax + delta / 128.0)), k = 0.3, delta = 0
  */
 BinaryImage binarizeWolf(
     GrayImage const& src,
