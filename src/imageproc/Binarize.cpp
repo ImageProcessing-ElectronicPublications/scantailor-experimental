@@ -679,7 +679,7 @@ float binarizeGradValue(
     uint8_t const* gmean_line = gmean.data();
     int const gmean_stride = gmean.stride();
 
-    double g, gi;
+    double g, gi, gm;
     double sum_g = 0.0, sum_gi = 0.0, sum_gl = 0.0, sum_gil = 0.0;
 
     for (int y = 0; y < h; y++)
@@ -689,12 +689,13 @@ float binarizeGradValue(
         for (int x = 0; x < w; x++)
         {
             gi = gray_line[x];
-            g = gmean_line[x];
-            g -= gi;
+            gm = gmean_line[x];
+            g = gi;
+            g -= gm;
             g = (g < 0.0) ? -g : g;
-            gi *= g;
+            gm *= g;
             sum_gl += g;
-            sum_gil += gi;
+            sum_gil += gm;
         }
         sum_g += sum_gl;
         sum_gi += sum_gil;

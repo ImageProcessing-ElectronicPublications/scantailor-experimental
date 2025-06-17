@@ -1014,7 +1014,7 @@ GrayImage grayGradMap(
             gmean_line += gmean_stride;
         }
 
-        float const mean_grad = (1.0f - coef) * (binarizeGradValue(src, gmean) + delta);
+        float const mean_grad = (1.0f - coef) * binarizeGradValue(src, gmean);
 
         gmean_line = gmean.data();
         for (int y = 0; y < h; y++)
