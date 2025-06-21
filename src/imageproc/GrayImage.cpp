@@ -843,7 +843,7 @@ GrayImage grayWolfMap(
         {
             for (int x = 0; x < w; x++)
             {
-                uint32_t origin = src_line[x];
+                uint32_t const origin = src_line[x];
                 float const deviation = gdeviation_line[x];
                 max_deviation = (max_deviation < deviation) ? deviation : max_deviation;
                 min_gray_level = (min_gray_level < origin) ? min_gray_level : origin;
@@ -862,6 +862,95 @@ GrayImage grayWolfMap(
                 float const deviation = gdeviation_line[x];
                 float const shift = 1.0f - (deviation / max_deviation + (float) delta / 128.0f);
                 float threshold = mean - k * shift * (mean - min_gray_level);
+
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                gmean_line[x] = (unsigned char) threshold;
+            }
+            gmean_line += gmean_stride;
+            gdeviation_line += gdeviation_stride;
+        }
+    }
+
+    return gmean;
+}
+
+/*
+ * window = mean * (1 - k * md / kd), k = 0.25
+ * where:
+ * kd = 1 + kdm * kds
+ * kdm = (meanFull + 1) / (deviation + 1)
+ * deviationD = deviationMax - deviationMin
+ * kds = (deviation - deviationMin) / deviationD if deviationD > 0, 1 if other
+ * modification by zvezdochiot:
+ * md = (mean + 1 - delta) / (meanFull + deviation + 1)
+ */
+GrayImage grayWindowMap(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmean = grayMapMean(src, radius);
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    if (radius > 0)
+    {
+        GrayImage gdeviation = grayMapDeviation(src, radius);
+        if (gdeviation.isNull())
+        {
+            return gmean;
+        }
+
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        unsigned char* gdeviation_line = gdeviation.data();
+        int const gdeviation_stride = gdeviation.stride();
+
+        uint64_t mean_full = 0;
+        float deviation_min = 256.0f, deviation_max = 0.0f, deviation_delta;
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                uint64_t const origin = src_line[x];
+                float const deviation = gdeviation_line[x];
+                deviation_min = (deviation_min < deviation) ? deviation_min : deviation;
+                deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
+                mean_full += origin;
+            }
+            src_line += src_stride;
+            gdeviation_line += gdeviation_stride;
+        }
+        mean_full /= h;
+        mean_full += (w >> 1);
+        mean_full /= w;
+        deviation_delta = deviation_max - deviation_min;
+
+        gmean_line = gmean.data();
+        gdeviation_line = gdeviation.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const mean = gmean_line[x];
+                float const deviation = gdeviation_line[x];
+                float const md = (mean + 1.0f - delta) / (mean_full + deviation + 1.0f);
+                float const kdm = (mean_full + 1.0f) / (deviation + 1.0f);
+                float const kds = (deviation_delta > 0.0f) ? ((deviation - deviation_min) / deviation_delta) : 1.0f;
+                float const kd = 1.0f + kdm * kds;
+                float threshold = mean * (1 - k * md / kd);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;

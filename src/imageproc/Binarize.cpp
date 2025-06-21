@@ -605,6 +605,35 @@ BinaryImage binarizeWolf(
 }
 
 /*
+ * window = mean * (1 - k * md / kd), k = 0.25
+ * where:
+ * kd = 1 + kdm * kds
+ * kdm = (meanFull + 1) / (deviation + 1)
+ * deviationD = deviationMax - deviationMin
+ * kds = (deviation - deviationMin) / deviationD if deviationD > 0, 1 if other
+ * modification by zvezdochiot:
+ * md = (mean + 1 - delta) / (meanFull + deviation + 1)
+ */
+BinaryImage binarizeWindow(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(grayWindowMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
+
+    return bw_img;
+}
+
+/*
  * bradley = mean * (1.0 - k), k = 0.2
  */
 BinaryImage binarizeBradley(

@@ -183,6 +183,22 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
     unsigned char upper_bound = 255);
 
 /**
+ * \brief Image binarization using Dynamic Window based thresholding method.
+ *
+ * Bataineh, B., Abdullah, S. N. H. S., & Omar, K. (2011).
+ * An adaptive local binarization method for document images based
+ * on a novel thresholding method and  dynamic windows.
+ * Pattern Recognition Letters, 32(14), 1805–1813.
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeWindow(
+    GrayImage const& src,
+    int radius = 25,
+    float k = 0.25f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
  * \brief Image binarization using Bradley's adaptive thresholding method.
  *
  * Derek Bradley, Gerhard Roth. 2005. "Adaptive Thresholding Using the Integral Image".
