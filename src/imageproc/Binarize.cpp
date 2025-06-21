@@ -605,10 +605,10 @@ BinaryImage binarizeWolf(
 }
 
 /*
- * window = mean * (1 - k * md / kd), k = 0.25
+ * window = mean * (1 - k * md / kd), k = 1.0
  * where:
  * kd = 1 + kdm * kds
- * kdm = (meanFull + 1) / (deviation + 1)
+ * kdm = (2 * meanFull + 1) / (deviation + 1)
  * deviationD = deviationMax - deviationMin
  * kds = (deviation - deviationMin) / deviationD if deviationD > 0, 1 if other
  * modification by zvezdochiot:

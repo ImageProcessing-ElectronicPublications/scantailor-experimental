@@ -875,10 +875,10 @@ GrayImage grayWolfMap(
 }
 
 /*
- * window = mean * (1 - k * md / kd), k = 0.25
+ * window = mean * (1 - k * md / kd), k = 1.0
  * where:
  * kd = 1 + kdm * kds
- * kdm = (meanFull + 1) / (deviation + 1)
+ * kdm = (2 * meanFull + 1) / (deviation + 1)
  * deviationD = deviationMax - deviationMin
  * kds = (deviation - deviationMin) / deviationD if deviationD > 0, 1 if other
  * modification by zvezdochiot:
@@ -947,7 +947,7 @@ GrayImage grayWindowMap(
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
                 float const md = (mean + 1.0f - delta) / (mean_full + deviation + 1.0f);
-                float const kdm = (mean_full + 1.0f) / (deviation + 1.0f);
+                float const kdm = (mean_full + mean_full + 1.0f) / (deviation + 1.0f);
                 float const kds = (deviation_delta > 0.0f) ? ((deviation - deviation_min) / deviation_delta) : 1.0f;
                 float const kd = 1.0f + kdm * kds;
                 float threshold = mean * (1 - k * md / kd);

@@ -103,6 +103,8 @@ private slots:
 
     void thresholdMethodChanged(int idx);
 
+    void thresholdDefaultButtonClicked();
+
     void morphologyToggled(bool checked);
 
     void negateToggled(bool checked);

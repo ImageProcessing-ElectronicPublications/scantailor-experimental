@@ -192,8 +192,8 @@ IMAGEPROC_EXPORT BinaryImage binarizeWolf(
  */
 IMAGEPROC_EXPORT BinaryImage binarizeWindow(
     GrayImage const& src,
-    int radius = 25,
-    float k = 0.25f,
+    int radius = 50,
+    float k = 1.0f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);

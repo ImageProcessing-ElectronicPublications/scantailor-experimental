@@ -203,8 +203,8 @@ IMAGEPROC_EXPORT GrayImage grayWolfMap(
     int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayWindowMap(
     GrayImage const& src,
-    int radius = 100,
-    float k = 0.30f,
+    int radius = 50,
+    float k = 1.0f,
     int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayBradleyMap(
     GrayImage const& src,

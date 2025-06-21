@@ -226,6 +226,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdMethodChanged(int))
     );
     connect(
+        thresholdDefaultButton, SIGNAL(clicked()),
+        this, SLOT(thresholdDefaultButtonClicked())
+    );
+    connect(
         morphologyCB, SIGNAL(clicked(bool)),
         this, SLOT(morphologyToggled(bool))
     );
@@ -866,6 +870,115 @@ OptionsWidget::thresholdMethodChanged(int idx)
 //    updateColorsDisplay();
     emit invalidateThumbnail(m_pageId);
     emit reloadRequested();
+}
+
+void
+OptionsWidget::thresholdDefaultButtonClicked()
+{
+    unsigned int changes = 0;
+
+    BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
+    ThresholdFilter const method = black_white_options.thresholdMethod();
+
+    int cur_bound_lower = black_white_options.getThresholdBoundLower();
+    int cur_bound_upper = black_white_options.getThresholdBoundUpper();
+    int cur_radius = black_white_options.thresholdRadius();
+    double cur_coef = black_white_options.thresholdCoef();
+
+    int new_bound_lower = 0;
+    int new_bound_upper = 255;
+    int new_radius = cur_radius;
+    double new_coef = cur_coef;
+
+    switch (method)
+    {
+    case T_OTSU:
+    case T_MEANDELTA:
+    case T_DOTS8:
+        break;
+    case T_BMTILED:
+        new_radius = 50;
+        new_coef = 0.75;
+        break;
+    case T_NIBLACK:
+    case T_GATOS:
+    case T_BRADLEY:
+    case T_SINGH:
+        new_radius = 100;
+        new_coef = 0.2;
+        break;
+    case T_SAUVOLA:
+        new_radius = 100;
+        new_coef = 0.34;
+        break;
+    case T_WOLF:
+    case T_WAN:
+        new_radius = 100;
+        new_coef = 0.30;
+        break;
+    case T_WINDOW:
+        new_radius = 50;
+        new_coef = 1.0;
+        break;
+    case T_NICK:
+        new_radius = 100;
+        new_coef = 0.1;
+        break;
+    case T_GRAD:
+        new_radius = 10;
+        new_coef = 0.75;
+        break;
+    case T_EDGEPLUS:
+    case T_BLURDIV:
+    case T_EDGEDIV:
+    case T_EDGEADAPT:
+        new_radius = 5;
+        new_coef = 0.75;
+        break;
+    case T_ROBUST:
+    case T_MSCALE:
+    case T_ENGRAVING:
+        new_radius = 20;
+        new_coef = 0.2;
+        break;
+    case T_GRAIN:
+        new_radius = 15;
+        new_coef = 0.75;
+        break;
+    }
+
+    if (cur_bound_lower != new_bound_lower)
+    {
+        changes++;
+        black_white_options.setThresholdBoundLower(new_bound_lower);
+    }
+    if (cur_bound_upper != new_bound_upper)
+    {
+        changes++;
+        black_white_options.setThresholdBoundUpper(new_bound_upper);
+    }
+    if (cur_radius != new_radius)
+    {
+        changes++;
+        black_white_options.setThresholdRadius(new_radius);
+    }
+    if (cur_coef != new_coef)
+    {
+        changes++;
+        black_white_options.setThresholdCoef(new_coef);
+    }
+
+    if (changes > 0)
+    {
+        m_colorParams.setBlackWhiteOptions(black_white_options);
+        m_ptrSettings->setColorParams(m_pageId, m_colorParams);
+
+        thresholdRadius->setValue(black_white_options.thresholdRadius());
+        thresholdCoef->setValue(black_white_options.thresholdCoef());
+
+        emit invalidateThumbnail(m_pageId);
+        emit reloadRequested();
+    }
 }
 
 void
