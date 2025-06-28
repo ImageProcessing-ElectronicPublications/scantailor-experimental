@@ -153,7 +153,7 @@ GrayImage grayMapDeviation(
         IntegralImage<uint32_t> integral_image(w, h);
         IntegralImage<uint64_t> integral_sqimage(w, h);
 
-        uint32_t min_gray_level = 255;
+        uint32_t gray_min = 255;
 
         for (int y = 0; y < h; y++)
         {
@@ -164,7 +164,7 @@ GrayImage grayMapDeviation(
                 uint32_t const pixel = src_line[x];
                 integral_image.push(pixel);
                 integral_sqimage.push(pixel * pixel);
-                min_gray_level = std::min(min_gray_level, pixel);
+                gray_min = std::min(gray_min, pixel);
             }
             src_line += src_stride;
         }
@@ -634,6 +634,7 @@ GrayImage grayNiblackMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
+
                 float const shift = deviation - delta;
                 float threshold = mean - k * shift;
 
@@ -744,7 +745,7 @@ void grayBGtoMap(
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * sauvola = mean * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
+ * sauvola = mean * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
  */
 GrayImage graySauvolaMap(
     GrayImage const& src,
@@ -785,7 +786,8 @@ GrayImage graySauvolaMap(
                 float const deviation = gdeviation_line[x];
 
                 float const shift = deviation + delta;
-                float threshold = mean * (1.0f + k * (shift / 128.0f - 1.0f));
+                float const part = k * (1.0f - shift / 128.0f);
+                float threshold = mean * (1.0f - part);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
@@ -836,8 +838,8 @@ GrayImage grayWolfMap(
         unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
 
-        uint32_t min_gray_level = 255;
-        float max_deviation = 0.0f;
+        uint32_t gray_min = 255;
+        float deviation_max = 0.0f;
 
         for (int y = 0; y < h; y++)
         {
@@ -845,8 +847,9 @@ GrayImage grayWolfMap(
             {
                 uint32_t const origin = src_line[x];
                 float const deviation = gdeviation_line[x];
-                max_deviation = (max_deviation < deviation) ? deviation : max_deviation;
-                min_gray_level = (min_gray_level < origin) ? min_gray_level : origin;
+
+                deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
+                gray_min = (gray_min < origin) ? gray_min : origin;
             }
             src_line += src_stride;
             gdeviation_line += gdeviation_stride;
@@ -860,8 +863,11 @@ GrayImage grayWolfMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
-                float const shift = 1.0f - (deviation / max_deviation + (float) delta / 128.0f);
-                float threshold = mean - k * shift * (mean - min_gray_level);
+
+                float const frac = (deviation_max > 0.0f) ? (deviation / deviation_max) : 1.0f;
+                float const frac_delta = (float) delta / 128.0f;
+                float const part = 1.0f - (frac + frac_delta);
+                float threshold = mean - k * part * (mean - gray_min);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
@@ -877,12 +883,13 @@ GrayImage grayWolfMap(
 /*
  * window = mean * (1 - k * md / kd), k = 1.0
  * where:
+ * md = (mean + 1) / (meanFull + deviation + 1)
  * kd = 1 + kdm * kds
  * kdm = (2 * meanFull + 1) / (deviation + 1)
  * deviationD = deviationMax - deviationMin
  * kds = (deviation - deviationMin) / deviationD if deviationD > 0, 1 if other
  * modification by zvezdochiot:
- * md = (mean + 1 - delta) / (meanFull + deviation + 1)
+ * md = (mean + 1 - delta) / (meanFull + deviation + 1), delta = 0
  */
 GrayImage grayWindowMap(
     GrayImage const& src,
@@ -946,6 +953,7 @@ GrayImage grayWindowMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
+
                 float const md = (mean + 1.0f - delta) / (mean_full + deviation + 1.0f);
                 float const kdm = (mean_full + mean_full + 1.0f) / (deviation + 1.0f);
                 float const kds = (deviation_delta > 0.0f) ? ((deviation - deviation_min) / deviation_delta) : 1.0f;
@@ -993,6 +1001,7 @@ GrayImage grayBradleyMap(
             for (int x = 0; x < w; x++)
             {
                 float const mean = gmean_line[x];
+
                 float threshold = (k < 1.0f) ? (mean * (1.0f - k)) : 0.0f;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
@@ -1048,6 +1057,7 @@ GrayImage grayNickMap(
             {
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
+
                 float const circle = sqrtf(deviation * deviation + cnick * mean * mean);
                 float threshold = mean - k * circle;
 
@@ -1182,7 +1192,7 @@ GrayImage graySinghMap(
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * WAN = (mean + max) / 2 * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
+ * WAN = (mean + max) / 2 * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
  */
 GrayImage grayWANMap(
     GrayImage const& src,
@@ -1229,10 +1239,12 @@ GrayImage grayWANMap(
                 float const mean = gmean_line[x];
                 float const imax = gmax_line[x];
                 float const deviation = gdeviation_line[x];
+
                 float const average = (mean + imax) * 0.5f;
                 float const shift = deviation + delta;
+                float const part = k * (1.0f - shift / 128.0f);
 
-                float threshold = average * (1.0f + k * (shift / 128.0f - 1.0f));
+                float threshold = average * (1.0f - part);
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
             }

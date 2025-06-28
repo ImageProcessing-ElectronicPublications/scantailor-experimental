@@ -559,7 +559,7 @@ BinaryImage binarizeGatos(
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * sauvola = mean * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
+ * sauvola = mean * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
  */
 BinaryImage binarizeSauvola(
     GrayImage const& src,
@@ -607,12 +607,13 @@ BinaryImage binarizeWolf(
 /*
  * window = mean * (1 - k * md / kd), k = 1.0
  * where:
+ * md = (mean + 1) / (meanFull + deviation + 1)
  * kd = 1 + kdm * kds
  * kdm = (2 * meanFull + 1) / (deviation + 1)
  * deviationD = deviationMax - deviationMin
  * kds = (deviation - deviationMin) / deviationD if deviationD > 0, 1 if other
  * modification by zvezdochiot:
- * md = (mean + 1 - delta) / (meanFull + deviation + 1)
+ * md = (mean + 1 - delta) / (meanFull + deviation + 1), delta = 0
  */
 BinaryImage binarizeWindow(
     GrayImage const& src,
@@ -658,7 +659,7 @@ BinaryImage binarizeBradley(
 /*
  * nick = mean - k * sqrt(stdev * stdev + cnick * mean * mean), k = 0.10
  * modification by zvezdochiot:
- * cnick = (max_delta - delta) / (max_delta - min_delta);
+ * cnick = (max_delta - delta) / (delta_max - delta_min);
  */
 BinaryImage binarizeNick(
     GrayImage const& src,
@@ -783,7 +784,7 @@ BinaryImage binarizeSingh(
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * WAN = (mean + max) / 2 * (1.0 + k * ((stderr + delta) / 128.0 - 1.0)), k = 0.34, delta = 0
+ * WAN = (mean + max) / 2 * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
  */
 BinaryImage binarizeWAN(
     GrayImage const& src,

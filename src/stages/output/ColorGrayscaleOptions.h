@@ -30,7 +30,7 @@ class ColorGrayscaleOptions
 {
 public:
     ColorGrayscaleOptions()
-        : m_curveCoef(0.5)
+        : m_curveCoef(0.0)
         , m_sqrCoef(0.0)
         , m_RISundefectSize(2)
         , m_RISundefectCoef(0.0)
@@ -74,7 +74,7 @@ public:
         , m_dots8Coef(0.0)
         , m_unPaperIters(4)
         , m_unPaperCoef(0.0)
-        , m_normalizeCoef(0.5)
+        , m_normalizeCoef(1.0)
         , m_whiteMargins(false)
         , m_grayScale(false)
     {}
