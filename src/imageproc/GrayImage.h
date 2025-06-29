@@ -184,17 +184,17 @@ IMAGEPROC_EXPORT GrayImage grayBiModalTiledMap(
 IMAGEPROC_EXPORT GrayImage grayNiblackMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.2f,
+    float k = 0.20f,
     int delta = 0);
 IMAGEPROC_EXPORT void grayBGtoMap(
     GrayImage const& src,
     GrayImage& background,
     float q = 0.6f,
-    float p = 0.2f);
+    float p = 0.20f);
 IMAGEPROC_EXPORT GrayImage graySauvolaMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.34f,
+    float k = 0.30f,
     int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayWolfMap(
     GrayImage const& src,
@@ -209,7 +209,7 @@ IMAGEPROC_EXPORT GrayImage grayWindowMap(
 IMAGEPROC_EXPORT GrayImage grayBradleyMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.2f);
+    float k = 0.20f);
 IMAGEPROC_EXPORT GrayImage grayNickMap(
     GrayImage const& src,
     int radius = 100,
@@ -223,17 +223,22 @@ IMAGEPROC_EXPORT GrayImage grayGradMap(
 IMAGEPROC_EXPORT GrayImage graySinghMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.2f,
+    float k = 0.30f,
+    int delta = 0);
+IMAGEPROC_EXPORT GrayImage grayFoxMap(
+    GrayImage const& src,
+    int radius = 100,
+    float k = 0.30f,
     int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayWANMap(
     GrayImage const& src,
     int radius = 100,
-    float k = 0.2f,
+    float k = 0.30f,
     int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayMScaleMap(
     GrayImage const& src,
     int radius = 10,
-    float coef = 0.5f);
+    float coef = 0.50f);
 IMAGEPROC_EXPORT GrayImage grayEngravingMap(
     GrayImage const& src,
     int radius = 20,

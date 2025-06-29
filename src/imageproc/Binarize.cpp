@@ -559,7 +559,8 @@ BinaryImage binarizeGatos(
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * sauvola = mean * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
+ * sauvola = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
+ *      base = mean, frac_s = stderr / 128.0, frac_d = delta / 128.0
  */
 BinaryImage binarizeSauvola(
     GrayImage const& src,
@@ -583,7 +584,8 @@ BinaryImage binarizeSauvola(
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  * modification by zvezdochiot:
- * wolf = mean - k * (mean - min_v) * (1.0 - (stderr / stdmax + delta / 128.0)), k = 0.3, delta = 0
+ * wolf = base * (1.0 - k * (1.0 - (frac_sn + frac_d))) + min_v, k = 0.3, delta = 0
+ *      base = mean - min_v, frac_sn = stderr / stdmax, frac_d = delta / 128.0
  */
 BinaryImage binarizeWolf(
     GrayImage const& src,
@@ -760,7 +762,8 @@ BinaryImage binarizeGrad(
  * singh = mean * (1.0 - k * (1.0 - dI / (256 - dI))), k = 0.2
  * dI = origin - mean
  * modification by zvezdochiot:
- * singh = mean * (1.0 - k * (1.0 - (dI + delta) / (256 - dI))), k = 0.2, delta = 0
+ * singh = base * (1.0 - k * 0.5 * (1.0 - (frac_s + frac_d))), k = 0.3, delta = 0
+ *      base = mean, dI = origin - mean, frac_s = dI / (256 - dI), frac_d = delta / 128.0
  */
 BinaryImage binarizeSingh(
     GrayImage const& src,
@@ -782,9 +785,33 @@ BinaryImage binarizeSingh(
 }  // binarizeSingh
 
 /*
- * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ * fox= base * (1.0 - k * 0.5 * (1.0 - (frac_sn + frac_d))) +  min_v, k = 0.3, delta = 0
+ *      base = mean - min_v, dI = origin - mean, frac_s = dI / (256 - dI), frac_sn = frac_s / max(frac_s), frac_d = delta / 128.0
+ */
+BinaryImage binarizeFox(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(grayFoxMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
+
+    return bw_img;
+}
+
+/*
+ * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.30
  * modification by zvezdochiot:
- * WAN = (mean + max) / 2 * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
+ * WAN = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
+ *      base = (mean + max) / 2, frac_s = stderr / 128.0, frac_d = delta / 128.0
  */
 BinaryImage binarizeWAN(
     GrayImage const& src,

@@ -77,6 +77,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("N.I.C.K"), T_NICK);
     thresholdMethodSelector->addItem(tr("Grad"), T_GRAD);
     thresholdMethodSelector->addItem(tr("Singh"), T_SINGH);
+    thresholdMethodSelector->addItem(tr("Fox"), T_FOX);
     thresholdMethodSelector->addItem(tr("WAN"), T_WAN);
     thresholdMethodSelector->addItem(tr("EdgePlus"), T_EDGEPLUS);
     thresholdMethodSelector->addItem(tr("BlurDiv"), T_BLURDIV);
@@ -903,15 +904,13 @@ OptionsWidget::thresholdDefaultButtonClicked()
     case T_NIBLACK:
     case T_GATOS:
     case T_BRADLEY:
-    case T_SINGH:
         new_radius = 100;
         new_coef = 0.2;
         break;
     case T_SAUVOLA:
-        new_radius = 100;
-        new_coef = 0.34;
-        break;
     case T_WOLF:
+    case T_SINGH:
+    case T_FOX:
     case T_WAN:
         new_radius = 100;
         new_coef = 0.30;

@@ -647,7 +647,7 @@ GrayImage grayNiblackMap(
     }
 
     return gmean;
-}
+}  // grayNiblackMap
 
 /*
  * gatos = bg - f(i, bg, q, p), q = 0.6, p = 0.2
@@ -745,7 +745,8 @@ void grayBGtoMap(
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * sauvola = mean * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
+ * sauvola = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
+ *      base = mean, frac_s = stderr / 128.0, frac_d = delta / 128.0
  */
 GrayImage graySauvolaMap(
     GrayImage const& src,
@@ -798,12 +799,13 @@ GrayImage graySauvolaMap(
     }
 
     return gmean;
-}
+}  // graySauvolaMap
 
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
  * modification by zvezdochiot:
- * wolf = mean - k * (mean - min_v) * (1.0 - (stderr / stdmax + delta / 128.0)), k = 0.3, delta = 0
+ * wolf = base * (1.0 - k * (1.0 - (frac_sn + frac_d))) + min_v, k = 0.3, delta = 0
+ *      base = mean - min_v, frac_sn = stderr / stdmax, frac_d = delta / 128.0
  */
 GrayImage grayWolfMap(
     GrayImage const& src,
@@ -838,14 +840,14 @@ GrayImage grayWolfMap(
         unsigned char* gdeviation_line = gdeviation.data();
         int const gdeviation_stride = gdeviation.stride();
 
-        uint32_t gray_min = 255;
+        float gray_min = 255.0f;
         float deviation_max = 0.0f;
 
         for (int y = 0; y < h; y++)
         {
             for (int x = 0; x < w; x++)
             {
-                uint32_t const origin = src_line[x];
+                float const origin = src_line[x];
                 float const deviation = gdeviation_line[x];
 
                 deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
@@ -864,10 +866,11 @@ GrayImage grayWolfMap(
                 float const mean = gmean_line[x];
                 float const deviation = gdeviation_line[x];
 
+                float const base = mean - gray_min;
                 float const frac = (deviation_max > 0.0f) ? (deviation / deviation_max) : 1.0f;
                 float const frac_delta = (float) delta / 128.0f;
                 float const part = 1.0f - (frac + frac_delta);
-                float threshold = mean - k * part * (mean - gray_min);
+                float threshold = base * (1.0f - k * part) + gray_min;
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
@@ -878,7 +881,7 @@ GrayImage grayWolfMap(
     }
 
     return gmean;
-}
+}  // grayWolfMap
 
 /*
  * window = mean * (1 - k * md / kd), k = 1.0
@@ -969,7 +972,7 @@ GrayImage grayWindowMap(
     }
 
     return gmean;
-}
+}  // grayWindowMap
 
 /*
  * bradley = mean * (1.0 - k), k = 0.2
@@ -1070,7 +1073,7 @@ GrayImage grayNickMap(
     }
 
     return gmean;
-}
+}  // grayNickMap
 
 /*
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
@@ -1132,13 +1135,14 @@ GrayImage grayGradMap(
     }
 
     return gmean;
-}
+}  // grayGradMap
 
 /*
  * singh = mean * (1.0 - k * (1.0 - dI / (256 - dI))), k = 0.2
  * dI = origin - mean
  * modification by zvezdochiot:
- * singh = mean * (1.0 - k * (1.0 - (dI + delta) / (256 - dI))), k = 0.2, delta = 0
+ * singh = base * (1.0 - k * 0.5 * (1.0 - (frac_s + frac_d))), k = 0.3, delta = 0
+ *      base = mean, dI = origin - mean, frac_s = dI / (256 - dI), frac_d = delta / 128.0
  */
 GrayImage graySinghMap(
     GrayImage const& src,
@@ -1173,10 +1177,10 @@ GrayImage graySinghMap(
                 float const mean = gmean_line[x];
 
                 float const grad = origin - mean;
-                float const nom = grad + delta;
-                float const den = 256.0f - grad;
-                float const sigma = nom / den;
-                float threshold = mean * (1.0f - k * (1.0f - sigma));
+                float const frac = grad / (256.0f - grad);
+                float const frac_delta = (float) delta / 128.0f;
+                float const part = 0.5f * (1.0f - (frac + frac_delta));
+                float threshold = mean * (1.0f - k * part);
 
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
@@ -1190,9 +1194,87 @@ GrayImage graySinghMap(
 }  // graySinghMap
 
 /*
+ * fox= base * (1.0 - k * 0.5 * (1.0 - (frac_sn + frac_d))) +  min_v, k = 0.3, delta = 0
+ *      base = mean - min_v, dI = origin - mean, frac_s = dI / (256 - dI), frac_sn = frac_s / max(frac_s), frac_d = delta / 128.0
+ */
+GrayImage grayFoxMap(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmean = grayMapMean(src, radius);
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    if (radius > 0)
+    {
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        float gray_min = 255.0f;
+        float frac_max = 0.0f;
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+
+                float const grad = origin - mean;
+                float const frac = grad / (256.0f - grad);
+                float const frac_abs = (frac < 0) ? -frac : frac;
+
+                frac_max = (frac_max < frac_abs) ? frac_abs : frac_max;
+                gray_min = (gray_min < origin) ? gray_min : origin;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+
+        src_line = src.data();
+        gmean_line = gmean.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+
+                float const base = mean - gray_min;
+                float const grad = origin - mean;
+                float const frac = (frac_max > 0.0f) ? (grad / (256.0f - grad) / frac_max) : 1.0f;
+                float const frac_delta = (float) delta / 128.0f;
+                float const part = 0.5f * (1.0f - (frac + frac_delta));
+                float threshold = base * (1.0f - k * part) + gray_min;
+
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                gmean_line[x] = (unsigned char) threshold;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+
+    return gmean;
+}  // grayFoxMap
+
+/*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
  * modification by zvezdochiot:
- * WAN = (mean + max) / 2 * (1.0 - k * (1.0 - (stderr + delta) / 128.0)), k = 0.34, delta = 0
+ * WAN = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
+ *      base = (mean + max) / 2, frac_s = stderr / 128.0, frac_d = delta / 128.0
  */
 GrayImage grayWANMap(
     GrayImage const& src,
