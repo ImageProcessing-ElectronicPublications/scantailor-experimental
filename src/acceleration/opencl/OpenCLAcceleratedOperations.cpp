@@ -122,7 +122,7 @@ OpenCLAcceleratedOperations::gaussBlur(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->gaussBlur(src, h_sigma, v_sigma);
     }
 }
@@ -178,7 +178,7 @@ OpenCLAcceleratedOperations::anisotropicGaussBlur(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->anisotropicGaussBlur(src, dir_x, dir_y, dir_sigma, ortho_dir_sigma);
     }
 }
@@ -236,7 +236,7 @@ std::pair<Grid<float>, Grid<uint8_t>>
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->textFilterBank(src, directions, sigmas, shoulder_length);
     }
 }
@@ -308,7 +308,7 @@ OpenCLAcceleratedOperations::dewarp(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->dewarp(
                    src, dst_size, distortion_model,
                    model_domain, background_color,
@@ -350,7 +350,7 @@ OpenCLAcceleratedOperations::affineTransform(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->affineTransform(
                    src, xform, dst_rect, outside_pixels, min_mapping_area
                );
@@ -382,7 +382,7 @@ OpenCLAcceleratedOperations::renderPolynomialSurface(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->renderPolynomialSurface(surface, width, height);
     }
 }
@@ -411,7 +411,7 @@ OpenCLAcceleratedOperations::savGolFilter(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->savGolFilter(src, window_size, hor_degree, vert_degree);
     }
 }
@@ -449,7 +449,7 @@ OpenCLAcceleratedOperations::hitMissReplaceInPlace(
         {
             throw std::bad_alloc();
         }
-        qDebug() << "OpenCL error: " << e.what();
+        qDebug() << "OpenCL error: " << e.err() << " in " << e.what();
         return m_ptrFallback->hitMissReplaceInPlace(img, img_surroundings, patterns);
     }
 }
