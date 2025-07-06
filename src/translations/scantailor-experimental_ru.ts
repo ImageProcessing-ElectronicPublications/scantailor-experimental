@@ -1517,6 +1517,11 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выберите пороговый метод.</translation>
     </message>
     <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="559"/>
+        <source>Default threshold value.</source>
+        <translation>Значения порога по умолчанию.</translation>
+    </message>
+    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
         <source>M</source>
         <translation></translation>

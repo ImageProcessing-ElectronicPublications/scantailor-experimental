@@ -881,11 +881,17 @@ OptionsWidget::thresholdDefaultButtonClicked()
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
     ThresholdFilter const method = black_white_options.thresholdMethod();
 
+    int cur_delta = black_white_options.thresholdAdjustment();;
+    bool cur_morph = black_white_options.morphology();
+    bool cur_negate = black_white_options.negate();
     int cur_bound_lower = black_white_options.getThresholdBoundLower();
     int cur_bound_upper = black_white_options.getThresholdBoundUpper();
     int cur_radius = black_white_options.thresholdRadius();
     double cur_coef = black_white_options.thresholdCoef();
 
+    int new_delta = 0;
+    bool new_morph = true;
+    bool new_negate = false;
     int new_bound_lower = 0;
     int new_bound_upper = 255;
     int new_radius = cur_radius;
@@ -946,6 +952,21 @@ OptionsWidget::thresholdDefaultButtonClicked()
         break;
     }
 
+    if (cur_delta != new_delta)
+    {
+        changes++;
+        black_white_options.setThresholdAdjustment(new_delta);
+    }
+    if (cur_morph != new_morph)
+    {
+        changes++;
+        black_white_options.setMorphology(new_morph);
+    }
+    if (cur_negate != new_negate)
+    {
+        changes++;
+        black_white_options.setNegate(new_negate);
+    }
     if (cur_bound_lower != new_bound_lower)
     {
         changes++;
@@ -971,9 +992,6 @@ OptionsWidget::thresholdDefaultButtonClicked()
     {
         m_colorParams.setBlackWhiteOptions(black_white_options);
         m_ptrSettings->setColorParams(m_pageId, m_colorParams);
-
-        thresholdRadius->setValue(black_white_options.thresholdRadius());
-        thresholdCoef->setValue(black_white_options.thresholdCoef());
 
         emit invalidateThumbnail(m_pageId);
         emit reloadRequested();

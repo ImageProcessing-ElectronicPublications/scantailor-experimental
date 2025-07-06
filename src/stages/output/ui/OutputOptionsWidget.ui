@@ -556,7 +556,7 @@
               <string>D</string>
              </property>
              <property name="toolTip">
-              <string>Default value.</string>
+              <string>Default threshold value.</string>
              </property>
             </widget>
            </item>
