@@ -442,9 +442,9 @@ IF(APPLE)
     )
     
     IF(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
-        CMAKE_PATH(SET QT_PLUGINS_DIR NORMALIZE ${Qt5Core_DIR}/../../../plugins)
+        CMAKE_PATH(SET QT_PLUGINS_DIR NORMALIZE ${Qt5Core_DIR}/../../../share/qt/plugins)
     ELSE()
-        CMAKE_PATH(SET QT_PLUGINS_DIR NORMALIZE ${Qt6Core_DIR}/../../../plugins)
+        CMAKE_PATH(SET QT_PLUGINS_DIR NORMALIZE ${Qt6Core_DIR}/../../../share/qt/plugins)
     ENDIF()
 
     set(PLUGINS_DESTINATION scantailor-experimental.app/Contents/PlugIns)
