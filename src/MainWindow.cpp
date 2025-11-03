@@ -1668,11 +1668,14 @@ MainWindow::stylesheetChanged(const QString stylesheetFilePath)
 
     QString path = stylesheetFileInfo.absolutePath();
 
+    QString stylesheet;
+
     QFile stylesheetFile(stylesheetFilePath);
 
-    stylesheetFile.open(QIODevice::ReadOnly);
-
-    QString stylesheet = stylesheetFile.readAll();
+    if (stylesheetFile.open(QIODevice::ReadOnly))
+    {
+        stylesheet = stylesheetFile.readAll();
+    }
 
 #if defined(Q_OS_MAC)
     stylesheet.replace("@path_to_pics@", QCoreApplication::applicationDirPath() + "/" + STYLESHEETS_DIR);
