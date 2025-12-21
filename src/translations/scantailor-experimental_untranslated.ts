@@ -25,7 +25,7 @@
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="124"/>
-        <source>Lead Developer</source>
+        <source>Original Developer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

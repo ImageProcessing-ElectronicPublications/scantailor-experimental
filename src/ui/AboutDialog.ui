@@ -121,7 +121,7 @@ font-weight: bold;</string>
               <string notr="true">font-weight: bold;</string>
              </property>
              <property name="text">
-              <string>Lead Developer</string>
+              <string>Original Developer</string>
              </property>
             </widget>
            </item>

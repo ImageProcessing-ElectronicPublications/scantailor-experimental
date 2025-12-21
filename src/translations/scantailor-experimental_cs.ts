@@ -24,8 +24,8 @@
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="124"/>
-        <source>Lead Developer</source>
-        <translation>Hlavní vývojář</translation>
+        <source>Original Developer</source>
+        <translation>Původní vývojář</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="156"/>

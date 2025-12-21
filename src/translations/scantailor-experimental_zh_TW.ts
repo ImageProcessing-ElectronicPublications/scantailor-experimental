@@ -25,8 +25,8 @@
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="124"/>
-        <source>Lead Developer</source>
-        <translation>主要開發成員</translation>
+        <source>Original Developer</source>
+        <translation>原開發成員</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="131"/>

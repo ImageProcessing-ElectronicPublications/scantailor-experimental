@@ -26,8 +26,8 @@
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="124"/>
-        <source>Lead Developer</source>
-        <translation type="unfinished">Dezvoltator principal</translation>
+        <source>Original Developer</source>
+        <translation type="unfinished">Dezvoltator original</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="131"/>
