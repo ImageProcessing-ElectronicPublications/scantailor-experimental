@@ -27,18 +27,18 @@ For build with Qt6 install following packages:
 
 Use following command:
 
-``sh
+``` sh
 mkdir build
 cd build
 cmake -D CMAKE_BUILD_TYPE=Release ..
 cmake --build .
-``
+```
 
 For Qt6 build use following command:
 
-``sh
+``` sh
 mkdir build-qt6
 cd build-qt6
 cmake -D ST_USE_QT6=ON -D CMAKE_BUILD_TYPE=Release ..
 cmake --build .
-``
+```
