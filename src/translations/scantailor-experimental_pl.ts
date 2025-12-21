@@ -140,7 +140,7 @@
     <message>
         <location filename="../ui/AboutDialog.ui" line="370"/>
         <source>References</source>
-        <translation type="unfinished"></translation>
+        <translation>Przypisy</translation>
     </message>
     <message>
         <source>Svetoslav Sashkov, Mandor - Bulgarian

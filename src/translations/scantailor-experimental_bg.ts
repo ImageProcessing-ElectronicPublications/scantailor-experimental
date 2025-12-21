@@ -149,7 +149,7 @@
     <message>
         <location filename="../ui/AboutDialog.ui" line="370"/>
         <source>References</source>
-        <translation type="unfinished"></translation>
+        <translation>Бележки</translation>
     </message>
     <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;

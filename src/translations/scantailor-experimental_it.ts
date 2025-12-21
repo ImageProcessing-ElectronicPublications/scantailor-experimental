@@ -141,7 +141,7 @@
     <message>
         <location filename="../ui/AboutDialog.ui" line="370"/>
         <source>References</source>
-        <translation type="unfinished"></translation>
+        <translation>Riferimenti</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="182"/>

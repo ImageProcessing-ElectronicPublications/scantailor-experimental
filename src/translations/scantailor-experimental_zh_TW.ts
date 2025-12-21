@@ -136,7 +136,7 @@
     <message>
         <location filename="../ui/AboutDialog.ui" line="370"/>
         <source>References</source>
-        <translation type="unfinished"></translation>
+        <translation>註腳</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="182"/>

@@ -187,7 +187,7 @@ Andrey Bergman - Регулировка загрузки системы.
     <message>
         <location filename="../ui/AboutDialog.ui" line="370"/>
         <source>References</source>
-        <translation>Настройки</translation>
+        <translation>Ссылки</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="477"/>

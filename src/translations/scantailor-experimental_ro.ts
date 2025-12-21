@@ -156,7 +156,7 @@
     <message>
         <location filename="../ui/AboutDialog.ui" line="370"/>
         <source>References</source>
-        <translation type="unfinished">Referințe</translation>
+        <translation>Note de subsol</translation>
     </message>
     <message>
         <location filename="../ui/AboutDialog.ui" line="477"/>
