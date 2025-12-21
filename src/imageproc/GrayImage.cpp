@@ -975,6 +975,67 @@ GrayImage grayWindowMap(
 }  // grayWindowMap
 
 /*
+ * LCaM = k * [mean + contrast * (256 - origin + delta) / 256], k = 0.75, delta = 0
+ *      contrast = Imax - Imin
+ *      mean = integral(I,w) / w
+ *      w = (2 * radius + 1) * (2 * radius + 1), radius = 5
+*/
+GrayImage grayLCaMMap(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmean = grayMapMean(src, radius);
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    if (radius > 0)
+    {
+        GrayImage gcontrast = grayMapContrast(src, radius);
+        if (gcontrast.isNull())
+        {
+            return gmean;
+        }
+
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+        unsigned char* gcontrast_line = gcontrast.data();
+        int const gcontrast_stride = gcontrast.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+                float const contrast = gcontrast_line[x];
+
+                float threshold = k * (mean + contrast * (256.0f - origin + delta) / 256.0f);
+
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                gmean_line[x] = (unsigned char) threshold;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+            gcontrast_line += gcontrast_stride;
+        }
+    }
+
+    return gmean;
+}  // grayLCaMMap
+
+/*
  * bradley = mean * (1.0 - k), k = 0.2
  */
 GrayImage grayBradleyMap(

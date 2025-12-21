@@ -206,6 +206,11 @@ IMAGEPROC_EXPORT GrayImage grayWindowMap(
     int radius = 50,
     float k = 1.0f,
     int delta = 0);
+IMAGEPROC_EXPORT GrayImage grayLCaMMap(
+    GrayImage const& src,
+    int radius = 5,
+    float k = 0.75f,
+    int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayBradleyMap(
     GrayImage const& src,
     int radius = 100,

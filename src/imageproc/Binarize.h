@@ -276,6 +276,22 @@ IMAGEPROC_EXPORT BinaryImage binarizeLAAB(
     unsigned char upper_bound = 255);
 
 /**
+ * \brief Image binarization using Local Contrast and Mean based Thresholding Technique in Image Binarization.
+ *
+ * O. Imocha Singh, Tejmani Sinam, O. James, T.Romen Singh
+ * International Journal of Computer Applications (0975 – 8887)
+ * Volume 51– No.6, August 2012
+ * https://research.ijcaonline.org/volume51/number6/pxc3881362.pdf
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeLCaM(
+    GrayImage const& src,
+    int radius = 5,
+    float k = 0.75f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
  * \brief Image binarization using Fox adaptive thresholding method.
  *
  * Modification of the Wolf threshold using the Singh optimization of the Sauvola threshold.

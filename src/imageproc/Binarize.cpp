@@ -875,6 +875,31 @@ BinaryImage binarizeLAAB(
 }  // binarizeLAAB
 
 /*
+ * LCaM = k * [mean + contrast * (256 - origin + delta) / 256], k = 0.75, delta = 0
+ *      contrast = Imax - Imin
+ *      mean = integral(I,w) / w
+ *      w = (2 * radius + 1) * (2 * radius + 1), radius = 5
+*/
+BinaryImage binarizeLCaM(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(grayLCaMMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
+
+    return bw_img;
+}
+
+/*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.30
  * modification by zvezdochiot:
  * WAN = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
