@@ -259,6 +259,23 @@ IMAGEPROC_EXPORT BinaryImage binarizeSingh(
     unsigned char upper_bound = 255);
 
 /**
+ * \brief Image binarization using Local Adaptive Automatic Binarisation (LAAB).
+ *
+ * Romen Taiyenjam, Sudipta Roy, Khumanthem Manglem Singh
+ * February 2012
+ * International Journal of Computer Applications 40(6):27-30
+ * DOI:10.5120/4961-7218
+ * https://www.researchgate.net/publication/258650941_Local_Adaptive_Automatic_Binarisation_LAAB
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeLAAB(
+    GrayImage const& src,
+    int radius = 25,
+    float k = 0.1f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
  * \brief Image binarization using Fox adaptive thresholding method.
  *
  * Modification of the Wolf threshold using the Singh optimization of the Sauvola threshold.

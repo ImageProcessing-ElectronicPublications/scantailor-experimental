@@ -1255,6 +1255,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeFox(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_LAAB:
+        {
+            binarized = binarizeLAAB(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         case T_WAN:
         {
             binarized = binarizeWAN(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);

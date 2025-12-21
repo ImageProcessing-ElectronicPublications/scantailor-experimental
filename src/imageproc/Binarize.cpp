@@ -808,6 +808,73 @@ BinaryImage binarizeFox(
 }
 
 /*
+ * LAAB = 0.5 * (ca - c) / ca
+ *      c = 1 - 2 * v
+ *      ca = abs(c)
+ *      v = (0.5 + 0.1 * k) * (256 + d) / (256 - d), k = 0.1
+ *      d = (origin - mean - delta) * (256 - mean) / 256, delta = 0
+ *      mean = integral(I,w) / w
+ *      w = (2 * radius + 1) * (2 * radius + 1), radius = 25
+ */
+BinaryImage binarizeLAAB(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    unsigned int const w = src.width();
+    unsigned int const h = src.height();
+    uint8_t const* src_line = src.data();
+    unsigned int const src_stride = src.stride();
+
+    GrayImage gmean = grayMapMean(src, radius);
+    if (gmean.isNull())
+    {
+        return BinaryImage();
+    }
+
+    unsigned char* gmean_line = gmean.data();
+    int const gmean_stride = gmean.stride();
+
+    BinaryImage bw_img(w, h);
+    if (bw_img.isNull())
+    {
+        return BinaryImage();
+    }
+
+    uint32_t* bw_line = bw_img.data();
+    unsigned int const bw_stride = bw_img.wordsPerLine();
+
+    float const coef = 0.5f + 0.1f * k;
+    for (unsigned int y = 0; y < h; y++)
+    {
+        for (unsigned int x = 0; x < w; x++)
+        {
+            float const origin = src_line[x];
+            float const mean = gmean_line[x];
+            float const d = (origin - mean - delta) * (256.0f - mean) / 256.0f;
+            float const v = coef * (256.0f + d) / (256.0f - d);
+            float const c = 1.0f - 2.0f * v;
+            float const ca = (c < 0.0f) ? -c : c;
+            float const laab = (ca > 0.0f) ? (0.5f * (ca - c) / ca) : 0.0f;
+            binarySetBW(bw_line, x, !(laab > 0.0f));
+        }
+        src_line += src_stride;
+        gmean_line += gmean_stride;
+        bw_line += bw_stride;
+    }
+
+    return bw_img;
+}  // binarizeLAAB
+
+/*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.30
  * modification by zvezdochiot:
  * WAN = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0

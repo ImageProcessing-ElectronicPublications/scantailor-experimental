@@ -232,6 +232,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_FOX;
     }
+    else if (str == "laab")
+    {
+        return T_LAAB;
+    }
     else if (str == "WAN")
     {
         return T_WAN;
@@ -321,6 +325,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_FOX:
         str = "fox";
+        break;
+    case T_LAAB:
+        str = "laab";
         break;
     case T_WAN:
         str = "WAN";

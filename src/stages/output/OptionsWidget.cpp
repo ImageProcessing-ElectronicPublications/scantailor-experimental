@@ -78,6 +78,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("Grad"), T_GRAD);
     thresholdMethodSelector->addItem(tr("Singh"), T_SINGH);
     thresholdMethodSelector->addItem(tr("Fox"), T_FOX);
+    thresholdMethodSelector->addItem(tr("LAAB"), T_LAAB);
     thresholdMethodSelector->addItem(tr("WAN"), T_WAN);
     thresholdMethodSelector->addItem(tr("EdgePlus"), T_EDGEPLUS);
     thresholdMethodSelector->addItem(tr("BlurDiv"), T_BLURDIV);
@@ -924,6 +925,10 @@ OptionsWidget::thresholdDefaultButtonClicked()
     case T_WINDOW:
         new_radius = 50;
         new_coef = 1.0;
+        break;
+    case T_LAAB:
+        new_radius = 25;
+        new_coef = 0.1;
         break;
     case T_NICK:
         new_radius = 100;
