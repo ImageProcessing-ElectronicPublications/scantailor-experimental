@@ -25,10 +25,12 @@
 #include <assert.h>
 
 ProjectOpeningContext::ProjectOpeningContext(
-    QWidget* parent, QString const& project_file, QDomDocument const& doc)
-    :	m_projectFile(project_file),
-      m_reader(doc),
-      m_pParent(parent)
+    QWidget* parent,
+    QString const& project_file,
+    QDomDocument const& doc)
+    : m_projectFile(project_file)
+    , m_reader(doc, project_file)
+    , m_pParent(parent)
 {
 }
 

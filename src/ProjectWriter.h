@@ -19,6 +19,14 @@
 #ifndef PROJECTWRITER_H_
 #define PROJECTWRITER_H_
 
+#include <vector>
+#include <map>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/member.hpp>
+#include <QString>
+#include <Qt>
 #include "IntrusivePtr.h"
 #include "PageSequence.h"
 #include "OutputFileNameGenerator.h"
@@ -26,14 +34,6 @@
 #include "PageId.h"
 #include "SelectedPage.h"
 #include "VirtualFunction.h"
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/sequenced_index.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/member.hpp>
-#include <QString>
-#include <Qt>
-#include <vector>
-#include <map>
 
 class AbstractFilter;
 class ProjectPages;
@@ -150,7 +150,7 @@ private:
     >
     > Pages;
 
-    QDomElement processDirectories(QDomDocument& doc) const;
+    QDomElement processDirectories(QDomDocument& doc, QString const& projectDirPath) const;
 
     QDomElement processFiles(QDomDocument& doc) const;
 

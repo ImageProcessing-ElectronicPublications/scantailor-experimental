@@ -16,24 +16,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <set>
+#include <boost/bind/bind.hpp>
+#include <QSize>
+#include <QDir>
+#include <QFileInfo>
+#include <QDomElement>
+#include <QDomNode>
 #include "ProjectReader.h"
 #include "ProjectPages.h"
 #include "FileNameDisambiguator.h"
 #include "AbstractFilter.h"
 #include "XmlUnmarshaller.h"
-#include <QSize>
-#include <QDir>
-#include <QDomElement>
-#include <QDomNode>
-#include <boost/bind/bind.hpp>
-#include <set>
 
-ProjectReader::ProjectReader(QDomDocument const& doc)
-    :	m_doc(doc),
-      m_ptrDisambiguator(new FileNameDisambiguator)
+ProjectReader::ProjectReader(
+    QDomDocument const& doc,
+    QString const& projectFilePath)
+    : m_doc(doc)
+    , m_ptrDisambiguator(new FileNameDisambiguator)
 {
+    if (!projectFilePath.isEmpty())
+    {
+        m_projectDirPath = QFileInfo(projectFilePath).absolutePath();
+    }
+
     QDomElement project_el(m_doc.documentElement());
-    m_outDir = project_el.attribute("outputDirectory");
+    m_outDir = resolvePath(project_el.attribute("outputDirectory"));
 
     Qt::LayoutDirection layout_direction = Qt::LeftToRight;
     if (project_el.attribute("layoutDirection") == "RTL")
@@ -84,6 +92,20 @@ ProjectReader::~ProjectReader()
 {
 }
 
+QString
+ProjectReader::resolvePath(QString const& path) const
+{
+    if (path.isEmpty())
+    {
+        return path;
+    }
+    if (m_projectDirPath.isEmpty() || QDir::isAbsolutePath(path))
+    {
+      return path;
+    }
+    return QDir(m_projectDirPath).absoluteFilePath(path);
+}
+
 void
 ProjectReader::readFilterSettings(std::vector<FilterPtr> const& filters) const
 {
@@ -123,11 +145,12 @@ ProjectReader::processDirectories(QDomElement const& dirs_el)
             continue;
         }
 
-        QString const path(el.attribute("path"));
+        QString path(el.attribute("path"));
         if (path.isEmpty())
         {
             continue;
         }
+        path = resolvePath(path);
 
         m_dirMap.insert(DirMap::value_type(id, path));
     }
