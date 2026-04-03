@@ -1345,6 +1345,8 @@ OutputGenerator::colored(
 
         grayRISundefectInPlace(gout, color_options.RISundefectSize(), color_options.RISundefectCoef());
 
+        grayDeBlur5InPlace(gout, color_options.getDeBlur5Size(), color_options.getDeBlur5Coef());
+
         grayAutoLevelInPlace(gout, color_options.autoLevelSize(), color_options.autoLevelCoef());
 
         grayBalanceInPlace(gout, color_options.balanceSize(), color_options.balanceCoef());

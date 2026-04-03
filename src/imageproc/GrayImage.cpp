@@ -2863,6 +2863,95 @@ void grayBalanceInPlace(
     }
 } // grayBalance
 
+GrayImage grayDeBlur5(
+    GrayImage const& src,
+    int const radius,
+    float const coef)
+{
+    GrayImage dst(src);
+    grayDeBlur5InPlace(dst, radius, coef);
+    return dst;
+}
+
+void grayDeBlur5InPlace(
+    GrayImage& src,
+    int const radius,
+    float const coef)
+{
+    if (src.isNull())
+    {
+        return;
+    }
+
+    if ((radius > 0) && (coef != 0.0f))
+    {
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+
+        GrayImage giter(src);
+        if (giter.isNull())
+        {
+            return;
+        }
+        unsigned char* giter_line = giter.data();
+        int const giter_stride = giter.stride();
+
+        for (int k = 0; k < 5; k++)
+        {
+            GrayImage gmean = gaussBlur(giter, radius, radius);
+            if (gmean.isNull())
+            {
+                return;
+            }
+            unsigned char* gmean_line = gmean.data();
+            int const gmean_stride = gmean.stride();
+
+            src_line = src.data();
+            giter_line = giter.data();
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    int const origin = src_line[x];
+                    int const mean = gmean_line[x];
+                    int iter = giter_line[x];
+
+                    int delta = (mean - origin) + 128;
+                    delta *= delta;
+                    delta >>= 7;
+                    delta -= 128;
+                    iter -= delta;
+
+                    iter = (iter < 0) ? 0 : (iter < 255) ? iter : 255;
+                    giter_line[x] = (unsigned char) iter;
+                }
+                src_line += src_stride;
+                gmean_line += gmean_stride;
+                giter_line += giter_stride;
+            }
+        }
+
+        src_line = src.data();
+        giter_line = giter.data();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float iter = giter_line[x];
+
+                iter = coef * iter + (1.0f - coef) * origin + 0.5f;
+                iter = (iter < 0.0f) ? 0.0f : (iter < 255.0f) ? iter : 255.0f;
+                src_line[x] = (unsigned char) iter;
+            }
+            src_line += src_stride;
+            giter_line += giter_stride;
+        }
+    }
+} // grayDeBlur5
+
 GrayImage grayOverBlur(
     GrayImage const& src,
     int const radius,

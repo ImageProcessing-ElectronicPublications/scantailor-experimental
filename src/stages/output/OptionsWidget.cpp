@@ -91,6 +91,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("Engraving"), T_ENGRAVING);
 
     colorFilterSelector->addItem(tr("RIS undefect"), F_RIS);
+    colorFilterSelector->addItem(tr("deBlur5"), F_DEBLUR5);
     colorFilterSelector->addItem(tr("Auto Level"), F_AUTOLEVEL);
     colorFilterSelector->addItem(tr("Balance"), F_BALANCE);
     colorFilterSelector->addItem(tr("OverBlur"), F_OVERBLUR);
@@ -534,6 +535,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.RISundefectSize());
         colorFilterCoef->setValue(color_options.RISundefectCoef());
         break;
+    case F_DEBLUR5:
+        colorFilterSize->setValue(color_options.getDeBlur5Size());
+        colorFilterCoef->setValue(color_options.getDeBlur5Coef());
+        break;
     case F_AUTOLEVEL:
         colorFilterSize->setValue(color_options.autoLevelSize());
         colorFilterCoef->setValue(color_options.autoLevelCoef());
@@ -635,6 +640,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_RIS:
         color_options.setRISundefectSize(value);
         break;
+    case F_DEBLUR5:
+        color_options.setDeBlur5Size(value);
+        break;
     case F_AUTOLEVEL:
         color_options.setAutoLevelSize(value);
         break;
@@ -710,6 +718,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
     {
     case F_RIS:
         color_options.setRISundefectCoef(value);
+        break;
+    case F_DEBLUR5:
+        color_options.setDeBlur5Coef(value);
         break;
     case F_AUTOLEVEL:
         color_options.setAutoLevelCoef(value);

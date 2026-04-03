@@ -34,6 +34,8 @@ public:
         , m_sqrCoef(0.0)
         , m_RISundefectSize(2)
         , m_RISundefectCoef(0.0)
+        , m_deBlur5Size(3)
+        , m_deBlur5Coef(0.0)
         , m_autoLevelSize(10)
         , m_autoLevelCoef(0.0)
         , m_balanceSize(23)
@@ -116,6 +118,23 @@ public:
     void setRISundefectCoef(double val)
     {
         m_RISundefectCoef = val;
+    }
+
+    int getDeBlur5Size() const
+    {
+        return m_deBlur5Size;
+    }
+    void setDeBlur5Size(int val)
+    {
+        m_deBlur5Size = val;
+    }
+    double getDeBlur5Coef() const
+    {
+        return m_deBlur5Coef;
+    }
+    void setDeBlur5Coef(double val)
+    {
+        m_deBlur5Coef = val;
     }
 
     int autoLevelSize() const
@@ -494,6 +513,8 @@ private:
     double m_sqrCoef;
     int m_RISundefectSize;
     double m_RISundefectCoef;
+    int m_deBlur5Size;
+    double m_deBlur5Coef;
     int m_autoLevelSize;
     double m_autoLevelCoef;
     int m_balanceSize;

@@ -29,6 +29,8 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     , m_sqrCoef(el.attribute("sqrCoef").toDouble())
     , m_RISundefectSize(el.attribute("risSize").toInt())
     , m_RISundefectCoef(el.attribute("risCoef").toDouble())
+    , m_deBlur5Size(el.attribute("deblur5Size").toInt())
+    , m_deBlur5Coef(el.attribute("deblur5Coef").toDouble())
     , m_autoLevelSize(el.attribute("autoLevelSize").toInt())
     , m_autoLevelCoef(el.attribute("autoLevelCoef").toDouble())
     , m_balanceSize(el.attribute("balanceSize").toInt())
@@ -88,6 +90,14 @@ ColorGrayscaleOptions::ColorGrayscaleOptions(QDomElement const& el)
     if (m_RISundefectCoef < -1.0 || m_RISundefectCoef > 1.0)
     {
         m_RISundefectCoef = 0.0;
+    }
+    if (m_deBlur5Size < 1)
+    {
+        m_deBlur5Size = 3;
+    }
+    if (m_deBlur5Coef < -1.0 || m_deBlur5Coef > 1.0)
+    {
+        m_deBlur5Coef = 0.0;
     }
     if (m_autoLevelSize < 1)
     {
@@ -246,6 +256,11 @@ ColorGrayscaleOptions::toXml(QDomDocument& doc, QString const& name) const
         el.setAttribute("risSize", m_RISundefectSize);
         el.setAttribute("risCoef", m_RISundefectCoef);
     }
+    if (m_deBlur5Coef != 0.0)
+    {
+        el.setAttribute("deblur5Size", m_deBlur5Size);
+        el.setAttribute("deblur5Coef", m_deBlur5Coef);
+    }
     if (m_autoLevelCoef != 0.0)
     {
         el.setAttribute("autoLevelSize", m_autoLevelSize);
@@ -374,6 +389,14 @@ ColorGrayscaleOptions::operator==(ColorGrayscaleOptions const& other) const
         return false;
     }
     if (m_RISundefectSize != other.m_RISundefectSize)
+    {
+        return false;
+    }
+    if (m_deBlur5Coef != other.m_deBlur5Coef)
+    {
+        return false;
+    }
+    if (m_deBlur5Size != other.m_deBlur5Size)
     {
         return false;
     }

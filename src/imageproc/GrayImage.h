@@ -434,6 +434,19 @@ IMAGEPROC_EXPORT void grayBalanceInPlace(
     float coef = 0.0f);
 
 /**
+ * @brief deBlur GrayImage based GaussBlur.
+ * https://habr.com/ru/articles/983796/
+ */
+IMAGEPROC_EXPORT GrayImage grayDeBlur5(
+    GrayImage const& src,
+    int radius = 3,
+    float coef = 0.0f);
+IMAGEPROC_EXPORT void grayDeBlur5InPlace(
+    GrayImage& src,
+    int radius = 3,
+    float coef = 0.0f);
+
+/**
  * @brief OverBlur GrayImage based GaussBlur.
  */
 IMAGEPROC_EXPORT GrayImage grayOverBlur(
