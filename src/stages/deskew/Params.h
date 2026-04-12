@@ -22,10 +22,10 @@
 #include <QString>
 #include <QPolygonF>
 #include "DistortionType.h"
-#include "RotationParams.h"
-#include "SourceParams.h"
-#include "PerspectiveParams.h"
-#include "DewarpingParams.h"
+#include "ParamsDewarping.h"
+#include "ParamsPerspective.h"
+#include "ParamsRotation.h"
+#include "ParamsSource.h"
 #include "Dependencies.h"
 
 class QDomDocument;
@@ -56,49 +56,49 @@ public:
         m_distortionType = type;
     }
 
-    RotationParams& rotationParams()
+    ParamsDewarping& getParamsDewarping()
     {
-        return m_rotationParams;
+        return m_paramsDewarping;
     }
 
-    RotationParams const& rotationParams() const
+    ParamsDewarping const& getParamsDewarping() const
     {
-        return m_rotationParams;
+        return m_paramsDewarping;
     }
 
-    SourceParams& sourceParams()
+    ParamsPerspective& getParamsPerspective()
     {
-        return m_sourceParams;
+        return m_paramsPerspective;
     }
 
-    SourceParams const& sourceParams() const
+    ParamsPerspective const& getParamsPerspective() const
     {
-        return m_sourceParams;
+        return m_paramsPerspective;
     }
 
-    void setSourceParams(SourceParams source)
+    ParamsRotation& getParamsRotation()
     {
-        m_sourceParams = source;
+        return m_paramsRotation;
     }
 
-    PerspectiveParams& perspectiveParams()
+    ParamsRotation const& getParamsRotation() const
     {
-        return m_perspectiveParams;
+        return m_paramsRotation;
     }
 
-    PerspectiveParams const& perspectiveParams() const
+    ParamsSource& getParamsSource()
     {
-        return m_perspectiveParams;
+        return m_paramsSource;
     }
 
-    DewarpingParams& dewarpingParams()
+    ParamsSource const& getParamsSource() const
     {
-        return m_dewarpingParams;
+        return m_paramsSource;
     }
 
-    DewarpingParams const& dewarpingParams() const
+    void setParamsSource(ParamsSource source)
     {
-        return m_dewarpingParams;
+        m_paramsSource = source;
     }
 
     Dependencies const& dependencies() const
@@ -123,10 +123,10 @@ public:
     void takeManualSettingsFrom(Params const& other);
 private:
     DistortionType m_distortionType;
-    RotationParams m_rotationParams;
-    SourceParams m_sourceParams;
-    PerspectiveParams m_perspectiveParams;
-    DewarpingParams m_dewarpingParams;
+    ParamsDewarping m_paramsDewarping;
+    ParamsPerspective m_paramsPerspective;
+    ParamsRotation m_paramsRotation;
+    ParamsSource m_paramsSource;
     Dependencies m_deps;
 };
 

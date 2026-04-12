@@ -304,7 +304,7 @@ Task::processRotationDistortion(
     CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
     AffineImageTransform const& orig_image_transform, Params& params)
 {
-    if (!params.rotationParams().isValid())
+    if (!params.getParamsRotation().isValid())
     {
         QRect const transformed_crop_rect(
             orig_image_transform.transformedCropArea().boundingRect().toRect()
@@ -355,13 +355,13 @@ Task::processRotationDistortion(
 
             if (skew.confidence() >= skew.GOOD_CONFIDENCE)
             {
-                params.rotationParams().setCompensationAngleDeg(-skew.angle());
+                params.getParamsRotation().setCompensationAngleDeg(-skew.angle());
             }
             else
             {
-                params.rotationParams().setCompensationAngleDeg(0);
+                params.getParamsRotation().setCompensationAngleDeg(0);
             }
-            params.rotationParams().setMode(MODE_AUTO);
+            params.getParamsRotation().setMode(MODE_AUTO);
 
             m_ptrSettings->setPageParams(m_pageId, params);
 
@@ -371,7 +371,7 @@ Task::processRotationDistortion(
 
     if (m_ptrNextTask)
     {
-        double const angle = params.rotationParams().compensationAngleDeg();
+        double const angle = params.getParamsRotation().compensationAngleDeg();
         return m_ptrNextTask->process(
                    status, accel_ops, orig_image, gray_orig_image_factory,
                    std::make_shared<AffineImageTransform>(
@@ -404,7 +404,7 @@ Task::processPerspectiveDistortion(
     CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
     AffineImageTransform const& orig_image_transform, Params& params)
 {
-    if (!params.perspectiveParams().isValid())
+    if (!params.getParamsPerspective().isValid())
     {
         DistortionModelBuilder model_builder(
             orig_image_transform.transform().inverted().map(QPointF(0, 1))
@@ -443,12 +443,12 @@ Task::processPerspectiveDistortion(
             point_bl = to_orig.map(transformed_box.bottomLeft());
             point_br = to_orig.map(transformed_box.bottomRight());
         }
-        params.perspectiveParams().setCorner(PerspectiveParams::TOP_LEFT, point_tl);
-        params.perspectiveParams().setCorner(PerspectiveParams::TOP_RIGHT, point_tr);
-        params.perspectiveParams().setCorner(PerspectiveParams::BOTTOM_LEFT, point_bl);
-        params.perspectiveParams().setCorner(PerspectiveParams::BOTTOM_RIGHT, point_br);
+        params.getParamsPerspective().setCorner(ParamsPerspective::TOP_LEFT, point_tl);
+        params.getParamsPerspective().setCorner(ParamsPerspective::TOP_RIGHT, point_tr);
+        params.getParamsPerspective().setCorner(ParamsPerspective::BOTTOM_LEFT, point_bl);
+        params.getParamsPerspective().setCorner(ParamsPerspective::BOTTOM_RIGHT, point_br);
 
-        params.perspectiveParams().setMode(MODE_AUTO);
+        params.getParamsPerspective().setMode(MODE_AUTO);
 
         m_ptrSettings->setPageParams(m_pageId, params);
     } // if (!params.isValid())
@@ -459,10 +459,10 @@ Task::processPerspectiveDistortion(
         // as well, so we just use that.
         std::vector<QPointF> top_curve;
         std::vector<QPointF> bottom_curve;
-        top_curve.push_back(params.perspectiveParams().corner(PerspectiveParams::TOP_LEFT));
-        top_curve.push_back(params.perspectiveParams().corner(PerspectiveParams::TOP_RIGHT));
-        bottom_curve.push_back(params.perspectiveParams().corner(PerspectiveParams::BOTTOM_LEFT));
-        bottom_curve.push_back(params.perspectiveParams().corner(PerspectiveParams::BOTTOM_RIGHT));
+        top_curve.push_back(params.getParamsPerspective().corner(ParamsPerspective::TOP_LEFT));
+        top_curve.push_back(params.getParamsPerspective().corner(ParamsPerspective::TOP_RIGHT));
+        bottom_curve.push_back(params.getParamsPerspective().corner(ParamsPerspective::BOTTOM_LEFT));
+        bottom_curve.push_back(params.getParamsPerspective().corner(ParamsPerspective::BOTTOM_RIGHT));
 
         auto perspective_transform(
             std::make_shared<DewarpingImageTransform>(
@@ -470,7 +470,7 @@ Task::processPerspectiveDistortion(
                 orig_image_transform.origCropArea(),
                 top_curve,
                 bottom_curve,
-                ((params.sourceParams().photo()) ? params.sourceParams().fov() : 0.0),
+                ((params.getParamsSource().photo()) ? params.getParamsSource().fov() : 0.0),
                 dewarping::DepthPerception(),
                 dewarping::DepthPerception(),
                 dewarping::DepthPerception()
@@ -500,7 +500,7 @@ Task::processWarpDistortion(
     CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
     AffineImageTransform const& orig_image_transform, Params& params)
 {
-    if (!params.dewarpingParams().isValid())
+    if (!params.getParamsDewarping().isValid())
     {
         DistortionModelBuilder model_builder(
             orig_image_transform.transform().inverted().map(QPointF(0, 1))
@@ -548,12 +548,12 @@ Task::processWarpDistortion(
             assert(distortion_model.isValid());
         }
 
-        params.dewarpingParams().setDistortionModel(distortion_model);
+        params.getParamsDewarping().setDistortionModel(distortion_model);
 
         // Note that we don't reset depth perception, as it's a manual parameter
         // that's usually the same for all pictures in a project.
 
-        params.dewarpingParams().setMode(MODE_AUTO);
+        params.getParamsDewarping().setMode(MODE_AUTO);
 
         m_ptrSettings->setPageParams(m_pageId, params);
     } // if (!params.isValid())
@@ -563,12 +563,12 @@ Task::processWarpDistortion(
         auto dewarping_transform(
             std::make_shared<DewarpingImageTransform>(
                 orig_image_transform.origSize(), orig_image_transform.origCropArea(),
-                params.dewarpingParams().distortionModel().topCurve().polyline(),
-                params.dewarpingParams().distortionModel().bottomCurve().polyline(),
-                ((params.sourceParams().photo()) ? params.sourceParams().fov() : 0.0),
-                params.dewarpingParams().depthPerception(),
-                params.dewarpingParams().correctCurves(),
-                params.dewarpingParams().correctAngle()
+                params.getParamsDewarping().distortionModel().topCurve().polyline(),
+                params.getParamsDewarping().distortionModel().bottomCurve().polyline(),
+                ((params.getParamsSource().photo()) ? params.getParamsSource().fov() : 0.0),
+                params.getParamsDewarping().depthPerception(),
+                params.getParamsDewarping().correctCurves(),
+                params.getParamsDewarping().correctAngle()
             )
         );
         return m_ptrNextTask->process(
@@ -709,7 +709,7 @@ Task::RotationUiUpdater::updateUI(FilterUiInterface* ui)
         return;
     }
 
-    double const angle = m_pageParams.rotationParams().compensationAngleDeg();
+    double const angle = m_pageParams.getParamsRotation().compensationAngleDeg();
     ImageView* view = new ImageView(m_ptrAccelOps, m_fullSizeImage, m_downscaledImage, angle);
     ui->setImageWidget(view, ui->TRANSFER_OWNERSHIP, m_ptrDbg.get());
 
@@ -767,16 +767,16 @@ Task::PerspectiveUiUpdater::updateUI(FilterUiInterface* ui)
     XSpline top_curve;
     XSpline bottom_curve;
     top_curve.appendControlPoint(
-        m_pageParams.perspectiveParams().corner(PerspectiveParams::TOP_LEFT), 0
+        m_pageParams.getParamsPerspective().corner(ParamsPerspective::TOP_LEFT), 0
     );
     top_curve.appendControlPoint(
-        m_pageParams.perspectiveParams().corner(PerspectiveParams::TOP_RIGHT), 0
+        m_pageParams.getParamsPerspective().corner(ParamsPerspective::TOP_RIGHT), 0
     );
     bottom_curve.appendControlPoint(
-        m_pageParams.perspectiveParams().corner(PerspectiveParams::BOTTOM_LEFT), 0
+        m_pageParams.getParamsPerspective().corner(ParamsPerspective::BOTTOM_LEFT), 0
     );
     bottom_curve.appendControlPoint(
-        m_pageParams.perspectiveParams().corner(PerspectiveParams::BOTTOM_RIGHT), 0
+        m_pageParams.getParamsPerspective().corner(ParamsPerspective::BOTTOM_RIGHT), 0
     );
     DistortionModel distortion_model;
     distortion_model.setTopCurve(Curve(top_curve));
@@ -850,10 +850,10 @@ Task::DewarpingUiUpdater::updateUI(FilterUiInterface* ui)
         m_fullSizeImage,
         m_downscaledImage,
         m_pageId,
-        m_pageParams.dewarpingParams().distortionModel(),
-        m_pageParams.dewarpingParams().depthPerception(),
-        m_pageParams.dewarpingParams().correctCurves(),
-        m_pageParams.dewarpingParams().correctAngle(),
+        m_pageParams.getParamsDewarping().distortionModel(),
+        m_pageParams.getParamsDewarping().depthPerception(),
+        m_pageParams.getParamsDewarping().correctCurves(),
+        m_pageParams.getParamsDewarping().correctAngle(),
         /*fixed_number_of_control_points=*/false
     );
     ui->setImageWidget(view, ui->TRANSFER_OWNERSHIP, m_ptrDbg.get());

@@ -16,10 +16,10 @@ SET(
     CacheDrivenTask.cpp CacheDrivenTask.h
     Dependencies.cpp Dependencies.h
     DistortionType.cpp DistortionType.h
-    RotationParams.cpp RotationParams.h
-    SourceParams.cpp SourceParams.h
-    PerspectiveParams.cpp PerspectiveParams.h
-    DewarpingParams.cpp DewarpingParams.h
+    ParamsDewarping.cpp ParamsDewarping.h
+    ParamsPerspective.cpp ParamsPerspective.h
+    ParamsRotation.cpp ParamsRotation.h
+    ParamsSource.cpp ParamsSource.h
     Params.cpp Params.h
     ApplyDialog.cpp ApplyDialog.h
     Utils.cpp Utils.h

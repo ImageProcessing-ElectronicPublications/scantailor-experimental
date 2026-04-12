@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DESKEW_PERSPECTIVE_PARAMS_H_
-#define DESKEW_PERSPECTIVE_PARAMS_H_
+#ifndef DESKEW_PARAMS_PERSPECTIVE_H_
+#define DESKEW_PARAMS_PERSPECTIVE_H_
 
 #include <QPointF>
 #include "AutoManualMode.h"
@@ -30,10 +30,10 @@ namespace deskew
 {
 
 /**
- * PerspectiveParams holds a set points in original image coordinates
+ * ParamsPerspective holds a set points in original image coordinates
  * that are to be mapped to a rectangle in destination image coordinates.
  */
-class PerspectiveParams
+class ParamsPerspective
 {
     // Member-wise copying is OK.
 public:
@@ -43,9 +43,9 @@ public:
      * Defaults to all corners at origin (making isValid() return false)
      * and MODE_AUTO.
      */
-    PerspectiveParams();
+    ParamsPerspective();
 
-    PerspectiveParams(QDomElement const& el);
+    ParamsPerspective(QDomElement const& el);
 
     bool isValid() const;
 

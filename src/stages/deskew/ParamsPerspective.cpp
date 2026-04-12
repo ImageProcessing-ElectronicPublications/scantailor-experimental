@@ -16,68 +16,76 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
 #include <QPointF>
 #include <QLineF>
 #include <QRectF>
-#include "DewarpingParams.h"
+#include "ParamsPerspective.h"
+#include "XmlMarshaller.h"
+#include "XmlUnmarshaller.h"
 #include "dewarping/DistortionModel.h"
-#include "dewarping/DepthPerception.h"
+#include "dewarping/Curve.h"
 
 namespace deskew
 {
 
-DewarpingParams::DewarpingParams()
-    :   m_mode(MODE_AUTO)
+ParamsPerspective::ParamsPerspective()
+    : m_mode(MODE_AUTO)
 {
 }
 
-DewarpingParams::DewarpingParams(QDomElement const& el)
-    : m_distortionModel(el.namedItem("distortion-model").toElement())
-    , m_depthPerception(el.attribute("depthPerception"))
-    , m_correctCurves(el.attribute("correctCurves"))
-    , m_correctAngle(el.attribute("correctAngle"))
-    , m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
+ParamsPerspective::ParamsPerspective(QDomElement const& el)
+    : m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
-}
-
-DewarpingParams::~DewarpingParams()
-{
+    m_corners[TOP_LEFT] = XmlUnmarshaller::pointF(el.namedItem("tl").toElement());
+    m_corners[TOP_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("tr").toElement());
+    m_corners[BOTTOM_RIGHT] = XmlUnmarshaller::pointF(el.namedItem("br").toElement());
+    m_corners[BOTTOM_LEFT] = XmlUnmarshaller::pointF(el.namedItem("bl").toElement());
 }
 
 bool
-DewarpingParams::isValid() const
+ParamsPerspective::isValid() const
 {
-    return m_distortionModel.isValid();
+    dewarping::DistortionModel distortion_model;
+    distortion_model.setTopCurve(
+        std::vector<QPointF> {m_corners[TOP_LEFT], m_corners[TOP_RIGHT]}
+    );
+    distortion_model.setBottomCurve(
+        std::vector<QPointF> {m_corners[BOTTOM_LEFT], m_corners[BOTTOM_RIGHT]}
+    );
+    return distortion_model.isValid();
 }
 
 void
-DewarpingParams::invalidate()
+ParamsPerspective::invalidate()
 {
-    *this = DewarpingParams();
+    *this = ParamsPerspective();
 }
 
 QDomElement
-DewarpingParams::toXml(QDomDocument& doc, QString const& name) const
+ParamsPerspective::toXml(QDomDocument& doc, QString const& name) const
 {
     if (!isValid())
     {
         return QDomElement();
     }
 
+    XmlMarshaller marshaller(doc);
+
     QDomElement el(doc.createElement(name));
-    el.appendChild(m_distortionModel.toXml(doc, "distortion-model"));
-    el.setAttribute("depthPerception", m_depthPerception.toString());
-    el.setAttribute("correctCurves", m_correctCurves.toString());
-    el.setAttribute("correctAngle", m_correctAngle.toString());
     el.setAttribute("mode", m_mode == MODE_MANUAL ? "manual" : "auto");
+    el.appendChild(marshaller.pointF(m_corners[TOP_LEFT], "tl"));
+    el.appendChild(marshaller.pointF(m_corners[TOP_RIGHT], "tr"));
+    el.appendChild(marshaller.pointF(m_corners[BOTTOM_RIGHT], "br"));
+    el.appendChild(marshaller.pointF(m_corners[BOTTOM_LEFT], "bl"));
     return el;
 }
 
 double
-DewarpingParams::getAngle() const
+ParamsPerspective::getAngle() const
 {
     double angle = 0.0;
     if (isValid())
@@ -88,10 +96,10 @@ DewarpingParams::getAngle() const
         float sumxh = 0.0f, sumyh = 0.0f;
         float sumxv = 0.0f, sumyv = 0.0f;
         float sumxy, sumd;
-        QPointF point_tl = m_distortionModel.topCurve().polyline().front();
-        QPointF point_tr = m_distortionModel.topCurve().polyline().back();
-        QPointF point_bl = m_distortionModel.bottomCurve().polyline().front();
-        QPointF point_br = m_distortionModel.bottomCurve().polyline().back();
+        QPointF point_tl = corner(TOP_LEFT);
+        QPointF point_tr = corner(TOP_RIGHT);
+        QPointF point_bl = corner(BOTTOM_LEFT);
+        QPointF point_br = corner(BOTTOM_RIGHT);
         x[0] = point_tl.x();
         y[0] = point_tl.y();
         x[1] = point_tr.x();
@@ -146,15 +154,15 @@ DewarpingParams::getAngle() const
 }
 
 double
-DewarpingParams::getAngleOblique() const
+ParamsPerspective::getAngleOblique() const
 {
     double angle = 0.0;
     if (isValid())
     {
-        QPointF point_tl = m_distortionModel.topCurve().polyline().front();
-        QPointF point_tr = m_distortionModel.topCurve().polyline().back();
-        QPointF point_bl = m_distortionModel.bottomCurve().polyline().front();
-        QPointF point_br = m_distortionModel.bottomCurve().polyline().back();
+        QPointF point_tl = corner(TOP_LEFT);
+        QPointF point_tr = corner(TOP_RIGHT);
+        QPointF point_bl = corner(BOTTOM_LEFT);
+        QPointF point_br = corner(BOTTOM_RIGHT);
         QPointF point_l = point_tl + point_bl;
         QPointF point_r = point_tr + point_br;
         QPointF point_t = point_tl + point_tr;
@@ -179,15 +187,15 @@ DewarpingParams::getAngleOblique() const
 }
 
 double
-DewarpingParams::getAngleHor() const
+ParamsPerspective::getAngleHor() const
 {
     double angle = 0.0;
     if (isValid())
     {
-        QPointF point_tl = m_distortionModel.topCurve().polyline().front();
-        QPointF point_tr = m_distortionModel.topCurve().polyline().back();
-        QPointF point_bl = m_distortionModel.bottomCurve().polyline().front();
-        QPointF point_br = m_distortionModel.bottomCurve().polyline().back();
+        QPointF point_tl = corner(TOP_LEFT);
+        QPointF point_tr = corner(TOP_RIGHT);
+        QPointF point_bl = corner(BOTTOM_LEFT);
+        QPointF point_br = corner(BOTTOM_RIGHT);
         QLineF line_t(point_tl, point_tr);
         QLineF line_b(point_bl, point_br);
         double angle_t = line_t.angle();
@@ -202,15 +210,15 @@ DewarpingParams::getAngleHor() const
 }
 
 double
-DewarpingParams::getAngleVert() const
+ParamsPerspective::getAngleVert() const
 {
     double angle = 0.0;
     if (isValid())
     {
-        QPointF point_tl = m_distortionModel.topCurve().polyline().front();
-        QPointF point_tr = m_distortionModel.topCurve().polyline().back();
-        QPointF point_bl = m_distortionModel.bottomCurve().polyline().front();
-        QPointF point_br = m_distortionModel.bottomCurve().polyline().back();
+        QPointF point_tl = corner(TOP_LEFT);
+        QPointF point_tr = corner(TOP_RIGHT);
+        QPointF point_bl = corner(BOTTOM_LEFT);
+        QPointF point_br = corner(BOTTOM_RIGHT);
         QLineF line_l(point_tl, point_bl);
         QLineF line_r(point_tr, point_br);
         double angle_l = line_l.angle();

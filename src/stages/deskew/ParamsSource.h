@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DESKEW_SOURCE_PARAMS_H_
-#define DESKEW_SOURCE_PARAMS_H_
+#ifndef DESKEW_PARAMS_SOURCE_H_
+#define DESKEW_PARAMS_SOURCE_H_
 
 class QDomDocument;
 class QDomElement;
@@ -26,18 +26,14 @@ class QString;
 namespace deskew
 {
 
-class SourceParams
+class ParamsSource
 {
-    // Member-wise copying is OK.
 public:
-    /**
-     * Constructs RotationParams with MODE_AUTO and an invalid compensation angle.
-     */
-    SourceParams();
+    ParamsSource();
 
-    SourceParams(double const& fov, bool const& photo);
+    ParamsSource(double const& fov, bool const& photo);
 
-    SourceParams(QDomElement const& el);
+    ParamsSource(QDomElement const& el);
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
@@ -59,9 +55,9 @@ public:
         m_photo = flg;
     }
 
-    bool operator==(SourceParams const& other) const;
+    bool operator==(ParamsSource const& other) const;
 
-    bool operator!=(SourceParams const& other) const;
+    bool operator!=(ParamsSource const& other) const;
 
 private:
     double m_fov;

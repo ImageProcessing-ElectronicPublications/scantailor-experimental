@@ -341,7 +341,7 @@ ConsoleBatch::setupDeskew(std::set<PageId> allPages)
             deskew::Dependencies deps(QPolygonF()/*XXX*/, rotation);
             deskew::Params params(deps);
             params.setDistortionType(deskew::DistortionType::ROTATION);
-            params.rotationParams().setCompensationAngleDeg(angle);
+            params.getParamsRotation().setCompensationAngleDeg(angle);
             deskew->getSettings()->setPageParams(page, params);
         }
     }

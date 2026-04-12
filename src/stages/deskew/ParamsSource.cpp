@@ -19,24 +19,24 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
-#include "SourceParams.h"
+#include "ParamsSource.h"
 
 namespace deskew
 {
 
-SourceParams::SourceParams()
+ParamsSource::ParamsSource()
     : m_fov(0.7)
     , m_photo(false)
 {
 }
 
-SourceParams::SourceParams(double const& fov, bool const& photo)
+ParamsSource::ParamsSource(double const& fov, bool const& photo)
     : m_fov(fov)
     , m_photo(photo)
 {
 }
 
-SourceParams::SourceParams(QDomElement const& el)
+ParamsSource::ParamsSource(QDomElement const& el)
     : m_photo(el.attribute("photo") == "1")
 {
     double fov = el.attribute("fov").toDouble();
@@ -44,7 +44,7 @@ SourceParams::SourceParams(QDomElement const& el)
 }
 
 QDomElement
-SourceParams::toXml(QDomDocument& doc, QString const& name) const
+ParamsSource::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
     el.setAttribute("photo", (m_photo) ? "1" : "0");
@@ -53,7 +53,7 @@ SourceParams::toXml(QDomDocument& doc, QString const& name) const
 }
 
 bool
-SourceParams::operator==(SourceParams const& other) const
+ParamsSource::operator==(ParamsSource const& other) const
 {
     if (m_photo != other.m_photo)
     {
@@ -68,7 +68,7 @@ SourceParams::operator==(SourceParams const& other) const
 }
 
 bool
-SourceParams::operator!=(SourceParams const& other) const
+ParamsSource::operator!=(ParamsSource const& other) const
 {
     return !(*this == other);
 }

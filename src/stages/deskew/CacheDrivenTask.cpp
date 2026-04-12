@@ -96,7 +96,7 @@ CacheDrivenTask::process(
         case DistortionType::ROTATION:
         {
             auto rotated = std::make_shared<AffineImageTransform>(image_transform);
-            rotated->rotate(params->rotationParams().compensationAngleDeg());
+            rotated->rotate(params->getParamsRotation().compensationAngleDeg());
             new_transform = std::move(rotated);
             break;
         }
@@ -104,20 +104,20 @@ CacheDrivenTask::process(
         {
             std::vector<QPointF> const top_curve
             {
-                params->perspectiveParams().corner(PerspectiveParams::TOP_LEFT),
-                params->perspectiveParams().corner(PerspectiveParams::TOP_RIGHT)
+                params->getParamsPerspective().corner(ParamsPerspective::TOP_LEFT),
+                params->getParamsPerspective().corner(ParamsPerspective::TOP_RIGHT)
             };
             std::vector<QPointF> const bottom_curve
             {
-                params->perspectiveParams().corner(PerspectiveParams::BOTTOM_LEFT),
-                params->perspectiveParams().corner(PerspectiveParams::BOTTOM_RIGHT)
+                params->getParamsPerspective().corner(ParamsPerspective::BOTTOM_LEFT),
+                params->getParamsPerspective().corner(ParamsPerspective::BOTTOM_RIGHT)
             };
             new_transform = std::make_shared<DewarpingImageTransform>(
                                 image_transform.origSize(),
                                 image_transform.origCropArea(),
                                 top_curve,
                                 bottom_curve,
-                                ((params->sourceParams().photo()) ? params->sourceParams().fov() : 0.0),
+                                ((params->getParamsSource().photo()) ? params->getParamsSource().fov() : 0.0),
                                 dewarping::DepthPerception(),
                                 dewarping::DepthPerception(),
                                 dewarping::DepthPerception()
@@ -128,12 +128,12 @@ CacheDrivenTask::process(
         {
             new_transform = std::make_shared<DewarpingImageTransform>(
                                 image_transform.origSize(), image_transform.origCropArea(),
-                                params->dewarpingParams().distortionModel().topCurve().polyline(),
-                                params->dewarpingParams().distortionModel().bottomCurve().polyline(),
-                                ((params->sourceParams().photo()) ? params->sourceParams().fov() : 0.0),
-                                params->dewarpingParams().depthPerception(),
-                                params->dewarpingParams().correctCurves(),
-                                params->dewarpingParams().correctAngle()
+                                params->getParamsDewarping().distortionModel().topCurve().polyline(),
+                                params->getParamsDewarping().distortionModel().bottomCurve().polyline(),
+                                ((params->getParamsSource().photo()) ? params->getParamsSource().fov() : 0.0),
+                                params->getParamsDewarping().depthPerception(),
+                                params->getParamsDewarping().correctCurves(),
+                                params->getParamsDewarping().correctAngle()
                             );
             break;
         }
@@ -171,7 +171,7 @@ CacheDrivenTask::process(
                     thumb_col->thumbnailCache(),
                     thumb_col->maxLogicalThumbSize(),
                     page_info.id(), image_transform,
-                    params->rotationParams().compensationAngleDeg(),
+                    params->getParamsRotation().compensationAngleDeg(),
                     /*grid_visible=*/true
                 )
             );
@@ -181,13 +181,13 @@ CacheDrivenTask::process(
         {
             std::vector<QPointF> const top_curve
             {
-                params->perspectiveParams().corner(PerspectiveParams::TOP_LEFT),
-                params->perspectiveParams().corner(PerspectiveParams::TOP_RIGHT)
+                params->getParamsPerspective().corner(ParamsPerspective::TOP_LEFT),
+                params->getParamsPerspective().corner(ParamsPerspective::TOP_RIGHT)
             };
             std::vector<QPointF> const bottom_curve
             {
-                params->perspectiveParams().corner(PerspectiveParams::BOTTOM_LEFT),
-                params->perspectiveParams().corner(PerspectiveParams::BOTTOM_RIGHT)
+                params->getParamsPerspective().corner(ParamsPerspective::BOTTOM_LEFT),
+                params->getParamsPerspective().corner(ParamsPerspective::BOTTOM_RIGHT)
             };
             thumb.reset(
                 new DewarpingThumbnail(
@@ -209,11 +209,11 @@ CacheDrivenTask::process(
                     thumb_col->thumbnailCache(),
                     thumb_col->maxLogicalThumbSize(),
                     page_info.id(), image_transform,
-                    params->dewarpingParams().distortionModel().topCurve().polyline(),
-                    params->dewarpingParams().distortionModel().bottomCurve().polyline(),
-                    params->dewarpingParams().depthPerception(),
-                    params->dewarpingParams().correctCurves(),
-                    params->dewarpingParams().correctAngle()
+                    params->getParamsDewarping().distortionModel().topCurve().polyline(),
+                    params->getParamsDewarping().distortionModel().bottomCurve().polyline(),
+                    params->getParamsDewarping().depthPerception(),
+                    params->getParamsDewarping().correctCurves(),
+                    params->getParamsDewarping().correctAngle()
                 )
             );
             break;

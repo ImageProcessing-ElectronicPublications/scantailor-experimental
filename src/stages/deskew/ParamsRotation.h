@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DESKEW_ROTATION_PARAMS_H_
-#define DESKEW_ROTATION_PARAMS_H_
+#ifndef DESKEW_PARAMS_ROTATION_H_
+#define DESKEW_PARAMS_ROTATION_H_
 
 #include "AutoManualMode.h"
 
@@ -28,16 +28,16 @@ class QString;
 namespace deskew
 {
 
-class RotationParams
+class ParamsRotation
 {
     // Member-wise copying is OK.
 public:
     /**
-     * Constructs RotationParams with MODE_AUTO and an invalid compensation angle.
+     * Constructs ParamsRotation with MODE_AUTO and an invalid compensation angle.
      */
-    RotationParams();
+    ParamsRotation();
 
-    RotationParams(QDomElement const& el);
+    ParamsRotation(QDomElement const& el);
 
     bool isValid() const
     {

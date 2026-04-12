@@ -122,7 +122,7 @@ Settings::setDistortionType(
 
 void
 Settings::setSource(
-    std::set<PageId> const& pages, SourceParams const& source)
+    std::set<PageId> const& pages, ParamsSource const& source)
 {
     QMutexLocker const locker(&m_mutex);
 
@@ -131,12 +131,12 @@ Settings::setSource(
         PerPageParams::iterator it = m_perPageParams.find(page_id);
         if (it != m_perPageParams.end())
         {
-            it->second.setSourceParams(source);
+            it->second.setParamsSource(source);
         }
         else
         {
             Params params((Dependencies()));
-            params.setSourceParams(source);
+            params.setParamsSource(source);
             Utils::mapSetValue(m_perPageParams, page_id, params);
         }
     }
@@ -153,12 +153,12 @@ Settings::setDepthPerception(
         PerPageParams::iterator it = m_perPageParams.find(page_id);
         if (it != m_perPageParams.end())
         {
-            it->second.dewarpingParams().setDepthPerception(depth_perception);
+            it->second.getParamsDewarping().setDepthPerception(depth_perception);
         }
         else
         {
             Params params((Dependencies()));
-            params.dewarpingParams().setDepthPerception(depth_perception);
+            params.getParamsDewarping().setDepthPerception(depth_perception);
             Utils::mapSetValue(m_perPageParams, page_id, params);
         }
     }
@@ -175,12 +175,12 @@ Settings::setCorrectCurves(
         PerPageParams::iterator it = m_perPageParams.find(page_id);
         if (it != m_perPageParams.end())
         {
-            it->second.dewarpingParams().setCorrectCurves(correct_curves);
+            it->second.getParamsDewarping().setCorrectCurves(correct_curves);
         }
         else
         {
             Params params((Dependencies()));
-            params.dewarpingParams().setCorrectCurves(correct_curves);
+            params.getParamsDewarping().setCorrectCurves(correct_curves);
             Utils::mapSetValue(m_perPageParams, page_id, params);
         }
     }
@@ -197,12 +197,12 @@ Settings::setCorrectAngle(
         PerPageParams::iterator it = m_perPageParams.find(page_id);
         if (it != m_perPageParams.end())
         {
-            it->second.dewarpingParams().setCorrectAngle(correct_angle);
+            it->second.getParamsDewarping().setCorrectAngle(correct_angle);
         }
         else
         {
             Params params((Dependencies()));
-            params.dewarpingParams().setCorrectAngle(correct_angle);
+            params.getParamsDewarping().setCorrectAngle(correct_angle);
             Utils::mapSetValue(m_perPageParams, page_id, params);
         }
     }

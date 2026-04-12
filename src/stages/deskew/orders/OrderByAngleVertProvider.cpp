@@ -57,10 +57,10 @@ OrderByAngleVertProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngleVert();
+            lhs_angle = -lhs_params->getParamsPerspective().getAngleVert();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngleVert();
+            lhs_angle = -lhs_params->getParamsDewarping().getAngleVert();
             break;
         } // switch
     }
@@ -77,10 +77,10 @@ OrderByAngleVertProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngleVert();
+            rhs_angle = -rhs_params->getParamsPerspective().getAngleVert();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngleVert();
+            rhs_angle = -rhs_params->getParamsDewarping().getAngleVert();
             break;
         } // switch
     }

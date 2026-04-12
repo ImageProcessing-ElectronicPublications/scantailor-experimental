@@ -246,9 +246,9 @@ OptionsWidget::depthPerceptionAppliedTo(std::set<PageId> const& pages)
         return;
     }
 
-    m_ptrSettings->setDepthPerception(pages, m_pageParams.dewarpingParams().depthPerception());
-    m_ptrSettings->setCorrectCurves(pages, m_pageParams.dewarpingParams().correctCurves());
-    m_ptrSettings->setCorrectAngle(pages, m_pageParams.dewarpingParams().correctAngle());
+    m_ptrSettings->setDepthPerception(pages, m_pageParams.getParamsDewarping().depthPerception());
+    m_ptrSettings->setCorrectCurves(pages, m_pageParams.getParamsDewarping().correctCurves());
+    m_ptrSettings->setCorrectAngle(pages, m_pageParams.getParamsDewarping().correctAngle());
 
     for (PageId const& page_id : pages)
     {
@@ -264,9 +264,9 @@ OptionsWidget::depthPerceptionAppliedToAllPages(std::set<PageId> const& pages)
         return;
     }
 
-    m_ptrSettings->setDepthPerception(pages, m_pageParams.dewarpingParams().depthPerception());
-    m_ptrSettings->setCorrectCurves(pages, m_pageParams.dewarpingParams().correctCurves());
-    m_ptrSettings->setCorrectAngle(pages, m_pageParams.dewarpingParams().correctAngle());
+    m_ptrSettings->setDepthPerception(pages, m_pageParams.getParamsDewarping().depthPerception());
+    m_ptrSettings->setCorrectCurves(pages, m_pageParams.getParamsDewarping().correctCurves());
+    m_ptrSettings->setCorrectAngle(pages, m_pageParams.getParamsDewarping().correctAngle());
     emit invalidateAllThumbnails();
 }
 
@@ -278,24 +278,24 @@ OptionsWidget::manualDistortionModelSetExternally(
     // we get called both in dewarping and perspective modes.
     if (m_pageParams.distortionType() == DistortionType::WARP)
     {
-        m_pageParams.dewarpingParams().setDistortionModel(model);
-        m_pageParams.dewarpingParams().setMode(MODE_MANUAL);
+        m_pageParams.getParamsDewarping().setDistortionModel(model);
+        m_pageParams.getParamsDewarping().setMode(MODE_MANUAL);
     }
     else if (m_pageParams.distortionType() == DistortionType::PERSPECTIVE)
     {
-        m_pageParams.perspectiveParams().setCorner(
-            PerspectiveParams::TOP_LEFT, model.topCurve().polyline().front()
+        m_pageParams.getParamsPerspective().setCorner(
+            ParamsPerspective::TOP_LEFT, model.topCurve().polyline().front()
         );
-        m_pageParams.perspectiveParams().setCorner(
-            PerspectiveParams::TOP_RIGHT, model.topCurve().polyline().back()
+        m_pageParams.getParamsPerspective().setCorner(
+            ParamsPerspective::TOP_RIGHT, model.topCurve().polyline().back()
         );
-        m_pageParams.perspectiveParams().setCorner(
-            PerspectiveParams::BOTTOM_LEFT, model.bottomCurve().polyline().front()
+        m_pageParams.getParamsPerspective().setCorner(
+            ParamsPerspective::BOTTOM_LEFT, model.bottomCurve().polyline().front()
         );
-        m_pageParams.perspectiveParams().setCorner(
-            PerspectiveParams::BOTTOM_RIGHT, model.bottomCurve().polyline().back()
+        m_pageParams.getParamsPerspective().setCorner(
+            ParamsPerspective::BOTTOM_RIGHT, model.bottomCurve().polyline().back()
         );
-        m_pageParams.perspectiveParams().setMode(MODE_MANUAL);
+        m_pageParams.getParamsPerspective().setMode(MODE_MANUAL);
     }
     else
     {
@@ -310,8 +310,8 @@ OptionsWidget::manualDistortionModelSetExternally(
 void
 OptionsWidget::manualDeskewAngleSetExternally(double const degrees)
 {
-    m_pageParams.rotationParams().setCompensationAngleDeg(degrees);
-    m_pageParams.rotationParams().setMode(MODE_MANUAL);
+    m_pageParams.getParamsRotation().setCompensationAngleDeg(degrees);
+    m_pageParams.getParamsRotation().setMode(MODE_MANUAL);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
 
     updateModeIndication(MODE_MANUAL);
@@ -359,9 +359,9 @@ OptionsWidget::postUpdateUI(Params const& page_params)
 
     if ((page_params.distortionType() == DistortionType::WARP) || (page_params.distortionType() == DistortionType::PERSPECTIVE))
     {
-        bool const photo = page_params.sourceParams().photo();
+        bool const photo = page_params.getParamsSource().photo();
         ui.photoCheckBox->setChecked(photo);
-        double const fov = page_params.sourceParams().fov();
+        double const fov = page_params.getParamsSource().fov();
         ui.fovSpinBox->setValue(fov);
         ui.fovSpinBox->setEnabled(photo);
         ui.sourcePanel->setVisible( true );
@@ -373,16 +373,16 @@ OptionsWidget::postUpdateUI(Params const& page_params)
 
     if (page_params.distortionType() == DistortionType::ROTATION)
     {
-        double const angle = page_params.rotationParams().compensationAngleDeg();
+        double const angle = page_params.getParamsRotation().compensationAngleDeg();
         setSpinBoxKnownState(degreesToSpinBox(angle));
     }
     else if (page_params.distortionType() == DistortionType::WARP)
     {
-        double const depth_perception = page_params.dewarpingParams().depthPerception().value();
+        double const depth_perception = page_params.getParamsDewarping().depthPerception().value();
         ui.depthPerceptionSlider->setValue(depthPerceptionToSlider(depth_perception));
-        double const correct_curves = page_params.dewarpingParams().correctCurves().value();
+        double const correct_curves = page_params.getParamsDewarping().correctCurves().value();
         ui.correctCurvesSlider->setValue(depthPerceptionToSlider(correct_curves));
-        double const correct_angle = page_params.dewarpingParams().correctAngle().value();
+        double const correct_angle = page_params.getParamsDewarping().correctAngle().value();
         ui.correctAngleSlider->setValue(depthPerceptionToSlider(correct_angle));
     }
 }
@@ -451,7 +451,7 @@ OptionsWidget::photoToggled(bool const checked)
         return;
     }
 
-    m_pageParams.sourceParams().setPhoto(checked);
+    m_pageParams.getParamsSource().setPhoto(checked);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
     ui.fovSpinBox->setEnabled(checked);
 }
@@ -464,7 +464,7 @@ OptionsWidget::fovSpinBoxChanged(double const value)
         return;
     }
 
-    m_pageParams.sourceParams().setFov(value);
+    m_pageParams.getParamsSource().setFov(value);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
 }
 
@@ -496,7 +496,7 @@ OptionsWidget::sourceAppliedTo(std::set<PageId> const& pages)
         return;
     }
 
-    m_ptrSettings->setSource(pages, m_pageParams.sourceParams());
+    m_ptrSettings->setSource(pages, m_pageParams.getParamsSource());
 }
 
 void
@@ -508,8 +508,8 @@ OptionsWidget::spinBoxValueChanged(double const value)
     }
 
     double const degrees = spinBoxToDegrees(value);
-    m_pageParams.rotationParams().setCompensationAngleDeg(degrees);
-    m_pageParams.rotationParams().setMode(MODE_MANUAL);
+    m_pageParams.getParamsRotation().setCompensationAngleDeg(degrees);
+    m_pageParams.getParamsRotation().setMode(MODE_MANUAL);
 
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
     updateModeIndication(MODE_MANUAL);
@@ -533,31 +533,31 @@ OptionsWidget::modeChanged(bool const auto_mode)
     case DistortionType::ROTATION:
         if (auto_mode)
         {
-            m_pageParams.rotationParams().invalidate();
+            m_pageParams.getParamsRotation().invalidate();
         }
         else
         {
-            m_pageParams.rotationParams().setMode(MODE_MANUAL);
+            m_pageParams.getParamsRotation().setMode(MODE_MANUAL);
         }
         break;
     case DistortionType::PERSPECTIVE:
         if (auto_mode)
         {
-            m_pageParams.perspectiveParams().invalidate();
+            m_pageParams.getParamsPerspective().invalidate();
         }
         else
         {
-            m_pageParams.perspectiveParams().setMode(MODE_MANUAL);
+            m_pageParams.getParamsPerspective().setMode(MODE_MANUAL);
         }
         break;
     case DistortionType::WARP:
         if (auto_mode)
         {
-            m_pageParams.dewarpingParams().invalidate();
+            m_pageParams.getParamsDewarping().invalidate();
         }
         else
         {
-            m_pageParams.dewarpingParams().setMode(MODE_MANUAL);
+            m_pageParams.getParamsDewarping().setMode(MODE_MANUAL);
         }
         break;
     }
@@ -578,7 +578,7 @@ OptionsWidget::depthPerceptionSliderMoved(int value)
     }
 
     double const depth_perception = sliderToDepthPerception(value);
-    m_pageParams.dewarpingParams().setDepthPerception(depth_perception);
+    m_pageParams.getParamsDewarping().setDepthPerception(depth_perception);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
 
     emit depthPerceptionSetByUser(depth_perception);
@@ -604,7 +604,7 @@ OptionsWidget::correctCurvesSliderMoved(int value)
     }
 
     double const correct_curves = sliderToDepthPerception(value);
-    m_pageParams.dewarpingParams().setCorrectCurves(correct_curves);
+    m_pageParams.getParamsDewarping().setCorrectCurves(correct_curves);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
 
     emit correctCurvesSetByUser(correct_curves);
@@ -630,7 +630,7 @@ OptionsWidget::correctAngleSliderMoved(int value)
     }
 
     double const correct_angle = sliderToDepthPerception(value);
-    m_pageParams.dewarpingParams().setCorrectAngle(correct_angle);
+    m_pageParams.getParamsDewarping().setCorrectAngle(correct_angle);
     m_ptrSettings->setPageParams(m_pageId, m_pageParams);
 
     emit correctAngleSetByUser(correct_angle);

@@ -57,10 +57,10 @@ OrderByAngleHorProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngleHor();
+            lhs_angle = -lhs_params->getParamsPerspective().getAngleHor();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngleHor();
+            lhs_angle = -lhs_params->getParamsDewarping().getAngleHor();
             break;
         } // switch
     }
@@ -77,10 +77,10 @@ OrderByAngleHorProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngleHor();
+            rhs_angle = -rhs_params->getParamsPerspective().getAngleHor();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngleHor();
+            rhs_angle = -rhs_params->getParamsDewarping().getAngleHor();
             break;
         } // switch
     }

@@ -57,10 +57,10 @@ OrderByAngleObliqueProvider::precedes(
             lhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            lhs_angle = -lhs_params->perspectiveParams().getAngleOblique();
+            lhs_angle = -lhs_params->getParamsPerspective().getAngleOblique();
             break;
         case DistortionType::WARP:
-            lhs_angle = -lhs_params->dewarpingParams().getAngleOblique();
+            lhs_angle = -lhs_params->getParamsDewarping().getAngleOblique();
             break;
         } // switch
     }
@@ -77,10 +77,10 @@ OrderByAngleObliqueProvider::precedes(
             rhs_angle = 0.0;
             break;
         case DistortionType::PERSPECTIVE:
-            rhs_angle = -rhs_params->perspectiveParams().getAngleOblique();
+            rhs_angle = -rhs_params->getParamsPerspective().getAngleOblique();
             break;
         case DistortionType::WARP:
-            rhs_angle = -rhs_params->dewarpingParams().getAngleOblique();
+            rhs_angle = -rhs_params->getParamsDewarping().getAngleOblique();
             break;
         } // switch
     }

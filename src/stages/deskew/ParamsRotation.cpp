@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "RotationParams.h"
+#include "ParamsRotation.h"
 #include "../../Utils.h"
 #include <QDomDocument>
 #include <QDomElement>
@@ -26,27 +26,27 @@
 namespace deskew
 {
 
-RotationParams::RotationParams()
+ParamsRotation::ParamsRotation()
     : m_compensationAngleDeg(0)
     , m_mode(MODE_AUTO)
     , m_isValid(false)
 {
 }
 
-RotationParams::RotationParams(QDomElement const& el)
+ParamsRotation::ParamsRotation(QDomElement const& el)
     : m_mode(el.attribute("mode") == QLatin1String("manual") ? MODE_MANUAL : MODE_AUTO)
 {
     m_compensationAngleDeg = el.attribute("angle").toDouble(&m_isValid);
 }
 
 void
-RotationParams::invalidate()
+ParamsRotation::invalidate()
 {
-    *this = RotationParams();
+    *this = ParamsRotation();
 }
 
 void
-RotationParams::setCompensationAngleDeg(double angle_deg)
+ParamsRotation::setCompensationAngleDeg(double angle_deg)
 {
     using namespace std;
 
@@ -58,7 +58,7 @@ RotationParams::setCompensationAngleDeg(double angle_deg)
 }
 
 QDomElement
-RotationParams::toXml(QDomDocument& doc, QString const& name) const
+ParamsRotation::toXml(QDomDocument& doc, QString const& name) const
 {
     if (!m_isValid)
     {

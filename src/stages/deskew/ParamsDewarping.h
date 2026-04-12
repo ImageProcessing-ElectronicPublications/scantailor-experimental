@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DESKEW_DEWARPING_PARAMS_H_
-#define DESKEW_DEWARPING_PARAMS_H_
+#ifndef DESKEW_PARAMS_DEWARPING_H_
+#define DESKEW_PARAMS_DEWARPING_H_
 
 #include "AutoManualMode.h"
 #include "dewarping/DistortionModel.h"
@@ -30,16 +30,16 @@ class QString;
 namespace deskew
 {
 
-class DewarpingParams
+class ParamsDewarping
 {
     // Member-wise copying is OK.
 public:
     /** Defaults to invalid state with MODE_AUTO. */
-    DewarpingParams();
+    ParamsDewarping();
 
-    DewarpingParams(QDomElement const& el);
+    ParamsDewarping(QDomElement const& el);
 
-    ~DewarpingParams();
+    ~ParamsDewarping();
 
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 
