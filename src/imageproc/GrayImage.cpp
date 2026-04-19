@@ -2890,6 +2890,40 @@ void grayDeBlur5InPlace(
         unsigned char* src_line = src.data();
         int const src_stride = src.stride();
 
+        /* Adapt */
+        GrayImage gadapt = gaussBlur(src, radius, radius);
+        if (gadapt.isNull())
+        {
+            return;
+        }
+        unsigned char* gadapt_line = gadapt.data();
+        int const gadapt_stride = gadapt.stride();
+
+        GrayImage gadapt2 = gaussBlur(gadapt, radius, radius);
+        if (gadapt2.isNull())
+        {
+            return;
+        }
+        unsigned char* gadapt2_line = gadapt2.data();
+        int const gadapt2_stride = gadapt2.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const adapt = gadapt_line[x];
+                int const adapt2 = gadapt2_line[x];
+
+                int delta = (adapt - adapt2) + 128;
+                delta = (delta < 0) ? 0 : (delta < 255) ? delta : 255;
+                gadapt_line[x] = (unsigned char) delta;
+            }
+            gadapt_line += gadapt_stride;
+            gadapt2_line += gadapt2_stride;
+        }
+        gadapt2 = GrayImage();
+        /* end Adapt */
+
         GrayImage giter(src);
         if (giter.isNull())
         {
@@ -2909,18 +2943,18 @@ void grayDeBlur5InPlace(
             int const gmean_stride = gmean.stride();
 
             src_line = src.data();
+            gadapt_line = gadapt.data();
             giter_line = giter.data();
             for (int y = 0; y < h; y++)
             {
                 for (int x = 0; x < w; x++)
                 {
                     int const origin = src_line[x];
+                    int const adapt = gadapt_line[x];
                     int const mean = gmean_line[x];
                     int iter = giter_line[x];
 
-                    int delta = (mean - origin) + 128;
-                    delta *= delta;
-                    delta >>= 7;
+                    int delta = (mean - origin - adapt) + 256;
                     delta -= 128;
                     iter -= delta;
 
@@ -2928,10 +2962,12 @@ void grayDeBlur5InPlace(
                     giter_line[x] = (unsigned char) iter;
                 }
                 src_line += src_stride;
+                gadapt_line += gadapt_stride;
                 gmean_line += gmean_stride;
                 giter_line += giter_stride;
             }
         }
+        gadapt = GrayImage();
 
         src_line = src.data();
         giter_line = giter.data();
