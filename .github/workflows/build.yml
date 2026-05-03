@@ -1,0 +1,129 @@
+name: Build ScanTailor Experimental
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          ninja-build \
+          pkg-config \
+          libeigen3-dev \
+          libboost-dev \
+          libboost-test-dev \
+          libboost-system-dev \
+          qt6-base-dev \
+          qt6-tools-dev \
+          qt6-tools-dev-tools \
+          libqt6opengl6-dev \
+          libqt6svg6-dev \
+          libqt6xml6 \
+          libjpeg-dev \
+          libpng-dev \
+          libtiff-dev \
+          zlib1g-dev \
+          libopencv-dev
+          
+    - name: Verify Eigen3 installation
+      run: |
+        pkg-config --exists eigen3 && echo "Eigen3 found" || echo "Eigen3 not found"
+        find /usr/include -name "Eigen" -type d 2>/dev/null || true
+        find /usr/include -name "eigen3" -type d 2>/dev/null || true
+        
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/cmake/Qt6" \
+          -DST_USE_QT6=ON \
+          -DEIGEN3_INCLUDE_DIR=/usr/include/eigen3 \
+          -G Ninja
+          
+    - name: Build
+      run: cmake --build build --parallel $(nproc)
+      
+    - name: Test installation
+      run: |
+        cd build
+        ls -la
+        file scantailor-experimental* || true
+        
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies via Homebrew
+      run: |
+        brew update
+        brew install \
+          cmake \
+          ninja \
+          eigen \
+          boost \
+          qt6 \
+          jpeg \
+          libpng \
+          libtiff \
+          opencv
+          
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="$(brew --prefix qt6)" \
+          -DST_USE_QT6=ON \
+          -DEIGEN3_INCLUDE_DIR="$(brew --prefix eigen)/include/eigen3" \
+          -G Ninja
+          
+    - name: Build
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu)
+      
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v1.1
+      
+    - name: Install vcpkg dependencies
+      run: |
+        vcpkg install \
+          eigen3:x64-windows \
+          boost:x64-windows \
+          qt6:x64-windows \
+          libjpeg-turbo:x64-windows \
+          libpng:x64-windows \
+          tiff:x64-windows \
+          zlib:x64-windows
+          
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+          -DST_USE_QT6=ON \
+          -G "Visual Studio 17 2022" \
+          -A x64
+          
+    - name: Build
+      run: cmake --build build --config Release --parallel

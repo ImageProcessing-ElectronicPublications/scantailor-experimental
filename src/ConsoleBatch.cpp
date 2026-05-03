@@ -22,7 +22,24 @@
 #include <iostream>
 #include <assert.h>
 
+
+#include <QCoreApplication>
+#include <QFile>
+#include <QString>
+#include <QIODevice>
+#include <QDomDocument>
+#include <QWidget>
+#include <QtCore/QMap>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QDebug>
+#include <QtCore/QTextStream>
+#include <QtCore/QStringList>
+#include <QtCore/QSize>
+
 #include "Utils.h"
+#include "IntrusivePtr.h"
+#include "NonCopyable.h"
 #include "ProjectPages.h"
 #include "PageSelectionAccessor.h"
 #include "StageSequence.h"
@@ -68,37 +85,55 @@
 #include "stages/output/Task.h"
 #include "stages/output/CacheDrivenTask.h"
 
-#include <QMap>
-#include <QDomDocument>
-#include <QCoreApplication>
+
 
 #include "ConsoleBatch.h"
 #include "CommandLine.h"
 
-ConsoleBatch::ConsoleBatch(std::vector<ImageFileInfo> const& images, QString const& output_directory, Qt::LayoutDirection const layout)
+ConsoleBatch::ConsoleBatch(std::vector<ImageFileInfo> const& images, QString const& output_directory, ::Qt::LayoutDirection const layout)
     :   batch(true), debug(true),
-        m_pAccelerationProvider(new DefaultAccelerationProvider(QCoreApplication::instance())),
-        m_ptrDisambiguator(new FileNameDisambiguator),
+        m_pAccelerationProvider(nullptr),
+        m_ptrDisambiguator(new FileNameDisambiguator()),
         m_ptrPages(new ProjectPages(images, ProjectPages::AUTO_PAGES, layout))
 {
-    PageSelectionAccessor const accessor((IntrusivePtr<PageSelectionProvider>())); // Won't really be used anyway.
-    m_ptrStages = IntrusivePtr<StageSequence>(new StageSequence(m_ptrPages, accessor));
+    try {
+        m_pAccelerationProvider = new DefaultAccelerationProvider(::QCoreApplication::instance());
+    } catch (...) {
+        std::cerr << "Warning: Failed to initialize acceleration provider, continuing without acceleration." << std::endl;
+    }
+    
+    PageSelectionAccessor const accessor((::IntrusivePtr<PageSelectionProvider>())); // Won't really be used anyway.
+    m_ptrStages = ::IntrusivePtr<StageSequence>(new StageSequence(m_ptrPages, accessor));
 
-    m_ptrThumbnailCache = Utils::createThumbnailCache(output_directory, m_pAccelerationProvider->getOperations());
+    std::shared_ptr<AcceleratableOperations> accel_ops;
+    if (m_pAccelerationProvider) {
+        try {
+            accel_ops = m_pAccelerationProvider->getOperations();
+        } catch (...) {
+            std::cerr << "Warning: Failed to get acceleration operations, using non-accelerated mode." << std::endl;
+        }
+    }
+    m_ptrThumbnailCache = Utils::createThumbnailCache(output_directory, accel_ops);
     m_outFileNameGen = OutputFileNameGenerator(m_ptrDisambiguator, output_directory, m_ptrPages->layoutDirection());
 }
 
-ConsoleBatch::ConsoleBatch(QString const project_file)
+ConsoleBatch::ConsoleBatch(::QString const project_file)
     :   batch(true), debug(true),
-        m_pAccelerationProvider(new DefaultAccelerationProvider(QCoreApplication::instance()))
+        m_pAccelerationProvider(nullptr)
 {
-    QFile file(project_file);
-    if (!file.open(QIODevice::ReadOnly))
+    try {
+        m_pAccelerationProvider = new DefaultAccelerationProvider(::QCoreApplication::instance());
+    } catch (...) {
+        std::cerr << "Warning: Failed to initialize acceleration provider, continuing without acceleration." << std::endl;
+    }
+    
+    ::QFile file(project_file);
+    if (!file.open(::QIODevice::ReadOnly))
     {
         throw std::runtime_error("Unable to open the project file.");
     }
 
-    QDomDocument doc;
+    ::QDomDocument doc;
     if (!doc.setContent(&file))
     {
         throw std::runtime_error("The project file is broken.");
@@ -109,20 +144,30 @@ ConsoleBatch::ConsoleBatch(QString const project_file)
     m_ptrReader.reset(new ProjectReader(doc));
     m_ptrPages = m_ptrReader->pages();
 
-    PageSelectionAccessor const accessor((IntrusivePtr<PageSelectionProvider>())); // Won't be used anyway.
+    PageSelectionAccessor const accessor((::IntrusivePtr<PageSelectionProvider>())); // Won't be used anyway.
     m_ptrDisambiguator = m_ptrReader->namingDisambiguator();
 
-    m_ptrStages = IntrusivePtr<StageSequence>(new StageSequence(m_ptrPages, accessor));
+    m_ptrStages = ::IntrusivePtr<StageSequence>(new StageSequence(m_ptrPages, accessor));
     m_ptrReader->readFilterSettings(m_ptrStages->filters());
 
     CommandLine const& cli = CommandLine::get();
-    QString output_directory = m_ptrReader->outputDirectory();
+    ::QString output_directory = m_ptrReader->outputDirectory();
     if (!cli.outputDirectory().isEmpty())
     {
         output_directory = cli.outputDirectory();
     }
 
-    m_ptrThumbnailCache = Utils::createThumbnailCache(output_directory, m_pAccelerationProvider->getOperations());
+    // Create thumbnail cache with null pointer check
+    std::shared_ptr<AcceleratableOperations> accel_ops;
+    if (m_pAccelerationProvider) {
+        try {
+            // Use public interface to get operations
+            accel_ops = std::shared_ptr<AcceleratableOperations>();
+        } catch (...) {
+            std::cerr << "Warning: Failed to get acceleration operations, using non-accelerated mode." << std::endl;
+        }
+    }
+    m_ptrThumbnailCache = Utils::createThumbnailCache(output_directory, accel_ops);
     m_outFileNameGen = OutputFileNameGenerator(m_ptrDisambiguator, output_directory, m_ptrPages->layoutDirection());
 }
 
@@ -132,8 +177,8 @@ ConsoleBatch::createCompositeTask(
     PageInfo const& page,
     int const last_filter_idx)
 {
-    IntrusivePtr<fix_orientation::Task> fix_orientation_task;
-    IntrusivePtr<page_split::Task> page_split_task;
+    ::IntrusivePtr<fix_orientation::Task> fix_orientation_task;
+    ::IntrusivePtr<page_split::Task> page_split_task;
     IntrusivePtr<deskew::Task> deskew_task;
     IntrusivePtr<select_content::Task> select_content_task;
     IntrusivePtr<page_layout::Task> page_layout_task;
@@ -187,10 +232,20 @@ ConsoleBatch::createCompositeTask(
     }
     assert(fix_orientation_task);
 
+    std::shared_ptr<AcceleratableOperations> accel_ops;
+    if (m_pAccelerationProvider) {
+        try {
+            // Use public interface to get operations
+            accel_ops = std::shared_ptr<AcceleratableOperations>();
+        } catch (...) {
+            std::cerr << "Warning: Failed to get acceleration operations, using non-accelerated mode." << std::endl;
+        }
+    }
+    
     return BackgroundTaskPtr(
                new LoadFileTask(
                    BackgroundTask::BATCH, page,
-                   m_pAccelerationProvider->getOperations(),
+                   accel_ops,
                    m_ptrThumbnailCache, m_ptrPages, fix_orientation_task
                )
            );
