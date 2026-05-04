@@ -594,6 +594,7 @@ GrayImage grayBiModalTiledMap(
 
 /*
  * niblack = mean - k * stderr, k = 0.2
+ * mean = BlurBox(I, radius), radius = 100
  * modification by zvezdochiot:
  * niblack = mean - k * (stderr - delta), k = 0.2, delta = 0
  */
@@ -744,6 +745,7 @@ void grayBGtoMap(
 
 /*
  * sauvola = mean * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ * mean = BlurBox(I, radius), radius = 100
  * modification by zvezdochiot:
  * sauvola = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
  *      base = mean, frac_s = stderr / 128.0, frac_d = delta / 128.0
@@ -803,6 +805,7 @@ GrayImage graySauvolaMap(
 
 /*
  * wolf = mean - k * (mean - min_v) * (1.0 - stderr / stdmax), k = 0.3
+ * mean = BlurBox(I, radius), radius = 100
  * modification by zvezdochiot:
  * wolf = base * (1.0 - k * (1.0 - (frac_sn + frac_d))) + min_v, k = 0.3, delta = 0
  *      base = mean - min_v, frac_sn = stderr / stdmax, frac_d = delta / 128.0
@@ -886,6 +889,7 @@ GrayImage grayWolfMap(
 /*
  * window = mean * (1 - k * md / kd), k = 1.0
  * where:
+ * mean = BlurBox(I, radius), radius = 50
  * md = (mean + 1) / (meanFull + deviation + 1)
  * kd = 1 + kdm * kds
  * kdm = (2 * meanFull + 1) / (deviation + 1)
@@ -976,9 +980,8 @@ GrayImage grayWindowMap(
 
 /*
  * LCaM = k * [mean + contrast * (256 - origin + delta) / 256], k = 0.75, delta = 0
+ *      mean = BlurBox(I, radius), radius = 5
  *      contrast = Imax - Imin
- *      mean = integral(I,w) / w
- *      w = (2 * radius + 1) * (2 * radius + 1), radius = 5
 */
 GrayImage grayLCaMMap(
     GrayImage const& src,
@@ -1037,6 +1040,7 @@ GrayImage grayLCaMMap(
 
 /*
  * bradley = mean * (1.0 - k), k = 0.2
+ * mean = BlurBox(I, radius), radius = 100
  */
 GrayImage grayBradleyMap(
     GrayImage const& src,
@@ -1080,6 +1084,7 @@ GrayImage grayBradleyMap(
 
 /*
  * nick = mean - k * sqrt(stdev * stdev + cnick * mean * mean), k = 0.10
+ * mean = BlurBox(I, radius), radius = 100
  * modification by zvezdochiot:
  * cnick = (max_delta - delta) / (max_delta - min_delta);
  */
@@ -1138,6 +1143,7 @@ GrayImage grayNickMap(
 
 /*
  * grad = mean * k + meanG * (1.0 - k), meanG = mean(I * G) / mean(G), G = |I - mean|, k = 0.75
+ * mean = BlurGauss(I, radius), radius = 10
  * modification by zvezdochiot:
  * mean = mean + delta, delta = 0
  */
@@ -1200,6 +1206,7 @@ GrayImage grayGradMap(
 
 /*
  * singh = mean * (1.0 - k * (1.0 - dI / (256 - dI))), k = 0.2
+ * mean = BlurBox(I, radius), radius = 100
  * dI = origin - mean
  * modification by zvezdochiot:
  * singh = base * (1.0 - k * 0.5 * (1.0 - (frac_s + frac_d))), k = 0.3, delta = 0
@@ -1256,6 +1263,7 @@ GrayImage graySinghMap(
 
 /*
  * fox= base * (1.0 - k * 0.5 * (1.0 - (frac_sn + frac_d))) +  min_v, k = 0.3, delta = 0
+ *      mean = BlurBox(I, radius), radius = 100
  *      base = mean - min_v, dI = origin - mean, frac_s = dI / (256 - dI), frac_sn = frac_s / max(frac_s), frac_d = delta / 128.0
  */
 GrayImage grayFoxMap(
@@ -1333,6 +1341,7 @@ GrayImage grayFoxMap(
 
 /*
  * WAN = (mean + max) / 2 * (1.0 + k * (stderr / 128.0 - 1.0)), k = 0.34
+ *      mean = BlurBox(I, radius), radius = 100
  * modification by zvezdochiot:
  * WAN = base * (1.0 - k * (1.0 - (frac_s + frac_d))), k = 0.30, delta = 0
  *      base = (mean + max) / 2, frac_s = stderr / 128.0, frac_d = delta / 128.0
@@ -1399,6 +1408,68 @@ GrayImage grayWANMap(
 
     return gmean;
 }
+
+/*
+ * OBBPM = mean * (1.0 - k * (1.0 - (frac_s + frac_d))) * kos , k = 0.1
+ * mean = BlurBox(I, radius), radius = 100
+ * frac_s = (s - mean) / R
+ * s = overlay(origin, origin)
+ * kos = 0.5 * (1.0  + origin / s)
+ * frac_d = delta / R
+ * R = 128.0
+ */
+GrayImage grayOBBPMMap(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta)
+{
+    if (src.isNull())
+    {
+        return GrayImage();
+    }
+    GrayImage gmean = grayMapMean(src, radius);
+    if (gmean.isNull())
+    {
+        return GrayImage(src);
+    }
+
+    if (radius > 0)
+    {
+        float const R = 128.0f;
+        float const Rf = (R + R - 1.0f);
+        float const Rinv = 1.0f / R;
+        int const w = src.width();
+        int const h = src.height();
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gmean_line = gmean.data();
+        int const gmean_stride = gmean.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                float const origin = src_line[x];
+                float const mean = gmean_line[x];
+
+                float const s = (origin < R) ? (origin * origin * Rinv) : (Rf - (Rf - origin) * (Rf - origin) * Rinv);
+                float const frac_s = (s - mean) * Rinv;
+                float const frac_d = (float) delta * Rinv;
+                float const part = (1.0f - (frac_s + frac_d));
+                float const thres = mean * (1.0f - k * part);
+                float threshold = thres * 0.5f * (1.0f + (origin + 1.0f) / (s + 1.0f));
+
+                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                gmean_line[x] = (unsigned char) threshold;
+            }
+            src_line += src_stride;
+            gmean_line += gmean_stride;
+        }
+    }
+
+    return gmean;
+}  // grayOBBPMMap
 
 GrayImage grayMScaleMap(
     GrayImage const& src,

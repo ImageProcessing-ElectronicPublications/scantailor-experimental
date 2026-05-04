@@ -319,6 +319,22 @@ IMAGEPROC_EXPORT BinaryImage binarizeWAN(
     unsigned char upper_bound = 255);
 
 /**
+ * \brief Image binarization using OBBPM's local thresholding method.
+ *
+ * O. Imocha Singh and T. Romen Singh / Journal of Computer Science 2017, 13 (11): 667.673
+ * DOI: 10.3844/jcssp.2017.667.673
+ *
+ * This Overlay mod BBPM.
+ */
+IMAGEPROC_EXPORT BinaryImage binarizeOBBPM(
+    GrayImage const& src,
+    int radius = 100,
+    float k = 0.10f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+
+/**
  * \brief Image binarization using EdgeDiv (EdgePlus & BlurDiv) local/global thresholding method.
  *
  * EdgeDiv, zvezdochiot 2023. "Adaptive/global document image binarization".

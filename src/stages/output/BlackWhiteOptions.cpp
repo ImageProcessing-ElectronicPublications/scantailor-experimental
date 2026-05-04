@@ -244,6 +244,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_WAN;
     }
+    else if (str == "OBBPM")
+    {
+        return T_OBBPM;
+    }
     else if (str == "edgeplus")
     {
         return T_EDGEPLUS;
@@ -338,6 +342,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_WAN:
         str = "WAN";
+        break;
+    case T_OBBPM:
+        str = "OBBPM";
         break;
     case T_EDGEPLUS:
         str = "edgeplus";

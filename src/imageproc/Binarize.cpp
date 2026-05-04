@@ -924,6 +924,34 @@ BinaryImage binarizeWAN(
     return bw_img;
 }
 
+/*
+ * OBBPM = mean * (1.0 - k * (1.0 - (frac_s + frac_d))) * kos , k = 0.1
+ * mean = BlurBox(I, radius), radius = 100
+ * frac_s = (s - mean) / R
+ * s = overlay(origin, origin)
+ * kos = 0.5 * (1.0  + origin / s)
+ * frac_d = delta / R
+ * R = 128.0
+ */
+BinaryImage binarizeOBBPM(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    GrayImage threshold_map(grayOBBPMMap(src, radius, k, delta));
+    BinaryImage bw_img(binarizeFromMap(src, threshold_map, 0, bound_lower, bound_upper));
+
+    return bw_img;
+}
+
 BinaryImage binarizeEdgeDiv(
     GrayImage const& src,
     int const radius,

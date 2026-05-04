@@ -1270,6 +1270,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeWAN(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_OBBPM:
+        {
+            binarized = binarizeOBBPM(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         case T_EDGEPLUS:
         {
             binarized = binarizeEdgeDiv(gray, radius, threshold_coef, 0.0, threshold_delta, bound_lower, bound_upper);

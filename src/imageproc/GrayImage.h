@@ -240,6 +240,11 @@ IMAGEPROC_EXPORT GrayImage grayWANMap(
     int radius = 100,
     float k = 0.30f,
     int delta = 0);
+IMAGEPROC_EXPORT GrayImage grayOBBPMMap(
+    GrayImage const& src,
+    int radius = 100,
+    float k = 0.10f,
+    int delta = 0);
 IMAGEPROC_EXPORT GrayImage grayMScaleMap(
     GrayImage const& src,
     int radius = 10,
