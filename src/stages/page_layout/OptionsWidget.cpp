@@ -165,6 +165,10 @@ OptionsWidget::OptionsWidget(
         this, SLOT(matchSizeAffineToggled(bool))
     );
     connect(
+        matchSizeSubRb, SIGNAL(toggled(bool)),
+        this, SLOT(matchSizeSubToggled(bool))
+    );
+    connect(
         applyAlignmentBtn, SIGNAL(clicked()),
         this, SLOT(showApplyAlignmentDialog())
     );
@@ -240,6 +244,9 @@ OptionsWidget::preUpdateUI(
             break;
         case MatchSizeMode::M_AFFINE:
             matchSizeAffineRb->setChecked(true);
+            break;
+        case MatchSizeMode::M_SUB:
+            matchSizeSubRb->setChecked(true);
             break;
         }
     }
@@ -433,6 +440,21 @@ OptionsWidget::matchSizeAffineToggled(bool selected)
     }
 
     m_matchSizeMode.set(MatchSizeMode::M_AFFINE);
+
+    enableDisableAlignmentButtons();
+    emit matchSizeModeChanged(m_matchSizeMode);
+    updateSizeDisplay();
+}
+
+void
+OptionsWidget::matchSizeSubToggled(bool selected)
+{
+    if (!selected || m_ignoreMatchSizeModeChanges)
+    {
+        return;
+    }
+
+    m_matchSizeMode.set(MatchSizeMode::M_SUB);
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);

@@ -16,12 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Params.h"
-#include "XmlMarshaller.h"
-#include "XmlUnmarshaller.h"
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
+#include "Params.h"
+#include "XmlMarshaller.h"
+#include "XmlUnmarshaller.h"
 
 namespace page_layout
 {
@@ -32,11 +32,11 @@ Params::Params(
     MatchSizeMode const& match_size_mode,
     Alignment const& alignment,
     Framings const& framings)
-    : m_hardMargins(hard_margins),
-      m_contentSize(content_size),
-      m_matchSizeMode(match_size_mode),
-      m_alignment(alignment),
-      m_framings(framings)
+    : m_hardMargins(hard_margins)
+    , m_contentSize(content_size)
+    , m_matchSizeMode(match_size_mode)
+    , m_alignment(alignment)
+    , m_framings(framings)
 {
 }
 

@@ -609,7 +609,7 @@ ImageView::dragFinished()
     RelativeMargins const margins(calcHardMargins());
     AggregateSizeChanged const agg_size_changed(commitHardMargins(margins));
 
-    if ((m_matchSizeMode == MatchSizeMode::M_SCALE) || (m_matchSizeMode == MatchSizeMode::M_AFFINE))
+    if ((m_matchSizeMode == MatchSizeMode::M_SCALE) || (m_matchSizeMode == MatchSizeMode::M_AFFINE) || (m_matchSizeMode == MatchSizeMode::M_SUB))
     {
         // In this mode, adjusting the margins affects scaling applied to the image itself.
         recalcBoxesAndFit(margins);

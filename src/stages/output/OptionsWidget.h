@@ -59,7 +59,7 @@ public:
         return m_lastTab;
     }
 signals:
-    void despeckleLevelChanged(double factor, bool* handled);
+    void despeckleLevelChanged(int factor, bool* handled);
 public slots:
     void tabChanged(ImageViewTab tab);
 private slots:
@@ -105,11 +105,11 @@ private slots:
 
     void thresholdDefaultButtonClicked();
 
-    void morphologyToggled(bool checked);
-
     void negateToggled(bool checked);
 
     void dimmingColoredCoefChanged(double value);
+
+    void morphologyCoefChanged(double value);
 
     void bwThresholdChanged();
 
@@ -157,7 +157,7 @@ private slots:
 
     void despecklePanelToggled(bool checked);
 
-    void despeckleFactorChanged(double value);
+    void despeckleFactorChanged(int value);
 
     void applyDespeckleButtonClicked();
 
@@ -183,7 +183,7 @@ private:
     PageId m_pageId;
     ColorParams m_colorParams;
     DespeckleLevel m_despeckleLevel;
-    double m_despeckleFactor;
+    int m_despeckleFactor;
     boost::optional<QSize> m_thisPageOutputSize;
     ImageViewTab m_lastTab;
     int m_ignoreThresholdChanges;

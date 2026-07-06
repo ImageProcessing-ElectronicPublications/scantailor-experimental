@@ -407,17 +407,11 @@ OutputGenerator::process(
         // We only do smoothing if we are going to do binarization later.
         if (render_params.needBinarization())
         {
-            if (black_white_options.morphology())
+            double morphology_coef = black_white_options.morphologyCoef();
+            maybe_smoothed = smoothToGrayscale(transformed_image, morphology_coef, accel_ops);
+            if (dbg)
             {
-                maybe_smoothed = smoothToGrayscale(transformed_image, accel_ops);
-                if (dbg)
-                {
-                    dbg->add(maybe_smoothed, "smoothed");
-                }
-            }
-            else
-            {
-                maybe_smoothed = QImage(transformed_image);
+                dbg->add(maybe_smoothed, "smoothed");
             }
             coloredDimmingFilterInPlace(maybe_smoothed, coloredSignificance);
             if ((black_white_options.dimmingColoredCoef() > 0.0) && (black_kmeans_options.coloredMaskCoef() > 0.0))
@@ -1118,31 +1112,17 @@ OutputGenerator::detectPictures(
 GrayImage
 OutputGenerator::smoothToGrayscale(
     QImage const& src,
+    double const morphology_coef,
     std::shared_ptr<AcceleratableOperations> const& accel_ops)
 {
-    int const min_dim = std::min(src.width(), src.height());
-    int window;
-    int degree;
-    if (min_dim <= 1250)
-    {
-        window = 5;
-        degree = 3;
-    }
-    else if (min_dim <= 2500)
-    {
-        window = 7;
-        degree = 4;
-    }
-    else if (min_dim <= 5000)
-    {
-        window = 11;
-        degree = 4;
-    }
-    else
-    {
-        window = 11;
-        degree = 2;
-    }
+    int const w = src.width();
+    int const h = src.height();
+    int const min_dim = (w < h) ? w : h;
+    float const dpi = (float) min_dim / 5.41f; /* 5.41in - average width of book pages */
+
+    int const window = (int) (3.0f + morphology_coef * (0.85f + 0.012f * dpi));
+    int const degree = (int) (1.0f + morphology_coef * (2.25f + 0.00184f * dpi));
+
     return accel_ops->savGolFilter(GrayImage(src), QSize(window, window), degree, degree);
 }
 
@@ -1469,7 +1449,7 @@ OutputGenerator::colored(
 void
 OutputGenerator::maybeDespeckleInPlace(
     imageproc::BinaryImage& image,
-    double const despeckle_factor,
+    unsigned int const despeckle_factor,
     BinaryImage* out_speckles_img,
     TaskStatus const& status,
     DebugImages* dbg) const

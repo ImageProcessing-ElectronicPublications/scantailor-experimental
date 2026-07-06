@@ -19,11 +19,11 @@
 #ifndef PAGE_LAYOUT_PARAMS_H_
 #define PAGE_LAYOUT_PARAMS_H_
 
+#include <QSizeF>
 #include "RelativeMargins.h"
 #include "MatchSizeMode.h"
 #include "Alignment.h"
 #include "Framings.h"
-#include <QSizeF>
 
 class QDomDocument;
 class QDomElement;

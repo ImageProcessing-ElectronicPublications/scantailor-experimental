@@ -22,64 +22,110 @@
 namespace output
 {
 
-double despeckleLevelToFactor(DespeckleLevel const level)
+int despeckleLevelToFactor(DespeckleLevel const level)
 {
+    int despeckle_factor = 0;
+
     switch (level)
     {
     case DESPECKLE_OFF:
-        return 0.0;
+        despeckle_factor = 0;
+        break;
     case DESPECKLE_CAUTIOUS:
-        return 1.5;
+        despeckle_factor = 67;
+        break;
     case DESPECKLE_NORMAL:
-        return 2.5;
+        despeckle_factor = 100;
+        break;
     case DESPECKLE_AGGRESSIVE:
-        return 3.5;
+        despeckle_factor = 150;
+        break;
     default:
-        return 0.0;
+        despeckle_factor = 0;
+        break;
     }
+
+    return despeckle_factor;
+}
+
+DespeckleLevel despeckleFactorToLevel(int const despeckle_factor)
+{
+    DespeckleLevel level = DESPECKLE_CUSTOM;
+
+    switch (despeckle_factor)
+    {
+    case 0:
+        level = DESPECKLE_OFF;
+        break;
+    case 67:
+        level = DESPECKLE_CAUTIOUS;
+        break;
+    case 100:
+        level = DESPECKLE_NORMAL;
+        break;
+    case 150:
+        level = DESPECKLE_AGGRESSIVE;
+        break;
+    default:
+        level = DESPECKLE_CUSTOM;
+        break;
+    }
+
+    return level;
 }
 
 QString despeckleLevelToString(DespeckleLevel const level)
 {
+    QString level_string = QString();
+
     switch (level)
     {
     case DESPECKLE_OFF:
-        return "off";
+        level_string =  QString("off");
+        break;
     case DESPECKLE_CAUTIOUS:
-        return "cautious";
+        level_string =  QString("cautious");
+        break;
     case DESPECKLE_NORMAL:
-        return "normal";
+        level_string =  QString("normal");
+        break;
     case DESPECKLE_AGGRESSIVE:
-        return "aggressive";
+        level_string =  QString("aggressive");
+        break;
     case DESPECKLE_CUSTOM:
-        return "custom";
+        level_string =  QString("custom");
+        break;
     }
 
-    return QString();
+    return level_string;
 }
 
 DespeckleLevel despeckleLevelFromString(QString const& str)
 {
+    DespeckleLevel level = DESPECKLE_CUSTOM;
+
     if (str == "off")
     {
-        return DESPECKLE_OFF;
+        level = DESPECKLE_OFF;
     }
     else if (str == "cautious")
     {
-        return DESPECKLE_CAUTIOUS;
+        level = DESPECKLE_CAUTIOUS;
+    }
+    else if (str == "normal")
+    {
+        level = DESPECKLE_NORMAL;
     }
     else if (str == "aggressive")
     {
-        return DESPECKLE_AGGRESSIVE;
+        level = DESPECKLE_AGGRESSIVE;
     }
     else if (str == "custom")
     {
-        return DESPECKLE_CUSTOM;
+        level = DESPECKLE_CUSTOM;
     }
-    else
-    {
-        return DESPECKLE_NORMAL;
-    }
+
+    return level;
 }
 
 } // namespace output

@@ -31,9 +31,11 @@ namespace output
 {
 
 DespeckleState::DespeckleState(
-    QImage const& output, BinaryImage const& speckles, double factor)
-    : m_speckles(speckles),
-      m_despeckleFactor(factor)
+    QImage const& output,
+    BinaryImage const& speckles,
+    unsigned int factor)
+    : m_speckles(speckles)
+    , m_despeckleFactor(factor)
 {
     m_everythingMixed = overlaySpeckles(output, speckles);
     m_everythingBW = extractBW(m_everythingMixed);
@@ -47,8 +49,9 @@ DespeckleState::visualize(std::shared_ptr<AcceleratableOperations> const& accel_
 
 DespeckleState
 DespeckleState::redespeckle(
-    double const factor,
-    TaskStatus const& status, DebugImages* dbg) const
+    unsigned int const factor,
+    TaskStatus const& status,
+    DebugImages* dbg) const
 {
     DespeckleState new_state(*this);
 
@@ -59,7 +62,7 @@ DespeckleState::redespeckle(
 
     new_state.m_despeckleFactor = factor;
 
-    if (factor > 0.0)
+    if (factor > 0)
     {
         // Null speckles image is equivalent to a white one.
         new_state.m_speckles.release();

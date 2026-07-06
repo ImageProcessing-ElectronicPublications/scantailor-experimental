@@ -91,30 +91,32 @@ struct Settings
      */
     int bigObjectThreshold;
 
-    static Settings get(double despeckle_factor, QSize image_size);
+    static Settings get(unsigned int despeckle_factor, QSize image_size);
 };
 
 Settings
-Settings::get(double const despeckle_factor, QSize const image_size)
+Settings::get(unsigned int const despeckle_factor, QSize const image_size)
 {
     /*
     despeckle_factor:
-    * 0.0 -> NONE;
-    * 1.5 -> CAUTIOUS:
-    * 2.5 -> NORMAL:
-    * 3.5 -> AGGRESSIVE:
+    * 0 -> NONE;
+    * 67 -> CAUTIOUS:
+    * 100 -> NORMAL:
+    * 150 -> AGGRESSIVE:
     */
     Settings settings;
 
     int const w = image_size.width();
     int const h = image_size.height();
     int const min_dim = (w < h) ? w : h;
-    double const size_factor = min_dim / 2000.0;
-    double dfe = exp(3.125 - 0.525 * despeckle_factor);
+    float const dpi = (float) min_dim / 5.41f; /* 5.41in - average width of book pages */
+    float const dpi_factor = dpi / 300.0f;
 
-    settings.minRelativeParentWeight = 0.05 * (despeckle_factor + 1.0) * size_factor;
-    settings.pixelsToSqDist = (uint32_t) (dfe * dfe + 0.5);
-    settings.bigObjectThreshold = (int) (5.0 * despeckle_factor * size_factor + 0.5);
+    float const dim_factor = 0.13457f + 0.00265f * despeckle_factor;
+    float const dist_factor = 1.0f / (dim_factor * dim_factor);
+    settings.minRelativeParentWeight = 0.0016f * despeckle_factor;
+    settings.pixelsToSqDist = (uint32_t) (dist_factor * dist_factor + 0.5f);
+    settings.bigObjectThreshold = (int) (0.114f * despeckle_factor * dpi_factor + 0.5f);
 
     return settings;
 }
@@ -779,8 +781,10 @@ void voronoiDistances(
 
 BinaryImage
 Despeckle::despeckle(
-    BinaryImage const& src, double const despeckle_factor,
-    TaskStatus const& status, DebugImages* const dbg)
+    BinaryImage const& src,
+    unsigned int const despeckle_factor,
+    TaskStatus const& status,
+    DebugImages* const dbg)
 {
     BinaryImage dst(src);
     despeckleInPlace(dst, despeckle_factor, status, dbg);
@@ -789,8 +793,10 @@ Despeckle::despeckle(
 
 void
 Despeckle::despeckleInPlace(
-    BinaryImage& image, double const despeckle_factor,
-    TaskStatus const& status, DebugImages* const dbg)
+    BinaryImage& image,
+    unsigned int const despeckle_factor,
+    TaskStatus const& status,
+    DebugImages* const dbg)
 {
     Settings const settings(Settings::get(despeckle_factor, image.size()));
 

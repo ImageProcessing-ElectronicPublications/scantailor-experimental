@@ -1497,16 +1497,6 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="515"/>
-        <source>Dimming Colored</source>
-        <translation>Затемнение цветов</translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="522"/>
-        <source>Value is -1.0 .. 2.0.</source>
-        <translation>Значение -1,0 .. 2,0.</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="542"/>
         <source>Threshold</source>
         <translation>Порог</translation>
@@ -1522,16 +1512,6 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Значения порога по умолчанию.</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
-        <source>M</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="559"/>
-        <source>Morphology ON/OFF.</source>
-        <translation>Морфология ВКЛ/ВЫКЛ.</translation>
-    </message>
-    <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="566"/>
         <source>N</source>
         <translation type="unfinished"></translation>
@@ -1540,6 +1520,21 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="569"/>
         <source>Negate threshold.</source>
         <translation>Негатив.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="553"/>
+        <source> - color, morph:</source>
+        <translation> - цвета, морф.:</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="556"/>
+        <source>Dimming colored, Morphology/Smooth.</source>
+        <translation>Затемнение цветов, Морфология/Сглаживание.</translation>
+    </message>
+    <message>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="563"/>
+        <source>Value is -1.0 .. 2.0.</source>
+        <translation>Значение -1,0 .. 2,0.</translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="580"/>
@@ -1681,9 +1676,9 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Фактор удаления пятен:</translation>
     </message>
     <message>
-        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1318"/>
-        <source>Value is 0.0 .. 9.99.</source>
-        <translation>Значение 0,0 .. 9,99.</translation>
+        <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1328"/>
+        <source>Value is 0 .. 300.</source>
+        <translation>Значение 0 .. 300.</translation>
     </message>
     <message>
         <location filename="../stages/output/ui/OutputOptionsWidget.ui" line="1376"/>
@@ -1913,6 +1908,16 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="462"/>
         <source>Match size by affine scaling</source>
         <translation>Выровнить размер путем аффинного масштабирования</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="472"/>
+        <source>Sub</source>
+        <translation>Понизить</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="475"/>
+        <source>Match size by subscaling</source>
+        <translation>Выровнить размер путем пониженного масштабирования</translation>
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="803"/>

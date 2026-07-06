@@ -60,14 +60,14 @@ PageLayout::PageLayout(
         double const pageh = m_innerRect.height();
         double const margins_w = margins.left() + margins.right();
         double const margins_h = margins.top() + margins.bottom();
-        if ((match_size_mode.get() == MatchSizeMode::M_SCALE) || (match_size_mode.get() == MatchSizeMode::M_AFFINE))
+        if ((match_size_mode.get() == MatchSizeMode::M_SCALE) || (match_size_mode.get() == MatchSizeMode::M_AFFINE) || (match_size_mode.get() == MatchSizeMode::M_SUB))
         {
             double const pagewidthx = pagew;
             double const pagewidthy = pageh * 0.7071067811865475244;
             double const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
             double const pagewm = pagew + margins_w * pagewidth;
             double const pagehm = pageh + margins_h * pagewidth;
-            if (match_size_mode.get() == MatchSizeMode::M_SCALE)
+            if ((match_size_mode.get() == MatchSizeMode::M_SCALE) || (match_size_mode.get() == MatchSizeMode::M_SUB))
             {
                 // aggregate_size = content_size * scale + margins * width * scale
                 // Solving for scale:
@@ -75,14 +75,7 @@ PageLayout::PageLayout(
                 double const x_scale = (pagewm > 0.0) ? (agwidth / pagewm) : 1.0;
                 double const y_scale = (pagehm > 0.0) ? (agheight / pagehm) : 1.0;
 
-                if (x_scale > 1.0 && y_scale > 1.0)
-                {
-                    m_scaleFactor_X = std::min(x_scale, y_scale);
-                }
-                else if (x_scale < 1.0 && y_scale < 1.0)
-                {
-                    m_scaleFactor_X = std::max(x_scale, y_scale);
-                }
+                m_scaleFactor_X = (x_scale < y_scale) ? x_scale : y_scale;
                 m_scaleFactor_Y = m_scaleFactor_X;
             }
             else

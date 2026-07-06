@@ -42,15 +42,19 @@ public:
      * \return The despeckled image.
      */
     static imageproc::BinaryImage despeckle(
-        imageproc::BinaryImage const& src, double despeckle_factor,
-        TaskStatus const& status, DebugImages* dbg = 0);
+        imageproc::BinaryImage const& src,
+        unsigned int despeckle_factor,
+        TaskStatus const& status,
+        DebugImages* dbg = 0);
 
     /**
      * \brief A slightly faster, in-place version of despeckle().
      */
     static void despeckleInPlace(
-        imageproc::BinaryImage& image, double despeckle_factor,
-        TaskStatus const& status, DebugImages* dbg = 0);
+        imageproc::BinaryImage& image,
+        unsigned int despeckle_factor,
+        TaskStatus const& status,
+        DebugImages* dbg = 0);
 };
 
 #endif

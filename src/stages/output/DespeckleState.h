@@ -42,7 +42,7 @@ class DespeckleState
     // Member-wise copying is OK.
 public:
     DespeckleState(QImage const& output,
-                   imageproc::BinaryImage const& speckles, double factor);
+                   imageproc::BinaryImage const& speckles, unsigned int factor);
 
     DespeckleLevel level() const
     {
@@ -57,7 +57,7 @@ public:
     DespeckleVisualization visualize(
         std::shared_ptr<AcceleratableOperations> const& accel_ops) const;
 
-    DespeckleState redespeckle(double factor,
+    DespeckleState redespeckle(unsigned int factor,
                                TaskStatus const& status, DebugImages* dbg = 0) const;
 private:
     static QImage overlaySpeckles(
@@ -89,7 +89,7 @@ private:
      * m_everythingBW.
      */
     DespeckleLevel m_despeckleLevel;
-    double m_despeckleFactor;
+    unsigned int m_despeckleFactor;
 };
 
 } // namespace output

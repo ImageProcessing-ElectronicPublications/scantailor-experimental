@@ -68,7 +68,7 @@ public:
 
     void setDespeckleLevel(PageId const& page_id, DespeckleLevel level);
 
-    void setDespeckleFactor(PageId const& page_id, double factor);
+    void setDespeckleFactor(PageId const& page_id, unsigned int factor);
 
     std::unique_ptr<OutputParams> getOutputParams(PageId const& page_id) const;
 

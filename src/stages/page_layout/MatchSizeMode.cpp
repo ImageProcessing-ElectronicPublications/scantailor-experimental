@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "MatchSizeMode.h"
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
+#include "MatchSizeMode.h"
 
 namespace page_layout
 {
@@ -39,6 +39,10 @@ MatchSizeMode::MatchSizeMode(QDomElement const& el)
     else if (mode == "affine")
     {
         m_mode = M_AFFINE;
+    }
+    else if (mode == "sub")
+    {
+        m_mode = M_SUB;
     }
     else
     {
@@ -65,6 +69,9 @@ MatchSizeMode::toXml(QDomDocument& doc, QString const& name) const
         break;
     case M_AFFINE:
         mode = "affine";
+        break;
+    case M_SUB:
+        mode = "sub";
         break;
     }
 

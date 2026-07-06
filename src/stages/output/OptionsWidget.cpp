@@ -235,16 +235,16 @@ OptionsWidget::OptionsWidget(
         this, SLOT(thresholdDefaultButtonClicked())
     );
     connect(
-        morphologyCB, SIGNAL(clicked(bool)),
-        this, SLOT(morphologyToggled(bool))
-    );
-    connect(
         negateCB, SIGNAL(clicked(bool)),
         this, SLOT(negateToggled(bool))
     );
     connect(
         dimmingColoredCoef, SIGNAL(valueChanged(double)),
         this, SLOT(dimmingColoredCoefChanged(double))
+    );
+    connect(
+        morphologyCoef, SIGNAL(valueChanged(double)),
+        this, SLOT(morphologyCoefChanged(double))
     );
     connect(
         lighterThresholdButton, SIGNAL(clicked(bool)),
@@ -394,8 +394,8 @@ OptionsWidget::OptionsWidget(
     }
     );
     connect(
-        despeckleFactor, SIGNAL(valueChanged(double)),
-        this, SLOT(despeckleFactorChanged(double))
+        despeckleFactor, SIGNAL(valueChanged(int)),
+        this, SLOT(despeckleFactorChanged(int))
     );
     connect(
         applyDespeckleButton, SIGNAL(clicked()),
@@ -896,16 +896,16 @@ OptionsWidget::thresholdDefaultButtonClicked()
     ThresholdFilter const method = black_white_options.thresholdMethod();
 
     int cur_delta = black_white_options.thresholdAdjustment();;
-    bool cur_morph = black_white_options.morphology();
     bool cur_negate = black_white_options.negate();
+    double cur_morph_coef = black_white_options.morphologyCoef();
     int cur_bound_lower = black_white_options.getThresholdBoundLower();
     int cur_bound_upper = black_white_options.getThresholdBoundUpper();
     int cur_radius = black_white_options.thresholdRadius();
     double cur_coef = black_white_options.thresholdCoef();
 
     int new_delta = 0;
-    bool new_morph = true;
     bool new_negate = false;
+    double new_morph_coef = 1.0;
     int new_bound_lower = 0;
     int new_bound_upper = 255;
     int new_radius = cur_radius;
@@ -977,15 +977,15 @@ OptionsWidget::thresholdDefaultButtonClicked()
         changes++;
         black_white_options.setThresholdAdjustment(new_delta);
     }
-    if (cur_morph != new_morph)
-    {
-        changes++;
-        black_white_options.setMorphology(new_morph);
-    }
     if (cur_negate != new_negate)
     {
         changes++;
         black_white_options.setNegate(new_negate);
+    }
+    if (cur_morph_coef != new_morph_coef)
+    {
+        changes++;
+        black_white_options.setMorphologyCoef(new_morph_coef);
     }
     if (cur_bound_lower != new_bound_lower)
     {
@@ -1019,10 +1019,10 @@ OptionsWidget::thresholdDefaultButtonClicked()
 }
 
 void
-OptionsWidget::morphologyToggled(bool const checked)
+OptionsWidget::morphologyCoefChanged(double value)
 {
     BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
-    black_white_options.setMorphology(checked);
+    black_white_options.setMorphologyCoef(value);
     m_colorParams.setBlackWhiteOptions(black_white_options);
     m_ptrSettings->setColorParams(m_pageId, m_colorParams);
     emit invalidateThumbnail(m_pageId);
@@ -1403,7 +1403,7 @@ OptionsWidget::despeckleLevelSelected(DespeckleLevel const level)
 }
 
 void
-OptionsWidget::despeckleFactorChanged(double value)
+OptionsWidget::despeckleFactorChanged(int value)
 {
     m_despeckleFactor = value;
     m_ptrSettings->setDespeckleFactor(m_pageId, m_despeckleFactor);
@@ -1540,9 +1540,9 @@ OptionsWidget::updateColorsDisplay()
         BlackWhiteOptions black_white_options(m_colorParams.blackWhiteOptions());
         BlackKmeansOptions black_kmeans_options(m_colorParams.blackKmeansOptions());
         thresholdMethodSelector->setCurrentIndex((int) black_white_options.thresholdMethod());
-        morphologyCB->setChecked(black_white_options.morphology());
         negateCB->setChecked(black_white_options.negate());
         dimmingColoredCoef->setValue(black_white_options.dimmingColoredCoef());
+        morphologyCoef->setValue(black_white_options.morphologyCoef());
         thresholdSlider->setValue(black_white_options.thresholdAdjustment());
         thresholdBoundLower->setValue(black_white_options.getThresholdBoundLower());
         thresholdBoundUpper->setValue(black_white_options.getThresholdBoundUpper());

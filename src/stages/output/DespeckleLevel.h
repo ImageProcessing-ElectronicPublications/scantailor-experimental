@@ -33,7 +33,9 @@ enum DespeckleLevel
     DESPECKLE_CUSTOM
 };
 
-double despeckleLevelToFactor(DespeckleLevel level);
+int despeckleLevelToFactor(DespeckleLevel level);
+
+DespeckleLevel despeckleFactorToLevel(int despeckle_factor);
 
 QString despeckleLevelToString(DespeckleLevel level);
 

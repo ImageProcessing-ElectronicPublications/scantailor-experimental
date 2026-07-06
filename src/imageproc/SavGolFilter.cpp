@@ -16,17 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SavGolFilter.h"
-#include "SavGolKernel.h"
-#include "GrayImage.h"
-#include "AlignedArray.h"
+#include <stdexcept>
+#include <algorithm>
+#include <cstdint>
 #include <QImage>
 #include <QSize>
 #include <QPoint>
 #include <QtGlobal>
-#include <stdexcept>
-#include <algorithm>
-#include <cstdint>
+#include "SavGolFilter.h"
+#include "SavGolKernel.h"
+#include "GrayImage.h"
+#include "AlignedArray.h"
 
 namespace imageproc
 {
@@ -42,8 +42,10 @@ int calcNumTerms(int const hor_degree, int const vert_degree)
 } // anonymous namespace
 
 GrayImage savGolFilter(
-    GrayImage const& src, QSize const& window_size,
-    int const hor_degree, int const vert_degree)
+    GrayImage const& src,
+    QSize const& window_size,
+    int const hor_degree,
+    int const vert_degree)
 {
     if (hor_degree < 0 || vert_degree < 0)
     {

@@ -423,7 +423,8 @@ Settings::Item::hardWidth() const
     }
     else
     {
-        return hardMargins.extendContentSize(contentSize).width();
+        double const hw = hardMargins.extendContentSize(contentSize).width();
+        return (matchSizeMode.get() == MatchSizeMode::M_SUB) ? (0.5 * hw) : hw;
     }
 }
 
@@ -436,20 +437,21 @@ Settings::Item::hardHeight() const
     }
     else
     {
-        return hardMargins.extendContentSize(contentSize).height();
+        double const hh = hardMargins.extendContentSize(contentSize).height();
+        return (matchSizeMode.get() == MatchSizeMode::M_SUB) ? (0.5 * hh) : hh;
     }
 }
 
 double
 Settings::Item::influenceHardWidth() const
 {
-    return matchSizeMode.get() == MatchSizeMode::M_DISABLED ? 0.0 : hardWidth();
+    return (matchSizeMode.get() == MatchSizeMode::M_DISABLED) ? 0.0 : hardWidth();
 }
 
 double
 Settings::Item::influenceHardHeight() const
 {
-    return matchSizeMode.get() == MatchSizeMode::M_DISABLED ? 0.0 : hardHeight();
+    return (matchSizeMode.get() == MatchSizeMode::M_DISABLED) ? 0.0 : hardHeight();
 }
 
 

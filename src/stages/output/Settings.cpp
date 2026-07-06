@@ -254,7 +254,7 @@ Settings::setDespeckleLevel(PageId const& page_id, DespeckleLevel level)
 }
 
 void
-Settings::setDespeckleFactor(PageId const& page_id, double factor)
+Settings::setDespeckleFactor(PageId const& page_id, unsigned int factor)
 {
     QMutexLocker const locker(&m_mutex);
 

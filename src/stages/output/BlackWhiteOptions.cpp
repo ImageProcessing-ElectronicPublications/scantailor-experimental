@@ -26,9 +26,9 @@ namespace output
 
 BlackWhiteOptions::BlackWhiteOptions()
     : m_thresholdMethod(T_OTSU)
-    , m_morphology(true)
     , m_negate(false)
     , m_dimmingColoredCoef(0.0)
+    , m_morphologyCoef(1.0)
     , m_thresholdAdjustment(0)
     , m_boundLower(0)
     , m_boundUpper(255)
@@ -42,9 +42,9 @@ BlackWhiteOptions::BlackWhiteOptions()
 
 BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     : m_thresholdMethod(parseThresholdMethod(el.attribute("thresholdMethod")))
-    , m_morphology(el.attribute("morphology") == "1")
     , m_negate(el.attribute("negate") == "1")
     , m_dimmingColoredCoef(el.attribute("dimmingColoredCoef").toDouble())
+    , m_morphologyCoef(el.attribute("morphology").toDouble())
     , m_thresholdAdjustment(el.attribute("thresholdAdj").toInt())
     , m_boundLower(el.attribute("boundLower").toInt())
     , m_boundUpper(el.attribute("boundUpper").toInt())
@@ -57,6 +57,10 @@ BlackWhiteOptions::BlackWhiteOptions(QDomElement const& el)
     if (m_dimmingColoredCoef < -1.0 || m_dimmingColoredCoef > 2.0)
     {
         m_dimmingColoredCoef = 0.0;
+    }
+    if (m_morphologyCoef < 0.0 || m_morphologyCoef > 1.0)
+    {
+        m_morphologyCoef = 1.0;
     }
     if (m_boundUpper <= m_boundLower)
     {
@@ -78,7 +82,6 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
 {
     QDomElement el(doc.createElement(name));
     el.setAttribute("thresholdMethod", formatThresholdMethod(m_thresholdMethod));
-    el.setAttribute("morphology", m_morphology ? "1" : "0");
     if (m_negate)
     {
         el.setAttribute("negate", "1");
@@ -87,6 +90,7 @@ BlackWhiteOptions::toXml(QDomDocument& doc, QString const& name) const
     {
         el.setAttribute("dimmingColoredCoef", m_dimmingColoredCoef);
     }
+    el.setAttribute("morphology", m_morphologyCoef);
     if (m_thresholdAdjustment != 0)
     {
         el.setAttribute("thresholdAdj", m_thresholdAdjustment);
@@ -123,15 +127,15 @@ BlackWhiteOptions::operator==(BlackWhiteOptions const& other) const
     {
         return false;
     }
-    if (m_morphology != other.m_morphology)
-    {
-        return false;
-    }
     if (m_negate != other.m_negate)
     {
         return false;
     }
     if (m_dimmingColoredCoef != other.m_dimmingColoredCoef)
+    {
+        return false;
+    }
+    if (m_morphologyCoef != other.m_morphologyCoef)
     {
         return false;
     }

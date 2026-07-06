@@ -47,7 +47,8 @@ public:
          * as well. This page will also compete for the widest / tallest page title itself.
          */
         M_SCALE,
-        M_AFFINE
+        M_AFFINE,
+        M_SUB
     };
 
     MatchSizeMode(Mode mode = M_DISABLED) : m_mode(mode) {}

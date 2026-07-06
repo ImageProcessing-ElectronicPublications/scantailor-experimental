@@ -98,11 +98,11 @@ public:
         m_despeckleLevel = level;
     }
 
-    double despeckleFactor() const
+    int despeckleFactor() const
     {
         return m_despeckleFactor;
     }
-    void setDespeckleFactor(double factor)
+    void setDespeckleFactor(int factor)
     {
         m_despeckleFactor = factor;
     }
@@ -115,7 +115,7 @@ private:
 
     ColorParams m_colorParams;
     DespeckleLevel m_despeckleLevel;
-    double m_despeckleFactor;
+    int m_despeckleFactor;
 };
 
 } // namespace output

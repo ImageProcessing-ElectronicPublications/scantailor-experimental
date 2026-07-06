@@ -102,6 +102,9 @@ Utils::borderColorForMatchSizeMode(MatchSizeMode const& mode)
     case MatchSizeMode::M_AFFINE:
         color = QColor(0xff, 0x40, 0x40);
         break;
+    case MatchSizeMode::M_SUB:
+        color = QColor(0x80, 0xff, 0x00);
+        break;
     }
 
     return color;
@@ -125,6 +128,9 @@ Utils::backgroundColorForMatchSizeMode(MatchSizeMode const& mode)
         break;
     case MatchSizeMode::M_AFFINE:
         color = QColor(0xff, 0x55, 0x55, 70);
+        break;
+    case MatchSizeMode::M_SUB:
+        color = QColor(0xa9, 0xff, 0x00, 70);
         break;
     }
 

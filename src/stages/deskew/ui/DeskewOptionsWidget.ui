@@ -391,7 +391,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="singleStep">
-         <double>0.010000000000000</double>
+         <double>0.01</double>
         </property>
        </widget>
       </item>
@@ -418,72 +418,113 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_8">
       <item>
-       <widget class="QSlider" name="depthPerceptionSlider">
-        <property name="toolTip">
-         <string>Depth perception</string>
-        </property>
-        <property name="minimum">
-         <number>100</number>
-        </property>
-        <property name="maximum">
-         <number>300</number>
-        </property>
-        <property name="pageStep">
-         <number>5</number>
-        </property>
-        <property name="value">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="depthPerceptionHorizontalLayout">
+        <item>
+         <widget class="QLabel" name="depthPerceptionLabel">
+          <property name="text">
+           <string>D:</string>
+          </property>
+          <property name="toolTip">
+           <string>Depth perception</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="depthPerceptionSlider">
+          <property name="toolTip">
+           <string>Depth perception</string>
+          </property>
+          <property name="minimum">
+           <number>100</number>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+          <property name="pageStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QSlider" name="correctCurvesSlider">
-        <property name="toolTip">
-         <string>Middle curves</string>
-        </property>
-        <property name="minimum">
-         <number>100</number>
-        </property>
-        <property name="maximum">
-         <number>300</number>
-        </property>
-        <property name="pageStep">
-         <number>5</number>
-        </property>
-        <property name="value">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="correctCurvesHorizontalLayout">
+        <item>
+         <widget class="QLabel" name="correctCurvesLabel">
+          <property name="text">
+           <string>C:</string>
+          </property>
+          <property name="toolTip">
+           <string>Middle curves</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="correctCurvesSlider">
+          <property name="toolTip">
+           <string>Middle curves</string>
+          </property>
+          <property name="minimum">
+           <number>100</number>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+          <property name="pageStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QSlider" name="correctAngleSlider">
-        <property name="toolTip">
-         <string>Middle angle</string>
-        </property>
-        <property name="minimum">
-         <number>100</number>
-        </property>
-        <property name="maximum">
-         <number>300</number>
-        </property>
-        <property name="pageStep">
-         <number>5</number>
-        </property>
-        <property name="value">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="correctAngleHorizontalLayout">
+        <item>
+         <widget class="QLabel" name="correctAngleLabel">
+          <property name="text">
+           <string>A:</string>
+          </property>
+          <property name="toolTip">
+           <string>Middle angle</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="correctAngleSlider">
+          <property name="toolTip">
+           <string>Middle angle</string>
+          </property>
+          <property name="minimum">
+           <number>100</number>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+          <property name="pageStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
-
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_10">
         <item>
@@ -521,7 +562,6 @@
         </item>
        </layout>
       </item>
-
      </layout>
     </widget>
    </item>

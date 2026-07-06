@@ -188,13 +188,14 @@ private:
 
     void maybeDespeckleInPlace(
         imageproc::BinaryImage& image,
-        double despeckle_factor,
+        unsigned int despeckle_factor,
         imageproc::BinaryImage* out_speckles_img,
         TaskStatus const& status,
         DebugImages* dbg) const;
 
     static imageproc::GrayImage smoothToGrayscale(
         QImage const& src,
+        double morphology_coef,
         std::shared_ptr<AcceleratableOperations> const& accel_ops);
 
     static void morphologicalSmoothInPlace(
@@ -261,7 +262,7 @@ private:
     QRect m_contentRect;
 
 //    DespeckleLevel m_despeckleLevel;
-    double m_despeckleFactor;
+    unsigned int m_despeckleFactor;
 };
 
 } // namespace output
