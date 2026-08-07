@@ -26,7 +26,7 @@ namespace page_layout
 {
 
 OrderByRatioProvider::OrderByRatioProvider(IntrusivePtr<Settings> const& settings)
-    :   m_ptrSettings(settings)
+    : m_ptrSettings(settings)
 {
 }
 
@@ -39,14 +39,22 @@ OrderByRatioProvider::precedes(
     std::unique_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
 
     QSizeF lhs_size;
+    float lhs_scale_w = 1.0f;
+    float lhs_scale_h = 1.0f;
     if (lhs_params.get())
     {
         lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
+        lhs_scale_w = lhs_params->matchSizeMode().getSubScaleWidth();
+        lhs_scale_h = lhs_params->matchSizeMode().getSubScaleHeight();
     }
     QSizeF rhs_size;
+    float rhs_scale_w = 1.0f;
+    float rhs_scale_h = 1.0f;
     if (rhs_params.get())
     {
         rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
+        rhs_scale_w = rhs_params->matchSizeMode().getSubScaleWidth();
+        rhs_scale_h = rhs_params->matchSizeMode().getSubScaleHeight();
     }
 
     bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();
@@ -58,8 +66,12 @@ OrderByRatioProvider::precedes(
         return lhs_valid;
     }
 
-    float const lk = (float)(lhs_size.width() + 1) / (float)(lhs_size.height() + 1);
-    float const rk = (float)(rhs_size.width() + 1) / (float)(rhs_size.height() + 1);
+    float const lw = 1.0f + lhs_scale_w * lhs_size.width();
+    float const lh = 1.0f + lhs_scale_h * lhs_size.height();
+    float const lk = lw / lh;
+    float const rw = 1.0f + rhs_scale_w * rhs_size.width();
+    float const rh = 1.0f + rhs_scale_h * rhs_size.height();
+    float const rk = rw / rh;
 
     return (lk < rk);
 }

@@ -57,6 +57,30 @@ OptionsWidget::OptionsWidget(
     ui.angleSpinBox->adjustSize();
     setSpinBoxUnknownState();
     connect(
+        ui.typePanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(typePanelToggled(bool))
+    );
+    connect(
+        ui.typePanel, SIGNAL(clicked(bool)),
+        this, SLOT(typePanelToggled(bool))
+    );
+    connect(
+        ui.autoManualPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(autoManualPanelToggled(bool))
+    );
+    connect(
+        ui.autoManualPanel, SIGNAL(clicked(bool)),
+        this, SLOT(autoManualPanelToggled(bool))
+    );
+    connect(
+        ui.sourcePanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(sourcePanelToggled(bool))
+    );
+    connect(
+        ui.sourcePanel, SIGNAL(clicked(bool)),
+        this, SLOT(sourcePanelToggled(bool))
+    );
+    connect(
         ui.photoCheckBox, SIGNAL(clicked(bool)),
         this, SLOT(photoToggled(bool))
     );
@@ -69,8 +93,24 @@ OptionsWidget::OptionsWidget(
         SLOT(showApplySourceDialog())
     );
     connect(
+        ui.rotationPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(rotationPanelToggled(bool))
+    );
+    connect(
+        ui.rotationPanel, SIGNAL(clicked(bool)),
+        this, SLOT(rotationPanelToggled(bool))
+    );
+    connect(
         ui.angleSpinBox, SIGNAL(valueChanged(double)),
         this, SLOT(spinBoxValueChanged(double))
+    );
+    connect(
+        ui.correctionPanelEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(correctionPanelToggled(bool))
+    );
+    connect(
+        ui.correctionPanel, SIGNAL(clicked(bool)),
+        this, SLOT(correctionPanelToggled(bool))
     );
 
     // Depth perception UI.
@@ -163,6 +203,51 @@ bool OptionsWidget::disconnectAll(void)
     if(!disconnect(this, SIGNAL(OptionsWidget::correctAngleSetByUser(double)), 0, 0)) result = false;
 
     return result;
+}
+
+void
+OptionsWidget::typePanelToggled(bool const checked)
+{
+    ui.typePanelEmpty->setVisible(!checked);
+    ui.typePanelEmpty->setChecked(checked);
+    ui.typePanel->setVisible(checked);
+    ui.typePanel->setChecked(checked);
+}
+
+void
+OptionsWidget::autoManualPanelToggled(bool const checked)
+{
+    ui.autoManualPanelEmpty->setVisible(!checked);
+    ui.autoManualPanelEmpty->setChecked(checked);
+    ui.autoManualPanel->setVisible(checked);
+    ui.autoManualPanel->setChecked(checked);
+}
+
+void
+OptionsWidget::sourcePanelToggled(bool const checked)
+{
+    ui.sourcePanelEmpty->setVisible(!checked);
+    ui.sourcePanelEmpty->setChecked(checked);
+    ui.sourcePanel->setVisible(checked);
+    ui.sourcePanel->setChecked(checked);
+}
+
+void
+OptionsWidget::rotationPanelToggled(bool const checked)
+{
+    ui.rotationPanelEmpty->setVisible(!checked);
+    ui.rotationPanelEmpty->setChecked(checked);
+    ui.rotationPanel->setVisible(checked);
+    ui.rotationPanel->setChecked(checked);
+}
+
+void
+OptionsWidget::correctionPanelToggled(bool const checked)
+{
+    ui.correctionPanelEmpty->setVisible(!checked);
+    ui.correctionPanelEmpty->setChecked(checked);
+    ui.correctionPanel->setVisible(checked);
+    ui.correctionPanel->setChecked(checked);
 }
 
 void
@@ -364,11 +449,6 @@ OptionsWidget::postUpdateUI(Params const& page_params)
         double const fov = page_params.getParamsSource().fov();
         ui.fovSpinBox->setValue(fov);
         ui.fovSpinBox->setEnabled(photo);
-        ui.sourcePanel->setVisible( true );
-    }
-    else
-    {
-        ui.sourcePanel->setVisible( false );
     }
 
     if (page_params.distortionType() == DistortionType::ROTATION)
@@ -692,9 +772,14 @@ OptionsWidget::setupDistortionTypeButtons()
 void
 OptionsWidget::hideDistortionDependentUiElements()
 {
+    ui.autoManualPanelEmpty->setVisible(false);
     ui.autoManualPanel->setVisible(false);
+    ui.rotationPanelEmpty->setVisible(false);
     ui.rotationPanel->setVisible(false);
-    ui.depthPerceptionPanel->setVisible(false);
+    ui.sourcePanelEmpty->setVisible(false);
+    ui.sourcePanel->setVisible(false);
+    ui.correctionPanelEmpty->setVisible(false);
+    ui.correctionPanel->setVisible(false);
 }
 
 void
@@ -704,9 +789,46 @@ OptionsWidget::setupUiForDistortionType(DistortionType::Type type)
 
     m_distortionTypeButtons[type]->setChecked(true);
 
-    ui.autoManualPanel->setVisible(type != DistortionType::NONE);
-    ui.rotationPanel->setVisible(type == DistortionType::ROTATION);
-    ui.depthPerceptionPanel->setVisible(type == DistortionType::WARP);
+    if (type != DistortionType::NONE)
+    {
+        ui.autoManualPanelEmpty->setVisible(!ui.autoManualPanel->isChecked());
+        ui.autoManualPanel->setVisible(ui.autoManualPanel->isChecked());
+    }
+    else
+    {
+        ui.autoManualPanelEmpty->setVisible(false);
+        ui.autoManualPanel->setVisible(false);
+    }
+    if (type == DistortionType::ROTATION)
+    {
+        ui.rotationPanelEmpty->setVisible(!ui.rotationPanel->isChecked());
+        ui.rotationPanel->setVisible(ui.rotationPanel->isChecked());
+    }
+    else
+    {
+        ui.rotationPanelEmpty->setVisible(false);
+        ui.rotationPanel->setVisible(false);
+    }
+    if ((type == DistortionType::PERSPECTIVE) || (type == DistortionType::WARP))
+    {
+        ui.sourcePanelEmpty->setVisible(!ui.sourcePanel->isChecked());
+        ui.sourcePanel->setVisible(ui.sourcePanel->isChecked());
+    }
+    else
+    {
+        ui.sourcePanelEmpty->setVisible(false);
+        ui.sourcePanel->setVisible(false);
+    }
+    if (type == DistortionType::WARP)
+    {
+        ui.correctionPanelEmpty->setVisible(!ui.correctionPanel->isChecked());
+        ui.correctionPanel->setVisible(ui.correctionPanel->isChecked());
+    }
+    else
+    {
+        ui.correctionPanelEmpty->setVisible(false);
+        ui.correctionPanel->setVisible(false);
+    }
 }
 
 void

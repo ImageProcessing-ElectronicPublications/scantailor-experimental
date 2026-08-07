@@ -38,11 +38,14 @@
      <property name="visible">
       <bool>false</bool>
      </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
      <layout class="QVBoxLayout" name="scalingPanelVerticalLayout">
       <item>
        <layout class="QHBoxLayout" name="scalingPanelHorizontalLayout">
         <item>
-         <spacer name="horizontalSpacer_3">
+         <spacer name="scalingHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -150,7 +153,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_4">
+         <spacer name="scalingHorizontalSpacerEnd">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -165,32 +168,62 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="scaleFactorOptions">
-        <item row="0" column="0">
-         <widget class="QLabel" name="scaleFactorLabel">
-          <property name="text">
-           <string>Scale factor:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="scaleFactor">
-          <property name="toolTip">
-           <string>Value is 0.5 .. 9.99.</string>
-          </property>
-          <property name="decimals">
-           <double>4</double>
-          </property>
-          <property name="minimum">
-           <double>0.5</double>
-          </property>
-          <property name="maximum">
-           <double>9.99</double>
-          </property>
-          <property name="singleStep">
-           <double>0.001</double>
-          </property>
-         </widget>
+       <layout class="QVBoxLayout" name="scaleFactorVerticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="scaleFactorHorizontalLayout">
+          <item>
+           <spacer name="scaleFactorHorizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="scaleFactorLabel">
+            <property name="text">
+             <string>Scale factor:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="scaleFactor">
+            <property name="toolTip">
+             <string>Value is 0.5 .. 9.99.</string>
+            </property>
+            <property name="decimals">
+             <double>4</double>
+            </property>
+            <property name="minimum">
+             <double>0.5</double>
+            </property>
+            <property name="maximum">
+             <double>9.99</double>
+            </property>
+            <property name="singleStep">
+             <double>0.001</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="scaleFactorHorizontalSpacerEnd">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -232,6 +265,9 @@
       <bool>true</bool>
      </property>
      <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
       <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="fitersVerticalLayout">
@@ -353,7 +389,7 @@
       </item>
       <item>
        <widget class="QWidget" name="colorMarginOptions" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <layout class="QHBoxLayout" name="colorMarginHorizontalLayout">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -367,7 +403,7 @@
           <number>0</number>
          </property>
          <item>
-          <spacer name="horizontalSpacer_13">
+          <spacer name="colorMarginHorizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -380,18 +416,14 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="QCheckBox" name="whiteMarginsCB">
-             <property name="text">
-              <string>White margins</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QCheckBox" name="whiteMarginsCB">
+           <property name="text">
+            <string>White margins</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_14">
+          <spacer name="colorMarginhorizontalSpacerEnd">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -470,9 +502,15 @@
      <property name="checkable">
       <bool>true</bool>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="modeVerticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="modeHorizontalLayout">
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -661,43 +699,6 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_12">
-           <item>
-            <spacer name="horizontalSpacer_22">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="thresholLabel">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_21">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item>
           <widget class="QSlider" name="thresholdSlider">
            <property name="minimum">
             <number>-50</number>
@@ -726,7 +727,7 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <layout class="QHBoxLayout" name="thresholdButtonHorizontalLayout">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -744,7 +745,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_5">
+            <spacer name="thresholdButtonHorizontalSpacerLeft">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -762,7 +763,7 @@
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
-              <string/>
+              <string>0</string>
              </property>
              <property name="iconSize">
               <size>
@@ -771,7 +772,7 @@
               </size>
              </property>
              <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonIconOnly</enum>
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
              </property>
              <property name="autoRaise">
               <bool>true</bool>
@@ -782,7 +783,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_6">
+            <spacer name="thresholdButtonHorizontalSpacerRight">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -926,6 +927,9 @@
       <bool>true</bool>
      </property>
      <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
       <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_kmeans4">
@@ -1155,14 +1159,17 @@
      <property name="visible">
       <bool>false</bool>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QVBoxLayout" name="despeckleVerticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="despeckleHorizontalLayout">
         <property name="spacing">
          <number>6</number>
         </property>
         <item>
-         <spacer name="horizontalSpacer_11">
+         <spacer name="despeckleHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1304,7 +1311,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_12">
+         <spacer name="despeckleHorizontalSpacerEnd">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1319,15 +1326,28 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="despeckleCustomOptions">
-        <item row="0" column="0">
+       <layout class="QHBoxLayout" name="despeckleCustomOptions">
+        <item>
+         <spacer name="despeckleCustomHorizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QLabel" name="despeckleFactorLabel">
           <property name="text">
            <string>Despeckle factor:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item>
          <widget class="QSpinBox" name="despeckleFactor">
           <property name="toolTip">
            <string>Value is 0 .. 300.</string>
@@ -1340,12 +1360,25 @@
           </property>
          </widget>
         </item>
+        <item>
+         <spacer name="despeckleCustomHorizontalSpacerEnd">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <layout class="QHBoxLayout" name="despeckleApplyHorizontalLayout">
         <item>
-         <spacer name="horizontalSpacer_15">
+         <spacer name="despeckleApplyHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1365,7 +1398,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_16">
+         <spacer name="despeckleApplyHorizontalSpacerEnd">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -1407,6 +1440,9 @@
       <bool>true</bool>
      </property>
      <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
       <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_metrics">
@@ -1518,7 +1554,7 @@
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_2">
+    <spacer name="outputVerticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

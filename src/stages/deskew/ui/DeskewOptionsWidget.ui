@@ -13,11 +13,33 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="deskewOptionsVerticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QCheckBox" name="typePanelEmpty">
+     <property name="text">
+      <string>Distortion type</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="typePanel">
      <property name="title">
       <string>Distortion type</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -192,9 +214,31 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="autoManualPanelEmpty">
+     <property name="text">
+      <string>Mode</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="autoManualPanel">
      <property name="title">
       <string>Mode</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
@@ -256,9 +300,31 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="sourcePanelEmpty">
+     <property name="text">
+      <string>Source</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="sourcePanel">
      <property name="title">
       <string>Source</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="sourceVerticalLayout">
       <item>
@@ -367,9 +433,31 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="rotationPanelEmpty">
+     <property name="text">
+      <string>Rotation angle</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="rotationPanel">
      <property name="title">
       <string>Rotation angle</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
@@ -412,9 +500,31 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="depthPerceptionPanel">
+    <widget class="QCheckBox" name="correctionPanelEmpty">
+     <property name="text">
+      <string>Correction model</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="correctionPanel">
      <property name="title">
       <string>Correction model</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_8">
       <item>

@@ -42,12 +42,12 @@ namespace page_layout
 OptionsWidget::OptionsWidget(
     IntrusivePtr<Settings> const& settings,
     PageSelectionAccessor const& page_selection_accessor)
-    : m_ptrSettings(settings),
-      m_pageSelectionAccessor(page_selection_accessor),
-      m_ignoreMarginChanges(0),
-      m_ignoreMatchSizeModeChanges(0),
-      m_leftRightLinked(true),
-      m_topBottomLinked(true)
+    : m_ptrSettings(settings)
+    , m_pageSelectionAccessor(page_selection_accessor)
+    , m_ignoreMarginChanges(0)
+    , m_ignoreMatchSizeModeChanges(0)
+    , m_leftRightLinked(true)
+    , m_topBottomLinked(true)
 {
     {
         QSettings app_settings;
@@ -55,10 +55,17 @@ OptionsWidget::OptionsWidget(
         m_topBottomLinked = app_settings.value("margins/topBottomLinked", true).toBool();
     }
 
-    m_chainIcon.addPixmap(
+    m_hchainIcon.addPixmap(
+        QPixmap(QString::fromUtf8(":/icons/stock-hchain-24.png"))
+    );
+    m_hchainBrokenIcon.addPixmap(
+        QPixmap(QString::fromUtf8(":/icons/stock-hchain-broken-24.png"))
+    );
+
+    m_vchainIcon.addPixmap(
         QPixmap(QString::fromUtf8(":/icons/stock-vchain-24.png"))
     );
-    m_brokenChainIcon.addPixmap(
+    m_vchainBrokenIcon.addPixmap(
         QPixmap(QString::fromUtf8(":/icons/stock-vchain-broken-24.png"))
     );
 
@@ -67,8 +74,8 @@ OptionsWidget::OptionsWidget(
     QIcon warningIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning));
     warningIconLabel->setPixmap(warningIcon.pixmap(48, 48));
 
-    updateLinkDisplay(topBottomLink, m_topBottomLinked);
-    updateLinkDisplay(leftRightLink, m_leftRightLinked);
+    updateLinkDisplayH(leftRightLink, m_leftRightLinked);
+    updateLinkDisplayV(topBottomLink, m_topBottomLinked);
     enableDisableAlignmentButtons();
 
     Utils::mapSetValue(
@@ -109,6 +116,14 @@ OptionsWidget::OptionsWidget(
     );
 
     connect(
+        framingsGroupEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(framingsGroupToggled(bool))
+    );
+    connect(
+        framingsGroup, SIGNAL(clicked(bool)),
+        this, SLOT(framingsGroupToggled(bool))
+    );
+    connect(
         extraWMarginSpinBox, SIGNAL(valueChanged(double)),
         this, SLOT(extraWMarginChanged(double))
     );
@@ -119,6 +134,14 @@ OptionsWidget::OptionsWidget(
     connect(
         applyFramingsBtn, SIGNAL(clicked()),
         this, SLOT(showApplyFramingsDialog())
+    );
+    connect(
+        marginsGroupEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(marginsGroupToggled(bool))
+    );
+    connect(
+        marginsGroup, SIGNAL(clicked(bool)),
+        this, SLOT(marginsGroupToggled(bool))
     );
     connect(
         topMarginSpinBox, SIGNAL(valueChanged(double)),
@@ -149,6 +172,14 @@ OptionsWidget::OptionsWidget(
         this, SLOT(showApplyMarginsDialog())
     );
     connect(
+        alignmentGroupEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(alignmentGroupToggled(bool))
+    );
+    connect(
+        alignmentGroup, SIGNAL(clicked(bool)),
+        this, SLOT(alignmentGroupToggled(bool))
+    );
+    connect(
         matchSizeDisabledRb, SIGNAL(toggled(bool)),
         this, SLOT(matchSizeDisabledToggled(bool))
     );
@@ -165,8 +196,12 @@ OptionsWidget::OptionsWidget(
         this, SLOT(matchSizeAffineToggled(bool))
     );
     connect(
-        matchSizeSubRb, SIGNAL(toggled(bool)),
-        this, SLOT(matchSizeSubToggled(bool))
+        subScaleFactorWidth, SIGNAL(valueChanged(double)),
+        this, SLOT(subScaleWidthChanged(double))
+    );
+    connect(
+        subScaleFactorHeight, SIGNAL(valueChanged(double)),
+        this, SLOT(subScaleHeightChanged(double))
     );
     connect(
         applyAlignmentBtn, SIGNAL(clicked()),
@@ -195,6 +230,8 @@ bool OptionsWidget::disconnectAll(void)
     if(!disconnect(this, SIGNAL(OptionsWidget::leftRightLinkToggled(bool)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::topBottomLinkToggled(bool)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::matchSizeModeChanged(MatchSizeMode const&)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::subScaleWidthChanged(double)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::subScaleHeightChanged(double)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::alignmentChanged(Alignment const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::framingsChanged(Framings const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::marginsSetLocally(RelativeMargins const&)), 0, 0)) result = false;
@@ -245,21 +282,22 @@ OptionsWidget::preUpdateUI(
         case MatchSizeMode::M_AFFINE:
             matchSizeAffineRb->setChecked(true);
             break;
-        case MatchSizeMode::M_SUB:
-            matchSizeSubRb->setChecked(true);
-            break;
         }
+        subScaleFactorWidth->setValue(match_size_mode.getSubScaleWidth());
+        subScaleFactorHeight->setValue(match_size_mode.getSubScaleHeight());
     }
 
     enableDisableAlignmentButtons();
 
     m_leftRightLinked = m_leftRightLinked && margins.horizontalMarginsApproxEqual();
     m_topBottomLinked = m_topBottomLinked && margins.verticalMarginsApproxEqual();
-    updateLinkDisplay(topBottomLink, m_topBottomLinked);
-    updateLinkDisplay(leftRightLink, m_leftRightLinked);
+    updateLinkDisplayH(leftRightLink, m_leftRightLinked);
+    updateLinkDisplayV(topBottomLink, m_topBottomLinked);
 
-    marginsGroup->setVisible(true);
-    alignmentGroup->setVisible(true);
+    marginsGroup->setVisible(marginsGroup->isChecked());
+    marginsGroupEmpty->setVisible(!marginsGroup->isChecked());
+    alignmentGroup->setVisible(alignmentGroup->isChecked());
+    alignmentGroupEmpty->setVisible(!alignmentGroup->isChecked());
     marginsGroup->setEnabled(false);
     alignmentGroup->setEnabled(false);
     missingContentBoxGroup->setVisible(false);
@@ -268,11 +306,23 @@ OptionsWidget::preUpdateUI(
 void
 OptionsWidget::postUpdateUI(bool have_content_box)
 {
-    marginsGroup->setVisible(have_content_box);
-    alignmentGroup->setVisible(have_content_box);
+    if (have_content_box)
+    {
+        marginsGroup->setVisible(marginsGroup->isChecked());
+        marginsGroupEmpty->setVisible(!marginsGroup->isChecked());
+        alignmentGroup->setVisible(alignmentGroup->isChecked());
+        alignmentGroupEmpty->setVisible(!alignmentGroup->isChecked());
 
-    marginsGroup->setEnabled(true);
-    alignmentGroup->setEnabled(true);
+        marginsGroup->setEnabled(true);
+        alignmentGroup->setEnabled(true);
+    }
+    else
+    {
+        marginsGroup->setVisible(have_content_box);
+        marginsGroupEmpty->setVisible(have_content_box);
+        alignmentGroup->setVisible(have_content_box);
+        alignmentGroupEmpty->setVisible(have_content_box);
+    }
 
     updateSizeDisplay();
 
@@ -289,6 +339,15 @@ OptionsWidget::marginsSetExternally(RelativeMargins const& margins)
 }
 
 void
+OptionsWidget::framingsGroupToggled(bool const checked)
+{
+    framingsGroupEmpty->setVisible(!checked);
+    framingsGroupEmpty->setChecked(checked);
+    framingsGroup->setVisible(checked);
+    framingsGroup->setChecked(checked);
+}
+
+void
 OptionsWidget::extraWMarginChanged(double const val)
 {
     if (m_ignoreMarginChanges)
@@ -298,7 +357,7 @@ OptionsWidget::extraWMarginChanged(double const val)
 
     extraWMarginSpinBox->setValue(val);
 
-    m_framings.setFramingWidth(extraWMarginSpinBox->value() / 100.0);
+    m_framings.setFramingWidth(extraWMarginSpinBox->value() * 0.01);
 
     updateFramingsDisplay();
     emit framingsChanged(m_framings);
@@ -316,12 +375,21 @@ OptionsWidget::extraHMarginChanged(double const val)
 
     extraHMarginSpinBox->setValue(val);
 
-    m_framings.setFramingHeight(extraHMarginSpinBox->value() / 100.0);
+    m_framings.setFramingHeight(extraHMarginSpinBox->value() * 0.01);
 
     updateFramingsDisplay();
     emit framingsChanged(m_framings);
     emit marginsSetLocally(m_margins);
     updateSizeDisplay();
+}
+
+void
+OptionsWidget::marginsGroupToggled(bool const checked)
+{
+    marginsGroupEmpty->setVisible(!checked);
+    marginsGroupEmpty->setChecked(checked);
+    marginsGroup->setVisible(checked);
+    marginsGroup->setChecked(checked);
 }
 
 void
@@ -339,8 +407,8 @@ OptionsWidget::horMarginsChanged(double const val)
         rightMarginSpinBox->setValue(val);
     }
 
-    m_margins.setLeft(leftMarginSpinBox->value() / 100.0);
-    m_margins.setRight(rightMarginSpinBox->value() / 100.0);
+    m_margins.setLeft(leftMarginSpinBox->value() * 0.01);
+    m_margins.setRight(rightMarginSpinBox->value() * 0.01);
 
     emit marginsSetLocally(m_margins);
     updateSizeDisplay();
@@ -361,8 +429,8 @@ OptionsWidget::vertMarginsChanged(double const val)
         bottomMarginSpinBox->setValue(val);
     }
 
-    m_margins.setTop(topMarginSpinBox->value() / 100.0);
-    m_margins.setBottom(bottomMarginSpinBox->value() / 100.0);
+    m_margins.setTop(topMarginSpinBox->value() * 0.01);
+    m_margins.setBottom(bottomMarginSpinBox->value() * 0.01);
 
     emit marginsSetLocally(m_margins);
     updateSizeDisplay();
@@ -373,7 +441,7 @@ OptionsWidget::topBottomLinkClicked()
 {
     m_topBottomLinked = !m_topBottomLinked;
     QSettings().setValue("margins/topBottomLinked", m_topBottomLinked);
-    updateLinkDisplay(topBottomLink, m_topBottomLinked);
+    updateLinkDisplayV(topBottomLink, m_topBottomLinked);
     topBottomLinkToggled(m_topBottomLinked);
 }
 
@@ -382,8 +450,17 @@ OptionsWidget::leftRightLinkClicked()
 {
     m_leftRightLinked = !m_leftRightLinked;
     QSettings().setValue("margins/leftRightLinked", m_leftRightLinked);
-    updateLinkDisplay(leftRightLink, m_leftRightLinked);
+    updateLinkDisplayH(leftRightLink, m_leftRightLinked);
     leftRightLinkToggled(m_leftRightLinked);
+}
+
+void
+OptionsWidget::alignmentGroupToggled(bool const checked)
+{
+    alignmentGroupEmpty->setVisible(!checked);
+    alignmentGroupEmpty->setChecked(checked);
+    alignmentGroup->setVisible(checked);
+    alignmentGroup->setChecked(checked);
 }
 
 void
@@ -447,14 +524,29 @@ OptionsWidget::matchSizeAffineToggled(bool selected)
 }
 
 void
-OptionsWidget::matchSizeSubToggled(bool selected)
+OptionsWidget::subScaleWidthChanged(double const value)
 {
-    if (!selected || m_ignoreMatchSizeModeChanges)
+    if (m_ignoreMatchSizeModeChanges)
     {
         return;
     }
 
-    m_matchSizeMode.set(MatchSizeMode::M_SUB);
+    m_matchSizeMode.setSubScaleWidth(value);
+
+    enableDisableAlignmentButtons();
+    emit matchSizeModeChanged(m_matchSizeMode);
+    updateSizeDisplay();
+}
+
+void
+OptionsWidget::subScaleHeightChanged(double const value)
+{
+    if (m_ignoreMatchSizeModeChanges)
+    {
+        return;
+    }
+
+    m_matchSizeMode.setSubScaleHeight(value);
 
     enableDisableAlignmentButtons();
     emit matchSizeModeChanged(m_matchSizeMode);
@@ -581,9 +673,14 @@ OptionsWidget::updateMarginsDisplay()
 }
 
 void
-OptionsWidget::updateLinkDisplay(QToolButton* button, bool const linked)
+OptionsWidget::updateLinkDisplayH(QToolButton* button, bool const linked)
 {
-    button->setIcon(linked ? m_chainIcon : m_brokenChainIcon);
+    button->setIcon(linked ? m_hchainIcon : m_hchainBrokenIcon);
+}
+void
+OptionsWidget::updateLinkDisplayV(QToolButton* button, bool const linked)
+{
+    button->setIcon(linked ? m_vchainIcon : m_vchainBrokenIcon);
 }
 
 void
@@ -601,16 +698,22 @@ OptionsWidget::updateSizeDisplay()
     float const exheight = m_framings.getFramingHeight();
     float agwidth = agg_size.width();
     float agheight = agg_size.height();
-    if(m_matchSizeMode == MatchSizeMode::M_DISABLED)
+
+    if(m_matchSizeMode.get() == MatchSizeMode::M_DISABLED)
     {
         QSizeF const content_size = m_ptrSettings->getContentSize(m_pageId);
         RelativeMargins const hard_magrins = m_ptrSettings->getHardMargins(m_pageId);
-        double const pagewidthx = content_size.width();
-        double const pagewidthy = content_size.height() * 0.7071067811865475244;
+        double const sub_scale_w = m_matchSizeMode.getSubScaleWidth();
+        double const sub_scale_h = m_matchSizeMode.getSubScaleHeight();
+        double const pageX = sub_scale_w * content_size.width();
+        double const pageY = sub_scale_h * content_size.height();
+        double const pagewidthx = pageX;
+        double const pagewidthy = pageY * 0.7071067811865475244;
         double const pagewidth = (pagewidthx < pagewidthy) ? pagewidthy : pagewidthx;
-        agwidth = content_size.width() + pagewidth * (hard_magrins.left() + hard_magrins.right());
-        agheight = content_size.height() + pagewidth * (hard_magrins.top() + hard_magrins.bottom());
+        agwidth = pageX + pagewidth * (hard_magrins.left() + hard_magrins.right());
+        agheight = pageY + pagewidth * (hard_magrins.top() + hard_magrins.bottom());
     }
+
     int const outwidth = (int) (agwidth * (1.0f + exwidth) + 0.5f);
     int const outheight = (int) (agheight * (1.0f + exheight) + 0.5f);
     labelExtraWout->setText(tr(" = %1").arg(outwidth));

@@ -2374,17 +2374,17 @@ p, li { white-space: pre-wrap; }
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
+        <source>Click to finish this zone. ESC to cancel.</source>
         <translation>Klicken Sie, um diesen Bereich abzuschließen. Abbrechen mit ESC.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
         <translation>Verbinden Sie ersten und letzten Punkt, um diesen Bereich abzuschließen. Abbrechen mit ESC.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
         <translation>Bereiche müssen durch wenigstens drei Punkte umschlossen sein. Abbrechen mit ESC.</translation>
     </message>
 </context>

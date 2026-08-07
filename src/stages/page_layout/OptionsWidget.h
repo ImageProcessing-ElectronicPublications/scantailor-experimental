@@ -111,9 +111,13 @@ signals:
 public slots:
     void marginsSetExternally(RelativeMargins const& margins);
 private slots:
+    void framingsGroupToggled(bool checked);
+
     void extraWMarginChanged(double val);
 
     void extraHMarginChanged(double val);
+
+    void marginsGroupToggled(bool checked);
 
     void horMarginsChanged(double val);
 
@@ -123,6 +127,8 @@ private slots:
 
     void leftRightLinkClicked();
 
+    void alignmentGroupToggled(bool checked);
+
     void matchSizeDisabledToggled(bool selected);
 
     void matchSizeMarginsToggled(bool selected);
@@ -131,7 +137,9 @@ private slots:
 
     void matchSizeAffineToggled(bool selected);
 
-    void matchSizeSubToggled(bool selected);
+    void subScaleWidthChanged(double value);
+
+    void subScaleHeightChanged(double value);
 
     void alignmentButtonClicked();
 
@@ -151,7 +159,8 @@ private:
 
     void updateMarginsDisplay();
 
-    void updateLinkDisplay(QToolButton* button, bool linked);
+    void updateLinkDisplayH(QToolButton* button, bool linked);
+    void updateLinkDisplayV(QToolButton* button, bool linked);
 
     void updateFramingsDisplay();
 
@@ -161,8 +170,10 @@ private:
 
     IntrusivePtr<Settings> m_ptrSettings;
     PageSelectionAccessor m_pageSelectionAccessor;
-    QIcon m_chainIcon;
-    QIcon m_brokenChainIcon;
+    QIcon m_hchainIcon;
+    QIcon m_hchainBrokenIcon;
+    QIcon m_vchainIcon;
+    QIcon m_vchainBrokenIcon;
     AlignmentByButton m_alignmentByButton;
     PageId m_pageId;
     RelativeMargins m_margins;

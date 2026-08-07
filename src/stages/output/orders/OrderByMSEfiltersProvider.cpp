@@ -24,7 +24,7 @@ namespace output
 {
 
 OrderByMSEfiltersProvider::OrderByMSEfiltersProvider(IntrusivePtr<Settings> const& settings)
-    :   m_ptrSettings(settings)
+    : m_ptrSettings(settings)
 {
 }
 

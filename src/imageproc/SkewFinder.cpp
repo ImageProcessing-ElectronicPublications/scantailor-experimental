@@ -16,6 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdint.h>
+#include <math.h>
+#include <stdexcept>
+#include <QDebug>
 #include "SkewFinder.h"
 #include "BinaryImage.h"
 #include "BWColor.h"
@@ -23,10 +27,6 @@
 #include "Shear.h"
 #include "ReduceThreshold.h"
 #include "Constants.h"
-#include <QDebug>
-#include <stdexcept>
-#include <stdint.h>
-#include <math.h>
 
 namespace imageproc
 {
@@ -44,11 +44,11 @@ int const SkewFinder::DEFAULT_FINE_REDUCTION = 1;
 double const SkewFinder::LOW_SCORE = 1000.0;
 
 SkewFinder::SkewFinder()
-    : m_maxAngle(DEFAULT_MAX_ANGLE),
-      m_accuracy(DEFAULT_ACCURACY),
-      m_resolutionRatio(1.0),
-      m_coarseReduction(DEFAULT_COARSE_REDUCTION),
-      m_fineReduction(DEFAULT_FINE_REDUCTION)
+    : m_maxAngle(DEFAULT_MAX_ANGLE)
+    , m_accuracy(DEFAULT_ACCURACY)
+    , m_resolutionRatio(1.0)
+    , m_coarseReduction(DEFAULT_COARSE_REDUCTION)
+    , m_fineReduction(DEFAULT_FINE_REDUCTION)
 {
 }
 

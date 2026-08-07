@@ -2329,17 +2329,17 @@ Vyjměte je z projektu.</translation>
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
+        <source>Click to finish this zone. ESC to cancel.</source>
         <translation>Klikněte pro uzavření zóny. ESC pro zrušení.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
         <translation>Spojit první a poslední bod k uzavření zóny. ESC pro zrušení.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
         <translation>Zóna musí mít aspoň 3 body. ESC ke zrušení.</translation>
     </message>
 </context>

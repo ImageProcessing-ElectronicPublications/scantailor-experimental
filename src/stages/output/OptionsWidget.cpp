@@ -17,6 +17,7 @@
 */
 
 #include <boost/foreach.hpp>
+#include <Qt>
 #include <QtGlobal>
 #include <QVariant>
 #include <QColorDialog>
@@ -25,7 +26,6 @@
 #include <QCursor>
 #include <QPoint>
 #include <QSize>
-#include <Qt>
 #include <QDebug>
 #include "OptionsWidget.h"
 #include "ApplyColorsDialog.h"
@@ -88,6 +88,7 @@ OptionsWidget::OptionsWidget(
     thresholdMethodSelector->addItem(tr("EdgeAdapt"), T_EDGEADAPT);
     thresholdMethodSelector->addItem(tr("Robust"), T_ROBUST);
     thresholdMethodSelector->addItem(tr("Grain"), T_GRAIN);
+    thresholdMethodSelector->addItem(tr("GrainEM"), T_GRAINEM);
     thresholdMethodSelector->addItem(tr("MultiScale"), T_MSCALE);
     thresholdMethodSelector->addItem(tr("Engraving"), T_ENGRAVING);
 
@@ -105,6 +106,7 @@ OptionsWidget::OptionsWidget(
     colorFilterSelector->addItem(tr("Despeckle"), F_DESPECKLE);
     colorFilterSelector->addItem(tr("Sigma"), F_SIGMA);
     colorFilterSelector->addItem(tr("Blur/Sharpen"), F_BLUR);
+    colorFilterSelector->addItem(tr("Smooth"), F_SMOOTH);
     colorFilterSelector->addItem(tr("Screen"), F_SCREEN);
     colorFilterSelector->addItem(tr("EdgeDiv"), F_EDGEDIV);
     colorFilterSelector->addItem(tr("Robust"), F_ROBUST);
@@ -412,7 +414,7 @@ OptionsWidget::OptionsWidget(
 
     thresholdSlider->setMinimum(-50);
     thresholdSlider->setMaximum(50);
-    thresholLabel->setText(QString::number(thresholdSlider->value()));
+    neutralThresholdBtn->setText(QString::number(thresholdSlider->value()));
 }
 
 OptionsWidget::~OptionsWidget()
@@ -588,6 +590,10 @@ OptionsWidget::colorFilterGet()
         colorFilterSize->setValue(color_options.blurSize());
         colorFilterCoef->setValue(color_options.blurCoef());
         break;
+    case F_SMOOTH:
+        colorFilterSize->setValue(color_options.smoothSize());
+        colorFilterCoef->setValue(color_options.smoothCoef());
+        break;
     case F_SCREEN:
         colorFilterSize->setValue(color_options.screenSize());
         colorFilterCoef->setValue(color_options.screenCoef());
@@ -680,6 +686,9 @@ OptionsWidget::colorFilterSizeChanged(int value)
     case F_BLUR:
         color_options.setBlurSize(value);
         break;
+    case F_SMOOTH:
+        color_options.setSmoothSize(value);
+        break;
     case F_SCREEN:
         color_options.setScreenSize(value);
         break;
@@ -758,6 +767,9 @@ OptionsWidget::colorFilterCoefChanged(double value)
         break;
     case F_BLUR:
         color_options.setBlurCoef(value);
+        break;
+    case F_SMOOTH:
+        color_options.setSmoothCoef(value);
         break;
     case F_SCREEN:
         color_options.setScreenCoef(value);
@@ -957,6 +969,7 @@ OptionsWidget::thresholdDefaultButtonClicked()
     case T_BLURDIV:
     case T_EDGEDIV:
     case T_EDGEADAPT:
+    case T_GRAINEM:
         new_radius = 5;
         new_coef = 0.75;
         break;
@@ -1065,7 +1078,7 @@ OptionsWidget::bwThresholdChanged()
     QString const tooltip_text(QString::number(value));
     thresholdSlider->setToolTip(tooltip_text);
 
-    thresholLabel->setText(QString::number(value));
+    neutralThresholdBtn->setText(QString::number(value));
 
     if (m_ignoreThresholdChanges)
     {

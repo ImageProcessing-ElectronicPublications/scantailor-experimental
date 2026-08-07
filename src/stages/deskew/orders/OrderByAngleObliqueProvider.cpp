@@ -24,7 +24,7 @@ namespace deskew
 {
 
 OrderByAngleObliqueProvider::OrderByAngleObliqueProvider(IntrusivePtr<Settings> const& settings)
-    :   m_ptrSettings(settings)
+    : m_ptrSettings(settings)
 {
 }
 

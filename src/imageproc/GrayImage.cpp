@@ -20,6 +20,7 @@
 #include <stdexcept>
 #include "GrayImage.h"
 #include "Grayscale.h"
+#include "Scale.h"
 
 namespace imageproc
 {
@@ -1787,20 +1788,19 @@ void grayMapOverlay(
         return;
     }
 
-    int const w = src.width();
-    int const h = src.height();
-    unsigned char* src_line = src.data();
-    int const src_stride = src.stride();
-
-    if ((gover.width() != w) || (gover.height() != h))
-    {
-        return;
-    }
-    unsigned char* gover_line = gover.data();
-    int const gover_stride = gover.stride();
-
     if (coef != 0.0f)
     {
+        int const ws = src.width();
+        int const hs = src.height();
+        int const wo = gover.width();
+        int const ho = gover.height();
+        int const w = (ws < wo) ? ws : wo;
+        int const h = (hs < ho) ? hs : ho;
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gover_line = gover.data();
+        int const gover_stride = gover.stride();
+
         for (int y = 0; y < h; y++)
         {
             for (int x = 0; x < w; x++)
@@ -1848,6 +1848,85 @@ void grayMapOverlay(
         }
     }
 } // grayMapOverlay
+
+void grayMix(
+    GrayImage& src,
+    GrayImage& gover,
+    float const coef)
+{
+    if ((src.isNull()) || (gover.isNull()))
+    {
+        return;
+    }
+
+    if (coef != 0.0f)
+    {
+        int const ws = src.width();
+        int const hs = src.height();
+        int const wo = gover.width();
+        int const ho = gover.height();
+        int const w = (ws < wo) ? ws : wo;
+        int const h = (hs < ho) ? hs : ho;
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gover_line = gover.data();
+        int const gover_stride = gover.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const origin = src_line[x];
+                int const overlay = gover_line[x];
+                float ret = 0.5f + (1.0f - coef) * origin + coef * overlay;
+                ret = (ret < 0.0f) ? 0.0f : ((ret < 255.0f) ? ret : 255.0f);
+                src_line[x] = (unsigned char) ret;
+            }
+            src_line += src_stride;
+            gover_line += gover_stride;
+        }
+    }
+} // grayGrainExtract
+
+void grayGrainExtract(
+    GrayImage& src,
+    GrayImage& gover,
+    float const coef)
+{
+    if ((src.isNull()) || (gover.isNull()))
+    {
+        return;
+    }
+
+    if (coef != 0.0f)
+    {
+        int const ws = src.width();
+        int const hs = src.height();
+        int const wo = gover.width();
+        int const ho = gover.height();
+        int const w = (ws < wo) ? ws : wo;
+        int const h = (hs < ho) ? hs : ho;
+        unsigned char* src_line = src.data();
+        int const src_stride = src.stride();
+        unsigned char* gover_line = gover.data();
+        int const gover_stride = gover.stride();
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int const origin = src_line[x];
+                int const overlay = gover_line[x];
+                int const grain = origin - overlay + 128;
+                float ret = 0.5f + (1.0f - coef) * origin + coef * grain;
+                ret = (ret < 0.0f) ? 0.0f : ((ret < 255.0f) ? ret : 255.0f);
+                src_line[x] = (unsigned char) ret;
+            }
+            src_line += src_stride;
+            gover_line += gover_stride;
+        }
+    }
+} // grayGrainExtract
 
 GrayImage grayCurveFilter(
     GrayImage& src, float const coef)
@@ -1998,7 +2077,8 @@ void grayGravureInPlace(
             return;
         }
 
-        grayMapOverlay(src, gover, coef);
+        //grayMapOverlay(src, gover, coef);
+        grayGrainExtract(src, gover, coef);
     }
 
 }  // grayGravure
@@ -2037,7 +2117,8 @@ void grayDots8InPlace(
             return;
         }
 
-        grayMapOverlay(src, gover, coef);
+        //grayMapOverlay(src, gover, coef);
+        grayGrainExtract(src, gover, coef);
     }
 }  // grayDots8
 
@@ -2110,7 +2191,7 @@ GrayImage grayScaleByLine(
 }
 GrayImage grayRISundefect(
     GrayImage const& src,
-    int const radius,
+    float const radius,
     float const coef)
 {
     GrayImage dst(src);
@@ -2120,7 +2201,7 @@ GrayImage grayRISundefect(
 
 void grayRISundefectInPlace(
     GrayImage& src,
-    int const radius,
+    float const radius,
     float const coef)
 {
     if (src.isNull())
@@ -2128,25 +2209,36 @@ void grayRISundefectInPlace(
         return;
     }
 
-    if ((radius > 0) && (coef != 0.0f))
+    if (radius == 1.0f)
+    {
+        return;
+    }
+
+    if ((radius > 0.0f) && (coef != 0.0f))
     {
         int const w = src.width();
         int const h = src.height();
         unsigned char* src_line = src.data();
         int const src_stride = src.stride();
+        float const radius_inv = 1.0f / radius;
 
-        int const wr = (w + radius - 1) / radius;
-        int const hr = (h + radius - 1) / radius;
+        int const wr = (int) (1.0f + radius_inv * (w - 1));
+        int const hr = (int) (1.0f + radius_inv * (h - 1));
+
+        if ((wr == w) && (hr == h))
+        {
+            return;
+        }
 
         if ((wr > 0) && (hr > 0))
         {
-            GrayImage gsub = grayScaleByLine(src, wr, hr);
+            GrayImage gsub = scaleToGray(src, QSize(wr, hr));
             if (gsub.isNull())
             {
                 return;
             }
 
-            GrayImage gref = grayScaleByLine(gsub, w, h);
+            GrayImage gref = scaleToGray(gsub, QSize(w, h));
             if (gref.isNull())
             {
                 return;

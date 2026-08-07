@@ -2480,18 +2480,18 @@ text-indent:0px;&quot;&gt;Премахване на избраните стра�
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
-        <translation>Цъкнете, за да завършите тази зона.  ESC за отказ.</translation>
+        <source>Click to finish this zone. ESC to cancel.</source>
+        <translation>Цъкнете, за да завършите тази зона. ESC за отказ.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
-        <translation>Свържете първата и последната точка, за да завършите тази зона.  ESC за отказ.</translation>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
+        <translation>Свържете първата и последната точка, за да завършите тази зона. ESC за отказ.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
-        <translation>Зоните трябва да имат поне 3 точки.  ESC за отказ.</translation>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
+        <translation>Зоните трябва да имат поне 3 точки. ESC за отказ.</translation>
     </message>
 </context>
 <context>

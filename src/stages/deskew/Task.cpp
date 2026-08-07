@@ -78,13 +78,14 @@ using namespace dewarping;
 class Task::NoDistortionUiUpdater : public FilterResult
 {
 public:
-    NoDistortionUiUpdater(IntrusivePtr<Filter> const& filter,
-                          std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                          std::unique_ptr<DebugImagesImpl> dbg_img,
-                          AffineTransformedImage const& transformed_image,
-                          PageId const& page_id,
-                          Params const& page_params,
-                          bool batch_processing);
+    NoDistortionUiUpdater(
+        IntrusivePtr<Filter> const& filter,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        std::unique_ptr<DebugImagesImpl> dbg_img,
+        AffineTransformedImage const& transformed_image,
+        PageId const& page_id,
+        Params const& page_params,
+        bool batch_processing);
 
     virtual void updateUI(FilterUiInterface* ui);
 
@@ -107,12 +108,12 @@ class Task::RotationUiUpdater : public FilterResult
 {
 public:
     RotationUiUpdater(IntrusivePtr<Filter> const& filter,
-                      std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                      std::unique_ptr<DebugImagesImpl> dbg_img,
-                      AffineTransformedImage const& full_size_image,
-                      PageId const& page_id,
-                      Params const& page_params,
-                      bool batch_processing);
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        std::unique_ptr<DebugImagesImpl> dbg_img,
+        AffineTransformedImage const& full_size_image,
+        PageId const& page_id,
+        Params const& page_params,
+        bool batch_processing);
 
     virtual void updateUI(FilterUiInterface* ui);
 
@@ -134,12 +135,14 @@ private:
 class Task::PerspectiveUiUpdater : public FilterResult
 {
 public:
-    PerspectiveUiUpdater(IntrusivePtr<Filter> const& filter,
-                         std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                         std::unique_ptr<DebugImagesImpl> dbg_img,
-                         AffineTransformedImage const& full_size_image,
-                         PageId const& page_id, Params const& page_params,
-                         bool batch_processing);
+    PerspectiveUiUpdater(
+        IntrusivePtr<Filter> const& filter,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        std::unique_ptr<DebugImagesImpl> dbg_img,
+        AffineTransformedImage const& full_size_image,
+        PageId const& page_id,
+        Params const& page_params,
+        bool batch_processing);
 
     virtual void updateUI(FilterUiInterface* ui);
 
@@ -161,12 +164,14 @@ private:
 class Task::DewarpingUiUpdater : public FilterResult
 {
 public:
-    DewarpingUiUpdater(IntrusivePtr<Filter> const& filter,
-                       std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                       std::unique_ptr<DebugImagesImpl> dbg_img,
-                       AffineTransformedImage const& full_size_image,
-                       PageId const& page_id, Params const& page_params,
-                       bool batch_processing);
+    DewarpingUiUpdater(
+        IntrusivePtr<Filter> const& filter,
+        std::shared_ptr<AcceleratableOperations> const& accel_ops,
+        std::unique_ptr<DebugImagesImpl> dbg_img,
+        AffineTransformedImage const& full_size_image,
+        PageId const& page_id,
+        Params const& page_params,
+        bool batch_processing);
 
     virtual void updateUI(FilterUiInterface* ui);
 
@@ -186,15 +191,18 @@ private:
 };
 
 
-Task::Task(IntrusivePtr<Filter> const& filter,
-           IntrusivePtr<Settings> const& settings,
-           IntrusivePtr<select_content::Task> const& next_task,
-           PageId const& page_id, bool const batch_processing, bool const debug)
-    : m_ptrFilter(filter),
-      m_ptrSettings(settings),
-      m_ptrNextTask(next_task),
-      m_pageId(page_id),
-      m_batchProcessing(batch_processing)
+Task::Task(
+    IntrusivePtr<Filter> const& filter,
+    IntrusivePtr<Settings> const& settings,
+    IntrusivePtr<select_content::Task> const& next_task,
+    PageId const& page_id,
+    bool const batch_processing,
+    bool const debug)
+    : m_ptrFilter(filter)
+    , m_ptrSettings(settings)
+    , m_ptrNextTask(next_task)
+    , m_pageId(page_id)
+    , m_batchProcessing(batch_processing)
 {
     if (debug)
     {
@@ -302,7 +310,8 @@ Task::processRotationDistortion(
     std::shared_ptr<AcceleratableOperations> const& accel_ops,
     QImage const& orig_image,
     CachingFactory<imageproc::GrayImage> const& gray_orig_image_factory,
-    AffineImageTransform const& orig_image_transform, Params& params)
+    AffineImageTransform const& orig_image_transform,
+    Params& params)
 {
     if (!params.getParamsRotation().isValid())
     {

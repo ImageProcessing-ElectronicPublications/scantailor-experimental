@@ -1801,11 +1801,13 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="43"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="508"/>
         <source>Width</source>
         <translation>Ширина</translation>
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="76"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="537"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
@@ -1813,14 +1815,6 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="166"/>
         <source>Margins</source>
         <translation>Поля</translation>
-    </message>
-    <message>
-        <source>Millimeters (mm)</source>
-        <translation type="vanished">Миллиметры (mm)</translation>
-    </message>
-    <message>
-        <source>Inches (in)</source>
-        <translation type="vanished">Дюймы (in)</translation>
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="189"/>
@@ -1910,14 +1904,20 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выровнить размер путем аффинного масштабирования</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="472"/>
-        <source>Sub</source>
-        <translation>Понизить</translation>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="511"/>
+        <source>Sub scaling Width.</source>
+        <translation>Понижающее масштабирование Ширины.</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="475"/>
-        <source>Match size by subscaling</source>
-        <translation>Выровнить размер путем пониженного масштабирования</translation>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="518"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="547"/>
+        <source>Value is 0.25 .. 2.00.</source>
+        <translation>Значение от 0.25 до 2.00.</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="540"/>
+        <source>Sub scaling Height.</source>
+        <translation>Понижающее масштабирование Высоты.</translation>
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="803"/>
@@ -2585,18 +2585,18 @@ p, li { white-space: pre-wrap; }
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
+        <source>Click to finish this zone. ESC to cancel.</source>
         <translation>Кликните для завершения этой зоны. ESC для отмены.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
         <translation>Соедините первую и последнюю точку для завершения этой зоны. ESC для отмены.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
-        <translation>Зоны должны содержать по крайней мере 3 точки. ESC для отмены.</translation>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
+        <translation>Зоны должны содержать по крайней мере 3 точки. Удерживайте Ctrl для прямоугольника. ESC для отмены.</translation>
     </message>
 </context>
 <context>

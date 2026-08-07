@@ -2338,17 +2338,17 @@ You should remove them from the project.</source>
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
+        <source>Click to finish this zone. ESC to cancel.</source>
         <translation>单击以结束这个区域。按ESC则取消。</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
         <translation>连接第一点和最后一个点以结束这个区域。按ESC则取消。</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
         <translation>区域需要有最少3个点。按ESC则取消。</translation>
     </message>
 </context>

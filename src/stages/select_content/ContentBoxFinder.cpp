@@ -113,12 +113,14 @@ struct PreferVertical
 } // anonymous namespace
 
 QRectF
-ContentBoxFinder::findContentBox(TaskStatus const& status,
-                                 std::shared_ptr<AcceleratableOperations> const& accel_ops,
-                                 AffineTransformedImage const& image, DebugImages* dbg)
+ContentBoxFinder::findContentBox(
+    TaskStatus const& status,
+    std::shared_ptr<AcceleratableOperations> const& accel_ops,
+    AffineTransformedImage const& image,
+    DebugImages* dbg)
 {
     AffineImageTransform downscaled_transform(image.xform());
-    downscaled_transform.scaleTo(QSize(1500, 1500), Qt::KeepAspectRatio);
+    downscaled_transform.scaleTo(QSize(1625, 1625), Qt::KeepAspectRatio);
 
     QRect const downscaled_rect(
         downscaled_transform.transformedCropArea().boundingRect().toRect()
@@ -151,7 +153,8 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     //BinaryImage bw150(binarizeWolf(GrayImage(gray150), 25, 50));
     //BinaryImage bw150(binarizeEdgeDiv(GrayImage(gray150), 25, 0.5, 1.0, 0));
-    BinaryImage bw150(binarizeEdgeDiv(GrayImage(gray150), 25, -1.0, 0.75, 0));
+    //BinaryImage bw150(binarizeEdgeDiv(GrayImage(gray150), 25, -1.0, 0.75, 0));
+    BinaryImage bw150(binarizeGrainEM(GrayImage(gray150), 6, 0.75));
     if (dbg)
     {
         dbg->add(bw150, "bw150");
@@ -191,7 +194,8 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     status.throwIfCancelled();
 
-    BinaryImage dilated(dilateBrick(bw150, QSize(3, 3)));
+    //BinaryImage dilated(dilateBrick(bw150, QSize(3, 3)));
+    BinaryImage dilated(dilateBrick(bw150, QSize(9, 9)));
     if (dbg)
     {
         dbg->add(dilated, "dilated");
@@ -199,8 +203,18 @@ ContentBoxFinder::findContentBox(TaskStatus const& status,
 
     status.throwIfCancelled();
 
-    BinaryImage shadows_dilated(seedFill(shadows_seed, dilated, CONN8));
+    BinaryImage dilatederoded(erodeBrick(dilated, QSize(6, 6)));
     dilated.release();
+    if (dbg)
+    {
+        dbg->add(dilatederoded, "closing");
+    }
+
+    status.throwIfCancelled();
+
+    BinaryImage shadows_dilated(seedFill(shadows_seed, dilatederoded, CONN8));
+    dilatederoded.release();
+	shadows_seed.release();
     if (dbg)
     {
         dbg->add(shadows_dilated, "shadows_dilated");

@@ -175,6 +175,8 @@ private:
         QImage const& image,
         imageproc::BinaryImage const& mask) const;
 
+    double calcPolygonArea(QPolygonF const poly);
+
     void colored(
         QImage& image,
         ColorGrayscaleOptions const& color_options,
@@ -197,6 +199,11 @@ private:
         QImage const& src,
         double morphology_coef,
         std::shared_ptr<AcceleratableOperations> const& accel_ops);
+
+    imageproc::GrayImage smoothSavGol(
+        QImage const& src,
+        int const radius,
+        double const coef);
 
     static void morphologicalSmoothInPlace(
         imageproc::BinaryImage& img,

@@ -19,10 +19,10 @@
 #ifndef IMAGEPROC_SAVGOL_KERNEL_H_
 #define IMAGEPROC_SAVGOL_KERNEL_H_
 
-#include "imageproc_config.h"
-#include "AlignedArray.h"
 #include <Eigen/Core>
 #include <Eigen/Cholesky>
+#include "imageproc_config.h"
+#include "AlignedArray.h"
 
 class QPoint;
 class QSize;

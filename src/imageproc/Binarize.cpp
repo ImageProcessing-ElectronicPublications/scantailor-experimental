@@ -1025,6 +1025,27 @@ BinaryImage binarizeGrain(
     return bw_img;
 } // binarizeGrain
 
+BinaryImage binarizeGrainEM(
+    GrayImage const& src,
+    int const radius,
+    float const k,
+    int const delta,
+    unsigned char const bound_lower,
+    unsigned char const bound_upper)
+{
+    if (src.isNull())
+    {
+        return BinaryImage();
+    }
+
+    int const radius2 = radius + radius;
+    GrayImage gray(grayGrain(src, radius2, k));
+    GrayImage clean(grayEMDenoiser(gray, radius, k));
+    BinaryImage bw_img(binarizeBiModal(clean, delta, bound_lower, bound_upper));
+
+    return bw_img;
+} // binarizeGrainEM
+
 BinaryImage binarizeMScale(
     GrayImage const& src,
     int const radius,

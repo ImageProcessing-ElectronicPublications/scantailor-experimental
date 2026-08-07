@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ReduceThreshold.h"
-#include <stdexcept>
 #include <stdint.h>
 #include <assert.h>
+#include <stdexcept>
+#include "ReduceThreshold.h"
 
 namespace imageproc
 {

@@ -40,14 +40,20 @@ MatchSizeMode::MatchSizeMode(QDomElement const& el)
     {
         m_mode = M_AFFINE;
     }
-    else if (mode == "sub")
-    {
-        m_mode = M_SUB;
-    }
     else
     {
         // Default mode for backwards compatibility.
         m_mode = M_GROW_MARGINS;
+    }
+    m_subScaleFactorWidth = el.attribute("subScaleWidth").toDouble();
+    m_subScaleFactorHeight = el.attribute("subScaleHeight").toDouble();
+    if ((m_subScaleFactorWidth < 0.25) || (m_subScaleFactorWidth > 2.0))
+    {
+        m_subScaleFactorWidth = 1.0;
+    }
+    if ((m_subScaleFactorHeight < 0.25) || (m_subScaleFactorHeight > 2.0))
+    {
+        m_subScaleFactorHeight = 1.0;
     }
 }
 
@@ -70,13 +76,12 @@ MatchSizeMode::toXml(QDomDocument& doc, QString const& name) const
     case M_AFFINE:
         mode = "affine";
         break;
-    case M_SUB:
-        mode = "sub";
-        break;
     }
 
     QDomElement el(doc.createElement(name));
     el.setAttribute("mode", QLatin1String(mode));
+    el.setAttribute("subScaleWidth", m_subScaleFactorWidth);
+    el.setAttribute("subScaleHeight", m_subScaleFactorHeight);
 
     return el;
 }

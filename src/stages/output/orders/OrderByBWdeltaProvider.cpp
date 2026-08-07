@@ -24,7 +24,7 @@ namespace output
 {
 
 OrderByBWdeltaProvider::OrderByBWdeltaProvider(IntrusivePtr<Settings> const& settings)
-    :   m_ptrSettings(settings)
+    : m_ptrSettings(settings)
 {
 }
 

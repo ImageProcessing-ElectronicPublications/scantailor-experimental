@@ -2402,17 +2402,17 @@ p, li { white-space: pre-wrap; }
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
+        <source>Click to finish this zone. ESC to cancel.</source>
         <translation>Kliknij aby utworzyć ten obszar. Wciśnij Esc aby anulować.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
         <translation>Połącz pierwszy i ostatni punkt aby utworzyć ten obszar. Wciśnij Esc aby anulować.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
         <translation>Obszary muszą się składać z przynajmniej 3 punktów. Wciśnij Esc aby anulować.</translation>
     </message>
 </context>

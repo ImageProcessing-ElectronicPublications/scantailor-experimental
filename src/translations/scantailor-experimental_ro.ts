@@ -2134,17 +2134,17 @@ Ar trebui să le eliminați din proiect.</translation>
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
-        <translation type="unfinished">Clic pentru a finaliza această zonă.  ESC pentru anulare.</translation>
+        <source>Click to finish this zone. ESC to cancel.</source>
+        <translation type="unfinished">Clic pentru a finaliza această zonă. ESC pentru anulare.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
-        <translation type="unfinished">Conectați primul cu ultimul punct pentru finalizarea zonei.  ESC pentru anulare.</translation>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
+        <translation type="unfinished">Conectați primul cu ultimul punct pentru finalizarea zonei. ESC pentru anulare.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
         <translation type="unfinished">Zonele trebuie să aibă cel puțin 3 puncte. ESC pentru anulare.</translation>
     </message>
 </context>

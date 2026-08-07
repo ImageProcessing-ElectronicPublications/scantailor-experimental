@@ -2371,18 +2371,18 @@ text-indent:0px;&quot;&gt;Rimuovi i file selezionati dal progetto.&lt;/p&gt;&lt;
     <name>ZoneCreationInteraction</name>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="349"/>
-        <source>Click to finish this zone.  ESC to cancel.</source>
+        <source>Click to finish this zone. ESC to cancel.</source>
         <translation>Clicca per terminare questa zona. ESC per cancellare.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="353"/>
-        <source>Connect first and last points to finish this zone.  ESC to cancel.</source>
-        <translation>Unisci il primo e l&apos;ultimo punto per completare la zona.  ESC per cancellare.</translation>
+        <source>Connect first and last points to finish this zone. ESC to cancel.</source>
+        <translation>Unisci il primo e l&apos;ultimo punto per completare la zona. ESC per cancellare.</translation>
     </message>
     <message>
         <location filename="../zones/ZoneCreationInteraction.cpp" line="358"/>
-        <source>Zones need to have at least 3 points.  ESC to cancel.</source>
-        <translation>Le zone devono avere almeno tre punti.  ESC per cancellare.</translation>
+        <source>Zones need to have at least 3 points. Hold Ctrl for rectangle. ESC to cancel.</source>
+        <translation>Le zone devono avere almeno tre punti. ESC per cancellare.</translation>
     </message>
 </context>
 <context>

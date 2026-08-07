@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BlackWhiteOptions.h"
 #include <QDomDocument>
 #include <QDomElement>
 #include <QString>
+#include "BlackWhiteOptions.h"
 
 namespace output
 {
@@ -276,6 +276,10 @@ BlackWhiteOptions::parseThresholdMethod(QString const& str)
     {
         return T_GRAIN;
     }
+    else if (str == "grainem")
+    {
+        return T_GRAINEM;
+    }
     else if (str == "multiscale")
     {
         return T_MSCALE;
@@ -367,6 +371,9 @@ BlackWhiteOptions::formatThresholdMethod(ThresholdFilter type)
         break;
     case T_GRAIN:
         str = "grain";
+        break;
+    case T_GRAINEM:
+        str = "grainem";
         break;
     case T_MSCALE:
         str = "multiscale";

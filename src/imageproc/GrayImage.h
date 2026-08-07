@@ -265,6 +265,16 @@ void grayMapOverlay(
     GrayImage& gover,
     float coef = 0.0f);
 
+void grayMix(
+    GrayImage& src,
+    GrayImage& gover,
+    float coef = 0.0f);
+
+void grayGrainExtract(
+    GrayImage& src,
+    GrayImage& gover,
+    float coef = 0.0f);
+
 /**
  * @brief S-curve.
  *
@@ -322,11 +332,11 @@ IMAGEPROC_EXPORT GrayImage grayScaleByLine(
     int const hnew);
 IMAGEPROC_EXPORT GrayImage grayRISundefect(
     GrayImage const& src,
-    int radius = 2,
+    float radius = 2.0f,
     float coef = 0.0f);
 IMAGEPROC_EXPORT void grayRISundefectInPlace(
     GrayImage& src,
-    int radius = 2,
+    float radius = 2.0f,
     float coef = 0.0f);
 
 /**

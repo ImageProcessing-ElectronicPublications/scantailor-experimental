@@ -60,6 +60,8 @@ public:
         , m_sigmaCoef(0.0)
         , m_blurSize(1)
         , m_blurCoef(0.0)
+        , m_smoothSize(1)
+        , m_smoothCoef(0.0)
         , m_screenSize(5)
         , m_screenCoef(0.0)
         , m_edgedivSize(13)
@@ -341,6 +343,23 @@ public:
         m_blurCoef = val;
     }
 
+    int smoothSize() const
+    {
+        return m_smoothSize;
+    }
+    void setSmoothSize(int val)
+    {
+        m_smoothSize = val;
+    }
+    double smoothCoef() const
+    {
+        return m_smoothCoef;
+    }
+    void setSmoothCoef(double val)
+    {
+        m_smoothCoef = val;
+    }
+
     int screenSize() const
     {
         return m_screenSize;
@@ -539,6 +558,8 @@ private:
     double m_sigmaCoef;
     int m_blurSize;
     double m_blurCoef;
+    int m_smoothSize;
+    double m_smoothCoef;
     int m_screenSize;
     double m_screenCoef;
     int m_edgedivSize;

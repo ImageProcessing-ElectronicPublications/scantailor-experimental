@@ -26,7 +26,7 @@ namespace page_layout
 {
 
 OrderByWidthProvider::OrderByWidthProvider(IntrusivePtr<Settings> const& settings)
-    :   m_ptrSettings(settings)
+    : m_ptrSettings(settings)
 {
 }
 
@@ -39,14 +39,18 @@ OrderByWidthProvider::precedes(
     std::unique_ptr<Params> const rhs_params(m_ptrSettings->getPageParams(rhs_page));
 
     QSizeF lhs_size;
+    float lhs_scale_w = 1.0f;
     if (lhs_params.get())
     {
         lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
+        lhs_scale_w = lhs_params->matchSizeMode().getSubScaleWidth();
     }
     QSizeF rhs_size;
+    float rhs_scale_w = 1.0f;
     if (rhs_params.get())
     {
         rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
+        rhs_scale_w = rhs_params->matchSizeMode().getSubScaleWidth();
     }
 
     bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();
@@ -58,8 +62,8 @@ OrderByWidthProvider::precedes(
         return lhs_valid;
     }
 
-    float const lk = lhs_size.width();
-    float const rk = rhs_size.width();
+    float const lk = 1.0f + lhs_scale_w * (lhs_size.width() - 1.0f);
+    float const rk = 1.0f + rhs_scale_w * (rhs_size.width() - 1.0f);
 
     return (lk < rk);
 }

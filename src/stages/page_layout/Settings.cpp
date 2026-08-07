@@ -309,9 +309,11 @@ Settings::updateContentSizeAndGetParams(
     QSizeF* agg_hard_size_before, QSizeF* agg_hard_size_after)
 {
     return m_ptrImpl->updateContentSizeAndGetParams(
-               page_id, content_size,
-               agg_hard_size_before, agg_hard_size_after
-           );
+        page_id,
+        content_size,
+        agg_hard_size_before,
+        agg_hard_size_after
+    );
 }
 
 RelativeMargins
@@ -405,12 +407,12 @@ Settings::Item::Item(
     MatchSizeMode const& match_size_mode,
     Alignment const& align,
     Framings const& fram)
-    : pageId(page_id),
-      hardMargins(hard_margins),
-      contentSize(content_size),
-      matchSizeMode(match_size_mode),
-      alignment(align),
-      framings(fram)
+    : pageId(page_id)
+    , hardMargins(hard_margins)
+    , contentSize(content_size)
+    , matchSizeMode(match_size_mode)
+    , alignment(align)
+    , framings(fram)
 {
 }
 
@@ -424,7 +426,8 @@ Settings::Item::hardWidth() const
     else
     {
         double const hw = hardMargins.extendContentSize(contentSize).width();
-        return (matchSizeMode.get() == MatchSizeMode::M_SUB) ? (0.5 * hw) : hw;
+        double const hwss = 1.0 + matchSizeMode.getSubScaleWidth() * (hw - 1.0);
+        return hwss;
     }
 }
 
@@ -438,7 +441,8 @@ Settings::Item::hardHeight() const
     else
     {
         double const hh = hardMargins.extendContentSize(contentSize).height();
-        return (matchSizeMode.get() == MatchSizeMode::M_SUB) ? (0.5 * hh) : hh;
+        double const hhss = 1.0 + matchSizeMode.getSubScaleHeight() * (hh - 1.0);
+        return hhss;
     }
 }
 
@@ -458,15 +462,15 @@ Settings::Item::influenceHardHeight() const
 /*============================= Settings::Impl ==============================*/
 
 Settings::Impl::Impl()
-    : m_items(),
-      m_unorderedItems(m_items.get<SequencedTag>()),
-      m_descWidthOrder(m_items.get<DescWidthTag>()),
-      m_descHeightOrder(m_items.get<DescHeightTag>()),
-      m_invalidSize(),
-      m_defaultHardMargins(page_layout::Settings::defaultHardMargins()),
-      m_defaultMatchSizeMode(MatchSizeMode::M_GROW_MARGINS),
-      m_defaultAlignment(Alignment::TOP, Alignment::HCENTER),
-      m_defaultFramings(0.24, 0.16)
+    : m_items()
+    , m_unorderedItems(m_items.get<SequencedTag>())
+    , m_descWidthOrder(m_items.get<DescWidthTag>())
+    , m_descHeightOrder(m_items.get<DescHeightTag>())
+    , m_invalidSize()
+    , m_defaultHardMargins(page_layout::Settings::defaultHardMargins())
+    , m_defaultMatchSizeMode(MatchSizeMode::M_GROW_MARGINS)
+    , m_defaultAlignment(Alignment::TOP, Alignment::HCENTER)
+    , m_defaultFramings(0.24, 0.16)
 {
 }
 

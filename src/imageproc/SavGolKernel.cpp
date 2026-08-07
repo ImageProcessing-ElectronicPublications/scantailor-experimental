@@ -16,12 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SavGolKernel.h"
+#include <stdexcept>
 #include <Eigen/Core>
 #include <Eigen/Cholesky>
 #include <QSize>
 #include <QPoint>
-#include <stdexcept>
+#include "SavGolKernel.h"
 
 using namespace Eigen;
 

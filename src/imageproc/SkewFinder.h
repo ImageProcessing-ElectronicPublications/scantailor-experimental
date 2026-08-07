@@ -40,10 +40,15 @@ public:
      */
     static double const GOOD_CONFIDENCE;
 
-    Skew() : m_angle(0.0), m_confidence(0.0) {}
+    Skew()
+        : m_angle(0.0)
+        , m_confidence(0.0)
+    {}
 
     Skew(double angle, double confidence)
-        : m_angle(angle), m_confidence(confidence) {}
+        : m_angle(angle)
+        , m_confidence(confidence)
+    {}
 
     /**
      * \brief Get the skew angle in degrees.

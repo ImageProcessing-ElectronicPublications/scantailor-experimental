@@ -16,16 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <assert.h>
+#include <string.h>
+#include <stdint.h>
 #include <vector>
 #include <memory>
 #include <new>
 #include <algorithm>
-#include <assert.h>
-#include <string.h>
-#include <stdint.h>
 #include <boost/foreach.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <Qt>
+#include <QtGlobal>
 #include <QImage>
 #include <QSize>
 #include <QPoint>
@@ -37,9 +39,7 @@
 #include <QColor>
 #include <QPen>
 #include <QBrush>
-#include <QtGlobal>
 #include <QDebug>
-#include <Qt>
 #include "OutputGenerator.h"
 #include "TaskStatus.h"
 #include "Utils.h"
@@ -649,18 +649,19 @@ OutputGenerator::process(
                 }
 
                 mse_kmeans = hsvKMeansInPlace(
-                                 dst,
-                                 transformed_image,
-                                 bw_content,
-                                 bw_mask,
-                                 black_kmeans_options.kmeansCount(),
-                                 black_kmeans_options.kmeansValueStart(),
-                                 color_space_val,
-                                 black_kmeans_options.kmeansSat(),
-                                 black_kmeans_options.kmeansNorm(),
-                                 black_kmeans_options.kmeansBG(),
-                                 black_kmeans_options.getFindBlack(),
-                                 black_kmeans_options.getFindWhite());
+                    dst,
+                    transformed_image,
+                    bw_content,
+                    bw_mask,
+                    black_kmeans_options.kmeansCount(),
+                    black_kmeans_options.kmeansValueStart(),
+                    color_space_val,
+                    black_kmeans_options.kmeansSat(),
+                    black_kmeans_options.kmeansNorm(),
+                    black_kmeans_options.kmeansBG(),
+                    black_kmeans_options.getFindBlack(),
+                    black_kmeans_options.getFindWhite()
+                );
                 /* deprecated: maskMorphological(dst, bw_content, black_kmeans_options.kmeansMorphology()); */
             }
         }
@@ -730,8 +731,8 @@ OutputGenerator::normalizeIlluminationGray(
     status.throwIfCancelled();
 
     GrayImage bg_img = accel_ops->renderPolynomialSurface(
-                           bg_ps, input_for_normalisation.width(), input_for_normalisation.height()
-                       );
+        bg_ps, input_for_normalisation.width(), input_for_normalisation.height()
+    );
     if (dbg)
     {
         dbg->add(bg_img, "background");
@@ -1005,8 +1006,8 @@ OutputGenerator::modifyColoredMask(
 QImage
 OutputGenerator::convertToRGBorRGBA(QImage const& src)
 {
-    QImage::Format const fmt = src.hasAlphaChannel()
-                               ? QImage::Format_ARGB32 : QImage::Format_RGB32;
+    QImage::Format const fmt =
+        src.hasAlphaChannel() ? QImage::Format_ARGB32 : QImage::Format_RGB32;
 
     return src.convertToFormat(fmt);
 }
@@ -1126,6 +1127,31 @@ OutputGenerator::smoothToGrayscale(
     return accel_ops->savGolFilter(GrayImage(src), QSize(window, window), degree, degree);
 }
 
+GrayImage
+OutputGenerator::smoothSavGol(
+    QImage const& src,
+    int const radius,
+    double const coef)
+{
+    if (coef == 0.0)
+    {
+        return GrayImage();
+    }
+    else
+    {
+        int const w = src.width();
+        int const h = src.height();
+        int const min_dim = (w < h) ? w : h;
+        int const morphology_coef = (coef < 0.0) ? -coef : coef;
+        float const dpi = (float) min_dim / 5.41f * radius; /* 5.41in - average width of book pages */
+
+        int const window = (int) (3.0f + morphology_coef * (0.85f + 0.012f * dpi));
+        int const degree = (int) (1.0f + morphology_coef * (2.25f + 0.00184f * dpi));
+
+        return savGolFilter(GrayImage(src), QSize(window, window), degree, degree);
+    }
+}
+
 BinaryThreshold
 OutputGenerator::adjustThreshold(BinaryThreshold threshold) const
 {
@@ -1164,12 +1190,6 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
 
         switch (threshold_method)
         {
-        case T_OTSU:
-        {
-            // binarized = binarizeOtsu(image, threshold_delta);
-            binarized = binarizeBiModal(gray, threshold_delta, bound_lower, bound_upper);
-            break;
-        }
         case T_MEANDELTA:
         {
             binarized = binarizeMean(gray, threshold_delta, bound_lower, bound_upper);
@@ -1285,6 +1305,11 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
             binarized = binarizeGrain(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
             break;
         }
+        case T_GRAINEM:
+        {
+            binarized = binarizeGrainEM(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
         case T_MSCALE:
         {
             binarized = binarizeMScale(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
@@ -1293,6 +1318,13 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
         case T_ENGRAVING:
         {
             binarized = binarizeEngraving(gray, radius, threshold_coef, threshold_delta, bound_lower, bound_upper);
+            break;
+        }
+        case T_OTSU:
+        default:
+        {
+            // binarized = binarizeOtsu(image, threshold_delta);
+            binarized = binarizeBiModal(gray, threshold_delta, bound_lower, bound_upper);
             break;
         }
         }
@@ -1306,6 +1338,26 @@ OutputGenerator::binarize(QImage const& image, BinaryImage const& mask) const
     rasterOp<RopAnd<RopSrc, RopDst> >(binarized, mask);
 
     return binarized;
+}
+
+double
+OutputGenerator::calcPolygonArea(QPolygonF const poly)
+{
+    // Area of convex polygon formula taken from:
+    // http://mathworld.wolfram.com/PolygonArea.html
+    double area = 0.0;
+
+    QPointF prev_pt = poly.last();
+
+    for (QPointF const pt : poly)
+    {
+        area += prev_pt.x() * pt.y() - pt.x() * prev_pt.y();
+        prev_pt = pt;
+    }
+
+    area = 0.5 * std::abs(area);
+
+    return area;
 }
 
 void
@@ -1324,10 +1376,21 @@ OutputGenerator::colored(
     GrayImage gout = GrayImage(image);
     if (!gout.isNull())
     {
+        QPolygonF const region_orig = m_ptrImageTransform->origCropArea();
+        QPolygonF const region_transformed = m_ptrImageTransform->transformedCropArea();
+        double const area_orig = calcPolygonArea(region_orig);
+        double const area_transformed = calcPolygonArea(region_transformed);
+        double const scale2 = ((area_orig > 0.0) && (area_transformed > 0.0)) ? (area_transformed / area_orig) : 1.0;
+        double const scale = std::sqrt(scale2);
+
+        // RIS undefect auto
+        grayRISundefectInPlace(gout, scale, 1.0f);
+
         grayCurveFilterInPlace(gout, color_options.curveCoef());
 
         graySqrFilterInPlace(gout, color_options.sqrCoef());
 
+        // RIS undefect manual
         grayRISundefectInPlace(gout, color_options.RISundefectSize(), color_options.RISundefectCoef());
 
         grayDeBlur5InPlace(gout, color_options.getDeBlur5Size(), color_options.getDeBlur5Coef());
@@ -1355,6 +1418,15 @@ OutputGenerator::colored(
         graySigmaInPlace(gout, color_options.sigmaSize(), color_options.sigmaCoef());
 
         grayBlurInPlace(gout, color_options.blurSize(), color_options.blurCoef());
+
+        if (color_options.smoothCoef() != 0.0)
+        {
+            GrayImage gsmooth = smoothSavGol(gout, color_options.smoothSize(), 1.0f);
+            if (!gsmooth.isNull())
+            {
+                grayMix(gout, gsmooth, color_options.smoothCoef());
+            }
+        }
 
         grayScreenInPlace(gout, color_options.screenSize(), color_options.screenCoef());
 
@@ -1402,14 +1474,14 @@ OutputGenerator::colored(
 
             // imageGraySaveColors(image, gray, 1.0);
             maybe_normalized = normalizeIlluminationGray(
-                                   status,
-                                   accel_ops,
-                                   gout,
-                                   transformed_for_bg_estimation,
-                                   norm_coef,
-                                   downscaled_region_of_intereset,
-                                   dbg
-                               );
+                status,
+                accel_ops,
+                gout,
+                transformed_for_bg_estimation,
+                norm_coef,
+                downscaled_region_of_intereset,
+                dbg
+            );
             gout = GrayImage(maybe_normalized);
         }
 

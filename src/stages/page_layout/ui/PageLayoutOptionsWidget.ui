@@ -13,11 +13,36 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="PageLayoutVerticalLayout">
+   <item>
+    <widget class="QCheckBox" name="framingsGroupEmpty">
+     <property name="text">
+      <string>Framings</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="framingsGroup">
      <property name="title">
       <string>Framings</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="framingsVerticalLayout">
       <item>
@@ -161,15 +186,40 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="marginsGroupEmpty">
+     <property name="text">
+      <string>Margins</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="marginsGroup">
      <property name="title">
       <string>Margins</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="marginsVerticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="marginsHorizontalLayout">
         <item>
-         <spacer name="horizontalSpacer_3">
+         <spacer name="marginsHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -182,16 +232,22 @@
          </spacer>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="marginsGridLayout">
           <item row="0" column="0">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="marginsLabelTL">
             <property name="text">
-             <string>Top</string>
+             <string>.</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="topMarginSpinBox">
+            <property name="toolTip">
+             <string>Top</string>
+            </property>
             <property name="suffix">
              <string notr="true">%</string>
             </property>
@@ -209,42 +265,92 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2" rowspan="2">
-           <widget class="QToolButton" name="topBottomLink">
-            <property name="minimumSize">
-             <size>
-              <width>24</width>
-              <height>48</height>
-             </size>
-            </property>
+          <item row="0" column="2">
+           <widget class="QLabel" name="marginsLabelTR">
             <property name="text">
-             <string>...</string>
+             <string>.</string>
             </property>
-            <property name="icon">
-             <iconset resource="../../../resources/resources.qrc">
-              <normaloff>:/icons/stock-vchain-broken-24.png</normaloff>
-              <normalon>:/icons/stock-vchain-24.png</normalon>:/icons/stock-vchain-broken-24.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>9</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Bottom</string>
+           <widget class="QDoubleSpinBox" name="leftMarginSpinBox">
+            <property name="toolTip">
+             <string>Left</string>
+            </property>
+            <property name="suffix">
+             <string notr="true">%</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>-49.5</double>
+            </property>
+            <property name="maximum">
+             <double>999.5</double>
+            </property>
+            <property name="singleStep">
+             <double>0.5</double>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="bottomMarginSpinBox">
+           <layout class="QHBoxLayout" name="marginsLinksHorizontalLayout">
+            <item>
+             <widget class="QToolButton" name="leftRightLink">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../../resources/resources.qrc">
+                <normaloff>:/icons/stock-hchain-broken-24.png</normaloff>
+                <normalon>:/icons/stock-hchain-24.png</normalon>:/icons/stock-hchain-broken-24.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>9</height>
+               </size>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="topBottomLink">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../../resources/resources.qrc">
+                <normaloff>:/icons/stock-vchain-broken-24.png</normaloff>
+                <normalon>:/icons/stock-vchain-24.png</normalon>:/icons/stock-vchain-broken-24.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>9</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="2">
+           <widget class="QDoubleSpinBox" name="rightMarginSpinBox">
+            <property name="toolTip">
+             <string>Right</string>
+            </property>
             <property name="suffix">
              <string notr="true">%</string>
             </property>
@@ -263,14 +369,20 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="marginsLabelBL">
             <property name="text">
-             <string>Left</string>
+             <string>.</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="leftMarginSpinBox">
+           <widget class="QDoubleSpinBox" name="bottomMarginSpinBox">
+            <property name="toolTip">
+             <string>Bottom</string>
+            </property>
             <property name="suffix">
              <string notr="true">%</string>
             </property>
@@ -288,63 +400,30 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="2" rowspan="2">
-           <widget class="QToolButton" name="leftRightLink">
-            <property name="minimumSize">
-             <size>
-              <width>24</width>
-              <height>48</height>
-             </size>
-            </property>
+          <item row="2" column="2">
+           <widget class="QLabel" name="marginsLabelBR">
             <property name="text">
-             <string>...</string>
+             <string>.</string>
             </property>
-            <property name="icon">
-             <iconset resource="../../../resources/resources.qrc">
-              <normaloff>:/icons/stock-vchain-broken-24.png</normaloff>
-              <normalon>:/icons/stock-vchain-24.png</normalon>:/icons/stock-vchain-broken-24.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>9</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-            <property name="autoRaise">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Right</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="rightMarginSpinBox">
-            <property name="suffix">
-             <string notr="true">%</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>-49.5</double>
-            </property>
-            <property name="maximum">
-             <double>999.5</double>
-            </property>
-            <property name="singleStep">
-             <double>0.5</double>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="marginsHorizontalSpacerEnd">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <spacer name="horizontalSpacer">
@@ -362,9 +441,9 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout" name="marginsApplyHorizontalLayout">
         <item>
-         <spacer name="horizontalSpacer_9">
+         <spacer name="marginsApplyHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -384,7 +463,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_10">
+         <spacer name="marginsApplyHorizontalSpacerEnd">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -402,9 +481,34 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="alignmentGroupEmpty">
+     <property name="text">
+      <string>Alignment</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="alignmentGroup">
      <property name="title">
       <string>Alignment</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
      <layout class="QVBoxLayout" name="alignmentGroupVerticalLayout">
       <item>
@@ -469,17 +573,69 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="matchSizeSubRb">
-              <property name="text">
-               <string>Sub</string>
+             <layout class="QGridLayout" name="sizeSubGridLayout">
+              <property name="spacing">
+               <number>0</number>
               </property>
-              <property name="toolTip">
-               <string>Match size by subscaling</string>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">matchSizeButtonGroup</string>
-              </attribute>
-             </widget>
+              <item row="0" column="0">
+               <widget class="QLabel" name="sizeSubWidthLabel">
+                <property name="text">
+                 <string>Width</string>
+                </property>
+                <property name="toolTip">
+                 <string>Sub scaling Width.</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="subScaleFactorWidth">
+                <property name="toolTip">
+                 <string>Value is 0.25 .. 2.00.</string>
+                </property>
+                <property name="decimals">
+                 <double>4</double>
+                </property>
+                <property name="minimum">
+                 <double>0.25</double>
+                </property>
+                <property name="maximum">
+                 <double>2.00</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.001</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="sizeSubHeightLabel">
+                <property name="text">
+                 <string>Height</string>
+                </property>
+                <property name="toolTip">
+                 <string>Sub scaling Height.</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="subScaleFactorHeight">
+                <property name="toolTip">
+                 <string>Value is 0.25 .. 2.00.</string>
+                </property>
+                <property name="decimals">
+                 <double>4</double>
+                </property>
+                <property name="minimum">
+                 <double>0.25</double>
+                </property>
+                <property name="maximum">
+                 <double>2.00</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.001</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>

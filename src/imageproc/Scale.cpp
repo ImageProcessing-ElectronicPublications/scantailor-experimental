@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "Scale.h"
-#include "GrayImage.h"
-#include <QImage>
-#include <QSize>
-#include <stdexcept>
 #include <stdint.h>
 #include <assert.h>
+#include <stdexcept>
+#include <QImage>
+#include <QSize>
+#include "Scale.h"
+#include "GrayImage.h"
 
 namespace imageproc
 {
@@ -43,6 +43,10 @@ static GrayImage scaleDownIntGrayToGray(GrayImage const& src, QSize const& dst_s
     int const total_area = xscale * yscale;
 
     GrayImage dst(dst_size);
+    if (dst.isNull())
+    {
+        return dst;
+    }
 
     uint8_t const* src_line = src.data();
     uint8_t* dst_line = dst.data();
@@ -50,14 +54,9 @@ static GrayImage scaleDownIntGrayToGray(GrayImage const& src, QSize const& dst_s
     int const src_stride_scaled = src_stride * yscale;
     int const dst_stride = dst.stride();
 
-    int sy = 0;
-    int dy = 0;
-    for (; dy < dh; ++dy, sy += yscale)
+    for (int sy = 0, dy = 0; dy < dh; ++dy, sy += yscale)
     {
-
-        int sx = 0;
-        int dx = 0;
-        for (; dx < dw; ++dx, sx += xscale)
+        for (int sx = 0, dx = 0; dx < dw; ++dx, sx += xscale)
         {
 
             unsigned gray_level = 0;
@@ -98,6 +97,10 @@ static GrayImage scaleUpIntGrayToGray(GrayImage const& src, QSize const& dst_siz
     int const yscale = dh / sh;
 
     GrayImage dst(dst_size);
+    if (dst.isNull())
+    {
+        return dst;
+    }
 
     uint8_t const* src_line = src.data();
     uint8_t* dst_line = dst.data();
@@ -105,13 +108,9 @@ static GrayImage scaleUpIntGrayToGray(GrayImage const& src, QSize const& dst_siz
     int const dst_stride = dst.stride();
     int const dst_stride_scaled = dst_stride * yscale;
 
-    int dy = 0;
-    for (; dy < dh; dy += xscale)
+    for (int dy = 0; dy < dh; dy += xscale)
     {
-        int sx = 0;
-        int dx = 0;
-
-        for (; dx < dw; ++sx, dx += xscale)
+        for (int sx = 0, dx = 0; dx < dw; ++sx, dx += xscale)
         {
             uint8_t* pdst = dst_line + dx;
 
@@ -170,6 +169,10 @@ static GrayImage scaleUpGrayToGray(GrayImage const& src, QSize const& dst_size)
     double const dy2sy32 = calc32xRatio1(dh, sh);
 
     GrayImage dst(dst_size);
+    if (dst.isNull())
+    {
+        return dst;
+    }
 
     uint8_t const* const src_data = src.data();
     uint8_t* dst_line = dst.data();
@@ -270,6 +273,10 @@ static GrayImage scaleGrayToGray(GrayImage const& src, QSize const& dst_size)
     double const dy2sy32 = calc32xRatio2(dh, sh);
 
     GrayImage dst(dst_size);
+    if (dst.isNull())
+    {
+        return dst;
+    }
 
     uint8_t const* const src_data = src.data();
     uint8_t* dst_line = dst.data();

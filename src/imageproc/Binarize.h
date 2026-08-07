@@ -19,8 +19,8 @@
 #ifndef IMAGEPROC_BINARIZE_H_
 #define IMAGEPROC_BINARIZE_H_
 
-#include "imageproc_config.h"
 #include <QSize>
+#include "imageproc_config.h"
 
 class QImage;
 
@@ -372,6 +372,13 @@ IMAGEPROC_EXPORT BinaryImage binarizeGrain(
     GrayImage const& src,
     int radius = 15,
     float k = 0.50f,
+    int delta = 0,
+    unsigned char lower_bound = 0,
+    unsigned char upper_bound = 255);
+IMAGEPROC_EXPORT BinaryImage binarizeGrainEM(
+    GrayImage const& src,
+    int radius = 5,
+    float k = 0.75f,
     int delta = 0,
     unsigned char lower_bound = 0,
     unsigned char upper_bound = 255);

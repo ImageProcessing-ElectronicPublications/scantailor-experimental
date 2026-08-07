@@ -74,6 +74,16 @@ public:
 
     void postUpdateUI(Params const& page_params);
 private slots:
+    void typePanelToggled(bool checked);
+
+    void autoManualPanelToggled(bool checked);
+
+    void sourcePanelToggled(bool checked);
+
+    void rotationPanelToggled(bool checked);
+
+    void correctionPanelToggled(bool checked);
+
     void noDistortionToggled(bool checked);
 
     void rotationDistortionToggled(bool checked);
