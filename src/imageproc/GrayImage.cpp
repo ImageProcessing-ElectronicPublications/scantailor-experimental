@@ -609,42 +609,69 @@ GrayImage grayNiblackMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
-        GrayImage gdeviation = grayMapDeviation(src, radius);
-        if (gdeviation.isNull())
-        {
-            return gmean;
-        }
-
         int const w = src.width();
         int const h = src.height();
+
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        unsigned char* gdeviation_line = gdeviation.data();
-        int const gdeviation_stride = gdeviation.stride();
+
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
 
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+            }
+            src_line += src_stride;
+        }
 
-                float const shift = deviation - delta;
-                float threshold = mean - k * shift;
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
-                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                double const shift = deviation - delta;
+                double threshold = mean - k * shift;
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
                 gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
         }
     }
 
@@ -761,43 +788,70 @@ GrayImage graySauvolaMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
-        GrayImage gdeviation = grayMapDeviation(src, radius);
-        if (gdeviation.isNull())
-        {
-            return gmean;
-        }
-
         int const w = src.width();
         int const h = src.height();
+
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        unsigned char* gdeviation_line = gdeviation.data();
-        int const gdeviation_stride = gdeviation.stride();
+
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
 
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+            }
+            src_line += src_stride;
+        }
 
-                float const shift = deviation + delta;
-                float const part = k * (1.0f - shift / 128.0f);
-                float threshold = mean * (1.0f - part);
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
-                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                double const shift = deviation + delta;
+                double const part = k * (1.0 - shift / 128.0);
+                double threshold = mean * (1.0 - part);
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
                 gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
         }
     }
 
@@ -821,66 +875,103 @@ GrayImage grayWolfMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
-        GrayImage gdeviation = grayMapDeviation(src, radius);
-        if (gdeviation.isNull())
-        {
-            return gmean;
-        }
-
         int const w = src.width();
         int const h = src.height();
+
         unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        unsigned char* gdeviation_line = gdeviation.data();
-        int const gdeviation_stride = gdeviation.stride();
 
-        float gray_min = 255.0f;
-        float deviation_max = 0.0f;
+        double gray_min = 255.0;
+        double deviation_max = 0.0;
+
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
 
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const origin = src_line[x];
-                float const deviation = gdeviation_line[x];
-
-                deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
-                gray_min = (gray_min < origin) ? gray_min : origin;
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+                gray_min = (gray_min < pixel) ? gray_min : pixel;
             }
             src_line += src_stride;
-            gdeviation_line += gdeviation_stride;
         }
 
-        gmean_line = gmean.data();
-        gdeviation_line = gdeviation.data();
         for (int y = 0; y < h; y++)
         {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
             for (int x = 0; x < w; x++)
             {
-                float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
 
-                float const base = mean - gray_min;
-                float const frac = (deviation_max > 0.0f) ? (deviation / deviation_max) : 1.0f;
-                float const frac_delta = (float) delta / 128.0f;
-                float const part = 1.0f - (frac + frac_delta);
-                float threshold = base * (1.0f - k * part) + gray_min;
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
 
-                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
+            }
+        }
+
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                double const base = mean - gray_min;
+                double const frac = (deviation_max > 0.0) ? (deviation / deviation_max) : 1.0;
+                double const frac_delta = (float) delta / 128.0;
+                double const part = 1.0 - (frac + frac_delta);
+                double threshold = base * (1.0 - k * part) + gray_min;
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
                 gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
         }
     }
 
@@ -909,6 +1000,7 @@ GrayImage grayWindowMap(
     {
         return GrayImage();
     }
+
     GrayImage gmean = grayMapMean(src, radius);
     if (gmean.isNull())
     {
@@ -917,64 +1009,103 @@ GrayImage grayWindowMap(
 
     if (radius > 0)
     {
-        GrayImage gdeviation = grayMapDeviation(src, radius);
-        if (gdeviation.isNull())
-        {
-            return gmean;
-        }
-
         int const w = src.width();
         int const h = src.height();
+
         unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        unsigned char* gdeviation_line = gdeviation.data();
-        int const gdeviation_stride = gdeviation.stride();
 
         uint64_t mean_full = 0;
-        float deviation_min = 256.0f, deviation_max = 0.0f, deviation_delta;
+        double deviation_min = 256.0, deviation_max = 0.0, deviation_delta;
+
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
 
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
             for (int x = 0; x < w; x++)
             {
-                uint64_t const origin = src_line[x];
-                float const deviation = gdeviation_line[x];
-                deviation_min = (deviation_min < deviation) ? deviation_min : deviation;
-                deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
-                mean_full += origin;
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+                mean_full += pixel;
             }
             src_line += src_stride;
-            gdeviation_line += gdeviation_stride;
         }
+
         mean_full /= h;
         mean_full += (w >> 1);
         mean_full /= w;
-        deviation_delta = deviation_max - deviation_min;
 
-        gmean_line = gmean.data();
-        gdeviation_line = gdeviation.data();
         for (int y = 0; y < h; y++)
         {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
             for (int x = 0; x < w; x++)
             {
-                float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
 
-                float const md = (mean + 1.0f - delta) / (mean_full + deviation + 1.0f);
-                float const kdm = (mean_full + mean_full + 1.0f) / (deviation + 1.0f);
-                float const kds = (deviation_delta > 0.0f) ? ((deviation - deviation_min) / deviation_delta) : 1.0f;
-                float const kd = 1.0f + kdm * kds;
-                float threshold = mean * (1 - k * md / kd);
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
 
-                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                deviation_min = (deviation_min < deviation) ? deviation_min : deviation;
+                deviation_max = (deviation_max < deviation) ? deviation : deviation_max;
+            }
+        }
+
+        deviation_delta = deviation_max - deviation_min;
+
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                double const md = (mean + 1.0f - delta) / (mean_full + deviation + 1.0f);
+                double const kdm = (mean_full + mean_full + 1.0f) / (deviation + 1.0f);
+                double const kds = (deviation_delta > 0.0f) ? ((deviation - deviation_min) / deviation_delta) : 1.0f;
+                double const kd = 1.0f + kdm * kds;
+                double threshold = mean * (1 - k * md / kd);
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
                 gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
         }
-    }
+	}
 
     return gmean;
 }  // grayWindowMap
@@ -1099,43 +1230,71 @@ GrayImage grayNickMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
-        float cnick = (50.0f - delta) * 0.01f;
-        GrayImage gdeviation = grayMapDeviation(src, radius);
-        if (gdeviation.isNull())
-        {
-            return gmean;
-        }
+        double cnick = (50.0 - delta) * 0.01;
 
         int const w = src.width();
         int const h = src.height();
+
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
-        unsigned char* gdeviation_line = gdeviation.data();
-        int const gdeviation_stride = gdeviation.stride();
+
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
 
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const mean = gmean_line[x];
-                float const deviation = gdeviation_line[x];
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+            }
+            src_line += src_stride;
+        }
 
-                float const circle = sqrtf(deviation * deviation + cnick * mean * mean);
-                float threshold = mean - k * circle;
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
 
-                threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                double const circle = sqrt(deviation * deviation + cnick * mean * mean);
+                double threshold = mean - k * circle;
+
+                threshold = (threshold < 0.0) ? 0.0 : ((threshold < 255.0) ? threshold : 255.0);
                 gmean_line[x] = (unsigned char) threshold;
             }
             gmean_line += gmean_stride;
-            gdeviation_line += gdeviation_stride;
         }
     }
 

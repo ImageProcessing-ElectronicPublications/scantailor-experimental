@@ -20,6 +20,6 @@
 #define SCANTAILOR_VERSION_H_
 
 #define STFAMILY "experimental"
-#define VERSION "1.2026.08.08" // Must be "x.x.x.x" or an empty string.
+#define VERSION "1.2026.10.10" // Must be "x.x.x.x" or an empty string.
 
 #endif
