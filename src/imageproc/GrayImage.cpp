@@ -1001,7 +1001,7 @@ GrayImage grayWindowMap(
         return GrayImage();
     }
 
-    GrayImage gmean = grayMapMean(src, radius);
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -1183,7 +1183,7 @@ GrayImage grayBradleyMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
         return GrayImage(src);
@@ -1193,14 +1193,42 @@ GrayImage grayBradleyMap(
     {
         int const w = src.width();
         int const h = src.height();
+
+        unsigned char const* src_line = src.data();
+        int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
+        IntegralImage<uint32_t> integral_image(w, h);
+
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const mean = gmean_line[x];
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+            }
+            src_line += src_stride;
+        }
+
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
 
                 float threshold = (k < 1.0f) ? (mean * (1.0f - k)) : 0.0f;
 
@@ -1382,27 +1410,54 @@ GrayImage graySinghMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
         int const w = src.width();
         int const h = src.height();
+
         unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
+        IntegralImage<uint32_t> integral_image(w, h);
+
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const origin = src_line[x];
-                float const mean = gmean_line[x];
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+            }
+            src_line += src_stride;
+        }
+
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+
+                double const origin = gmean_line[x];
 
                 float const grad = origin - mean;
                 float const frac = grad / (256.0f - grad);
@@ -1436,30 +1491,57 @@ GrayImage grayFoxMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
         int const w = src.width();
         int const h = src.height();
+
         unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
+
+        IntegralImage<uint32_t> integral_image(w, h);
+
+        for (int y = 0; y < h; y++)
+        {
+            integral_image.beginRow();
+            for (int x = 0; x < w; x++)
+            {
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+            }
+            src_line += src_stride;
+        }
 
         float gray_min = 255.0f;
         float frac_max = 0.0f;
 
         for (int y = 0; y < h; y++)
         {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
             for (int x = 0; x < w; x++)
             {
-                float const origin = src_line[x];
-                float const mean = gmean_line[x];
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+
+                double const origin = gmean_line[x];
 
                 float const grad = origin - mean;
                 float const frac = grad / (256.0f - grad);
@@ -1468,18 +1550,29 @@ GrayImage grayFoxMap(
                 frac_max = (frac_max < frac_abs) ? frac_abs : frac_max;
                 gray_min = (gray_min < origin) ? gray_min : origin;
             }
-            src_line += src_stride;
             gmean_line += gmean_stride;
         }
 
-        src_line = src.data();
         gmean_line = gmean.data();
         for (int y = 0; y < h; y++)
         {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
             for (int x = 0; x < w; x++)
             {
-                float const origin = src_line[x];
-                float const mean = gmean_line[x];
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+
+                double const origin = gmean_line[x];
 
                 float const base = mean - gray_min;
                 float const grad = origin - mean;
@@ -1491,7 +1584,6 @@ GrayImage grayFoxMap(
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
             }
-            src_line += src_stride;
             gmean_line += gmean_stride;
         }
     }
@@ -1588,30 +1680,66 @@ GrayImage grayOBBPMMap(
     {
         return GrayImage();
     }
-    GrayImage gmean = grayMapMean(src, radius);
+    GrayImage gmean(src);
     if (gmean.isNull())
     {
-        return GrayImage(src);
+        return gmean;
     }
 
     if (radius > 0)
     {
-        float const R = 128.0f;
-        float const Rf = (R + R - 1.0f);
-        float const Rinv = 1.0f / R;
         int const w = src.width();
         int const h = src.height();
+
         unsigned char const* src_line = src.data();
         int const src_stride = src.stride();
         unsigned char* gmean_line = gmean.data();
         int const gmean_stride = gmean.stride();
 
+        IntegralImage<uint32_t> integral_image(w, h);
+        IntegralImage<uint64_t> integral_sqimage(w, h);
+
         for (int y = 0; y < h; y++)
         {
+            integral_image.beginRow();
+            integral_sqimage.beginRow();
             for (int x = 0; x < w; x++)
             {
-                float const origin = src_line[x];
-                float const mean = gmean_line[x];
+                uint32_t const pixel = src_line[x];
+                integral_image.push(pixel);
+                integral_sqimage.push(pixel * pixel);
+            }
+            src_line += src_stride;
+        }
+
+        float const R = 128.0f;
+        float const Rf = (R + R - 1.0f);
+        float const Rinv = 1.0f / R;
+
+        for (int y = 0; y < h; y++)
+        {
+            int const top = ((y - radius) < 0) ? 0 : (y - radius);
+            int const bottom = ((y + radius + 1) < h) ? (y + radius + 1) : h;
+
+            for (int x = 0; x < w; x++)
+            {
+                int const left = ((x - radius) < 0) ? 0 : (x - radius);
+                int const right = ((x + radius + 1) < w) ? (x + radius + 1) : w;
+                int const area = (bottom - top) * (right - left);
+                assert(area > 0); // because window_size > 0 and w > 0 and h > 0
+
+                QRect const rect(left, top, right - left, bottom - top);
+                double const window_sum = integral_image.sum(rect);
+                double const window_sqsum = integral_sqimage.sum(rect);
+
+                double const r_area = 1.0 / area;
+                double const mean = window_sum * r_area;
+                double const sqmean = window_sqsum * r_area;
+
+                double const variance = sqmean - mean * mean;
+                double const deviation = sqrt(fabs(variance));
+
+                double const origin = gmean_line[x];
 
                 float const s = (origin < R) ? (origin * origin * Rinv) : (Rf - (Rf - origin) * (Rf - origin) * Rinv);
                 float const frac_s = (s - mean) * Rinv;
@@ -1623,7 +1751,6 @@ GrayImage grayOBBPMMap(
                 threshold = (threshold < 0.0f) ? 0.0f : ((threshold < 255.0f) ? threshold : 255.0f);
                 gmean_line[x] = (unsigned char) threshold;
             }
-            src_line += src_stride;
             gmean_line += gmean_stride;
         }
     }

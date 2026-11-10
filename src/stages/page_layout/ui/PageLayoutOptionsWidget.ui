@@ -572,71 +572,6 @@
               </attribute>
              </widget>
             </item>
-            <item>
-             <layout class="QGridLayout" name="sizeSubGridLayout">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="sizeSubWidthLabel">
-                <property name="text">
-                 <string>Width</string>
-                </property>
-                <property name="toolTip">
-                 <string>Sub scaling Width.</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QDoubleSpinBox" name="subScaleFactorWidth">
-                <property name="toolTip">
-                 <string>Value is 0.25 .. 2.00.</string>
-                </property>
-                <property name="decimals">
-                 <double>4</double>
-                </property>
-                <property name="minimum">
-                 <double>0.25</double>
-                </property>
-                <property name="maximum">
-                 <double>2.00</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.001</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="sizeSubHeightLabel">
-                <property name="text">
-                 <string>Height</string>
-                </property>
-                <property name="toolTip">
-                 <string>Sub scaling Height.</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="subScaleFactorHeight">
-                <property name="toolTip">
-                 <string>Value is 0.25 .. 2.00.</string>
-                </property>
-                <property name="decimals">
-                 <double>4</double>
-                </property>
-                <property name="minimum">
-                 <double>0.25</double>
-                </property>
-                <property name="maximum">
-                 <double>2.00</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.001</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
            </layout>
           </item>
           <item>
@@ -954,6 +889,172 @@
         </item>
         <item>
          <spacer name="horizontalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="subScaleGroupEmpty">
+     <property name="text">
+      <string>Sub Scale</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="subScaleGroup">
+     <property name="title">
+      <string>Sub Scale</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="visible">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QVBoxLayout" name="subScaleVerticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="subScaleHorizontalLayout">
+        <item>
+         <spacer name="subScaleHorizontalSpacerBegin">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="sizeSubGridLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="sizeSubWidthLabel">
+            <property name="text">
+             <string>Width</string>
+            </property>
+            <property name="toolTip">
+             <string>Sub scaling Width.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="subScaleFactorWidth">
+            <property name="toolTip">
+             <string>Value is 0.25 .. 2.00.</string>
+            </property>
+            <property name="decimals">
+             <double>4</double>
+            </property>
+            <property name="minimum">
+             <double>0.25</double>
+            </property>
+            <property name="maximum">
+             <double>2.00</double>
+            </property>
+            <property name="singleStep">
+             <double>0.001</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="sizeSubHeightLabel">
+            <property name="text">
+             <string>Height</string>
+            </property>
+            <property name="toolTip">
+             <string>Sub scaling Height.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="subScaleFactorHeight">
+            <property name="toolTip">
+             <string>Value is 0.25 .. 2.00.</string>
+            </property>
+            <property name="decimals">
+             <double>4</double>
+            </property>
+            <property name="minimum">
+             <double>0.25</double>
+            </property>
+            <property name="maximum">
+             <double>2.00</double>
+            </property>
+            <property name="singleStep">
+             <double>0.001</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="subScaleHorizontalSpacerEnd">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="subScaleHorizontalLayoutApply">
+        <item>
+         <spacer name="subScaleHorizontalSpacerAB">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="applySubScaleBtn">
+          <property name="text">
+           <string>Apply to ...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="subScaleHorizontalSpacerAE">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>

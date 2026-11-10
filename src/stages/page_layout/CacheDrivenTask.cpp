@@ -42,7 +42,7 @@ CacheDrivenTask::CacheDrivenTask(
     IntrusivePtr<output::CacheDrivenTask> const& next_task,
     IntrusivePtr<Settings> const& settings)
     : m_ptrNextTask(next_task)
-    ,    m_ptrSettings(settings)
+    , m_ptrSettings(settings)
 {
 }
 
@@ -69,7 +69,8 @@ CacheDrivenTask::process(
                     new IncompleteThumbnail(
                         thumb_col->thumbnailCache(),
                         thumb_col->maxLogicalThumbSize(),
-                        page_info.id(), *full_size_image_transform
+                        page_info.id(),
+                        *full_size_image_transform
                     )
                 )
             );
@@ -91,6 +92,7 @@ CacheDrivenTask::process(
         params->matchSizeMode(),
         params->alignment(),
         params->framings(),
+        params->subScale(),
         params->hardMargins()
     );
     page_layout.absorbScalingIntoTransform(*adjusted_transform);

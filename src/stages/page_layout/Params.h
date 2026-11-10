@@ -24,6 +24,7 @@
 #include "MatchSizeMode.h"
 #include "Alignment.h"
 #include "Framings.h"
+#include "SubScale.h"
 
 class QDomDocument;
 class QDomElement;
@@ -40,7 +41,8 @@ public:
            QSizeF const& content_size,
            MatchSizeMode const& match_size_mode,
            Alignment const& alignment,
-           Framings const& framings);
+           Framings const& framings,
+           SubScale const& sub_scale);
 
     Params(QDomElement const& el);
 
@@ -69,6 +71,11 @@ public:
         return m_framings;
     }
 
+    SubScale const& subScale() const
+    {
+        return m_subscale;
+    }
+
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
     RelativeMargins m_hardMargins;
@@ -76,6 +83,7 @@ private:
     MatchSizeMode m_matchSizeMode;
     Alignment m_alignment;
     Framings m_framings;
+    SubScale m_subscale;
 };
 
 } // namespace page_layout

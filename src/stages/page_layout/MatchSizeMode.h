@@ -52,8 +52,6 @@ public:
 
     MatchSizeMode(Mode mode = M_DISABLED)
         : m_mode(mode)
-        , m_subScaleFactorWidth(1.0)
-        , m_subScaleFactorHeight(1.0)
     {}
 
     MatchSizeMode(QDomElement const& el);
@@ -68,41 +66,13 @@ public:
         m_mode = mode;
     }
 
-    double getSubScaleWidth() const
-    {
-        return m_subScaleFactorWidth;
-    }
-
-    void setSubScaleWidth(double scale)
-    {
-        m_subScaleFactorWidth = scale;
-    }
-
-    double getSubScaleHeight() const
-    {
-        return m_subScaleFactorHeight;
-    }
-
-    void setSubScaleHeight(double scale)
-    {
-        m_subScaleFactorHeight = scale;
-    }
-
     bool operator==(MatchSizeMode const& other) const
     {
         if (m_mode != other.m_mode)
         {
             return false;
         }
-        if (m_subScaleFactorWidth != other.m_subScaleFactorWidth)
-        {
-            return false;
-        }
-        if (m_subScaleFactorHeight != other.m_subScaleFactorHeight)
-        {
-            return false;
-        }
-        
+
         return true;
     }
 
@@ -114,8 +84,6 @@ public:
     QDomElement toXml(QDomDocument& doc, QString const& name) const;
 private:
     Mode m_mode;
-    double m_subScaleFactorWidth;
-    double m_subScaleFactorHeight;
 };
 
 } // namespace page_layout

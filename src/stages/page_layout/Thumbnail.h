@@ -42,12 +42,12 @@ class Thumbnail : public ThumbnailBase
 {
 public:
     Thumbnail(IntrusivePtr<ThumbnailPixmapCache> const& thumbnail_cache,
-              QSizeF const& max_display_size,
-              PageId const& page_id,
-              Params const& params,
-              imageproc::AbstractImageTransform const& full_size_image_transform,
-              PageLayout const& page_layout,
-              Framings const& framings);
+        QSizeF const& max_display_size,
+        PageId const& page_id,
+        Params const& params,
+        imageproc::AbstractImageTransform const& full_size_image_transform,
+        PageLayout const& page_layout,
+        Framings const& framings);
 
     virtual void paintOverImage(
         QPainter& painter,

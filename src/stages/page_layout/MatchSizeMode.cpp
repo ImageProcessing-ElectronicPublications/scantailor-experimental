@@ -45,16 +45,6 @@ MatchSizeMode::MatchSizeMode(QDomElement const& el)
         // Default mode for backwards compatibility.
         m_mode = M_GROW_MARGINS;
     }
-    m_subScaleFactorWidth = el.attribute("subScaleWidth").toDouble();
-    m_subScaleFactorHeight = el.attribute("subScaleHeight").toDouble();
-    if ((m_subScaleFactorWidth < 0.25) || (m_subScaleFactorWidth > 2.0))
-    {
-        m_subScaleFactorWidth = 1.0;
-    }
-    if ((m_subScaleFactorHeight < 0.25) || (m_subScaleFactorHeight > 2.0))
-    {
-        m_subScaleFactorHeight = 1.0;
-    }
 }
 
 QDomElement
@@ -80,8 +70,6 @@ MatchSizeMode::toXml(QDomDocument& doc, QString const& name) const
 
     QDomElement el(doc.createElement(name));
     el.setAttribute("mode", QLatin1String(mode));
-    el.setAttribute("subScaleWidth", m_subScaleFactorWidth);
-    el.setAttribute("subScaleHeight", m_subScaleFactorHeight);
 
     return el;
 }

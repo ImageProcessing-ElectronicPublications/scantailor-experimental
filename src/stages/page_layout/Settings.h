@@ -36,6 +36,7 @@ class Params;
 class MatchSizeMode;
 class Alignment;
 class Framings;
+class SubScale;
 
 class Settings : public RefCountable
 {
@@ -157,6 +158,10 @@ public:
 
     void setPageFramings(PageId const& page_id, Framings const& framings);
 
+    SubScale getPageSubScale(PageId const& page_id) const;
+
+    void setPageSubScale(PageId const& page_id, SubScale const& sub_scale);
+
     /**
      * \brief Sets content size in millimeters for the specified page.
      *
@@ -190,6 +195,7 @@ private:
     class ModifyMargins;
     class ModifyAlignment;
     class ModifyFramings;
+    class ModifySubScale;
     class ModifyContentSize;
 
     std::unique_ptr<Impl> m_ptrImpl;

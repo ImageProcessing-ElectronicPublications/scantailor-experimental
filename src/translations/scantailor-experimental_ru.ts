@@ -350,9 +350,10 @@ Andrey Bergman - Регулировка загрузки системы.
         <translation>Наклон средней</translation>
     </message>
     <message>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="172"/>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="347"/>
-        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="505"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="166"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="461"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="886"/>
+        <location filename="../stages/deskew/ui/DeskewOptionsWidget.ui" line="1052"/>
         <source>Apply to ...</source>
         <translation>Применить к ...</translation>
     </message>
@@ -1801,13 +1802,13 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="43"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="508"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="962"/>
         <source>Width</source>
         <translation>Ширина</translation>
     </message>
     <message>
         <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="76"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="537"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="991"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
@@ -1904,18 +1905,24 @@ To determine it, run batch processing at &quot;Select Content&quot; or &quot;Pag
         <translation>Выровнить размер путем аффинного масштабирования</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="511"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="911"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="924"/>
+        <source>Sub Scale</source>
+        <translation>Понижение</translation>
+    </message>
+    <message>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="965"/>
         <source>Sub scaling Width.</source>
         <translation>Понижающее масштабирование Ширины.</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="518"/>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="547"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="972"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="1001"/>
         <source>Value is 0.25 .. 2.00.</source>
         <translation>Значение от 0.25 до 2.00.</translation>
     </message>
     <message>
-        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="540"/>
+        <location filename="../stages/page_layout/ui/PageLayoutOptionsWidget.ui" line="994"/>
         <source>Sub scaling Height.</source>
         <translation>Понижающее масштабирование Высоты.</translation>
     </message>

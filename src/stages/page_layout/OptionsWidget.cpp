@@ -196,6 +196,18 @@ OptionsWidget::OptionsWidget(
         this, SLOT(matchSizeAffineToggled(bool))
     );
     connect(
+        applyAlignmentBtn, SIGNAL(clicked()),
+        this, SLOT(showApplyAlignmentDialog())
+    );
+    connect(
+        subScaleGroupEmpty, SIGNAL(clicked(bool)),
+        this, SLOT(subScaleGroupToggled(bool))
+    );
+    connect(
+        subScaleGroup, SIGNAL(clicked(bool)),
+        this, SLOT(subScaleGroupToggled(bool))
+    );
+    connect(
         subScaleFactorWidth, SIGNAL(valueChanged(double)),
         this, SLOT(subScaleWidthChanged(double))
     );
@@ -204,8 +216,8 @@ OptionsWidget::OptionsWidget(
         this, SLOT(subScaleHeightChanged(double))
     );
     connect(
-        applyAlignmentBtn, SIGNAL(clicked()),
-        this, SLOT(showApplyAlignmentDialog())
+        applySubScaleBtn, SIGNAL(clicked()),
+        this, SLOT(showApplySubScaleDialog())
     );
 
     typedef AlignmentByButton::value_type KeyVal;
@@ -234,6 +246,7 @@ bool OptionsWidget::disconnectAll(void)
     if(!disconnect(this, SIGNAL(OptionsWidget::subScaleHeightChanged(double)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::alignmentChanged(Alignment const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::framingsChanged(Framings const&)), 0, 0)) result = false;
+    if(!disconnect(this, SIGNAL(OptionsWidget::subScaleChanged(Framings const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::marginsSetLocally(RelativeMargins const&)), 0, 0)) result = false;
     if(!disconnect(this, SIGNAL(OptionsWidget::aggregateHardSizeChanged()), 0, 0)) result = false;
 
@@ -246,13 +259,15 @@ OptionsWidget::preUpdateUI(
     RelativeMargins const& margins,
     MatchSizeMode const& match_size_mode,
     Alignment const& alignment,
-    Framings const& framings)
+    Framings const& framings,
+    SubScale const& sub_scale)
 {
     m_pageId = page_id;
     m_margins = margins;
     m_matchSizeMode = match_size_mode;
     m_alignment = alignment;
     m_framings = framings;
+    m_subscale = sub_scale;
 
     for (auto const& kv : m_alignmentByButton)
     {
@@ -261,9 +276,6 @@ OptionsWidget::preUpdateUI(
             kv.first->setChecked(true);
         }
     }
-
-    updateFramingsDisplay();
-    updateMarginsDisplay();
 
     {
         ScopedIncDec<int> const guard(m_ignoreMatchSizeModeChanges);
@@ -283,16 +295,22 @@ OptionsWidget::preUpdateUI(
             matchSizeAffineRb->setChecked(true);
             break;
         }
-        subScaleFactorWidth->setValue(match_size_mode.getSubScaleWidth());
-        subScaleFactorHeight->setValue(match_size_mode.getSubScaleHeight());
+        subScaleFactorWidth->setValue(sub_scale.getWidth());
+        subScaleFactorHeight->setValue(sub_scale.getHeight());
     }
+
 
     enableDisableAlignmentButtons();
 
     m_leftRightLinked = m_leftRightLinked && margins.horizontalMarginsApproxEqual();
     m_topBottomLinked = m_topBottomLinked && margins.verticalMarginsApproxEqual();
+
+    updateFramingsDisplay();
+    updateMarginsDisplay();
     updateLinkDisplayH(leftRightLink, m_leftRightLinked);
     updateLinkDisplayV(topBottomLink, m_topBottomLinked);
+    updateSubScaleDisplay();
+    updateSizeDisplay();
 
     marginsGroup->setVisible(marginsGroup->isChecked());
     marginsGroupEmpty->setVisible(!marginsGroup->isChecked());
@@ -300,6 +318,7 @@ OptionsWidget::preUpdateUI(
     alignmentGroupEmpty->setVisible(!alignmentGroup->isChecked());
     marginsGroup->setEnabled(false);
     alignmentGroup->setEnabled(false);
+    subScaleGroup->setEnabled(false);
     missingContentBoxGroup->setVisible(false);
 }
 
@@ -312,9 +331,12 @@ OptionsWidget::postUpdateUI(bool have_content_box)
         marginsGroupEmpty->setVisible(!marginsGroup->isChecked());
         alignmentGroup->setVisible(alignmentGroup->isChecked());
         alignmentGroupEmpty->setVisible(!alignmentGroup->isChecked());
+        subScaleGroup->setVisible(subScaleGroup->isChecked());
+        subScaleGroupEmpty->setVisible(!subScaleGroup->isChecked());
 
         marginsGroup->setEnabled(true);
         alignmentGroup->setEnabled(true);
+        subScaleGroup->setEnabled(true);
     }
     else
     {
@@ -322,6 +344,8 @@ OptionsWidget::postUpdateUI(bool have_content_box)
         marginsGroupEmpty->setVisible(have_content_box);
         alignmentGroup->setVisible(have_content_box);
         alignmentGroupEmpty->setVisible(have_content_box);
+        subScaleGroup->setVisible(have_content_box);
+        subScaleGroupEmpty->setVisible(have_content_box);
     }
 
     updateSizeDisplay();
@@ -524,6 +548,15 @@ OptionsWidget::matchSizeAffineToggled(bool selected)
 }
 
 void
+OptionsWidget::subScaleGroupToggled(bool const checked)
+{
+    subScaleGroupEmpty->setVisible(!checked);
+    subScaleGroupEmpty->setChecked(checked);
+    subScaleGroup->setVisible(checked);
+    subScaleGroup->setChecked(checked);
+}
+
+void
 OptionsWidget::subScaleWidthChanged(double const value)
 {
     if (m_ignoreMatchSizeModeChanges)
@@ -531,10 +564,10 @@ OptionsWidget::subScaleWidthChanged(double const value)
         return;
     }
 
-    m_matchSizeMode.setSubScaleWidth(value);
+    m_subscale.setWidth(value);
 
     enableDisableAlignmentButtons();
-    emit matchSizeModeChanged(m_matchSizeMode);
+    emit subScaleChanged(m_subscale);
     updateSizeDisplay();
 }
 
@@ -546,10 +579,10 @@ OptionsWidget::subScaleHeightChanged(double const value)
         return;
     }
 
-    m_matchSizeMode.setSubScaleHeight(value);
+    m_subscale.setHeight(value);
 
     enableDisableAlignmentButtons();
-    emit matchSizeModeChanged(m_matchSizeMode);
+    emit subScaleChanged(m_subscale);
     updateSizeDisplay();
 }
 
@@ -612,6 +645,21 @@ OptionsWidget::showApplyAlignmentDialog()
 }
 
 void
+OptionsWidget::showApplySubScaleDialog()
+{
+    ApplyDialog* dialog = new ApplyDialog(
+        this, m_pageId, m_pageSelectionAccessor
+    );
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowTitle(tr("Apply Sub Scale"));
+    connect(
+        dialog, SIGNAL(accepted(std::set<PageId> const&)),
+        this, SLOT(applySubScale(std::set<PageId> const&))
+    );
+    dialog->show();
+}
+
+void
 OptionsWidget::applyFramings(std::set<PageId> const& pages)
 {
     if (pages.empty())
@@ -662,6 +710,22 @@ OptionsWidget::applyAlignment(std::set<PageId> const& pages)
 }
 
 void
+OptionsWidget::applySubScale(std::set<PageId> const& pages)
+{
+    if (pages.empty())
+    {
+        return;
+    }
+
+    for (PageId const& page_id : pages)
+    {
+        m_ptrSettings->setPageSubScale(page_id, m_subscale);
+    }
+
+    emit invalidateAllThumbnails();
+}
+
+void
 OptionsWidget::updateMarginsDisplay()
 {
     ScopedIncDec<int> const ignore_scope(m_ignoreMarginChanges);
@@ -691,6 +755,13 @@ OptionsWidget::updateFramingsDisplay()
 }
 
 void
+OptionsWidget::updateSubScaleDisplay()
+{
+    subScaleFactorWidth->setValue(m_subscale.getWidth());
+    subScaleFactorHeight->setValue(m_subscale.getHeight());
+}
+
+void
 OptionsWidget::updateSizeDisplay()
 {
     QSizeF const agg_size = m_ptrSettings->getAggregateHardSize();
@@ -703,8 +774,8 @@ OptionsWidget::updateSizeDisplay()
     {
         QSizeF const content_size = m_ptrSettings->getContentSize(m_pageId);
         RelativeMargins const hard_magrins = m_ptrSettings->getHardMargins(m_pageId);
-        double const sub_scale_w = m_matchSizeMode.getSubScaleWidth();
-        double const sub_scale_h = m_matchSizeMode.getSubScaleHeight();
+        double const sub_scale_w = m_subscale.getWidth();
+        double const sub_scale_h = m_subscale.getHeight();
         double const pageX = sub_scale_w * content_size.width();
         double const pageY = sub_scale_h * content_size.height();
         double const pagewidthx = pageX;

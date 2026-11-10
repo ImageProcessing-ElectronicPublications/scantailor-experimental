@@ -18,6 +18,7 @@ SET(
     MatchSizeMode.cpp MatchSizeMode.h
     Framings.cpp Framings.h
     PageLayout.cpp PageLayout.h
+    SubScale.cpp SubScale.h
     orders/OrderByWidthProvider.cpp orders/OrderByWidthProvider.h
     orders/OrderByHeightProvider.cpp orders/OrderByHeightProvider.h
     orders/OrderByRatioProvider.cpp orders/OrderByRatioProvider.h

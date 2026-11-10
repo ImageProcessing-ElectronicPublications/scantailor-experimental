@@ -30,6 +30,7 @@ namespace page_layout
 
 class MatchSizeMode;
 class Alignment;
+class SubScale;
 
 class Utils
 {
@@ -50,11 +51,12 @@ public:
         QSizeF const& hard_size_px,
         QSizeF const& aggregate_hard_size_px,
         MatchSizeMode const& match_size_mode,
-        Alignment const& alignment);
+        Alignment const& alignment,
+        SubScale const& sub_scale);
 
     static QColor borderColorForMatchSizeMode(MatchSizeMode const& mode);
 
-    static QColor backgroundColorForMatchSizeMode(MatchSizeMode const& mode);
+    static QColor backgroundColorForMatchSizeMode(MatchSizeMode const& mode, SubScale  const& sub_scale);
 };
 
 } // namespace page_layout

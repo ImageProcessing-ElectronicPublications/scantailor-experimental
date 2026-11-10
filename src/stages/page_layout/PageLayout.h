@@ -35,6 +35,7 @@ namespace page_layout
 class Alignment;
 class Framings;
 class MatchSizeMode;
+class SubScale;
 
 class PageLayout
 {
@@ -45,6 +46,7 @@ public:
         MatchSizeMode const& match_size_mode,
         Alignment const& alignment,
         Framings const& framings,
+        SubScale const& sub_scale,
         RelativeMargins const& margins);
 
     QRectF const& innerRect() const

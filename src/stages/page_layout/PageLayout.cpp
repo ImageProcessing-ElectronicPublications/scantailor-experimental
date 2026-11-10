@@ -24,6 +24,7 @@
 #include "MatchSizeMode.h"
 #include "Alignment.h"
 #include "Framings.h"
+#include "SubScale.h"
 #include "RelativeMargins.h"
 #include "Utils.h"
 #include "imageproc/AbstractImageTransform.h"
@@ -39,10 +40,11 @@ PageLayout::PageLayout(
     MatchSizeMode const& match_size_mode,
     Alignment const& alignment,
     Framings const& framings,
+    SubScale const& sub_scale,
     RelativeMargins const& margins)
 {
     Q_UNUSED(framings);
-    
+
     m_innerRect = unscaled_content_rect;
     m_scaleFactor_X = 1.0;
     m_scaleFactor_Y = 1.0;
@@ -54,9 +56,9 @@ PageLayout::PageLayout(
 
     if (have_content_box)
     {
-        double const sub_scale_w_in = match_size_mode.getSubScaleWidth();
+        double const sub_scale_w_in = sub_scale.getWidth();
         double const sub_scale_w = (sub_scale_w_in > 0.0) ? sub_scale_w_in : 1.0;
-        double const sub_scale_h_in = match_size_mode.getSubScaleHeight();
+        double const sub_scale_h_in = sub_scale.getHeight();
         double const sub_scale_h = (sub_scale_h_in > 0.0) ? sub_scale_h_in : 1.0;
         double const agwidth = aggregate_hard_size.width();
         double const agheight = aggregate_hard_size.height();
@@ -134,7 +136,11 @@ PageLayout::PageLayout(
 
     QMarginsF const soft_margins(
         Utils::calcSoftMarginsPx(
-            m_middleRect.size(), aggregate_hard_size, match_size_mode, alignment
+            m_middleRect.size(),
+            aggregate_hard_size,
+            match_size_mode,
+            alignment,
+            sub_scale
         )
     );
 

@@ -43,14 +43,14 @@ OrderByHeightProvider::precedes(
     if (lhs_params.get())
     {
         lhs_size = lhs_params->hardMargins().extendContentSize(lhs_params->contentSize());
-        lhs_scale_h = lhs_params->matchSizeMode().getSubScaleHeight();
+        lhs_scale_h = lhs_params->subScale().getHeight();
     }
     QSizeF rhs_size;
     float rhs_scale_h = 1.0f;
     if (rhs_params.get())
     {
         rhs_size = rhs_params->hardMargins().extendContentSize(rhs_params->contentSize());
-        rhs_scale_h = rhs_params->matchSizeMode().getSubScaleHeight();
+        rhs_scale_h = rhs_params->subScale().getHeight();
     }
 
     bool const lhs_valid = !lhs_incomplete && lhs_size.isValid();

@@ -113,8 +113,10 @@ Task::process(
     QSizeF agg_hard_size_after;
     Params const params(
         m_ptrSettings->updateContentSizeAndGetParams(
-            m_pageId, content_box.toTransformedRect(*orig_image_transform).size(),
-            &agg_hard_size_before, &agg_hard_size_after
+            m_pageId,
+            content_box.toTransformedRect(*orig_image_transform).size(),
+            &agg_hard_size_before,
+            &agg_hard_size_after
         )
     );
 
@@ -134,14 +136,20 @@ Task::process(
             params.matchSizeMode(),
             params.alignment(),
             params.framings(),
+            params.subScale(),
             params.hardMargins()
         );
         page_layout.absorbScalingIntoTransform(*adjusted_transform);
 
         return m_ptrNextTask->process(
-                   status, accel_ops, orig_image, gray_orig_image_factory, adjusted_transform,
-                   page_layout.innerRect(), page_layout.extraRect(params.framings())
-               );
+            status,
+            accel_ops,
+            orig_image,
+            gray_orig_image_factory,
+            adjusted_transform,
+            page_layout.innerRect(),
+            page_layout.extraRect(params.framings())
+        );
     }
     else if (m_ptrFilter->optionsWidget())
     {
@@ -149,18 +157,25 @@ Task::process(
         if (!pre_transformed_image)
         {
             pre_transformed_image = orig_image_transform->toAffine(
-                                        orig_image, Qt::transparent, accel_ops
-                                    );
+                orig_image,
+                Qt::transparent,
+                accel_ops
+            );
         }
 
         return FilterResultPtr(
-                   new UiUpdater(
-                       m_ptrFilter, accel_ops, m_ptrSettings, m_pageId,
-                       orig_image_transform, *pre_transformed_image, content_box,
-                       agg_hard_size_before != agg_hard_size_after,
-                       m_batchProcessing
-                   )
-               );
+            new UiUpdater(
+                m_ptrFilter,
+                accel_ops,
+                m_ptrSettings,
+                m_pageId,
+                orig_image_transform,
+                *pre_transformed_image,
+                content_box,
+                agg_hard_size_before != agg_hard_size_after,
+                m_batchProcessing
+            )
+        );
     }
     else
     {
@@ -178,7 +193,9 @@ Task::UiUpdater::UiUpdater(
     PageId const& page_id,
     std::shared_ptr<AbstractImageTransform const> const& orig_transform,
     AffineTransformedImage const& affine_transformed_image,
-    ContentBox const& content_box, bool agg_size_changed, bool batch)
+    ContentBox const& content_box,
+    bool agg_size_changed,
+    bool batch)
     : m_ptrFilter(filter),
       m_ptrAccelOps(accel_ops),
       m_ptrSettings(settings),
@@ -228,9 +245,13 @@ Task::UiUpdater::updateUI(FilterUiInterface* ui)
     else
     {
         view = new ImageView(
-            m_ptrAccelOps, m_ptrSettings, m_pageId, m_ptrOrigTransform,
+            m_ptrAccelOps,
+            m_ptrSettings,
+            m_pageId,
+            m_ptrOrigTransform,
             m_affineTransformedImage, m_downscaledImage,
-            m_contentBox, *opt_widget
+            m_contentBox,
+            *opt_widget
         );
     }
 
@@ -274,6 +295,10 @@ Task::UiUpdater::updateUI(FilterUiInterface* ui)
         QObject::connect(
             opt_widget, SIGNAL(framingsChanged(Framings const&)),
             view, SLOT(framingsChanged(Framings const&))
+        );
+        QObject::connect(
+            opt_widget, SIGNAL(subScaleChanged(SubScale const&)),
+            view, SLOT(subScaleChanged(SubScale const&))
         );
         QObject::connect(
             opt_widget, SIGNAL(aggregateHardSizeChanged()),

@@ -81,6 +81,7 @@ ImageView::ImageView(
         m_matchSizeMode(opt_widget.matchSizeMode()),
         m_alignment(opt_widget.alignment()),
         m_framings(opt_widget.framings()),
+        m_subscale(opt_widget.subScale()),
         m_leftRightLinked(opt_widget.leftRightLinked()),
         m_topBottomLinked(opt_widget.topBottomLinked())
 {
@@ -223,8 +224,8 @@ ImageView::leftRightLinkToggled(bool const linked)
         if (margins.left() != margins.right())
         {
             double const new_margin = std::min(
-                                          margins.left(), margins.right()
-                                      );
+                margins.left(), margins.right()
+            );
             margins.setLeft(new_margin);
             margins.setRight(new_margin);
 
@@ -249,8 +250,8 @@ ImageView::topBottomLinkToggled(bool const linked)
         if (margins.top() != margins.bottom())
         {
             double const new_margin = std::min(
-                                          margins.top(), margins.bottom()
-                                      );
+                margins.top(), margins.bottom()
+            );
             margins.setTop(new_margin);
             margins.setBottom(new_margin);
 
@@ -311,6 +312,29 @@ ImageView::framingsChanged(Framings const& framings)
 }
 
 void
+ImageView::subScaleChanged(SubScale const& sub_scale)
+{
+    m_subscale = sub_scale;
+    m_ptrSettings->setPageSubScale(m_pageId, sub_scale);
+
+    Settings::AggregateSizeChanged const size_changed =
+        m_ptrSettings->setMatchSizeMode(m_pageId, m_matchSizeMode);
+
+    m_aggregateHardSize = m_ptrSettings->getAggregateHardSize();
+    m_committedAggregateHardSize = m_aggregateHardSize;
+    recalcBoxesAndFit(calcHardMargins());
+
+    if (size_changed == Settings::AGGREGATE_SIZE_CHANGED)
+    {
+        emit invalidateAllThumbnails();
+    }
+    else
+    {
+        emit invalidateThumbnail(m_pageId);
+    }
+}
+
+void
 ImageView::aggregateHardSizeChanged()
 {
     m_aggregateHardSize = m_ptrSettings->getAggregateHardSize();
@@ -323,7 +347,7 @@ void
 ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 {
     Q_UNUSED(interaction);
-    
+
     QRectF centerRectV = QRectF((m_extraRect.right() + m_extraRect.left()) * 0.5f, m_extraRect.top(), 0.0f, (m_extraRect.bottom() - m_extraRect.top()));
     QRectF centerRectH = QRectF(m_extraRect.left(), (m_extraRect.bottom() + m_extraRect.top()) * 0.5f, (m_extraRect.right() - m_extraRect.left()), 0.0f);
 
@@ -336,8 +360,8 @@ ImageView::onPaint(QPainter& painter, InteractionState const& interaction)
 
     painter.setRenderHint(QPainter::Antialiasing, false);
 
-    QColor const bg_color(Utils::backgroundColorForMatchSizeMode(m_matchSizeMode));
     QColor const border_color(Utils::borderColorForMatchSizeMode(m_matchSizeMode));
+    QColor const bg_color(Utils::backgroundColorForMatchSizeMode(m_matchSizeMode, m_subscale));
 
     painter.setPen(Qt::NoPen);
     painter.setBrush(bg_color);
@@ -644,6 +668,7 @@ ImageView::recalcBoxesAndFit(RelativeMargins const& margins)
         m_matchSizeMode,
         m_alignment,
         m_framings,
+        m_subscale,
         margins
     );
 
@@ -715,6 +740,8 @@ ImageView::forceNonNegativeHardMargins(QRectF& middle_rect) const
 RelativeMargins
 ImageView::calcHardMargins() const
 {
+    /* double const sub_scale_w = m_subscale.getWidth(); */
+    /* double const sub_scale_h = m_subscale.getHeight(); */
     double pagewidth = m_innerRect.width();
     double const pagewidthheight = m_innerRect.height() * 0.7071067811865475244;
     pagewidth = (pagewidth < pagewidthheight) ? pagewidthheight : pagewidth;
@@ -736,14 +763,20 @@ ImageView::recalcOuterRect()
 {
     QMarginsF const soft_margins(
         Utils::calcSoftMarginsPx(
-            m_middleRect.size(), m_aggregateHardSize, m_matchSizeMode, m_alignment
+            m_middleRect.size(),
+            m_aggregateHardSize,
+            m_matchSizeMode,
+            m_alignment,
+            m_subscale
         )
     );
 
     m_outerRect = m_middleRect.adjusted(
-                      -soft_margins.left(), -soft_margins.top(),
-                      soft_margins.right(), soft_margins.bottom()
-                  );
+        -soft_margins.left(),
+        -soft_margins.top(),
+        soft_margins.right(),
+        soft_margins.bottom()
+    );
 
     float const basew = m_outerRect.width();
     float const baseh = m_outerRect.height();

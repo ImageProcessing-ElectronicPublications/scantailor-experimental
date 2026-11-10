@@ -31,6 +31,7 @@
 #include "MatchSizeMode.h"
 #include "Alignment.h"
 #include "Framings.h"
+#include "SubScale.h"
 #include "PageId.h"
 
 class QToolButton;
@@ -60,7 +61,8 @@ public:
         RelativeMargins const& margins,
         MatchSizeMode const& match_size_mode,
         Alignment const& alignment,
-        Framings const& framings
+        Framings const& framings,
+        SubScale const& sub_scale
     );
 
     void postUpdateUI(bool have_content_box);
@@ -94,6 +96,10 @@ public:
     {
         return m_framings;
     }
+    SubScale const& subScale() const
+    {
+        return m_subscale;
+    }
 signals:
     void leftRightLinkToggled(bool linked);
 
@@ -104,6 +110,8 @@ signals:
     void alignmentChanged(Alignment const& alignment);
 
     void framingsChanged(Framings const& framings);
+
+    void subScaleChanged(SubScale const& subScale);
 
     void marginsSetLocally(RelativeMargins const& margins);
 
@@ -137,6 +145,8 @@ private slots:
 
     void matchSizeAffineToggled(bool selected);
 
+    void subScaleGroupToggled(bool checked);
+
     void subScaleWidthChanged(double value);
 
     void subScaleHeightChanged(double value);
@@ -149,11 +159,15 @@ private slots:
 
     void showApplyAlignmentDialog();
 
+    void showApplySubScaleDialog();
+
     void applyFramings(std::set<PageId> const& pages);
 
     void applyMargins(std::set<PageId> const& pages);
 
     void applyAlignment(std::set<PageId> const& pages);
+
+    void applySubScale(std::set<PageId> const& pages);
 private:
     typedef std::map<QToolButton*, Alignment> AlignmentByButton;
 
@@ -163,6 +177,8 @@ private:
     void updateLinkDisplayV(QToolButton* button, bool linked);
 
     void updateFramingsDisplay();
+
+    void updateSubScaleDisplay();
 
     void updateSizeDisplay();
 
@@ -180,6 +196,7 @@ private:
     MatchSizeMode m_matchSizeMode;
     Alignment m_alignment;
     Framings m_framings;
+    SubScale m_subscale;
     int m_ignoreMarginChanges;
     int m_ignoreMatchSizeModeChanges;
     bool m_leftRightLinked;

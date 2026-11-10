@@ -36,6 +36,7 @@
 #include "MatchSizeMode.h"
 #include "Alignment.h"
 #include "Framings.h"
+#include "SubScale.h"
 #include "IntrusivePtr.h"
 #include "PageId.h"
 #include "imageproc/AffineImageTransform.h"
@@ -90,6 +91,8 @@ public slots:
     void alignmentChanged(Alignment const& alignment);
 
     void framingsChanged(Framings const& framings);
+
+    void subScaleChanged(SubScale const& sub_scale);
 
     void aggregateHardSizeChanged();
 private:
@@ -242,6 +245,8 @@ private:
     Alignment m_alignment;
 
     Framings m_framings;
+
+    SubScale m_subscale;
 
     /**
      * Some data saved at the beginning of a resizing operation.

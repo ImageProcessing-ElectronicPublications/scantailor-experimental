@@ -34,6 +34,7 @@
 #include "MatchSizeMode.h"
 #include "Alignment.h"
 #include "Framings.h"
+#include "SubScale.h"
 #include "Params.h"
 #include "ProjectPages.h"
 #include "ProjectReader.h"
@@ -130,8 +131,9 @@ Filter::preUpdateUI(FilterUiInterface* ui, PageId const& page_id)
     MatchSizeMode const match_size_mode(m_ptrSettings->getMatchSizeMode(page_id));
     Alignment const alignment(m_ptrSettings->getPageAlignment(page_id));
     Framings const framings(m_ptrSettings->getPageFramings(page_id));
+    SubScale const sub_scale(m_ptrSettings->getPageSubScale(page_id));
 
-    m_ptrOptionsWidget->preUpdateUI(page_id, margins, match_size_mode, alignment, framings);
+    m_ptrOptionsWidget->preUpdateUI(page_id, margins, match_size_mode, alignment, framings, sub_scale);
     ui->setOptionsWidget(m_ptrOptionsWidget.get(), ui->KEEP_OWNERSHIP);
 }
 

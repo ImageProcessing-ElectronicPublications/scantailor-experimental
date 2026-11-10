@@ -37,6 +37,7 @@
 #include "RelativeMargins.h"
 #include "Alignment.h"
 #include "Framings.h"
+#include "SubScale.h"
 #include "RelinkablePath.h"
 #include "AbstractRelinker.h"
 
@@ -56,13 +57,15 @@ public:
     MatchSizeMode matchSizeMode;
     Alignment alignment;
     Framings framings;
+    SubScale subScale;
 
     Item(PageId const& page_id,
          RelativeMargins const& hard_margins,
          QSizeF const& content_size,
          MatchSizeMode const& match_size_mode,
          Alignment const& alignment,
-         Framings const& framings);
+         Framings const& framings,
+         SubScale const& sub_scale);
 
     double hardWidth() const;
 
@@ -98,7 +101,6 @@ private:
     RelativeMargins m_margins;
 };
 
-
 class Settings::ModifyAlignment
 {
 public:
@@ -111,7 +113,6 @@ public:
 private:
     Alignment m_alignment;
 };
-
 
 class Settings::ModifyFramings
 {
@@ -126,6 +127,18 @@ private:
     Framings m_framings;
 };
 
+class Settings::ModifySubScale
+{
+public:
+    ModifySubScale(SubScale const& sub_scale) : m_subscale(sub_scale) {}
+
+    void operator()(Item& item)
+    {
+        item.subScale = m_subscale;
+    }
+private:
+    SubScale m_subscale;
+};
 
 class Settings::ModifyContentSize
 {
@@ -184,6 +197,11 @@ public:
 
     void setPageFramings(
         PageId const& page_id, Framings const& framings);
+
+    SubScale getPageSubScale(PageId const& page_id) const;
+
+    void setPageSubScale(
+        PageId const& page_id, SubScale const& sub_scale);
 
     QSizeF getContentSize(PageId const& page_id) const;
 
@@ -252,6 +270,7 @@ private:
     MatchSizeMode const m_defaultMatchSizeMode;
     Alignment const m_defaultAlignment;
     Framings const m_defaultFramings;
+    SubScale const m_defaultSubScale;
 };
 
 
@@ -364,6 +383,18 @@ Settings::setPageFramings(PageId const& page_id, Framings const& framings)
     m_ptrImpl->setPageFramings(page_id, framings);
 }
 
+SubScale
+Settings::getPageSubScale(PageId const& page_id) const
+{
+    return m_ptrImpl->getPageSubScale(page_id);
+}
+
+void
+Settings::setPageSubScale(PageId const& page_id, SubScale const& sub_scale)
+{
+    m_ptrImpl->setPageSubScale(page_id, sub_scale);
+}
+
 QSizeF
 Settings::getContentSize(PageId const& page_id) const
 {
@@ -406,13 +437,15 @@ Settings::Item::Item(
     QSizeF const& content_size,
     MatchSizeMode const& match_size_mode,
     Alignment const& align,
-    Framings const& fram)
+    Framings const& fram,
+    SubScale const& subs)
     : pageId(page_id)
     , hardMargins(hard_margins)
     , contentSize(content_size)
     , matchSizeMode(match_size_mode)
     , alignment(align)
     , framings(fram)
+    , subScale(subs)
 {
 }
 
@@ -426,7 +459,7 @@ Settings::Item::hardWidth() const
     else
     {
         double const hw = hardMargins.extendContentSize(contentSize).width();
-        double const hwss = 1.0 + matchSizeMode.getSubScaleWidth() * (hw - 1.0);
+        double const hwss = 1.0 + subScale.getWidth() * (hw - 1.0);
         return hwss;
     }
 }
@@ -441,7 +474,7 @@ Settings::Item::hardHeight() const
     else
     {
         double const hh = hardMargins.extendContentSize(contentSize).height();
-        double const hhss = 1.0 + matchSizeMode.getSubScaleHeight() * (hh - 1.0);
+        double const hhss = 1.0 + subScale.getHeight() * (hh - 1.0);
         return hhss;
     }
 }
@@ -471,6 +504,7 @@ Settings::Impl::Impl()
     , m_defaultMatchSizeMode(MatchSizeMode::M_GROW_MARGINS)
     , m_defaultAlignment(Alignment::TOP, Alignment::HCENTER)
     , m_defaultFramings(0.24, 0.16)
+    , m_defaultSubScale(1.0, 1.0)
 {
 }
 
@@ -567,7 +601,7 @@ Settings::Impl::getPageParams(PageId const& page_id) const
     }
 
     return std::unique_ptr<Params>(
-               new Params(it->hardMargins, it->contentSize, it->matchSizeMode, it->alignment, it->framings)
+               new Params(it->hardMargins, it->contentSize, it->matchSizeMode, it->alignment, it->framings, it->subScale)
            );
 }
 
@@ -581,7 +615,8 @@ Settings::Impl::setPageParams(PageId const& page_id, Params const& params)
         params.contentSize(),
         params.matchSizeMode(),
         params.alignment(),
-        params.framings()
+        params.framings(),
+        params.subScale()
     );
 
     Container::iterator const it(m_items.lower_bound(page_id));
@@ -617,7 +652,8 @@ Settings::Impl::updateContentSizeAndGetParams(
             content_size,
             m_defaultMatchSizeMode,
             m_defaultAlignment,
-            m_defaultFramings
+            m_defaultFramings,
+            m_defaultSubScale
         );
         item_it = m_items.insert(it, item);
     }
@@ -636,7 +672,8 @@ Settings::Impl::updateContentSizeAndGetParams(
                item_it->contentSize,
                item_it->matchSizeMode,
                item_it->alignment,
-               item_it->framings
+               item_it->framings,
+               item_it->subScale
            );
 }
 
@@ -671,7 +708,8 @@ Settings::Impl::setHardMargins(
             m_invalidSize,
             m_defaultMatchSizeMode,
             m_defaultAlignment,
-            m_defaultFramings
+            m_defaultFramings,
+            m_defaultSubScale
         );
         m_items.insert(it, item);
     }
@@ -714,7 +752,8 @@ Settings::Impl::setMatchSizeMode(
             m_invalidSize,
             match_size_mode,
             m_defaultAlignment,
-            m_defaultFramings
+            m_defaultFramings,
+            m_defaultSubScale
         );
         m_items.insert(it, item);
     }
@@ -768,7 +807,8 @@ Settings::Impl::setPageAlignment(
             m_invalidSize,
             m_defaultMatchSizeMode,
             alignment,
-            m_defaultFramings
+            m_defaultFramings,
+            m_defaultSubScale
         );
         m_items.insert(it, item);
     }
@@ -809,13 +849,56 @@ Settings::Impl::setPageFramings(
             m_invalidSize,
             m_defaultMatchSizeMode,
             m_defaultAlignment,
-            framings
+            framings,
+            m_defaultSubScale
         );
         m_items.insert(it, item);
     }
     else
     {
         m_items.modify(it, ModifyFramings(framings));
+    }
+}
+
+SubScale
+Settings::Impl::getPageSubScale(PageId const& page_id) const
+{
+    QMutexLocker const locker(&m_mutex);
+
+    Container::iterator const it(m_items.find(page_id));
+    if (it == m_items.end())
+    {
+        return m_defaultSubScale;
+    }
+    else
+    {
+        return it->subScale;
+    }
+}
+
+void
+Settings::Impl::setPageSubScale(
+    PageId const& page_id, SubScale const& sub_scale)
+{
+    QMutexLocker const locker(&m_mutex);
+
+    Container::iterator const it(m_items.lower_bound(page_id));
+    if (it == m_items.end() || page_id < it->pageId)
+    {
+        Item const item(
+            page_id,
+            m_defaultHardMargins,
+            m_invalidSize,
+            m_defaultMatchSizeMode,
+            m_defaultAlignment,
+            m_defaultFramings,
+            sub_scale
+        );
+        m_items.insert(it, item);
+    }
+    else
+    {
+        m_items.modify(it, ModifySubScale(sub_scale));
     }
 }
 
@@ -852,7 +935,8 @@ Settings::Impl::setContentSize(
             content_size,
             m_defaultMatchSizeMode,
             m_defaultAlignment,
-            m_defaultFramings
+            m_defaultFramings,
+            m_defaultSubScale
         );
         m_items.insert(it, item);
     }

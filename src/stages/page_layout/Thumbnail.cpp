@@ -48,9 +48,9 @@ Thumbnail::Thumbnail(
           full_size_image_transform,
           page_layout.extraRect(framings)
       )
-    ,    m_params(params)
-    ,    m_pageLayout(page_layout)
-    ,    m_framings(framings)
+    , m_params(params)
+    , m_pageLayout(page_layout)
+    , m_framings(framings)
 {
 }
 
@@ -61,7 +61,7 @@ Thumbnail::paintOverImage(
     QTransform const& thumb_to_display)
 {
     Q_UNUSED(thumb_to_display);
-    
+
     // We work in display coordinates because we want to be
     // pixel-accurate with what we draw.
     painter.setWorldTransform(QTransform());
@@ -87,8 +87,8 @@ Thumbnail::paintOverImage(
     QPainterPath content_outline;
     content_outline.addPolygon(inner_rect);
 
-    QColor const bg_color(Utils::backgroundColorForMatchSizeMode(m_params.matchSizeMode()));
     QColor const border_color(Utils::borderColorForMatchSizeMode(m_params.matchSizeMode()));
+    QColor const bg_color(Utils::backgroundColorForMatchSizeMode(m_params.matchSizeMode(), m_params.subScale()));
 
     // Draw margins.
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);

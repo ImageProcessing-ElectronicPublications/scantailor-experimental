@@ -31,12 +31,14 @@ Params::Params(
     QSizeF const& content_size,
     MatchSizeMode const& match_size_mode,
     Alignment const& alignment,
-    Framings const& framings)
+    Framings const& framings,
+    SubScale const& sub_scale)
     : m_hardMargins(hard_margins)
     , m_contentSize(content_size)
     , m_matchSizeMode(match_size_mode)
     , m_alignment(alignment)
     , m_framings(framings)
+    , m_subscale(sub_scale)
 {
 }
 
@@ -53,7 +55,8 @@ Params::Params(QDomElement const& el)
       ),
       m_matchSizeMode(el.namedItem("matchSizeMode").toElement()),
       m_alignment(el.namedItem("alignment").toElement()),
-      m_framings(el.namedItem("framings").toElement())
+      m_framings(el.namedItem("framings").toElement()),
+      m_subscale(el.namedItem("subScale").toElement())
 {
 }
 
@@ -68,6 +71,7 @@ Params::toXml(QDomDocument& doc, QString const& name) const
     el.appendChild(m_matchSizeMode.toXml(doc, "matchSizeMode"));
     el.appendChild(m_alignment.toXml(doc, "alignment"));
     el.appendChild(m_framings.toXml(doc, "framings"));
+    el.appendChild(m_subscale.toXml(doc, "subScale"));
     return el;
 }
 

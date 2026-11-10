@@ -24,6 +24,7 @@
 #include "Utils.h"
 #include "MatchSizeMode.h"
 #include "Alignment.h"
+#include "SubScale.h"
 
 namespace page_layout
 {
@@ -33,7 +34,8 @@ Utils::calcSoftMarginsPx(
     QSizeF const& hard_size_px,
     QSizeF const& aggregate_hard_size_px,
     MatchSizeMode const& match_size_mode,
-    Alignment const& alignment)
+    Alignment const& alignment,
+    SubScale const& sub_scale)
 {
     if (match_size_mode.get() == MatchSizeMode::M_DISABLED)
     {
@@ -108,7 +110,7 @@ Utils::borderColorForMatchSizeMode(MatchSizeMode const& mode)
 }
 
 QColor
-Utils::backgroundColorForMatchSizeMode(MatchSizeMode const& mode)
+Utils::backgroundColorForMatchSizeMode(MatchSizeMode const& mode, SubScale const& sub_scale)
 {
     QColor color;
 
@@ -127,7 +129,7 @@ Utils::backgroundColorForMatchSizeMode(MatchSizeMode const& mode)
         color = QColor(0xff, 0x55, 0x55, 70);
         break;
     }
-    if ((mode.getSubScaleWidth() * mode.getSubScaleHeight()) < 1.0)
+    if ((sub_scale.getWidth() * sub_scale.getHeight()) < 1.0)
     {
         color = QColor(0xa9, 0xff, 0x00, 70);
     }
